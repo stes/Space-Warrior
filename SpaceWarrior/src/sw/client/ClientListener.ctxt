@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=grund
+comment0.target=void\ bearbeiteTrennung(java.lang.String)
+comment0.text=\r\n\ Wird\ ausgef\u00FChrt,\ wenn\ der\ Server\ die\ Verbindung\ beendet\r\n\ \r\n\ @param\ grund\ Der\ Trenngrund\r\n
+comment1.params=name\ text
+comment1.target=void\ bearbeiteChatNachricht(java.lang.String,\ java.lang.String)
+comment1.text=\r\n\ Wird\ ausgef\u00FChrt,\ wenn\ eine\ Chatnachricht\ erhalten\ wurde\r\n\ \r\n\ @param\ name\ Der\ Name\ des\ Absenders\r\n\ @param\ text\ Der\ Text,\ der\ gesendet\ wurde\r\n
+comment2.params=paket
+comment2.target=void\ bearbeiteSnapshot(sw.shared.Paket)
+comment2.text=\r\n\ Wird\ ausgef\u00FChrt,\ wenn\ der\ Client\ einen\ Snapshot\ empf\u00E4ngt\r\n\ \r\n\ @param\ paket\ Der\ Snapshot\r\n
+comment3.params=paket
+comment3.target=void\ bearbeiteSchuss(sw.shared.Paket)
+comment3.text=\r\n\ Wird\ ausgef\u00FChrt,\ wenn\ der\ Client\ einen\ Schuss\ empf\u00E4ngt\r\n\ \r\n\ @param\ paket\ Der\ Schuss\r\n
+numComments=4

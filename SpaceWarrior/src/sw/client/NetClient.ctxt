@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.params=ip\ port\ name
+comment0.target=NetClient(java.lang.String,\ int,\ java.lang.String)
+comment0.text=\r\n\ Erzeugt\ einen\ neuen\ NetClient\r\n\ \r\n\ @param\ ip\ Die\ IP\ Adresse\ des\ Servers\r\n\ @param\ port\ Der\ Port\r\n
+comment1.params=l
+comment1.target=void\ fuegeClientListenerHinzu(ClientListener)
+comment1.text=\r\n\ F\u00FCgt\ einen\ neuen\ ClientListener\ hinzu\r\n\ \r\n\ @param\ l\ Der\ Listener\r\n
+comment2.params=
+comment2.target=void\ setzeTrennGrundZurueck()
+comment3.params=nachricht
+comment3.target=void\ sendeNachricht(sw.shared.Paket)
+comment4.params=
+comment4.target=void\ bearbeiteVerbindungsverlust()
+comment5.params=nachricht
+comment5.target=void\ bearbeiteNachricht(java.lang.String)
+numComments=6

@@ -1,0 +1,25 @@
+#BlueJ package file
+package.editor.height=857
+package.editor.width=1156
+package.editor.x=-212
+package.editor.y=230
+package.numDependencies=0
+package.numTargets=2
+package.showExtends=true
+package.showUses=true
+readme.editor.height=700
+readme.editor.width=900
+readme.editor.x=0
+readme.editor.y=0
+target1.height=62
+target1.name=fortytwo
+target1.type=PackageTarget
+target1.width=80
+target1.x=10
+target1.y=90
+target2.height=62
+target2.name=bf
+target2.type=PackageTarget
+target2.width=80
+target2.x=160
+target2.y=10

@@ -1,0 +1,220 @@
+package sw.client;
+
+import sum.komponenten.*;
+import sum.ereignis.*;
+
+import sw.shared.Punkt;
+import sw.shared.Spielkonstanten;
+import sw.shared.Nachrichtentyp;
+import sw.shared.Paket;
+
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
+/**
+* Die Klasse SuMAnwendung wurde automatisch erstellt: 
+* 
+* @author Alex Belke, Dennis Sternberg, Steffen Schneider
+* @version 15.11.11
+*/
+public class SuMAnwendung extends EBAnwendung implements WindowListener, ClientListener
+{
+    // Objekte    
+    private Textfeld _txtIPAdresse;
+    private Textfeld _txtName;
+    private Textfeld _txtChatnachricht;
+    private Knopf _btnVerbinden;
+    private Knopf _btnChat;
+    private Etikett _lblIPAdresse;
+    private Etikett _lblName;
+    private Zeilenbereich _lstChatverlauf;
+    
+    private Spielfeld _spielfeld;
+    private SpielController _spielController;
+    
+    private NetClient _client;
+    
+    // Attribute
+    
+    /**
+    * Konstruktor
+    */
+    public SuMAnwendung()
+    {
+        //Initialisierung der Oberklasse
+        super(1467, 954, true);
+        this.initKomponenten();
+        this.bildschirm().addWindowListener(this);
+    }
+    
+    
+    private void initNachVerbindung()
+    {
+        _spielController = new SpielController(_client);  
+        _client.fuegeClientListenerHinzu(_spielController);
+        _client.fuegeClientListenerHinzu(this);
+        _spielfeld = new Spielfeld(_spielController.spielerListe());
+    }
+    /**
+     * Die Variablen der einzelnen Elemente der GUI werden gesetzt.
+     */
+    private void initKomponenten()
+    {
+        int chat = 700;
+        
+        _txtIPAdresse = new Textfeld(220, 10, 400, 25, "");
+        // Ausrichtung
+        _txtIPAdresse.setzeAusrichtung(Ausrichtung.LINKS);
+        
+        _txtName = new Textfeld(220, 50, 400, 25, "");
+        // Ausrichtung
+        _txtName.setzeAusrichtung(Ausrichtung.LINKS);
+        
+        _txtChatnachricht = new Textfeld(100, chat+100, 520, 25, "");
+        // Ausrichtung
+        _txtChatnachricht.setzeAusrichtung(Ausrichtung.LINKS);
+        
+        _txtChatnachricht.setzeBearbeiterEingabeBestaetigt("_txtChatnachrichtEingabeBestaetigt");
+        _btnVerbinden = new Knopf(640, 10, 100, 25, "Verbinden");
+        _btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
+        _btnChat = new Knopf(640, chat+100, 100, 25, "Chat");
+        _btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
+        _lblIPAdresse = new Etikett(100, 10, 100, 25, "IP-Adresse");
+        // Ausrichtung
+        _lblIPAdresse.setzeAusrichtung(Ausrichtung.LINKS);
+        
+        _lblName = new Etikett(100, 50, 100, 25, "Name");
+        // Ausrichtung
+        _lblName.setzeAusrichtung(Ausrichtung.LINKS);
+        
+        _lstChatverlauf = new Zeilenbereich(100, chat, 645, 90, "");
+    }
+    
+    /**
+    * Ereignis EingabeBestaetigtvon_txtChatnachricht fand statt.
+    */
+    public void _txtChatnachrichtEingabeBestaetigt()
+    {
+        if ( !_txtChatnachricht.inhaltAlsText().isEmpty())
+        {
+            sendeNachricht(_txtChatnachricht.inhaltAlsText());
+            _txtChatnachricht.loescheAlles();
+        }
+    }
+    
+    /**
+    * Ereignis Geklicktvon_btnVerbinden fand statt.
+    */
+    public void _btnVerbindenGeklickt()
+    {
+        if ( !_txtName.inhaltAlsText().isEmpty())
+        {
+            this.verbinde(_txtIPAdresse.inhaltAlsText(), _txtName.inhaltAlsText());
+        }
+ 
+    }
+    
+    /**
+    * Ereignis Geklicktvon_btnChat fand statt.
+    */
+    public void _btnChatGeklickt()
+    {
+        if ( !_txtChatnachricht.inhaltAlsText().isEmpty())
+        {
+            sendeNachricht(_txtChatnachricht.inhaltAlsText());
+            _txtChatnachricht.loescheAlles();
+        }
+    }
+    
+    /**
+     * Die eingegebene Nachricht wird an den Chatverlauf gesendet.
+     */
+    public void sendeNachricht(String chatNachricht)
+    {
+        Paket chat = new Paket(Nachrichtentyp.CL_CHAT_NACHRICHT);
+        chat.fuegeStringAn(chatNachricht);
+        _client.sendeNachricht(chat);
+    }
+    
+    /**
+     * Verbindet den Client mit einem Server.
+     */
+    private void verbinde(String ip, String name)
+    {
+        if(_client != null)
+            return;
+        
+        _client = new NetClient(ip, Spielkonstanten.STANDARD_PORT, name);
+        
+        if(_client.vorhanden())
+        {
+            this.deaktiviereElemente();
+            this.initNachVerbindung();
+        }
+        else
+        {
+            _lstChatverlauf.haengeAn("Fehler: konnte nicht zum Server verbinden");
+            _client.gibFrei();
+            _client = null;
+        }
+    }
+    
+    private void deaktiviereElemente()
+    {
+        _txtIPAdresse.deaktiviere();
+        _txtName.deaktiviere();
+        _btnVerbinden.deaktiviere();
+        _lblIPAdresse.deaktiviere();
+        _lblName.deaktiviere();
+    }
+    
+    @Override
+    public void bearbeiteLeerlauf()
+    {
+        if (_client != null)
+        {
+            _client.bearbeiteLeerlauf();
+        }
+        if (_spielfeld != null)
+        {
+            _spielfeld.repaint();
+        }
+    }
+    
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+        if (_client != null)
+        {
+            _client.gibFrei();
+        }
+    }
+    
+    public void bearbeiteTrennung(String grund)
+    {
+        if (_client != null)
+        {
+            _client.gibFrei();
+            _client = null;
+            _spielfeld.verstecke();
+            _spielfeld.gibFrei();
+        }
+        _btnVerbinden.aktiviere();
+        _lstChatverlauf.haengeAn(grund);
+    }
+    
+    public void bearbeiteChatNachricht(String name, String text)
+    {
+        _lstChatverlauf.haengeAn(name + ": " + text);
+    }
+    
+    public void bearbeiteSnapshot(Paket paket) {}
+    
+    public void bearbeiteSchuss(Paket paket) {}
+
+    public void windowActivated(WindowEvent e) { }
+    public void windowClosed(WindowEvent e) { }
+    public void windowDeactivated(WindowEvent e) { }
+    public void windowDeiconified(WindowEvent e) { }
+    public void windowIconified(WindowEvent e) { }
+    public void windowOpened(WindowEvent e) { }
+}
