@@ -27,13 +27,11 @@ import java.io.ByteArrayOutputStream;
  */
 public class Paket
 {
-    // Bezugsobjekte
     private StringBuilder _stringBuilder;
-    private String _string;
+    private String _content;
     private int _position;
     private char _typ;
 
-    // Attribute
 
     // Konstruktor
     /**
@@ -44,7 +42,7 @@ public class Paket
     public Paket(char typ)
     {
         _stringBuilder = new StringBuilder();
-        _string = new String();
+        _content = new String();
         _typ = (char)(((int)typ) & 0x3F | 0x40);
         _stringBuilder.append(_typ);
     }
@@ -57,8 +55,8 @@ public class Paket
     public Paket(String text)
     {
         _stringBuilder = new StringBuilder();
-        _string = text;
-        _typ = (char)(((int) _string.charAt(0)) & 0x3F);
+        _content = text;
+        _typ = (char)(((int) _content.charAt(0)) & 0x3F);
         _position++;
     }
     
@@ -132,12 +130,12 @@ public class Paket
      */
     public int holeZahl()
     {
-        int zahl = (_string.charAt(_position) & 0x03) << 30;
-        zahl |= (_string.charAt(_position+1) & 0x3F) << 24;
-        zahl |= (_string.charAt(_position+2) & 0x3F) << 18;
-        zahl |= (_string.charAt(_position+3) & 0x3F) << 12;
-        zahl |= (_string.charAt(_position+4) & 0x3F) << 6;
-        zahl |= (_string.charAt(_position+5) & 0x3F);
+        int zahl = (_content.charAt(_position) & 0x03) << 30;
+        zahl |= (_content.charAt(_position+1) & 0x3F) << 24;
+        zahl |= (_content.charAt(_position+2) & 0x3F) << 18;
+        zahl |= (_content.charAt(_position+3) & 0x3F) << 12;
+        zahl |= (_content.charAt(_position+4) & 0x3F) << 6;
+        zahl |= (_content.charAt(_position+5) & 0x3F);
         
         _position += 6;
         return zahl;
@@ -151,7 +149,7 @@ public class Paket
     public boolean holeBoolean()
     {
         _position++;
-        return _string.charAt(_position-1) == 1;
+        return _content.charAt(_position-1) == 1;
     }
     
     /**
@@ -163,7 +161,7 @@ public class Paket
     {
         int laenge = this.holeZahl();
         _position += laenge;
-        return _string.substring(_position-laenge, _position);
+        return _content.substring(_position-laenge, _position);
     }
     
     /**
