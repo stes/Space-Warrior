@@ -61,7 +61,8 @@ public class ServerFinder extends Thread
         }
     }
     
-    public void run()
+    @Override
+	public void run()
     {
         _isRunning = true;
         try

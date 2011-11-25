@@ -16,11 +16,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.shared;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -43,7 +38,7 @@ public class Paket
     {
         _stringBuilder = new StringBuilder();
         _content = new String();
-        _typ = (char)(((int)typ) & 0x3F | 0x40);
+        _typ = (char)((typ) & 0x3F | 0x40);
         _stringBuilder.append(_typ);
     }
     
@@ -56,18 +51,44 @@ public class Paket
     {
         _stringBuilder = new StringBuilder();
         _content = text;
-        _typ = (char)(((int) _content.charAt(0)) & 0x3F);
+        _typ = (char)((_content.charAt(0)) & 0x3F);
         _position++;
     }
     
     /**
-     * @return gibt den Typ zurück
+     * fügt ein bool an
+     * 
+     * @param bool
      */
-    public char Typ()
+    public void fuegeBooleanAn(boolean bool)
     {
-        return _typ;
+        char data = (char) (bool ? 1 : 0);
+        _stringBuilder.append(data);
     }
 
+    /**
+     * fügt ein weiteres Paket an
+     * 
+     * @param p 
+     */
+    public void fuegePaketAn(Paket p)
+    {
+        this.fuegeStringAn(p.toString());
+    }
+    
+    /**
+     * fügt einen Text an
+     * 
+     * @param text
+     */
+    public void fuegeStringAn(String text)
+    {
+        text = text.replace("\n", "");
+        text = text.replace("\r", "");
+        this.fuegeZahlAn(text.length());
+        _stringBuilder.append(text);
+    }
+    
     // Dienste
     /**
      * fügt Zahlen als Typ an
@@ -90,37 +111,36 @@ public class Paket
     }
     
     /**
-     * fügt ein bool an
+     * holt einen bool aus einem Paket
      * 
-     * @param bool
+     * @return bool
      */
-    public void fuegeBooleanAn(boolean bool)
+    public boolean holeBoolean()
     {
-        char data = (char) (bool ? 1 : 0);
-        _stringBuilder.append(data);
+        _position++;
+        return _content.charAt(_position-1) == 1;
     }
     
     /**
-     * fügt einen Text an
+     * holt ein weiteres Paket 
      * 
-     * @param text
+     * @return Paket
      */
-    public void fuegeStringAn(String text)
+    public Paket holePaket()
     {
-        text = text.replace("\n", "");
-        text = text.replace("\r", "");
-        this.fuegeZahlAn(text.length());
-        _stringBuilder.append(text);
+        return new Paket(this.holeString());
     }
     
     /**
-     * fügt ein weiteres Paket an
+     * holt einen String aus einem Paket
      * 
-     * @param p 
+     * @return string
      */
-    public void fuegePaketAn(Paket p)
+    public String holeString()
     {
-        this.fuegeStringAn(p.toString());
+        int laenge = this.holeZahl();
+        _position += laenge;
+        return _content.substring(_position-laenge, _position);
     }
     
     /**
@@ -141,42 +161,17 @@ public class Paket
         return zahl;
     }
     
-    /**
-     * holt einen bool aus einem Paket
-     * 
-     * @return bool
-     */
-    public boolean holeBoolean()
-    {
-        _position++;
-        return _content.charAt(_position-1) == 1;
-    }
-    
-    /**
-     * holt einen String aus einem Paket
-     * 
-     * @return string
-     */
-    public String holeString()
-    {
-        int laenge = this.holeZahl();
-        _position += laenge;
-        return _content.substring(_position-laenge, _position);
-    }
-    
-    /**
-     * holt ein weiteres Paket 
-     * 
-     * @return Paket
-     */
-    public Paket holePaket()
-    {
-        return new Paket(this.holeString());
-    }
-    
     @Override
     public String toString()
     {
         return _stringBuilder.toString();
+    }
+    
+    /**
+     * @return gibt den Typ zurück
+     */
+    public char Typ()
+    {
+        return _typ;
     }
 }

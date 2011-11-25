@@ -32,12 +32,28 @@ public class ImageContainer
     // Bezugsobjekte
     private static ImageContainer _self;
     
+    public static ImageContainer getLocalInstance()
+    {
+        if (_self == null)
+        {
+            ImageContainer.init();
+        }
+        return _self;
+    }
+    
+    public static void init()
+    {
+        _self = new ImageContainer();
+    }
+    
     private BufferedImage _localPlayerImg;
-    private BufferedImage _opposingPlayerImg;
-    private BufferedImage _backgroundImg;
     
     // Attribute
 
+    private BufferedImage _opposingPlayerImg;
+
+    private BufferedImage _backgroundImg;
+    
     // Konstruktor
     public ImageContainer()
     {
@@ -52,7 +68,12 @@ public class ImageContainer
             e.printStackTrace();
         }
     }
-
+    
+    public BufferedImage getBackgroundImg()
+    {
+    	return _backgroundImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
+    }
+    
     // Dienste
     public BufferedImage getLocalPlayerImg()
     {
@@ -62,24 +83,5 @@ public class ImageContainer
     public BufferedImage getOpposingPlayerImg()
     {
         return _opposingPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
-    }
-    
-    public BufferedImage getBackgroundImg()
-    {
-    	return _backgroundImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
-    }
-    
-    public static ImageContainer getLocalInstance()
-    {
-        if (_self == null)
-        {
-            ImageContainer.init();
-        }
-        return _self;
-    }
-    
-    public static void init()
-    {
-        _self = new ImageContainer();
     }
 }

@@ -25,13 +25,13 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -90,15 +90,15 @@ public class ServerGUI extends JFrame implements ActionListener
 		OutputStream output = new OutputStream()
 		{
 			@Override
-			public void write(int b) throws IOException
-			{
-				addMessage(String.valueOf((char) b));
-			}
-			
-			@Override
 			public void write(byte[] b, int off, int len)
 			{
 				addMessage(new String(b, off, len));
+			}
+			
+			@Override
+			public void write(int b) throws IOException
+			{
+				addMessage(String.valueOf((char) b));
 			}
 		};
 	    
@@ -106,38 +106,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	    System.setErr(new PrintStream(output, true));
 	}
 	
-	/**
-	 * setzt den Netserver
-	 * 
-	 * @param netServer
-	 */
-	public void setNetServer(NetServer netServer)
-	{
-	    _netServer = netServer;
-	}
-	
-	/**
-	 * fügt Systemnachrichten ein
-	 * 
-	 * @param str neue Textnachricht
-	 */
-	private void addMessage(String str)
-	{
-		_area.append(str);
-		_area.setCaretPosition(_area.getDocument().getLength());
-	}
-	
-	/**
-	 * setzt die Clientliste
-	 * 
-	 * @param data
-	 */
-	public void setClientList(Vector<?> data)
-	{
-		_clientList.setListData(data);
-	}
-	
-    @Override
+	@Override
     public void actionPerformed(ActionEvent e)
     {
     	if(e.getActionCommand().equals("Kick"))
@@ -154,4 +123,35 @@ public class ServerGUI extends JFrame implements ActionListener
     	    _nameField.setText("");
         }
     }
+	
+	/**
+	 * setzt die Clientliste
+	 * 
+	 * @param data
+	 */
+	public void setClientList(Vector<?> data)
+	{
+		_clientList.setListData(data);
+	}
+	
+	/**
+	 * setzt den Netserver
+	 * 
+	 * @param netServer
+	 */
+	public void setNetServer(NetServer netServer)
+	{
+	    _netServer = netServer;
+	}
+	
+    /**
+	 * fügt Systemnachrichten ein
+	 * 
+	 * @param str neue Textnachricht
+	 */
+	private void addMessage(String str)
+	{
+		_area.append(str);
+		_area.setCaretPosition(_area.getDocument().getLength());
+	}
 }

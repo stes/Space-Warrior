@@ -19,9 +19,9 @@ package sw.server;
 
 import java.util.ArrayList;
 
+import sw.shared.GameConstants;
 import sw.shared.Paket;
 import sw.shared.Pakettype;
-import sw.shared.GameConstants;
 import sw.shared.PlayerInput;
 
 /**
@@ -51,135 +51,6 @@ public class NetServer implements IServer
         _letzteAktualisierung = System.currentTimeMillis();
         this.setzeServerName("Server");
         System.out.println("Server wird gestartet an Port " + port);
-    }
-    
-    /**
-     * Der gesuchte Client wird zurückgegeben
-     * 
-     * @param ip Ip des Clients, welcher gesucht werden soll
-     * @param port Port des Clients, welcher gesucht werden soll
-     * @return der gesuchte Client oder null, wenn dieser nicht vorhanden ist
-     */
-    private Client sucheClient(String ip, int port)
-    {
-        String adresse = ip + ":" + port;
-        for(int i = 1; i <= _clientListe.size(); i++)
-        {
-            Client cur = _clientListe.get(i);
-            if(adresse.equals(cur.getAdress()))
-                return cur;
-        }
-        return null;
-    }
-    
-    /**
-     * Der gesuchte Client wird zurückgegeben
-     * 
-     * @param name Name des Clients, welcher gesucht werden soll
-     * @return der gesuchte Client oder null, wenn dieser nicht vorhanden ist
-     */
-    private Client sucheClient(String name)
-    {
-        for(int i = 1; i <= _clientListe.size(); i++)
-        {
-        	Client cur = _clientListe.get(i);
-            if(name.equals(cur.name()))
-                return cur;
-        }
-        return null;
-    }
-    
-    /**
-     * Entfernt einen Client
-     * 
-     * @param ip Ip des Clients, welcher entfernt werden soll
-     * @param port Port des Clients, welcher entfernt werden soll
-     */
-    private void entferneClient(String ip, int port)
-    {
-        String adresse = ip + ":" + port;
-        for(int i = 1; i <= _clientListe.size(); i++)
-        {
-        	Client cur = _clientListe.get(i);
-            if(adresse.equals(cur.getAdress()))
-            {
-                if(cur.getIsPlaying())
-                {
-                    _controller.bearbeiteSpielerVerlaesst(cur.name());
-                }
-                System.out.println("'" + cur.name() + "' hat die Verbindung zum Server getrennt");
-                _clientListe.remove(i);
-            }
-        }
-    }
-    
-    /**
-     * Sendet eine Nachricht an einen Client
-     * 
-     * @param ip Ip des Empfängers
-     * @param port Port des Empfängers
-     * @param nachricht Die Nachricht
-     */
-    private void sendeNachricht(String ip, int port, Paket nachricht)
-    {
-        //this.sendeAnEinen(ip, port, nachricht.toString());
-    }
-    
-    /**
-     * Sendet eine Nachricht an einen Client
-     * 
-     * @param name Name des Empfängers
-     * @param nachricht Die Nachricht
-     */
-    @Override
-    public void sendeNachricht(String name, Paket nachricht)
-    {
-        Client client = this.sucheClient(name);
-        if(client != null)
-        {
-            this.sendeNachricht(client.ip(), client.getPort(), nachricht);
-        }
-    }
-    
-    /**
-     * Sendet eine Nachricht an alle verbundenen Clients
-     * 
-     * @param nachricht Die Nachricht
-     */
-    @Override
-    public void sendeRundnachricht(Paket nachricht)
-    {
-        this.sendeAnAlle(nachricht.toString());
-    }
-    
-    @Override
-    public void bearbeiteVerbindungsaufbau(String pClientIP, int pPartnerPort)
-    {
-        System.out.println("Ein neuer Client versucht zu verbinden (" + pClientIP + ")");
-        if(_clientListe.size() < GameConstants.MAX_SPIELERZAHL)
-        {
-            Client neuerClient = new Client(pClientIP, pPartnerPort, "unbekannt");
-            _clientListe.add(neuerClient);
-        }
-        else
-        {
-            Paket info = new Paket(Pakettype.SV_TRENN_INFO);
-            info.fuegeStringAn("Der Server ist voll.");
-            this.sendeNachricht(pClientIP, pPartnerPort, info);
-            this.beendeVerbindung(pClientIP, pPartnerPort);
-        }
-    }
-    
-    @Override
-    public void bearbeiteVerbindungsende(String pClientIP, int pPartnerPort)
-    {
-        entferneClient(pClientIP, pPartnerPort);
-    }
-   
-    @Override
-    public void bearbeiteVerbindungsverlust(String pClientIP, int pPartnerPort)
-    {
-        entferneClient(pClientIP, pPartnerPort);
     }
     
     @Override
@@ -225,6 +96,88 @@ public class NetServer implements IServer
         }
     }
     
+    @Override
+    public void bearbeiteVerbindungsaufbau(String pClientIP, int pPartnerPort)
+    {
+        System.out.println("Ein neuer Client versucht zu verbinden (" + pClientIP + ")");
+        if(_clientListe.size() < GameConstants.MAX_SPIELERZAHL)
+        {
+            Client neuerClient = new Client(pClientIP, pPartnerPort, "unbekannt");
+            _clientListe.add(neuerClient);
+        }
+        else
+        {
+            Paket info = new Paket(Pakettype.SV_TRENN_INFO);
+            info.fuegeStringAn("Der Server ist voll.");
+            this.sendeNachricht(pClientIP, pPartnerPort, info);
+            this.beendeVerbindung(pClientIP, pPartnerPort);
+        }
+    }
+    
+    @Override
+    public void bearbeiteVerbindungsende(String pClientIP, int pPartnerPort)
+    {
+        entferneClient(pClientIP, pPartnerPort);
+    }
+    
+    @Override
+    public void bearbeiteVerbindungsverlust(String pClientIP, int pPartnerPort)
+    {
+        entferneClient(pClientIP, pPartnerPort);
+    }
+    
+    /**
+     * Gibt ein Paket mit den Serverinfos zurueck
+     *
+     * @return Paket mit Serverinfos
+     */
+    public Paket holeServerInfos()
+    {
+        Paket info = new Paket((char)0);
+        info.fuegeStringAn(_serverName);
+        info.fuegeZahlAn(GameConstants.MAX_SPIELERZAHL);
+        info.fuegeZahlAn(_clientListe.size());
+        return info;
+    }
+    
+    /**
+     * Sendet eine Nachricht an einen Client
+     * 
+     * @param name Name des Empfängers
+     * @param nachricht Die Nachricht
+     */
+    @Override
+    public void sendeNachricht(String name, Paket nachricht)
+    {
+        Client client = this.sucheClient(name);
+        if(client != null)
+        {
+            this.sendeNachricht(client.ip(), client.getPort(), nachricht);
+        }
+    }
+    
+    /**
+     * Sendet eine Nachricht an alle verbundenen Clients
+     * 
+     * @param nachricht Die Nachricht
+     */
+    @Override
+    public void sendeRundnachricht(Paket nachricht)
+    {
+        this.sendeAnAlle(nachricht.toString());
+    }
+    
+    /**
+     * Setzt den Name des Servers
+     *
+     * @param name neuer Server Name
+     */
+    public void setzeServerName(String name)
+    {
+        System.out.println("Server Name: " + name);
+        _serverName = name;
+    }
+   
     /**
      * Bearbeitet das Leerlauf-Ereignis
      */
@@ -247,33 +200,80 @@ public class NetServer implements IServer
         }
     }
     
-    /**
-     * Setzt den Name des Servers
-     *
-     * @param name neuer Server Name
-     */
-    public void setzeServerName(String name)
-    {
-        System.out.println("Server Name: " + name);
-        _serverName = name;
-    }
-    
-    /**
-     * Gibt ein Paket mit den Serverinfos zurueck
-     *
-     * @return Paket mit Serverinfos
-     */
-    public Paket holeServerInfos()
-    {
-        Paket info = new Paket((char)0);
-        info.fuegeStringAn(_serverName);
-        info.fuegeZahlAn(GameConstants.MAX_SPIELERZAHL);
-        info.fuegeZahlAn(_clientListe.size());
-        return info;
-    }
-    
     protected ArrayList<Client> clListe()
     {
         return _clientListe;
+    }
+    
+    /**
+     * Entfernt einen Client
+     * 
+     * @param ip Ip des Clients, welcher entfernt werden soll
+     * @param port Port des Clients, welcher entfernt werden soll
+     */
+    private void entferneClient(String ip, int port)
+    {
+        String adresse = ip + ":" + port;
+        for(int i = 1; i <= _clientListe.size(); i++)
+        {
+        	Client cur = _clientListe.get(i);
+            if(adresse.equals(cur.getAdress()))
+            {
+                if(cur.getIsPlaying())
+                {
+                    _controller.bearbeiteSpielerVerlaesst(cur.name());
+                }
+                System.out.println("'" + cur.name() + "' hat die Verbindung zum Server getrennt");
+                _clientListe.remove(i);
+            }
+        }
+    }
+    
+    /**
+     * Sendet eine Nachricht an einen Client
+     * 
+     * @param ip Ip des Empfängers
+     * @param port Port des Empfängers
+     * @param nachricht Die Nachricht
+     */
+    private void sendeNachricht(String ip, int port, Paket nachricht)
+    {
+        //this.sendeAnEinen(ip, port, nachricht.toString());
+    }
+    
+    /**
+     * Der gesuchte Client wird zurückgegeben
+     * 
+     * @param name Name des Clients, welcher gesucht werden soll
+     * @return der gesuchte Client oder null, wenn dieser nicht vorhanden ist
+     */
+    private Client sucheClient(String name)
+    {
+        for(int i = 1; i <= _clientListe.size(); i++)
+        {
+        	Client cur = _clientListe.get(i);
+            if(name.equals(cur.name()))
+                return cur;
+        }
+        return null;
+    }
+    
+    /**
+     * Der gesuchte Client wird zurückgegeben
+     * 
+     * @param ip Ip des Clients, welcher gesucht werden soll
+     * @param port Port des Clients, welcher gesucht werden soll
+     * @return der gesuchte Client oder null, wenn dieser nicht vorhanden ist
+     */
+    private Client sucheClient(String ip, int port)
+    {
+        String adresse = ip + ":" + port;
+        for(int i = 1; i <= _clientListe.size(); i++)
+        {
+            Client cur = _clientListe.get(i);
+            if(adresse.equals(cur.getAdress()))
+                return cur;
+        }
+        return null;
     }
 }

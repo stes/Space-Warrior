@@ -24,8 +24,25 @@ import javax.management.AttributeNotFoundException;
  */
 public class PlayerList
 {
+    /**
+     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
+     * 
+     * @param p Das Paket
+     * @return Eine neue Spielerlisten-Instanz
+     */
+    private static PlayerList ausSnapshot(Paket p)
+    {
+        PlayerList liste = new PlayerList(p.holeZahl());
+        int n = p.holeZahl();
+        for (int i = 0; i < n; i++)
+        {
+           liste.fuegeEin(PlayerDataSet.hole(p.holePaket()), null);
+        }
+        return liste;
+    }
     // Bezugsobjekte
     private PlayerDataSet[] _liste;
+
     private PlayerInput[] _eingaben;
     // Attribute
 
@@ -40,33 +57,22 @@ public class PlayerList
         _liste = new PlayerDataSet[groesse];
         _eingaben = new PlayerInput[groesse];
     }
-
-    // Dienste
     /**
-     * Die Spielerdaten werden aus der Liste geloescht
+     * @return eingabe
      */
-    public void leere()
+    public PlayerInput eingabeAn(int index)
     {
-        _liste = new PlayerDataSet[_liste.length];
-        _eingaben = new PlayerInput[_eingaben.length];
-    }
-    /**
-     * Fügt der Liste einen neuen Datensatz hinzu
-     * 
-     * @param spieler Der Datensatz
-     * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
-     */
-    public void fuegeEin(PlayerDataSet spieler, PlayerInput eingabe)
-    {
-        int index = leererPlatz();
-        if (index == -1)
-        {
-            throw new ArrayIndexOutOfBoundsException("Kein Platz in der Liste");
-        }
-        _liste[index] = spieler;
-        _eingaben[index] = (eingabe == null ? new PlayerInput() : eingabe);
+        return _eingaben[index];
     }
 
+    /**
+     * @return liste
+     */
+    public PlayerDataSet elementAn(int index)
+    {
+        return _liste[index];
+    }
+    
     /**
      * Entfernt den Spieler mit dem angegebenen Namen aus der
      * Liste
@@ -80,140 +86,6 @@ public class PlayerList
             return;
         throw new AttributeNotFoundException();
     }
-    
-    /**
-     * Entfernt den Spieler mit dem angegebenen Namen aus der
-     * Liste
-     * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wird
-     */
-    public boolean versucheEntfernen(String name)
-    {
-        for (int i = 0; i < _liste.length; i++)
-        {
-            if (_liste[i] != null && _liste[i].name().equals(name))
-            {
-                _liste[i] = null;
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Zaehlt die Anzahl der belegten Elemente in der Liste
-     * 
-     * @return Die Anzahl der belegten Elemente
-     */
-    public int zaehle()
-    {
-        int n = 0;
-        for (int i = 0; i < _liste.length; i++)
-        {
-            if (_liste[i] != null)
-            {
-                n++;
-            }
-        }
-        return n;
-    }
-    
-    /**
-     * Gibt die Groesse der Liste zurueck
-     * 
-     * @return Die Listengroesse
-     */
-    public int laenge()
-    {
-        return _liste.length;
-    }
-    
-    /**
-     * @return liste
-     */
-    public PlayerDataSet elementAn(int index)
-    {
-        return _liste[index];
-    }
-    
-    /**
-     * @return eingabe
-     */
-    public PlayerInput eingabeAn(int index)
-    {
-        return _eingaben[index];
-    }
-    
-    /**
-     * Sucht den Spieler mit dem angegebenen Namen in der
-     * Liste
-     * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört
-     */
-    public PlayerDataSet suche(String name) throws AttributeNotFoundException
-    {
-        PlayerDataSet s = versucheSuche(name);
-        if (s != null)
-            return s;
-        throw new AttributeNotFoundException();
-    }
-    
-    /**
-     * Sucht den Spieler mit dem angegebenen Namen in der
-     * Liste
-     * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
-     */
-    public PlayerDataSet versucheSuche(String name)
-    {
-        for (PlayerDataSet s : _liste)
-        {
-            if (s != null && s.name().equals(name))
-                return s;
-        }
-        return null;
-    }
-    
-    /**
-     * Setzt die Eingabe des Spielers
-     * 
-     * @param name Der Spielername
-     * @param eingabe Eingabe des Spielers
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
-     */
-    public boolean versucheSetzeEingabe(String name, PlayerInput eingabe)
-    {
-        for (int i = 0; i < _liste.length; i++)
-        {
-            PlayerDataSet s = _liste[i];
-            if (s != null && s.name().equals(name))
-            {
-                _eingaben[i] = eingabe;
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * @return nächster freier Platz in der Liste
-     * @return -1 , wenn kein freier Platz mehr verfügbar ist
-     */
-    private int leererPlatz()
-    {
-        for (int i = 0; i < _liste.length; i++)
-        {
-            if (_liste[i] == null)
-            {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
     
     /**
      * Schreibt die Spielerliste in ein Snapshot und gibt dieses zurueck
@@ -237,6 +109,58 @@ public class PlayerList
     }
     
     /**
+     * Fügt der Liste einen neuen Datensatz hinzu
+     * 
+     * @param spieler Der Datensatz
+     * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
+     */
+    public void fuegeEin(PlayerDataSet spieler, PlayerInput eingabe)
+    {
+        int index = leererPlatz();
+        if (index == -1)
+        {
+            throw new ArrayIndexOutOfBoundsException("Kein Platz in der Liste");
+        }
+        _liste[index] = spieler;
+        _eingaben[index] = (eingabe == null ? new PlayerInput() : eingabe);
+    }
+    
+    /**
+     * Gibt die Groesse der Liste zurueck
+     * 
+     * @return Die Listengroesse
+     */
+    public int laenge()
+    {
+        return _liste.length;
+    }
+    
+    // Dienste
+    /**
+     * Die Spielerdaten werden aus der Liste geloescht
+     */
+    public void leere()
+    {
+        _liste = new PlayerDataSet[_liste.length];
+        _eingaben = new PlayerInput[_eingaben.length];
+    }
+    
+    /**
+     * Sucht den Spieler mit dem angegebenen Namen in der
+     * Liste
+     * 
+     * @param name Der Spielername
+     * @return Der Datensatz der zum Spieler gehört
+     */
+    public PlayerDataSet suche(String name) throws AttributeNotFoundException
+    {
+        PlayerDataSet s = versucheSuche(name);
+        if (s != null)
+            return s;
+        throw new AttributeNotFoundException();
+    }
+    
+    /**
      * Updated das Paket
      * 
      * @param p Das Paket
@@ -249,19 +173,95 @@ public class PlayerList
     }
     
     /**
-     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
+     * Entfernt den Spieler mit dem angegebenen Namen aus der
+     * Liste
      * 
-     * @param p Das Paket
-     * @return Eine neue Spielerlisten-Instanz
+     * @param name Der Spielername
+     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wird
      */
-    private static PlayerList ausSnapshot(Paket p)
+    public boolean versucheEntfernen(String name)
     {
-        PlayerList liste = new PlayerList(p.holeZahl());
-        int n = p.holeZahl();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < _liste.length; i++)
         {
-           liste.fuegeEin(PlayerDataSet.hole(p.holePaket()), null);
+            if (_liste[i] != null && _liste[i].name().equals(name))
+            {
+                _liste[i] = null;
+                return true;
+            }
         }
-        return liste;
+        return false;
+    }
+    
+    /**
+     * Setzt die Eingabe des Spielers
+     * 
+     * @param name Der Spielername
+     * @param eingabe Eingabe des Spielers
+     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
+     */
+    public boolean versucheSetzeEingabe(String name, PlayerInput eingabe)
+    {
+        for (int i = 0; i < _liste.length; i++)
+        {
+            PlayerDataSet s = _liste[i];
+            if (s != null && s.name().equals(name))
+            {
+                _eingaben[i] = eingabe;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Sucht den Spieler mit dem angegebenen Namen in der
+     * Liste
+     * 
+     * @param name Der Spielername
+     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
+     */
+    public PlayerDataSet versucheSuche(String name)
+    {
+        for (PlayerDataSet s : _liste)
+        {
+            if (s != null && s.name().equals(name))
+                return s;
+        }
+        return null;
+    }
+    
+    /**
+     * Zaehlt die Anzahl der belegten Elemente in der Liste
+     * 
+     * @return Die Anzahl der belegten Elemente
+     */
+    public int zaehle()
+    {
+        int n = 0;
+        for (int i = 0; i < _liste.length; i++)
+        {
+            if (_liste[i] != null)
+            {
+                n++;
+            }
+        }
+        return n;
+    }
+    
+    /**
+     * @return nächster freier Platz in der Liste
+     * @return -1 , wenn kein freier Platz mehr verfügbar ist
+     */
+    private int leererPlatz()
+    {
+        for (int i = 0; i < _liste.length; i++)
+        {
+            if (_liste[i] == null)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 }

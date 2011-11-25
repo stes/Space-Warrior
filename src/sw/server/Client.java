@@ -46,6 +46,14 @@ public class Client
         _isPlaying = false;
     }
 
+    /**
+     * wahr, wenn der Client auf den Server verbindet
+     */
+    public void enterGame()
+    {
+        _isPlaying = true;
+    }
+    
     // Dienste
     /**
      * @return ip IPAddresse mit dazugehörigem Port
@@ -53,6 +61,30 @@ public class Client
     public String getAdress()
     {
         return _ip + ":" + _port;
+    }
+    
+    /**
+     * @return imSpiel gibt zurück ob der Client im Spiel ist
+     */
+    public boolean getIsPlaying()
+    {
+        return _isPlaying;
+    }
+    
+    /**
+     * @return port Port des Clients
+     */
+    public int getPort()
+    {
+        return _port;
+    }
+    
+    /**
+     * @return ip IPAddresse des Clients
+     */
+    public String ip()
+    {
+        return _ip;
     }
     
     /**
@@ -71,38 +103,6 @@ public class Client
     public void setName(String name)
     {
         _name = name;
-    }
-    
-    /**
-     * @return ip IPAddresse des Clients
-     */
-    public String ip()
-    {
-        return _ip;
-    }
-    
-    /**
-     * @return port Port des Clients
-     */
-    public int getPort()
-    {
-        return _port;
-    }
-    
-    /**
-     * wahr, wenn der Client auf den Server verbindet
-     */
-    public void enterGame()
-    {
-        _isPlaying = true;
-    }
-    
-    /**
-     * @return imSpiel gibt zurück ob der Client im Spiel ist
-     */
-    public boolean getIsPlaying()
-    {
-        return _isPlaying;
     }
     
     @Override

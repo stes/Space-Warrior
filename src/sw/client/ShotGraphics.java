@@ -43,17 +43,17 @@ public class ShotGraphics extends Shot
         _isReady = true;
     }
 
+    public boolean getIsOutOfDate()
+    {
+        return (this.getAge() > GameConstants.SCHUSS_LEBENSDAUER);
+    }
+    
     public void paint(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
         g2d.setColor(new Color(_basicColor.getRed(), _basicColor.getGreen(), _basicColor.getBlue(), (int)this.getAlphaValue(this.getAge())));
         g2d.setStroke(new BasicStroke(3));
         g.drawLine((int)this.startPunkt().getX(), (int)this.startPunkt().getY(), (int)this.endPunkt().getX(), (int)this.endPunkt().getY());
-    }
-    
-    public boolean getIsOutOfDate()
-    {
-        return (this.getAge() > GameConstants.SCHUSS_LEBENSDAUER);
     }
     
     private double getAge()

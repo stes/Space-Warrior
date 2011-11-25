@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sw.server;
 
-import java.net.DatagramSocket;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 
 import sw.shared.GameConstants;
 import sw.shared.Paket;
@@ -60,7 +60,8 @@ public class ServerInfo extends Thread
         }
     }
     
-    public void run()
+    @Override
+	public void run()
     {
         _laeuft = true;
         try

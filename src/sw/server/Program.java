@@ -17,10 +17,10 @@
  ******************************************************************************/
 package sw.server;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Vector;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
 
 import sw.shared.GameConstants;
 /**
@@ -29,8 +29,13 @@ import sw.shared.GameConstants;
  */
 public class Program implements WindowListener
 {
+    public static void main(String[] args)
+    {
+        (new Program()).run();
+    }
     private ServerGUI _serverGUI;
     private NetServer _netServer;
+    
     private ServerInfo _serverInfo;
     
     public Program()
@@ -65,7 +70,12 @@ public class Program implements WindowListener
         }
     }
     
-    public void windowClosing(WindowEvent e)
+    @Override
+	public void windowActivated(WindowEvent e) { }
+    @Override
+	public void windowClosed(WindowEvent e) { }
+    @Override
+	public void windowClosing(WindowEvent e)
     {
         if (_netServer != null)
         {
@@ -73,16 +83,13 @@ public class Program implements WindowListener
             _serverInfo.gibFrei();
         }
     }
-    
-    public void windowActivated(WindowEvent e) { }
-    public void windowClosed(WindowEvent e) { }
-    public void windowDeactivated(WindowEvent e) { }
-    public void windowDeiconified(WindowEvent e) { }
-    public void windowIconified(WindowEvent e) { }
-    public void windowOpened(WindowEvent e) { }
+    @Override
+	public void windowDeactivated(WindowEvent e) { }
+    @Override
+	public void windowDeiconified(WindowEvent e) { }
+    @Override
+	public void windowIconified(WindowEvent e) { }
 
-    public static void main(String[] args)
-    {
-        (new Program()).run();
-    }
+    @Override
+	public void windowOpened(WindowEvent e) { }
 }

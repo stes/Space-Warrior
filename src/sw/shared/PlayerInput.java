@@ -81,20 +81,6 @@ public class PlayerInput
     // Dienste
     
     /**
-     * Schreibt die Eingabe in ein Paket und gibt dieses zurueck
-     *
-     * @return das Paket
-     */
-    public Paket pack()
-    {
-        Paket paket = new Paket(Pakettype.CL_EINGABE);
-        paket.fuegeZahlAn(_bewegung);
-        paket.fuegeZahlAn(_drehung);
-        paket.fuegeZahlAn(_schuss);
-        return paket;
-    }
-    
-    /**
      * @return die Bewegung
      */
     public int bewegung()
@@ -108,6 +94,34 @@ public class PlayerInput
     public int drehung()
     {
         return _drehung;
+    }
+    
+    @Override
+    public boolean equals(Object other)
+    {
+        if(!(other instanceof PlayerInput))
+            return false;
+        PlayerInput e = (PlayerInput) other;
+        if(
+            e.bewegung() == this.bewegung() &&
+            e.drehung() == this.drehung() &&
+            e.schuss() == this.schuss())
+            return true;
+        return false;
+    }
+    
+    /**
+     * Schreibt die Eingabe in ein Paket und gibt dieses zurueck
+     *
+     * @return das Paket
+     */
+    public Paket pack()
+    {
+        Paket paket = new Paket(Pakettype.CL_EINGABE);
+        paket.fuegeZahlAn(_bewegung);
+        paket.fuegeZahlAn(_drehung);
+        paket.fuegeZahlAn(_schuss);
+        return paket;
     }
     
     /**
@@ -150,19 +164,5 @@ public class PlayerInput
     public void setzeSchuss(int wert)
     {
         _schuss = wert;
-    }
-    
-    @Override
-    public boolean equals(Object other)
-    {
-        if(!(other instanceof PlayerInput))
-            return false;
-        PlayerInput e = (PlayerInput) other;
-        if(
-            e.bewegung() == this.bewegung() &&
-            e.drehung() == this.drehung() &&
-            e.schuss() == this.schuss())
-            return true;
-        return false;
     }
 }

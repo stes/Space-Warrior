@@ -18,7 +18,6 @@
 package sw.shared;
 
 import java.awt.Point;
-import java.awt.geom.Point2D.Double;
 
 /**
  * Datenstruktur zur Repräsentation eines Schusses
@@ -30,12 +29,29 @@ public class Shot extends java.awt.geom.Line2D.Double
 {
     // Bezugsobjekte
 
+    /**
+     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
+     * 
+     * @param p Das Paket
+     * @return Eine neue Schuss-Instanz
+     * @throws IllegalArgumentException wenn Pakettyp falsch ist
+     */
+    public static Shot hole(Paket p)
+    {
+        if (p.Typ() != Pakettype.SV_SCHUSS)
+            throw new IllegalArgumentException();
+        return new Shot(
+            new Point(p.holeZahl(), p.holeZahl()),
+            p.holeZahl(),
+            p.holeBoolean());
+    }
     // Attribute
     private boolean _istMaster;
-    private int _richtung;
     
     // Konstruktor
 
+    private int _richtung;
+    
     /**
      * Erstellt einen neuen Schuss
      *
@@ -46,7 +62,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     {
         this(startPunkt, richtung, false);
     }
-    
+
     /**
      * Erstellt einen neuen Schuss
      *
@@ -60,53 +76,6 @@ public class Shot extends java.awt.geom.Line2D.Double
         _istMaster = master;
         setzeRichtung(richtung);
     }
-
-    // Dienste
-    /**
-     * @return der Startpunkt
-     */
-    public Point startPunkt()
-    {
-        return new Point((int)this.getX1(), (int)this.getY1());
-    }
-    /**
-     * @return der Endpunkt
-     */
-    public Point endPunkt()
-    {
-        return new Point((int)this.getX2(), (int)this.getY2());
-    }
-    
-    /**
-     * Weist dem Schuss eine neue Richtung zu
-     * 
-     * @param richtung Die neue Richtung im Gradmaß
-     */
-    public void setzeRichtung(int richtung)
-    {
-        _richtung = richtung;
-        double reichweite = _istMaster ? GameConstants.MAX_MASTER_REICHWEITE : GameConstants.MAX_REICHWEITE;
-        this.setLine(startPunkt(), new Point(
-            (int)(startPunkt().getX() + reichweite * Math.sin(Math.toRadians(richtung))),
-            (int)(startPunkt().getY() + reichweite * Math.cos(Math.toRadians(richtung)))));
-    }
-    
-    /**
-     * @return Die Richtung im Gradmaß
-     */
-    public int richtung()
-    {
-        return _richtung;
-    }
-    
-    /**
-     * @return true, wenn es sich um einen Masterschuss handelt
-     */
-    public boolean istMaster()
-    {
-        return _istMaster;
-    }
-    
     /**
      * Berechnet den Anstand zum angegebenen Punkt
      * 
@@ -118,17 +87,25 @@ public class Shot extends java.awt.geom.Line2D.Double
         return this.ptLineDist(p.getX(), p.getY());
     }
     
-	public double abstandZu(Point.Double p)
+    public double abstandZu(Point.Double p)
 	{
 		return this.ptLineDist(p.getX(), p.getY());
 	}
     
     /**
-     * @return Der Schaden, den der Schuss zufügt
+     * @return der Endpunkt
      */
-    public int schaden()
+    public Point endPunkt()
     {
-        return this.istMaster() ? GameConstants.MAX_MASTER_SCHADEN : GameConstants.MAX_SCHADEN;
+        return new Point((int)this.getX2(), (int)this.getY2());
+    }
+    
+    /**
+     * @return true, wenn es sich um einen Masterschuss handelt
+     */
+    public boolean istMaster()
+    {
+        return _istMaster;
     }
     
     /**
@@ -146,20 +123,42 @@ public class Shot extends java.awt.geom.Line2D.Double
         return p;
     }
     
-    /**
-     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
-     * 
-     * @param p Das Paket
-     * @return Eine neue Schuss-Instanz
-     * @throws IllegalArgumentException wenn Pakettyp falsch ist
+	/**
+     * @return Die Richtung im Gradmaß
      */
-    public static Shot hole(Paket p)
+    public int richtung()
     {
-        if (p.Typ() != Pakettype.SV_SCHUSS)
-            throw new IllegalArgumentException();
-        return new Shot(
-            new Point(p.holeZahl(), p.holeZahl()),
-            p.holeZahl(),
-            p.holeBoolean());
+        return _richtung;
+    }
+    
+    /**
+     * @return Der Schaden, den der Schuss zufügt
+     */
+    public int schaden()
+    {
+        return this.istMaster() ? GameConstants.MAX_MASTER_SCHADEN : GameConstants.MAX_SCHADEN;
+    }
+    
+    /**
+     * Weist dem Schuss eine neue Richtung zu
+     * 
+     * @param richtung Die neue Richtung im Gradmaß
+     */
+    public void setzeRichtung(int richtung)
+    {
+        _richtung = richtung;
+        double reichweite = _istMaster ? GameConstants.MAX_MASTER_REICHWEITE : GameConstants.MAX_REICHWEITE;
+        this.setLine(startPunkt(), new Point(
+            (int)(startPunkt().getX() + reichweite * Math.sin(Math.toRadians(richtung))),
+            (int)(startPunkt().getY() + reichweite * Math.cos(Math.toRadians(richtung)))));
+    }
+    
+    // Dienste
+    /**
+     * @return der Startpunkt
+     */
+    public Point startPunkt()
+    {
+        return new Point((int)this.getX1(), (int)this.getY1());
     }
 }

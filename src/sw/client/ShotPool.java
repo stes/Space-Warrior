@@ -33,6 +33,27 @@ public class ShotPool
     
     // Attribute
  
+    /**
+     * Fügt einen neuen Schuss hinzu
+     * 
+     * @param shot Der Schuss
+     */
+    public static void addShot(Shot shot)
+    {
+        _schuesse.add(new ShotGraphics(shot));
+    }
+    
+    /**
+     * Initialisiert den Schusspool
+     * 
+     * @param playingFieldGraphics Das Spielfeld, auf dem gezeichnet werden soll
+     */
+    public static void init(PlayingFieldGraphics playingFieldGraphics)
+    {
+        _schuesse = new ArrayList<ShotGraphics>(100);
+        _spielfeld = playingFieldGraphics;
+    }
+    
     // Dienste    
     /**
      * Zeigt die Schüsse an
@@ -54,26 +75,5 @@ public class ShotPool
                 }
             }
         }
-    }
-    
-    /**
-     * Fügt einen neuen Schuss hinzu
-     * 
-     * @param shot Der Schuss
-     */
-    public static void addShot(Shot shot)
-    {
-        _schuesse.add(new ShotGraphics(shot));
-    }
-    
-    /**
-     * Initialisiert den Schusspool
-     * 
-     * @param playingFieldGraphics Das Spielfeld, auf dem gezeichnet werden soll
-     */
-    public static void init(PlayingFieldGraphics playingFieldGraphics)
-    {
-        _schuesse = new ArrayList<ShotGraphics>(100);
-        _spielfeld = playingFieldGraphics;
     }
 }

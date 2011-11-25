@@ -18,7 +18,6 @@
 package sw.client;
 
 import sw.shared.GameConstants;
-import sw.shared.Pakettype;
 import sw.shared.PlayerDataSet;
 import sw.shared.PlayerList;
 import sw.shared.PlayerInput;
@@ -40,7 +39,6 @@ public class GameController implements AWTEventListener, ClientListener
     private IClient _client;
     private PlayerInput _currentState;
     private PlayerInput _oldState;
-    
     private boolean _isReady;
     
     /**
@@ -56,40 +54,12 @@ public class GameController implements AWTEventListener, ClientListener
         _isReady = true;
     }
         
-    /**
-     * @return the Playerlist
-     */
-    public PlayerList getPlayerList()
-    {
-        return _playerList;
-    }
-
-    /**
-     * send a Snapshot to every player
-     */
-    public void snapshot(Paket snapshot)
-    {
-        _playerList.update(snapshot);
-        for (int i = 0; i < _playerList.laenge(); i++)
-        {
-            PlayerDataSet d = _playerList.elementAn(i);
-            if (d != null && d.lokal())
-            {
-                _localPlayer = d;
-            }
-        }
-    }
-    
-    @Override
-    public void shot(Paket paket)
-    {
-        Shot s = Shot.hole(paket);
-        ShotPool.addShot(s);
-    }
     @Override
     public void chatMessage(String name, String text) {}
+
     @Override
     public void connectionLost(String grund) {}
+    
     @Override
     public void eventDispatched(AWTEvent e)
     {
@@ -179,6 +149,35 @@ public class GameController implements AWTEventListener, ClientListener
             _oldState = new PlayerInput(_currentState);
             Paket p = _currentState.pack();
             //_client.sendeNachricht(p);
+        }
+    }
+    /**
+     * @return the Playerlist
+     */
+    public PlayerList getPlayerList()
+    {
+        return _playerList;
+    }
+    @Override
+    public void shot(Paket paket)
+    {
+        Shot s = Shot.hole(paket);
+        ShotPool.addShot(s);
+    }
+    /**
+     * send a Snapshot to every player
+     */
+    @Override
+	public void snapshot(Paket snapshot)
+    {
+        _playerList.update(snapshot);
+        for (int i = 0; i < _playerList.laenge(); i++)
+        {
+            PlayerDataSet d = _playerList.elementAn(i);
+            if (d != null && d.lokal())
+            {
+                _localPlayer = d;
+            }
         }
     }
 }

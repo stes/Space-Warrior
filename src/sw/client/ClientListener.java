@@ -25,14 +25,6 @@ import sw.shared.Paket;
 
 public interface ClientListener
 {
-    // Dienste
-    /**
-     * Wird ausgeführt, wenn der Server die Verbindung beendet
-     * 
-     * @param grund Der Trenngrund
-     */
-    public void connectionLost(String grund);
-    
     /**
      * Wird ausgeführt, wenn eine Chatnachricht erhalten wurde
      * 
@@ -42,11 +34,11 @@ public interface ClientListener
     public void chatMessage(String name, String text);
     
     /**
-     * Wird ausgeführt, wenn der Client einen Snapshot empfängt
+     * Wird ausgeführt, wenn der Server die Verbindung beendet
      * 
-     * @param paket Der Snapshot
+     * @param grund Der Trenngrund
      */
-    public void snapshot(Paket paket);
+    public void connectionLost(String grund);
     
     /**
      * Wird ausgeführt, wenn der Client einen Schuss empfängt
@@ -54,4 +46,11 @@ public interface ClientListener
      * @param paket Der Schuss
      */
     public void shot(Paket paket);
+    
+    /**
+     * Wird ausgeführt, wenn der Client einen Snapshot empfängt
+     * 
+     * @param paket Der Snapshot
+     */
+    public void snapshot(Paket paket);
 }

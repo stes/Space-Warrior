@@ -88,6 +88,23 @@ public class PlayingFieldGraphics extends JPanel
         }
     }
     
+    private AffineTransform affineTransform(BufferedImage src, double degrees)
+    {
+        return AffineTransform.getRotateInstance(
+            Math.toRadians(degrees),
+            src.getWidth() / 2,
+            src.getHeight() / 2);
+    }
+    
+    private BufferedImage rotateImage(BufferedImage src, double degrees)
+    {
+        BufferedImage rotatedImage = new BufferedImage(src.getWidth(), src
+                .getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = rotatedImage.createGraphics();
+        g.drawImage(src, affineTransform(src, degrees), null);
+        return rotatedImage;
+    }
+    
     private void zeigeStatusbalken(Graphics2D g2d, PlayerDataSet d)
     {
         g2d.setStroke(new BasicStroke(15));
@@ -108,22 +125,5 @@ public class PlayingFieldGraphics extends JPanel
                                end_x, 60, new Color(100, 100, 100, 100));
         g2d.setPaint(pat);
         g2d.drawLine(start_x, y, end_x, y);
-    }
-    
-    private AffineTransform affineTransform(BufferedImage src, double degrees)
-    {
-        return AffineTransform.getRotateInstance(
-            Math.toRadians(degrees),
-            src.getWidth() / 2,
-            src.getHeight() / 2);
-    }
-    
-    private BufferedImage rotateImage(BufferedImage src, double degrees)
-    {
-        BufferedImage rotatedImage = new BufferedImage(src.getWidth(), src
-                .getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = rotatedImage.createGraphics();
-        g.drawImage(src, affineTransform(src, degrees), null);
-        return rotatedImage;
     }
 }
