@@ -108,37 +108,41 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
         _txtName.setBounds(220, 50, 400, 25);
         
         _txtChatnachricht.setBounds(100, chat+100, 520, 25);
+        ////_txtChatnachricht.eventhandlerblablabla("_txtChatnachrichtEingabeBestaetigt");
         
-        _txtChatnachricht.eventhandlerblablabla("_txtChatnachrichtEingabeBestaetigt");
-        _btnVerbinden = new JButton(640, 10, 100, 25, "Verbinden");
-        _btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
-        _btnChat = new JButton(640, chat+100, 100, 25, "Chat");
-        _btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
-        _btnAktualisieren = new JButton(1100, 620, 100, 25, "Aktualisieren");
-        _btnAktualisieren.setzeBearbeiterGeklickt("_btnAktualisierenGeklickt");
-        _lblIPAdresse = new Etikett(100, 10, 100, 25, "IP-Adresse");
-        // Ausrichtung
-        _lblIPAdresse.setzeAusrichtung(Ausrichtung.LINKS);
+        _btnVerbinden = new JButton("Verbinden");
+        _btnVerbinden.setBounds(640, 10, 100, 25);
+        //_btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
         
-        _lblName = new Etikett(100, 50, 100, 25, "Name");
-        // Ausrichtung
-        _lblName.setzeAusrichtung(Ausrichtung.LINKS);
+        _btnChat = new JButton("Chat");
+        _btnChat.setBounds(640, chat+100, 100, 25);
+        //_btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
         
-        _lstChatverlauf = new Zeilenbereich(100, chat, 645, 90, "");
-        _lstChatverlauf.deaktiviere();
+        _btnAktualisieren = new JButton("Aktualisieren");
+        _btnAktualisieren.setBounds(1100, 620, 100, 25);
+        //_btnAktualisieren.setzeBearbeiterGeklickt("_btnAktualisierenGeklickt");
         
-        _punkteListe = new Tabelle(1100, 100, 200, 150, Spielkonstanten.MAX_SPIELERZAHL, 2);
-        _punkteListe.deaktiviere();
-        _punkteListe.setzeSpaltentitelAn("Spieler", 1);
-        _punkteListe.setzeSpaltentitelAn("Punkte", 2);
-        _punkteListe.verstecke();
+        _lblIPAdresse = new JLabel("IP-Adresse");
+        _lblIPAdresse.setBounds(100, 10, 100, 25);
         
-        _serverListe = new Tabelle(1100, 300, 200, 300, 0, 3);
-        _serverListe.setzeSpaltentitelAn("Server", 1);
-        _serverListe.setzeSpaltentitelAn("Spieler/Max", 2);
-        _serverListe.setzeSpaltentitelAn("IP-Adresse", 3);
-        _serverListe.setzeSpaltenbreite(110);
-        _serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
+        _lblName = new JLabel("Name");
+        _lblName.setBounds(100, 50, 100, 25);
+        
+        _lstChatverlauf = new JTextArea();
+        _lstChatverlauf.setBounds(100, chat, 645, 90);
+        
+        _punkteListe = new JTable(Spielkonstanten.MAX_SPIELERZAHL, 2);
+        _punkteListe.setBounds(1100, 100, 200, 150);
+        
+        _punkteListe.getColumnModel().getColumn(0).setHeaderValue("Spieler");
+        _punkteListe.getColumnModel().getColumn(1).setHeaderValue("Punkte");
+        
+        _serverListe = new JTable(0, 3);
+        _serverListe.setBounds(1100, 300, 200, 300);
+        _serverListe.getColumnModel().getColumn(0).setHeaderValue("Server");
+        _serverListe.getColumnModel().getColumn(1).setHeaderValue("Spieler/Max");
+        _serverListe.getColumnModel().getColumn(0).setWidth(110);
+        //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
     }
     
     /**
@@ -154,9 +158,9 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     */
     public void _btnVerbindenGeklickt()
     {
-        if ( !_txtName.inhaltAlsText().isEmpty())
+        if ( !_txtName.getText().isEmpty())
         {
-            this.verbinde(_txtIPAdresse.inhaltAlsText(), _txtName.inhaltAlsText());
+            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
         }
  
     }
@@ -176,9 +180,8 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     {
         if(_serverSucher == null)
         {
-            _serverListe.setzeZeilenanzahl(0);
-            _btnAktualisieren.deaktiviere();
-            _uhr.starte();
+            //_serverListe.setzeZeilenanzahl(0);
+            _btnAktualisieren.setEnabled(true);
             _serverSucher = new ServerSucher(this);
             _serverSucher.start();
         }
@@ -199,13 +202,13 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
             @Override
             public void write(int b) throws IOException
             {
-                _lstChatverlauf.haengeAn(String.valueOf((char) b));
+                _lstChatverlauf.append(String.valueOf((char) b));
             }
             
             @Override
             public void write(byte[] b, int off, int len)
             {
-                _lstChatverlauf.haengeAn(new String(b, off, len));
+                _lstChatverlauf.append(new String(b, off, len));
             }
         };
         
@@ -226,7 +229,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
 	
     private void verarbeiteEingabe()
     {
-        String nachricht = _txtChatnachricht.inhaltAlsText();
+        String nachricht = _txtChatnachricht.getText();
         if ( !nachricht.isEmpty())
         {
             if (!FortyTwo.answer(nachricht))
@@ -247,11 +250,11 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
                 else
                 {
                     sendeNachricht(nachricht);
-                    _txtChatnachricht.loescheAlles();
+                    _txtChatnachricht.setText("");
                 }
             }
         }
-        _txtChatnachricht.loescheAlles();
+        _txtChatnachricht.setText("");
     }
     
     /**
@@ -259,11 +262,11 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
      */
     public void _tblMarkierungGeaendert()
     {
-        for(int i = 1; i <= _serverListe.zeilenanzahl(); i++)
+        for(int i = 0; i <= _serverListe.getRowCount(); i++)
         {
-            if(_serverListe.istZeileMarkiert(i))
+            if(_serverListe.isRowSelected(i))
             {
-                _txtIPAdresse.setzeInhalt(_serverListe.inhaltAlsTextAn(i, 3));
+                _txtIPAdresse.setText((String) _serverListe.getValueAt(i, 2));
             }
         }
     }
@@ -295,7 +298,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
         }
         else
         {
-            _lstChatverlauf.haengeAn("Fehler: konnte nicht zum Server verbinden");
+            _lstChatverlauf.append("Fehler: konnte nicht zum Server verbinden");
             _client.gibFrei();
             _client = null;
         }
@@ -303,40 +306,40 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     
     private void deaktiviereElemente()
     {
-        _txtIPAdresse.deaktiviere();
-        _txtName.deaktiviere();
-        _btnVerbinden.deaktiviere();
-        _lblIPAdresse.deaktiviere();
-        _lblName.deaktiviere();
-        _punkteListe.zeige();
-        _serverListe.verstecke();
-        _btnAktualisieren.deaktiviere();
+        _txtIPAdresse.setEnabled(false);
+        _txtName.setEnabled(false);
+        _btnVerbinden.setEnabled(false);
+        _lblIPAdresse.setEnabled(false);
+        _lblName.setEnabled(false);
+        _punkteListe.setVisible(true);
+        _serverListe.setVisible(false);
+        _btnAktualisieren.setEnabled(false);
     }
     
     private void aktiviereElemente()
     {
-        _txtIPAdresse.aktiviere();
-        _txtName.aktiviere();
-        _btnVerbinden.aktiviere();
-        _lblIPAdresse.aktiviere();
-        _lblName.aktiviere();
-        _punkteListe.verstecke();
-        _serverListe.zeige();
-        _btnAktualisieren.aktiviere();
+        _txtIPAdresse.setEnabled(true);
+        _txtName.setEnabled(true);
+        _btnVerbinden.setEnabled(true);
+        _lblIPAdresse.setEnabled(true);
+        _lblName.setEnabled(true);
+        _punkteListe.setVisible(false);
+        _serverListe.setVisible(true);
+        _btnAktualisieren.setEnabled(true);
     }
     
-    @Override
+    //@Override
     public void bearbeiteLeerlauf()
     {
         if (_spielfeld != null)
         {
             _spielfeld.repaint();
         }
-        if(_serverSucher != null && _uhr.verstricheneZeit() > 5000)
+        if(_serverSucher != null /*&& _uhr.verstricheneZeit() > 5000*/)
         {
             _serverSucher.gibFrei();
             _serverSucher = null;
-            _btnAktualisieren.aktiviere();
+            _btnAktualisieren.setEnabled(true);
         }
     }
     
@@ -345,7 +348,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     {
         if (_client != null)
         {
-            _client.gibFrei();
+            //_client.gibFrei();
         }
         if (_serverSucher != null)
         {
@@ -355,7 +358,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     
     public void bearbeiteServerGefunden(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
     {
-        _serverListe.haengeNeueZeileAn();
+        //_serverListe.();  new line
         _serverListe.setzeInhaltAn(serverName, _serverListe.zeilenanzahl(), 1);
         _serverListe.setzeInhaltAn(spielerZahl + "/" + maxSpielerZahl, _serverListe.zeilenanzahl(), 2);
         _serverListe.setzeInhaltAn(serverIp, _serverListe.zeilenanzahl(), 3);
