@@ -46,7 +46,7 @@ public interface ClientListener
      * 
      * @param paket Der Snapshot
      */
-    public void bearbeiteSnapshot(Paket paket);
+    public void editSnapshot(Paket paket);
     
     /**
      * Wird ausgeführt, wenn der Client einen Schuss empfängt

@@ -27,9 +27,9 @@ public interface IClient
 {
     // Dienste
     /**
-     * Sendet eine Nachricht an den Server
+     * sends a message to the server
      * 
-     * @param nachricht Die Nachricht
+     * @param message the message
      */
-    public void sendeNachricht(Paket nachricht);
+    public void sendMessage(Paket message);
 }

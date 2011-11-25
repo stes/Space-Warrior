@@ -418,7 +418,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     }
     
     @Override
-    public void bearbeiteSnapshot(Paket paket)
+    public void editSnapshot(Paket paket)
     {
         if(_spielController.spielerListe().zaehle() == 0)
             return;

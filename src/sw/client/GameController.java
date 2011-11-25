@@ -47,7 +47,7 @@ public class GameController implements AWTEventListener, ClientListener
     
     // Konstruktor
     /**
-     * Erzeugt einen neuen SpielController
+     * creates an new GameController
      */
     public GameController(IClient client)
     {
@@ -61,17 +61,17 @@ public class GameController implements AWTEventListener, ClientListener
         
     // Dienste 
     /**
-     * @return die aktuelle Spielerliste
+     * @return the Playerlist
      */
-    public SpielerListe spielerListe()
+    public PlayerList _playerList()
     {
         return _spielerListe;
     }
 
     /**
-     * Sendet einen Snapshot an jeden Spieler
+     * send a Snapshot to every player
      */
-    public void bearbeiteSnapshot(Paket snapshot)
+    public void editSnapshot(Paket snapshot)
     {
         _spielerListe.update(snapshot);
         for (int i = 0; i < _spielerListe.laenge(); i++)
