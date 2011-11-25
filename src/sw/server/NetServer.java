@@ -20,7 +20,7 @@ package sw.server;
 import java.util.ArrayList;
 
 import sw.shared.Paket;
-import sw.shared.Nachrichtentyp;
+import sw.shared.Pakettype;
 import sw.shared.Spielkonstanten;
 import sw.shared.SpielerEingabe;
 
@@ -31,7 +31,7 @@ import sw.shared.SpielerEingabe;
 
 public class NetServer implements IServer
 {
-    private SpielController _controller;
+    private GameController _controller;
     private ArrayList<Client> _clientListe;
     private double _letztesSnapshot;
     private double _letzteAktualisierung;
@@ -45,7 +45,7 @@ public class NetServer implements IServer
     public NetServer(int port)
     {
         //super(port, false);
-        _controller = new SpielController(this);
+        _controller = new GameController(this);
         _clientListe = new ArrayList<Client>();
         _letztesSnapshot = System.currentTimeMillis();
         _letzteAktualisierung = System.currentTimeMillis();
@@ -163,7 +163,7 @@ public class NetServer implements IServer
         }
         else
         {
-            Paket info = new Paket(Nachrichtentyp.SV_TRENN_INFO);
+            Paket info = new Paket(Pakettype.SV_TRENN_INFO);
             info.fuegeStringAn("Der Server ist voll.");
             this.sendeNachricht(pClientIP, pPartnerPort, info);
             this.beendeVerbindung(pClientIP, pPartnerPort);
@@ -190,7 +190,7 @@ public class NetServer implements IServer
         {
             Paket paket = new Paket(pNachricht);
             
-            if(Nachrichtentyp.CL_START_INFO == paket.Typ() && !client.istImSpiel())
+            if(Pakettype.CL_START_INFO == paket.Typ() && !client.istImSpiel())
             {
                 String name = paket.holeString();
                 Client cl = this.sucheClient(name);
@@ -203,22 +203,22 @@ public class NetServer implements IServer
                 }
                 else
                 {
-                    Paket info = new Paket(Nachrichtentyp.SV_TRENN_INFO);
+                    Paket info = new Paket(Pakettype.SV_TRENN_INFO);
                     info.fuegeStringAn("Der Name \"" + name + "\" wird bereits verwendet.");
                     this.sendeNachricht(pClientIP, pPartnerPort, info);
                     this.beendeVerbindung(pClientIP, pPartnerPort);
                 }
             }
-            else if(Nachrichtentyp.CL_CHAT_NACHRICHT == paket.Typ() && client.istImSpiel())
+            else if(Pakettype.CL_CHAT_NACHRICHT == paket.Typ() && client.istImSpiel())
             {
                 String text = paket.holeString();
-                Paket antwort = new Paket(Nachrichtentyp.SV_CHAT_NACHRICHT);
+                Paket antwort = new Paket(Pakettype.SV_CHAT_NACHRICHT);
                 antwort.fuegeStringAn(client.name());
                 antwort.fuegeStringAn(text);
                 this.sendeRundnachricht(antwort);
                 System.out.println(client.name() + ": " + text);
             }
-            else if(Nachrichtentyp.CL_EINGABE == paket.Typ() && client.istImSpiel())
+            else if(Pakettype.CL_EINGABE == paket.Typ() && client.istImSpiel())
             {
                 _controller.bearbeiteEingabe(client.name(), new SpielerEingabe(paket));
             }

@@ -87,7 +87,7 @@ public class SpielerEingabe
      */
     public Paket pack()
     {
-        Paket paket = new Paket(Nachrichtentyp.CL_EINGABE);
+        Paket paket = new Paket(Pakettype.CL_EINGABE);
         paket.fuegeZahlAn(_bewegung);
         paket.fuegeZahlAn(_drehung);
         paket.fuegeZahlAn(_schuss);

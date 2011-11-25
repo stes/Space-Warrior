@@ -25,7 +25,7 @@ import javax.management.AttributeNotFoundException;
 public class SpielerListe
 {
     // Bezugsobjekte
-    private SpielerDaten[] _liste;
+    private PlayerDataSet[] _liste;
     private SpielerEingabe[] _eingaben;
     // Attribute
 
@@ -37,7 +37,7 @@ public class SpielerListe
      */
     public SpielerListe(int groesse)
     {
-        _liste = new SpielerDaten[groesse];
+        _liste = new PlayerDataSet[groesse];
         _eingaben = new SpielerEingabe[groesse];
     }
 
@@ -47,7 +47,7 @@ public class SpielerListe
      */
     public void leere()
     {
-        _liste = new SpielerDaten[_liste.length];
+        _liste = new PlayerDataSet[_liste.length];
         _eingaben = new SpielerEingabe[_eingaben.length];
     }
     /**
@@ -56,7 +56,7 @@ public class SpielerListe
      * @param spieler Der Datensatz
      * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
      */
-    public void fuegeEin(SpielerDaten spieler, SpielerEingabe eingabe)
+    public void fuegeEin(PlayerDataSet spieler, SpielerEingabe eingabe)
     {
         int index = leererPlatz();
         if (index == -1)
@@ -132,7 +132,7 @@ public class SpielerListe
     /**
      * @return liste
      */
-    public SpielerDaten elementAn(int index)
+    public PlayerDataSet elementAn(int index)
     {
         return _liste[index];
     }
@@ -152,9 +152,9 @@ public class SpielerListe
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört
      */
-    public SpielerDaten suche(String name) throws AttributeNotFoundException
+    public PlayerDataSet suche(String name) throws AttributeNotFoundException
     {
-        SpielerDaten s = versucheSuche(name);
+        PlayerDataSet s = versucheSuche(name);
         if (s != null)
             return s;
         throw new AttributeNotFoundException();
@@ -167,9 +167,9 @@ public class SpielerListe
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
      */
-    public SpielerDaten versucheSuche(String name)
+    public PlayerDataSet versucheSuche(String name)
     {
-        for (SpielerDaten s : _liste)
+        for (PlayerDataSet s : _liste)
         {
             if (s != null && s.name().equals(name))
                 return s;
@@ -188,7 +188,7 @@ public class SpielerListe
     {
         for (int i = 0; i < _liste.length; i++)
         {
-            SpielerDaten s = _liste[i];
+            PlayerDataSet s = _liste[i];
             if (s != null && s.name().equals(name))
             {
                 _eingaben[i] = eingabe;
@@ -222,10 +222,10 @@ public class SpielerListe
      */
     public Paket erstelleSnapshot(String lokalerName)
     {
-        Paket p = new Paket(Nachrichtentyp.SV_SNAPSHOT);
+        Paket p = new Paket(Pakettype.SV_SNAPSHOT);
         p.fuegeZahlAn(this.laenge());
         p.fuegeZahlAn(this.zaehle());
-        for (SpielerDaten s : _liste)
+        for (PlayerDataSet s : _liste)
         {
             if (s != null)
             {
@@ -260,7 +260,7 @@ public class SpielerListe
         int n = p.holeZahl();
         for (int i = 0; i < n; i++)
         {
-           liste.fuegeEin(SpielerDaten.hole(p.holePaket()), null);
+           liste.fuegeEin(PlayerDataSet.hole(p.holePaket()), null);
         }
         return liste;
     }
