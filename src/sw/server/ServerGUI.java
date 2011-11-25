@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes
+ *     Copyright (C) 2011 Redix stes Abbadonn
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 /**
- * @author Alex Belke, Dennis Sternberg, Steffen Schneider
- * @version 15.11.11
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
  */
 
 public class ServerGUI extends JFrame implements ActionListener

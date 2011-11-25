@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes
+ *     Copyright (C) 2011 Redix stes Abbadonn
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ import sw.shared.Spielkonstanten;
 /**
  * Klasse zur Verwaltung von Spielerdaten
  * 
- * @author Alex Belke, Dennis Sternberg, Steffen Schneider
- * @version 15.11.11
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
  */
 public class PlayerDataSet implements Comparable<PlayerDataSet>
 {
@@ -72,32 +72,32 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      * Creates a new Player Dataset
      * 
      * @param name The player's Name
-     * @param lokal true, if player should be local
+     * @param local true, if player should be local
      */
-    public PlayerDataSet(String name, boolean lokal)
+    public PlayerDataSet(String name, boolean local)
     {
         this();
         _name = name;
-        _isLocal = lokal;
+        _isLocal = local;
     }
     /**
-     * Erzeugt eine Instanz der Klasse SpielerDaten
+     * Creates a new Player Dataset out of an existing
      * 
-     * @param daten Der Datensatz, der kopiert werden soll
+     * @param dataset The source dataset which should be copied
      */
-    public PlayerDataSet(PlayerDataSet daten)
+    public PlayerDataSet(PlayerDataSet dataset)
     {
-        _name = daten.name();
-        _isLocal = daten.lokal();
-        _location = daten.position();
-        _direction = daten.richtung();
-        _points = daten.punkte();
+        _name = dataset.name();
+        _isLocal = dataset.lokal();
+        _location = dataset.position();
+        _direction = dataset.richtung();
+        _points = dataset.punkte();
         
         if (_isLocal)
         {
-            _lifepoints = daten.leben();
-            _ammo = daten.munition();
-            _speed = daten.geschwindigkeit();
+            _lifepoints = dataset.leben();
+            _ammo = dataset.munition();
+            _speed = dataset.geschwindigkeit();
         }
     }
     

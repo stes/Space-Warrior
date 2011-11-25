@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes
+ *     Copyright (C) 2011 Redix stes Abbadonn
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -44,8 +44,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 
 /**
-* @author Alex Belke, Dennis Sternberg, Steffen Schneider
-* @version 15.11.11
+* @author Redix, stes, Abbadonn
+* @version 25.11.11
 */
 public class SWFrame extends JFrame implements WindowListener, ClientListener
 {
@@ -113,7 +113,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         //_spielController = new SpielController(_client);  
         //_client.fuegeClientListenerHinzu(_spielController);
         //_client.fuegeClientListenerHinzu(this);
-        _spielfeld = new PlayingFieldGraphics(_spielController.spielerListe());
+        _spielfeld = new PlayingFieldGraphics(_spielController.getPlayerList());
     }
     
     /**
@@ -420,15 +420,15 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     @Override
     public void editSnapshot(Paket paket)
     {
-        if(_spielController.spielerListe().zaehle() == 0)
+        if(_spielController.getPlayerList().zaehle() == 0)
             return;
-        PlayerDataSet[] spielerScore = new PlayerDataSet[_spielController.spielerListe().zaehle()];
+        PlayerDataSet[] spielerScore = new PlayerDataSet[_spielController.getPlayerList().zaehle()];
         int anzahl = 0;
         for(int i = 0; i < Spielkonstanten.MAX_SPIELERZAHL; i++)
         {
-            if(_spielController.spielerListe().elementAn(i) != null)
+            if(_spielController.getPlayerList().elementAn(i) != null)
             {
-                spielerScore[anzahl] = _spielController.spielerListe().elementAn(i);
+                spielerScore[anzahl] = _spielController.getPlayerList().elementAn(i);
                 anzahl++;
             }
         }

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes
+ *     Copyright (C) 2011 Redix stes Abbadonn
  * 
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import java.awt.Toolkit;
 /**
- * @author Alex Belke, Dennis Sternberg, Steffen Schneider
- * @version 15.11.11
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
  */ 
 public class GameController implements AWTEventListener, ClientListener
 {
@@ -63,7 +63,7 @@ public class GameController implements AWTEventListener, ClientListener
     /**
      * @return the Playerlist
      */
-    public PlayerList _playerList()
+    public SpielerListe getPlayerList()
     {
         return _spielerListe;
     }
@@ -182,7 +182,7 @@ public class GameController implements AWTEventListener, ClientListener
         {
             _alterStatus = new SpielerEingabe(_status);
             Paket p = _status.pack();
-            _client.sendeNachricht(p);
+            //_client.sendeNachricht(p);
         }
     }
 }
