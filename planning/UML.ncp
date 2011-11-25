@@ -1,0 +1,212 @@
+<Project>
+  <Name>SpaceWarrior</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Server</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>SpielServer</Name>
+        <Access>Public</Access>
+        <Location left="334" top="196" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private SpielController _controller</Member>
+        <Member type="Method">public void bearbeiteVerbindungsaufbau()</Member>
+        <Member type="Method">public void bearbeiteVerbindungsverlust()</Member>
+        <Member type="Method">public void bearbeiteVerbindungsende()</Member>
+        <Member type="Method">public void bearbeiteNachricht()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SpielController</Name>
+        <Access>Public</Access>
+        <Location left="596" top="196" />
+        <Size width="246" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public SpielController()</Member>
+        <Member type="Method">public void bearbeiteSpielerEingabe()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Server</Name>
+        <Access>Public</Access>
+        <Location left="10" top="207" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Client</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Client</Name>
+        <Access>Public</Access>
+        <Location left="186" top="47" />
+        <Size width="217" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void bearbeiteNachricht()</Member>
+        <Member type="Method">public void bearbeiteVerbindungsverlust()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SpielAnwendung</Name>
+        <Access>Public</Access>
+        <Location left="356" top="302" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Spielfeld _spielfeld</Member>
+        <Member type="Field">private Spieler[] _spieler</Member>
+        <Member type="Field">private Spieler _lokalerSpieler</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Figur</Name>
+        <Access>Public</Access>
+        <Location left="970" top="61" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Clientverbindung</Name>
+        <Access>Public</Access>
+        <Location left="593" top="47" />
+        <Size width="162" height="216" />
+        <Collapsed>True</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Spieler</Name>
+        <Access>Public</Access>
+        <Location left="574" top="412" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void zeichne()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Spielfeld</Name>
+        <Access>Public</Access>
+        <Location left="782" top="222" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Bild _hintergrund</Member>
+        <Member type="Method">public void zeichne()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="1" second="5">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="1" second="4">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Shared</Name>
+    <Language>Java</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Nachrichtentyp</Name>
+        <Access>Public</Access>
+        <Location left="351" top="171" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public final int CL_CHAT_NACHRICHT</Member>
+        <Member type="Field">public final int SV_CHAT_NACHRICHT</Member>
+        <Member type="Field">public final int CL_EINGABE</Member>
+        <Member type="Field">public final int SV_SNAPSHOT</Member>
+        <Member type="Field">public final int SV_SCHUSS</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Spielkonstanten</Name>
+        <Access>Public</Access>
+        <Location left="576" top="335" />
+        <Size width="218" height="308" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public final int MAX_SPIELERZAHL</Member>
+        <Member type="Field">public final int SPIELFELD_HOEHE</Member>
+        <Member type="Field">public final int SPIELFELD_BREITE</Member>
+        <Member type="Field">public final int MAX_SCHADEN</Member>
+        <Member type="Field">public final int MAX_MASTER_SCHADEN</Member>
+        <Member type="Field">public final int SPIELERGROESSE</Member>
+        <Member type="Field">public final int MAX_LEBEN</Member>
+        <Member type="Field">public final int MAX_MUNITION</Member>
+        <Member type="Field">public final int MAX_GESCHWINDIGKEIT</Member>
+        <Member type="Field">public final int MAX_REICHWEITE</Member>
+        <Member type="Field">public final int MAX_MASTER_REICHWEITE</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SpielerDaten</Name>
+        <Access>Public</Access>
+        <Location left="972" top="154" />
+        <Size width="246" height="332" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private String _name</Member>
+        <Member type="Field">private Point _position</Member>
+        <Member type="Field">private int _leben</Member>
+        <Member type="Field">private int _munition</Member>
+        <Member type="Field">private int _richtung</Member>
+        <Member type="Field">private int _geschwindigkeit</Member>
+        <Member type="Field">private int _punkte</Member>
+        <Member type="Field">private boolean _istLokal</Member>
+        <Member type="Constructor">public SpielerDaten(String name, Point position)</Member>
+        <Member type="Method">public void init()</Member>
+        <Member type="Method">public void beschleunige(int betrag)</Member>
+        <Member type="Method">public void bewege()</Member>
+        <Member type="Method">public void dreheUm(int winkel)</Member>
+        <Member type="Method">public void schieße()</Member>
+        <Member type="Method">public void ladeNach()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships />
+  </ProjectItem>
+</Project>
