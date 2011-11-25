@@ -1,8 +1,0 @@
-#BlueJ class context
-comment0.params=name\ nachricht
-comment0.target=void\ sendeNachricht(java.lang.String,\ sw.shared.Paket)
-comment0.text=\r\n\ Sendet\ eine\ Nachricht\ an\ einen\ Client\r\n\ \r\n\ @param\ name\ Name\ des\ Empf\u00E4ngers\r\n\ @param\ nachricht\ Die\ Nachricht\r\n
-comment1.params=nachricht
-comment1.target=void\ sendeRundnachricht(sw.shared.Paket)
-comment1.text=\r\n\ Sendet\ eine\ Nachricht\ an\ alle\ verbundenen\ Clients\r\n\ \r\n\ @param\ nachricht\ Die\ Nachricht\r\n
-numComments=2
