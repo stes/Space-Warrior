@@ -35,50 +35,50 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	
     // Attribute
     private String _name;
-    private Point.Double _position;
-    private int _leben;
-    private int _munition;
-    private double _richtung;
-    private double _geschwindigkeit;
-    private int _punkte;
-    private boolean _istLokal;
+    private Point.Double _location;
+    private int _lifepoints;
+    private int _ammo;
+    private double _direction;
+    private double _speed;
+    private int _points;
+    private boolean _isLocal;
 
     // Bezugsobjekte
     
     // Konstruktor
     /**
-     * Erzeugt eine Instanz der Klasse SpielerDaten
+     * Creates a new Player Dataset
      */
     public PlayerDataSet()
     {
-        _leben = Spielkonstanten.MAX_LEBEN;
-        _munition = Spielkonstanten.MAX_MUNITION;
-        _punkte = 0;
-        _position = new Point.Double(0, 0);
+        _lifepoints = Spielkonstanten.MAX_LEBEN;
+        _ammo = Spielkonstanten.MAX_MUNITION;
+        _points = 0;
+        _location = new Point.Double(0, 0);
     }
     /**
-     * Erzeugt eine Instanz der Klasse SpielerDaten
+     * Creates a new Player Dataset
      * 
-     * @param name Der Name
-     * @param position Die Position
-     * @param lokal true, wenn es sich um den lokalen Spieler handelt
+     * @param name The player's name
+     * @param position the initial location
+     * @param lokal true, if player should be local
      */
-    public PlayerDataSet(String name, Point position, boolean lokal) 
+    public PlayerDataSet(String name, Point position, boolean local) 
     {
-        this(name, lokal);
-        _position = new Point.Double(position.x, position.y);
+        this(name, local);
+        _location = new Point.Double(position.x, position.y);
     }
     /**
-     * Erzeugt eine Instanz der Klasse SpielerDaten
+     * Creates a new Player Dataset
      * 
-     * @param name Der Name
-     * @param lokal true, wenn es sich um den lokalen Spieler handelt
+     * @param name The player's Name
+     * @param lokal true, if player should be local
      */
     public PlayerDataSet(String name, boolean lokal)
     {
         this();
         _name = name;
-        _istLokal = lokal;
+        _isLocal = lokal;
     }
     /**
      * Erzeugt eine Instanz der Klasse SpielerDaten
@@ -88,25 +88,25 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
     public PlayerDataSet(PlayerDataSet daten)
     {
         _name = daten.name();
-        _istLokal = daten.lokal();
-        _position = daten.position();
-        _richtung = daten.richtung();
-        _punkte = daten.punkte();
+        _isLocal = daten.lokal();
+        _location = daten.position();
+        _direction = daten.richtung();
+        _points = daten.punkte();
         
-        if (_istLokal)
+        if (_isLocal)
         {
-            _leben = daten.leben();
-            _munition = daten.munition();
-            _geschwindigkeit = daten.geschwindigkeit();
+            _lifepoints = daten.leben();
+            _ammo = daten.munition();
+            _speed = daten.geschwindigkeit();
         }
     }
     
     @Override
     public int compareTo(PlayerDataSet spieler)
     {
-        if(_punkte < spieler.punkte())
+        if(_points < spieler.punkte())
             return -1;
-        if(_punkte > spieler.punkte())
+        if(_points > spieler.punkte())
             return 1;
         return 0;
     }
@@ -120,8 +120,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public int leben() throws IllegalStateException
     {
-        if (_istLokal)
-            return _leben;
+        if (_isLocal)
+            return _lifepoints;
         else
             throw new IllegalStateException("Spieler ist nicht lokal");
     }
@@ -132,7 +132,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void setzeLeben(int wert)
     {
-        _leben = wert;
+        _lifepoints = wert;
     }
     /**
      * Gibt die aktuelle Munition zurueck
@@ -142,8 +142,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public int munition() throws IllegalStateException
     {
-        if (_istLokal)
-            return _munition;
+        if (_isLocal)
+            return _ammo;
         else
             throw new IllegalStateException("Spieler ist nicht lokal");
     }
@@ -156,7 +156,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
     {
         if (wert >= 0 && wert <= Spielkonstanten.MAX_MUNITION)
         {
-            _munition = wert;
+            _ammo = wert;
         }
         else
         {
@@ -182,7 +182,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public Point.Double position()
     {
-        return _position;
+        return _location;
     }
     /**
      * Weisst der Position einen neuen Wert zu
@@ -203,7 +203,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
         else if (y - Spielkonstanten.SPIELERGROESSE/2 < 0)
             y = Spielkonstanten.SPIELERGROESSE/2;
 
-        _position = new Point.Double(x, y);
+        _location = new Point.Double(x, y);
     }
     /**
      * Weist eine neue Geschwindigkeit zu
@@ -212,11 +212,11 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     protected void setzeGeschwindigkeit(double geschwindigkeit)
     {
-        _geschwindigkeit = geschwindigkeit;
-        if (_geschwindigkeit < 0)
-            _geschwindigkeit = 0;
-        else if (_geschwindigkeit > Spielkonstanten.MAX_GESCHWINDIGKEIT)
-            _geschwindigkeit = Spielkonstanten.MAX_GESCHWINDIGKEIT;
+        _speed = geschwindigkeit;
+        if (_speed < 0)
+            _speed = 0;
+        else if (_speed > Spielkonstanten.MAX_GESCHWINDIGKEIT)
+            _speed = Spielkonstanten.MAX_GESCHWINDIGKEIT;
     }
     /**
      * Gibt die aktuelle Geschwindigkeit zurueck
@@ -226,8 +226,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public double geschwindigkeit() throws IllegalStateException
     {
-        if (_istLokal)
-            return _geschwindigkeit;
+        if (_isLocal)
+            return _speed;
         else
             throw new IllegalStateException("Spieler ist nicht lokal");
     }
@@ -238,7 +238,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public double richtung()
     {
-        return _richtung;
+        return _direction;
     }
     /**
      * Weist eine neue Richtung zu
@@ -247,7 +247,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void setzeRichtung(int value)
     {
-        _richtung = value % 360;
+        _direction = value % 360;
     }
     /**
      * Weist eine neue Richtung zu
@@ -256,7 +256,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void setzeRichtung(double value)
     {
-        _richtung = value % 360;
+        _direction = value % 360;
     }
     /**
      * Gibt den Namen des Spielers zurück
@@ -274,7 +274,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public int punkte()
     {
-        return _punkte;
+        return _points;
     }
     /**
      * Weist der Punktzahl einen neuen Wert zu
@@ -283,14 +283,14 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void setzePunkte(int wert)
     {
-        _punkte = wert;
+        _points = wert;
     }
     /**
      * @return true, wenn der Spieler lokal ist
      */
     public boolean lokal()
     {
-        return _istLokal;
+        return _isLocal;
     }
     //**********************************************************************************************
     /**
@@ -301,7 +301,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
         int rand = Spielkonstanten.SPIELERGROESSE/2+1;
         int x = rand + _random.nextInt(Spielkonstanten.SPIELFELD_BREITE - rand);
         int y = rand + _random.nextInt(Spielkonstanten.SPIELFELD_HOEHE - rand);
-        _position = new Point.Double(x, y);
+        _location = new Point.Double(x, y);
         setzeGeschwindigkeit(0);
         setzeRichtung(rand + _random.nextInt(360));
         setzeLeben(Spielkonstanten.MAX_LEBEN);
@@ -348,13 +348,13 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
     public Shot schiesse(boolean master)
     {
         int noetigeMunition = master ? Spielkonstanten.MUNITION_PRO_MSCHUSS : Spielkonstanten.MUNITION_PRO_SCHUSS;
-        if (_munition >= noetigeMunition)
+        if (_ammo >= noetigeMunition)
         {
-            _munition -= noetigeMunition;
+            _ammo -= noetigeMunition;
             
             double zeit = Spielkonstanten.SCHUSS_LEBENSDAUER / 2 /
                             ((double)Spielkonstanten.SPIELER_AKTUALISIERUNGS_INTERVALL);
-            return new Shot(this.positionNach(zeit), (int)_richtung, master);
+            return new Shot(this.positionNach(zeit), (int)_direction, master);
         }
         return null;
     }
@@ -370,7 +370,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void ladeNach() 
     {
-        _munition += (_munition < Spielkonstanten.MAX_MUNITION-1 ? 1 : 0);
+        _ammo += (_ammo < Spielkonstanten.MAX_MUNITION-1 ? 1 : 0);
     }
     /**
      * Schreibt die Spielerdaten in ein Paket und gibt dieses zurueck
