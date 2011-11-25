@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.server;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
@@ -49,17 +50,17 @@ public class Programm implements WindowListener
         int letzteLaenge = 0;
         while (true)
         {
-            Liste<Client> clientListe = _netServer.clListe();
-            if(clientListe.laenge() != letzteLaenge)
+            ArrayList<Client> clientListe = _netServer.clListe();
+            if(clientListe.size() != letzteLaenge)
             {
-                Vector liste = new Vector();
-                for(int i = 1; i <= clientListe.laenge(); i++)
+                Vector<Client> liste = new Vector<Client>();
+                for(int i = 1; i <= clientListe.size(); i++)
                 {
-                    clientListe.geheZuPosition(i);
-                    liste.add(clientListe.aktuelles());
+                    Client cur = clientListe.get(i);
+                    liste.add(cur);
                 }
                 _serverGUI.setClientList(liste);
-                letzteLaenge = clientListe.laenge();
+                letzteLaenge = clientListe.size();
             }
             _netServer.tick();
         }
@@ -69,7 +70,7 @@ public class Programm implements WindowListener
     {
         if (_netServer != null)
         {
-            _netServer.gibFrei();
+            //_netServer.gibFrei();
             _serverInfo.gibFrei();
         }
     }

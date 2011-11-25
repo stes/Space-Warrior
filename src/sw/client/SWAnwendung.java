@@ -65,7 +65,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     private Spielfeld _spielfeld;
     private SpielController _spielController;
     
-    private NetClient _client;
+    //private NetClient _client;
     private ServerSucher _serverSucher;
     
     // Attribute
@@ -78,9 +78,14 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
         //Initialisierung der Oberklasse
         super();
         this.initKomponenten();
+        
+        this.setVisible(true);
+        this.toFront();
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
         this.initEastereggs();
         //this.bildschirm().addWindowListener(this);
-        this.aktulisiereServerListe();
+        this.aktualisiereServerListe();
     }
     
     /**
@@ -88,9 +93,9 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
      */
     private void initNachVerbindung()
     {
-        _spielController = new SpielController(_client);  
-        _client.fuegeClientListenerHinzu(_spielController);
-        _client.fuegeClientListenerHinzu(this);
+        //_spielController = new SpielController(_client);  
+        //_client.fuegeClientListenerHinzu(_spielController);
+        //_client.fuegeClientListenerHinzu(this);
         _spielfeld = new Spielfeld(_spielController.spielerListe());
     }
     
@@ -103,45 +108,58 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
         
         _txtIPAdresse = new JTextField();
         _txtIPAdresse.setBounds(220, 10, 400, 25);
+        this.add(_txtIPAdresse);
         
         _txtName = new JTextField();
         _txtName.setBounds(220, 50, 400, 25);
+        this.add(_txtName);
         
+        _txtChatnachricht = new JTextField("");
         _txtChatnachricht.setBounds(100, chat+100, 520, 25);
         ////_txtChatnachricht.eventhandlerblablabla("_txtChatnachrichtEingabeBestaetigt");
+        this.add(_txtChatnachricht);
         
         _btnVerbinden = new JButton("Verbinden");
         _btnVerbinden.setBounds(640, 10, 100, 25);
         //_btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
+        this.add(_btnVerbinden);
         
         _btnChat = new JButton("Chat");
         _btnChat.setBounds(640, chat+100, 100, 25);
         //_btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
+        this.add(_btnChat);
         
         _btnAktualisieren = new JButton("Aktualisieren");
         _btnAktualisieren.setBounds(1100, 620, 100, 25);
         //_btnAktualisieren.setzeBearbeiterGeklickt("_btnAktualisierenGeklickt");
+        this.add(_btnAktualisieren);
         
         _lblIPAdresse = new JLabel("IP-Adresse");
         _lblIPAdresse.setBounds(100, 10, 100, 25);
+        this.add(_lblIPAdresse);
         
         _lblName = new JLabel("Name");
         _lblName.setBounds(100, 50, 100, 25);
+        this.add(_lblName);
         
         _lstChatverlauf = new JTextArea();
         _lstChatverlauf.setBounds(100, chat, 645, 90);
+        this.add(_lstChatverlauf);
         
         _punkteListe = new JTable(Spielkonstanten.MAX_SPIELERZAHL, 2);
         _punkteListe.setBounds(1100, 100, 200, 150);
+        this.add(_punkteListe);
         
         _punkteListe.getColumnModel().getColumn(0).setHeaderValue("Spieler");
         _punkteListe.getColumnModel().getColumn(1).setHeaderValue("Punkte");
+        this.add(_punkteListe);
         
         _serverListe = new JTable(0, 3);
         _serverListe.setBounds(1100, 300, 200, 300);
         _serverListe.getColumnModel().getColumn(0).setHeaderValue("Server");
         _serverListe.getColumnModel().getColumn(1).setHeaderValue("Spieler/Max");
         _serverListe.getColumnModel().getColumn(0).setWidth(110);
+        this.add(_serverListe);
         //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
     }
     
@@ -156,14 +174,14 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     /**
     * guckt ob der Verbindenbutton geklickt wurde
     */
-    public void _btnVerbindenGeklickt()
+    /*public void _btnVerbindenGeklickt()
     {
         if ( !_txtName.getText().isEmpty())
         {
             this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
         }
  
-    }
+    }*/
     
     /**
     * guckt ob der Chatbutton gedrückt wurde
@@ -176,7 +194,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     /**
      * aktualisiert die Serverliste
      */
-    private void aktulisiereServerListe()
+    private void aktualisiereServerListe()
     {
         if(_serverSucher == null)
         {
@@ -192,7 +210,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     */
     public void _btnAktualisierenGeklickt()
     {
-        this.aktulisiereServerListe();
+        this.aktualisiereServerListe();
     }
     
     private void initEastereggs()
@@ -278,13 +296,13 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     {
         Paket chat = new Paket(Nachrichtentyp.CL_CHAT_NACHRICHT);
         chat.fuegeStringAn(chatNachricht);
-        _client.sendeNachricht(chat);
+        //_client.sendeNachricht(chat);
     }
     
     /**
      * Verbindet den Client mit einem Server.
      */
-    private void verbinde(String ip, String name)
+    /*private void verbinde(String ip, String name)
     {
         if(_client != null)
             return;
@@ -302,7 +320,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
             _client.gibFrei();
             _client = null;
         }
-    }
+    }*/
     
     private void deaktiviereElemente()
     {
@@ -346,7 +364,7 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     @Override
     public void windowClosing(WindowEvent e)
     {
-        if (_client != null)
+        //if (_client != null)
         {
             //_client.gibFrei();
         }
@@ -359,29 +377,29 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
     public void bearbeiteServerGefunden(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
     {
         //_serverListe.();  new line
-        _serverListe.setzeInhaltAn(serverName, _serverListe.zeilenanzahl(), 1);
-        _serverListe.setzeInhaltAn(spielerZahl + "/" + maxSpielerZahl, _serverListe.zeilenanzahl(), 2);
-        _serverListe.setzeInhaltAn(serverIp, _serverListe.zeilenanzahl(), 3);
+        _serverListe.setValueAt(serverName, _serverListe.getRowCount()-1, 0);
+        _serverListe.setValueAt(spielerZahl + "/" + maxSpielerZahl, _serverListe.getRowCount()-1, 1);
+        _serverListe.setValueAt(serverIp, _serverListe.getRowCount()-1, 2);
     }
     
     @Override
     public void bearbeiteTrennung(String grund)
     {
-        if (_client != null)
+        //if (_client != null)
         {
-            _client.gibFrei();
-            _client = null;
-            _spielfeld.verstecke();
-            _spielfeld.gibFrei();
+            //_client.gibFrei();
+            //_client = null;
+            //_spielfeld.verstecke();
+            //_spielfeld.gibFrei();
         }
         this.aktiviereElemente();
-        _lstChatverlauf.haengeAn(grund);
+        _lstChatverlauf.append(grund);
     }
     
     @Override
     public void bearbeiteChatNachricht(String name, String text)
     {
-        _lstChatverlauf.haengeAn(name + ": " + text);
+        _lstChatverlauf.append(name + ": " + text);
     }
     
     @Override
@@ -402,15 +420,15 @@ public class SWAnwendung extends JFrame implements WindowListener, ClientListene
         
         java.util.Arrays.sort(spielerScore);
         
-        for(int i = 1; i <= spielerScore.length; i++)
+        for(int i = 0; i < spielerScore.length; i++)
         {
-            _punkteListe.setzeInhaltAn(spielerScore[spielerScore.length-i].name(), i, 1);
-            _punkteListe.setzeInhaltAn(spielerScore[spielerScore.length-i].punkte(), i, 2);
+            _punkteListe.setValueAt(spielerScore[spielerScore.length-i].name(), i, 0);
+            _punkteListe.setValueAt(spielerScore[spielerScore.length-i].punkte(), i, 1);
         }
-        for(int i = spielerScore.length+1; i <= _punkteListe.zeilenanzahl(); i++)
+        for(int i = spielerScore.length; i < _punkteListe.getRowCount(); i++)
         {
-            _punkteListe.setzeInhaltAn("", i, 1);
-            _punkteListe.setzeInhaltAn("", i, 2);
+            _punkteListe.setValueAt("", i, 0);
+            _punkteListe.setValueAt("", i, 1);
         }
     }
     

@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sw.client;
 
-import sum.netz.Clientverbindung;
-
 import java.util.ArrayList;
 
 import sw.shared.Nachrichtentyp;
@@ -28,7 +26,7 @@ import sw.shared.Paket;
  * @author Alex Belke, Dennis Sternberg, Steffen Schneider
  * @version 15.11.11
  */
-public class NetClient extends Clientverbindung implements IClient
+public class NetClient implements IClient
 {
     private String _letzterTrennGrund;
 
@@ -42,7 +40,7 @@ public class NetClient extends Clientverbindung implements IClient
      */
     public NetClient(String ip, int port, String name)
     {
-        super(ip, port, false);
+        //super(ip, port, false);
         _clientListener = new ArrayList<ClientListener>();
         this.setzeTrennGrundZurueck();
         Paket start = new Paket(Nachrichtentyp.CL_START_INFO);

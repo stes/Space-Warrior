@@ -17,9 +17,8 @@
  ******************************************************************************/
 package sw.server;
 
-import sum.netz.Server;
-import sum.strukturen.Liste;
-import sum.werkzeuge.Uhr;
+import java.util.ArrayList;
+
 import sw.shared.Paket;
 import sw.shared.Nachrichtentyp;
 import sw.shared.Spielkonstanten;
@@ -30,11 +29,10 @@ import sw.shared.SpielerEingabe;
  * @version 15.11.11
  */
 
-public class NetServer extends Server implements IServer
+public class NetServer implements IServer
 {
     private SpielController _controller;
-    private Liste<Client> _clientListe;
-    private Uhr _uhr;
+    private ArrayList<Client> _clientListe;
     private double _letztesSnapshot;
     private double _letzteAktualisierung;
     private String _serverName;
@@ -46,13 +44,11 @@ public class NetServer extends Server implements IServer
      */
     public NetServer(int port)
     {
-        super(port, false);
+        //super(port, false);
         _controller = new SpielController(this);
-        _clientListe = new Liste();
-        _uhr = new Uhr();
-        _uhr.starte();
-        _letztesSnapshot = _uhr.verstricheneZeit();
-        _letzteAktualisierung = _uhr.verstricheneZeit();
+        _clientListe = new ArrayList<Client>();
+        _letztesSnapshot = System.currentTimeMillis();
+        _letzteAktualisierung = System.currentTimeMillis();
         this.setzeServerName("Server");
         System.out.println("Server wird gestartet an Port " + port);
     }
@@ -67,11 +63,11 @@ public class NetServer extends Server implements IServer
     private Client sucheClient(String ip, int port)
     {
         String adresse = ip + ":" + port;
-        for(int i = 1; i <= _clientListe.laenge(); i++)
+        for(int i = 1; i <= _clientListe.size(); i++)
         {
-            _clientListe.geheZuPosition(i);
-            if(adresse.equals(_clientListe.aktuelles().adresse()))
-                return _clientListe.aktuelles();
+            Client cur = _clientListe.get(i);
+            if(adresse.equals(cur.adresse()))
+                return cur;
         }
         return null;
     }
@@ -84,11 +80,11 @@ public class NetServer extends Server implements IServer
      */
     private Client sucheClient(String name)
     {
-        for(int i = 1; i <= _clientListe.laenge(); i++)
+        for(int i = 1; i <= _clientListe.size(); i++)
         {
-            _clientListe.geheZuPosition(i);
-            if(name.equals(_clientListe.aktuelles().name()))
-                return _clientListe.aktuelles();
+        	Client cur = _clientListe.get(i);
+            if(name.equals(cur.name()))
+                return cur;
         }
         return null;
     }
@@ -102,17 +98,17 @@ public class NetServer extends Server implements IServer
     private void entferneClient(String ip, int port)
     {
         String adresse = ip + ":" + port;
-        for(int i = 1; i <= _clientListe.laenge(); i++)
+        for(int i = 1; i <= _clientListe.size(); i++)
         {
-            _clientListe.geheZuPosition(i);
-            if(adresse.equals(_clientListe.aktuelles().adresse()))
+        	Client cur = _clientListe.get(i);
+            if(adresse.equals(cur.adresse()))
             {
-                if(_clientListe.aktuelles().istImSpiel())
+                if(cur.istImSpiel())
                 {
-                    _controller.bearbeiteSpielerVerlaesst(_clientListe.aktuelles().name());
+                    _controller.bearbeiteSpielerVerlaesst(cur.name());
                 }
-                System.out.println("'" + _clientListe.aktuelles().name() + "' hat die Verbindung zum Server getrennt");
-                _clientListe.entferneAktuelles();
+                System.out.println("'" + cur.name() + "' hat die Verbindung zum Server getrennt");
+                _clientListe.remove(i);
             }
         }
     }
@@ -126,7 +122,7 @@ public class NetServer extends Server implements IServer
      */
     private void sendeNachricht(String ip, int port, Paket nachricht)
     {
-        this.sendeAnEinen(ip, port, nachricht.toString());
+        //this.sendeAnEinen(ip, port, nachricht.toString());
     }
     
     /**
@@ -160,10 +156,10 @@ public class NetServer extends Server implements IServer
     public void bearbeiteVerbindungsaufbau(String pClientIP, int pPartnerPort)
     {
         System.out.println("Ein neuer Client versucht zu verbinden (" + pClientIP + ")");
-        if(_clientListe.laenge() < Spielkonstanten.MAX_SPIELERZAHL)
+        if(_clientListe.size() < Spielkonstanten.MAX_SPIELERZAHL)
         {
             Client neuerClient = new Client(pClientIP, pPartnerPort, "unbekannt");
-            _clientListe.haengeAn(neuerClient);
+            _clientListe.add(neuerClient);
         }
         else
         {
@@ -234,11 +230,11 @@ public class NetServer extends Server implements IServer
      */
     public void tick()
     {
-        if (_uhr == null || _controller == null)
+        if (_controller == null)
         {
             return;
         }
-        double aktZeit = _uhr.verstricheneZeit();
+        double aktZeit = System.currentTimeMillis();
         if(aktZeit - _letzteAktualisierung > Spielkonstanten.SPIELER_AKTUALISIERUNGS_INTERVALL)
         {
             _controller.bearbeiteLeerlauf();
@@ -272,11 +268,11 @@ public class NetServer extends Server implements IServer
         Paket info = new Paket((char)0);
         info.fuegeStringAn(_serverName);
         info.fuegeZahlAn(Spielkonstanten.MAX_SPIELERZAHL);
-        info.fuegeZahlAn(_clientListe.laenge());
+        info.fuegeZahlAn(_clientListe.size());
         return info;
     }
     
-    protected Liste<Client> clListe()
+    protected ArrayList<Client> clListe()
     {
         return _clientListe;
     }

@@ -24,6 +24,7 @@ public class Programm
 {
     public static void main(String[] args)
     {
-        (new SWAnwendung()).fuehreAus();
+        SWAnwendung swa = new SWAnwendung();
+        
     }
 }
