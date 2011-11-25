@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sw.server;
 
-import sum.strukturen.Tabelle;
-
 import sw.shared.Spielkonstanten;
 import sw.shared.SpielerDaten;
 import sw.shared.SpielerListe;

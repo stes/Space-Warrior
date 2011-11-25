@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.shared;
 
-import sum.werkzeuge.Rechner;
+import java.util.Random;
 
 import sw.shared.Spielkonstanten;
 
@@ -29,6 +29,8 @@ import sw.shared.Spielkonstanten;
  */
 public class SpielerDaten implements Comparable<SpielerDaten>
 {
+	private static Random _random = new Random();
+	
     // Attribute
     private String _name;
     private Punkt _position;
@@ -40,7 +42,6 @@ public class SpielerDaten implements Comparable<SpielerDaten>
     private boolean _istLokal;
 
     // Bezugsobjekte
-    private Rechner _rechner;
     
     // Konstruktor
     /**
@@ -74,7 +75,6 @@ public class SpielerDaten implements Comparable<SpielerDaten>
     public SpielerDaten(String name, boolean lokal)
     {
         this();
-        _rechner = new Rechner();
         _name = name;
         _istLokal = lokal;
     }
@@ -297,11 +297,11 @@ public class SpielerDaten implements Comparable<SpielerDaten>
     public void init() 
     {
         int rand = Spielkonstanten.SPIELERGROESSE/2+1;
-        int x = _rechner.ganzeZufallsZahl(rand, Spielkonstanten.SPIELFELD_BREITE - rand);
-        int y = _rechner.ganzeZufallsZahl(rand, Spielkonstanten.SPIELFELD_HOEHE - rand);
+        int x = rand + _random.nextInt(Spielkonstanten.SPIELFELD_BREITE - rand);
+        int y = rand + _random.nextInt(Spielkonstanten.SPIELFELD_HOEHE - rand);
         _position = new Punkt(x, y);
         setzeGeschwindigkeit(0);
-        setzeRichtung(_rechner.ganzeZufallsZahl(rand, 360));
+        setzeRichtung(rand + _random.nextInt(360));
         setzeLeben(Spielkonstanten.MAX_LEBEN);
         setzeMunition(Spielkonstanten.MAX_MUNITION);
     }

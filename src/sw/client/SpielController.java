@@ -26,8 +26,6 @@ import sw.shared.Schuss;
 import sw.shared.Paket;
 import sw.shared.Punkt;
 
-import sum.multimedia.Bild;
-
 import java.awt.event.AWTEventListener;
 import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;

@@ -17,10 +17,6 @@
  ******************************************************************************/
 package sw.client;
 
-import sum.komponenten.*;
-import sum.ereignis.*;
-import sum.werkzeuge.Uhr;
-
 import sw.shared.Punkt;
 import sw.shared.Spielkonstanten;
 import sw.shared.Nachrichtentyp;
@@ -37,34 +33,40 @@ import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.IOException;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 
 /**
 * @author Alex Belke, Dennis Sternberg, Steffen Schneider
 * @version 15.11.11
 */
-public class SWAnwendung extends EBAnwendung implements WindowListener, ClientListener
+public class SWAnwendung extends JFrame implements WindowListener, ClientListener
 {
     // Objekte    
     private BfInterpreter _bfInterpreter;
-    private Textfeld _txtIPAdresse;
-    private Textfeld _txtName;
-    private Textfeld _txtChatnachricht;
-    private Knopf _btnVerbinden;
-    private Knopf _btnChat;
-    private Knopf _btnAktualisieren;
-    private Etikett _lblIPAdresse;
-    private Etikett _lblName;
-    private Zeilenbereich _lstChatverlauf;
-    private Tabelle _punkteListe;
-    private Tabelle _serverListe;
+    private JTextField _txtIPAdresse;
+    private JTextField _txtName;
+    private JTextField _txtChatnachricht;
+    private AbstractButton _btnVerbinden;
+    private AbstractButton _btnChat;
+    private AbstractButton _btnAktualisieren;
+    private JLabel _lblIPAdresse;
+    private JLabel _lblName;
+    private JTextArea _lstChatverlauf;
+    private JTable _punkteListe;
+    private JTable _serverListe;
     
     private Spielfeld _spielfeld;
     private SpielController _spielController;
     
     private NetClient _client;
     private ServerSucher _serverSucher;
-    
-    private Uhr _uhr;
     
     // Attribute
     
@@ -74,11 +76,10 @@ public class SWAnwendung extends EBAnwendung implements WindowListener, ClientLi
     public SWAnwendung()
     {
         //Initialisierung der Oberklasse
-        super(1467, 954, true);
+        super();
         this.initKomponenten();
         this.initEastereggs();
-        this.bildschirm().addWindowListener(this);
-        _uhr = new Uhr();
+        //this.bildschirm().addWindowListener(this);
         this.aktulisiereServerListe();
     }
     
@@ -100,24 +101,20 @@ public class SWAnwendung extends EBAnwendung implements WindowListener, ClientLi
     {
         int chat = 700;
         
-        _txtIPAdresse = new Textfeld(220, 10, 400, 25, "");
-        // Ausrichtung
-        _txtIPAdresse.setzeAusrichtung(Ausrichtung.LINKS);
+        _txtIPAdresse = new JTextField();
+        _txtIPAdresse.setBounds(220, 10, 400, 25);
         
-        _txtName = new Textfeld(220, 50, 400, 25, "");
-        // Ausrichtung
-        _txtName.setzeAusrichtung(Ausrichtung.LINKS);
+        _txtName = new JTextField();
+        _txtName.setBounds(220, 50, 400, 25);
         
-        _txtChatnachricht = new Textfeld(100, chat+100, 520, 25, "");
-        // Ausrichtung
-        _txtChatnachricht.setzeAusrichtung(Ausrichtung.LINKS);
+        _txtChatnachricht.setBounds(100, chat+100, 520, 25);
         
-        _txtChatnachricht.setzeBearbeiterEingabeBestaetigt("_txtChatnachrichtEingabeBestaetigt");
-        _btnVerbinden = new Knopf(640, 10, 100, 25, "Verbinden");
+        _txtChatnachricht.eventhandlerblablabla("_txtChatnachrichtEingabeBestaetigt");
+        _btnVerbinden = new JButton(640, 10, 100, 25, "Verbinden");
         _btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
-        _btnChat = new Knopf(640, chat+100, 100, 25, "Chat");
+        _btnChat = new JButton(640, chat+100, 100, 25, "Chat");
         _btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
-        _btnAktualisieren = new Knopf(1100, 620, 100, 25, "Aktualisieren");
+        _btnAktualisieren = new JButton(1100, 620, 100, 25, "Aktualisieren");
         _btnAktualisieren.setzeBearbeiterGeklickt("_btnAktualisierenGeklickt");
         _lblIPAdresse = new Etikett(100, 10, 100, 25, "IP-Adresse");
         // Ausrichtung

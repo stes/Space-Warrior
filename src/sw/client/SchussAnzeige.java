@@ -22,9 +22,6 @@ import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import sum.werkzeuge.Uhr;
-import sum.ereignis.Buntstift;
-
 import sw.shared.Schuss;
 import sw.shared.Spielkonstanten;
 import sw.shared.Punkt;
@@ -35,7 +32,6 @@ import sw.shared.Punkt;
  */
 public class SchussAnzeige extends Schuss
 {
-    private static Uhr _uhr = new Uhr();
     private static boolean _istBereit;
     
     // Bezugsobjekte
@@ -48,13 +44,9 @@ public class SchussAnzeige extends Schuss
     public SchussAnzeige(Schuss s)
     {
         super(s.startPunkt(), s.richtung(), s.istMaster());
-        if (!_istBereit)
-        {
-            _uhr.starte();
-            _istBereit = true;
-        }
         _basisFarbe = Color.BLUE;
-        _startZeit = _uhr.verstricheneZeit();
+        _startZeit = System.currentTimeMillis();
+        _istBereit = true;
     }
 
     // Dienste
@@ -73,7 +65,7 @@ public class SchussAnzeige extends Schuss
     
     private double alter()
     {
-        return _uhr.verstricheneZeit() - _startZeit;
+        return System.currentTimeMillis() - _startZeit;
     }
     
     private double alpha(double zeit)

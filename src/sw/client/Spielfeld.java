@@ -25,22 +25,22 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
 
+import javax.swing.JPanel;
+
 import sw.shared.SpielerListe;
 import sw.shared.SpielerDaten;
 import sw.shared.Spielkonstanten;
 
-import sum.multimedia.Bild;
-import sum.ereignis.Farbe;
-import sum.ereignis.Muster;
 /**
  * @author Alex Belke, Dennis Sternberg, Steffen Schneider
  * @version 15.11.11
  */
-public class Spielfeld extends Bild
+public class Spielfeld extends JPanel
 {
     private SpielerListe _spieler;
-    private BufferedImage _spielerBild;
-    private BufferedImage _gegnerBild;
+    private BufferedImage _localPlayerImg;
+    private BufferedImage _opposingPlayerImg;
+    private BufferedImage _backgroundImg;
     
     /**
      * Spielfeld wird erzeugt
@@ -48,15 +48,9 @@ public class Spielfeld extends Bild
      */
     public Spielfeld(SpielerListe spielerListe)
     {
-        super(
-            Spielkonstanten.BEZUGSPUNKT_X, 
-            Spielkonstanten.BEZUGSPUNKT_Y, 
-            Spielkonstanten.SPIELFELD_BREITE, 
-            Spielkonstanten.SPIELFELD_HOEHE);
-        String s = System.getProperty("user.dir") + "\\Hintergrund.png";
-        this.ladeBild(s);
-        _spielerBild = BilderContainer.lokaleInstanz().spielerBild();
-        _gegnerBild = BilderContainer.lokaleInstanz().gegnerBild();
+        super();
+        _localPlayerImg = BilderContainer.lokaleInstanz().spielerBild();
+        _opposingPlayerImg = BilderContainer.lokaleInstanz().gegnerBild();
         _spieler = spielerListe;
         SchussPool.init(this);
     }
@@ -78,7 +72,7 @@ public class Spielfeld extends Bild
             {
                 this.zeigeStatusbalken(g2d, d);
                 g2d.drawImage(
-                    rotateImage(_spielerBild, 180-d.richtung()),
+                    rotateImage(_localPlayerImg, 180-d.richtung()),
                     null,
                     (int)d.position().getX() - Spielkonstanten.SPIELERGROESSE/2,
                     (int)d.position().getY() - Spielkonstanten.SPIELERGROESSE/2);
@@ -86,7 +80,7 @@ public class Spielfeld extends Bild
             else
             {
                 g2d.drawImage(
-                    rotateImage(_gegnerBild, 180-d.richtung()),
+                    rotateImage(_opposingPlayerImg, 180-d.richtung()),
                     null,
                     (int)d.position().getX() - Spielkonstanten.SPIELERGROESSE/2,
                     (int)d.position().getY() - Spielkonstanten.SPIELERGROESSE/2);

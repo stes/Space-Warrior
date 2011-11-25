@@ -32,8 +32,10 @@ public class BilderContainer
     // Bezugsobjekte
     private static BilderContainer _ich;
     
-    private BufferedImage _spielerBild;
-    private BufferedImage _gegnerBild;
+    private BufferedImage _localPlayerImg;
+    private BufferedImage _opposingPlayerImg;
+    private BufferedImage _backgroundImg;
+    
     // Attribute
 
     // Konstruktor
@@ -41,8 +43,9 @@ public class BilderContainer
     {
         try
         {
-            _spielerBild = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship3Grey.gif"));
-            _gegnerBild = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship2Grey.gif"));
+        	_backgroundImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Hintergrund.png"));
+            _localPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship3Grey.gif"));
+            _opposingPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship2Grey.gif"));
         }
         catch (IOException e)
         {
@@ -53,12 +56,17 @@ public class BilderContainer
     // Dienste
     public BufferedImage spielerBild()
     {
-        return _spielerBild.getSubimage(0, 0, _spielerBild.getWidth(), _spielerBild.getHeight());
+        return _localPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
     }
     
     public BufferedImage gegnerBild()
     {
-        return _gegnerBild.getSubimage(0, 0, _spielerBild.getWidth(), _spielerBild.getHeight());
+        return _opposingPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
+    }
+    
+    public BufferedImage hintergrundBild()
+    {
+    	return _backgroundImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
     }
     
     public static BilderContainer lokaleInstanz()
