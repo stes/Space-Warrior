@@ -22,7 +22,7 @@ import java.util.Vector;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -36,7 +36,7 @@ public class Program implements WindowListener
     public Program()
     {
         _serverGUI = new ServerGUI(800, 400);
-        _netServer = new NetServer(Spielkonstanten.STANDARD_PORT);
+        _netServer = new NetServer(GameConstants.STANDARD_PORT);
         _serverGUI.setNetServer(_netServer);
         _serverInfo = new ServerInfo(_netServer);
         _serverInfo.start();

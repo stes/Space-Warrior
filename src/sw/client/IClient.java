@@ -25,7 +25,6 @@ import sw.shared.Paket;
 
 public interface IClient
 {
-    // Dienste
     /**
      * sends a message to the server
      * 

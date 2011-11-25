@@ -31,7 +31,7 @@ public interface ClientListener
      * 
      * @param grund Der Trenngrund
      */
-    public void bearbeiteTrennung(String grund);
+    public void connectionLost(String grund);
     
     /**
      * Wird ausgeführt, wenn eine Chatnachricht erhalten wurde
@@ -39,19 +39,19 @@ public interface ClientListener
      * @param name Der Name des Absenders
      * @param text Der Text, der gesendet wurde
      */
-    public void bearbeiteChatNachricht(String name, String text);
+    public void chatMessage(String name, String text);
     
     /**
      * Wird ausgeführt, wenn der Client einen Snapshot empfängt
      * 
      * @param paket Der Snapshot
      */
-    public void editSnapshot(Paket paket);
+    public void snapshot(Paket paket);
     
     /**
      * Wird ausgeführt, wenn der Client einen Schuss empfängt
      * 
      * @param paket Der Schuss
      */
-    public void bearbeiteSchuss(Paket paket);
+    public void shot(Paket paket);
 }

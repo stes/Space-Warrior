@@ -43,7 +43,7 @@ public class ShotPool
         {
             for (int i = 0; i < _schuesse.size(); i++)
             {
-                if (_schuesse.get(i).istVeraltet())
+                if (_schuesse.get(i).getIsOutOfDate())
                 {
                     _schuesse.remove(i);
                     _spielfeld.repaint();
@@ -61,7 +61,7 @@ public class ShotPool
      * 
      * @param shot Der Schuss
      */
-    public static void fuegeSchussHinzu(Shot shot)
+    public static void addShot(Shot shot)
     {
         _schuesse.add(new ShotGraphics(shot));
     }

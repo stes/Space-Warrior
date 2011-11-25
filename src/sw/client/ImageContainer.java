@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
 public class ImageContainer
 {
     // Bezugsobjekte
-    private static ImageContainer _ich;
+    private static ImageContainer _self;
     
     private BufferedImage _localPlayerImg;
     private BufferedImage _opposingPlayerImg;
@@ -54,32 +54,32 @@ public class ImageContainer
     }
 
     // Dienste
-    public BufferedImage spielerBild()
+    public BufferedImage getLocalPlayerImg()
     {
         return _localPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
     }
     
-    public BufferedImage gegnerBild()
+    public BufferedImage getOpposingPlayerImg()
     {
         return _opposingPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
     }
     
-    public BufferedImage hintergrundBild()
+    public BufferedImage getBackgroundImg()
     {
     	return _backgroundImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
     }
     
-    public static ImageContainer lokaleInstanz()
+    public static ImageContainer getLocalInstance()
     {
-        if (_ich == null)
+        if (_self == null)
         {
             ImageContainer.init();
         }
-        return _ich;
+        return _self;
     }
     
     public static void init()
     {
-        _ich = new ImageContainer();
+        _self = new ImageContainer();
     }
 }

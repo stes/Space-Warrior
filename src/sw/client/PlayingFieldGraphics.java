@@ -27,9 +27,9 @@ import java.awt.GradientPaint;
 
 import javax.swing.JPanel;
 
-import sw.shared.SpielerListe;
+import sw.shared.PlayerList;
 import sw.shared.PlayerDataSet;
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -37,7 +37,7 @@ import sw.shared.Spielkonstanten;
  */
 public class PlayingFieldGraphics extends JPanel
 {
-    private SpielerListe _spieler;
+    private PlayerList _spieler;
     private BufferedImage _localPlayerImg;
     private BufferedImage _opposingPlayerImg;
     private BufferedImage _backgroundImg;
@@ -46,12 +46,12 @@ public class PlayingFieldGraphics extends JPanel
      * Spielfeld wird erzeugt
      * 
      */
-    public PlayingFieldGraphics(SpielerListe spielerListe)
+    public PlayingFieldGraphics(PlayerList playerList)
     {
         super();
-        _localPlayerImg = ImageContainer.lokaleInstanz().spielerBild();
-        _opposingPlayerImg = ImageContainer.lokaleInstanz().gegnerBild();
-        _spieler = spielerListe;
+        _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
+        _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
+        _spieler = playerList;
         ShotPool.init(this);
     }
     /**
@@ -74,16 +74,16 @@ public class PlayingFieldGraphics extends JPanel
                 g2d.drawImage(
                     rotateImage(_localPlayerImg, 180-d.richtung()),
                     null,
-                    (int)d.position().getX() - Spielkonstanten.SPIELERGROESSE/2,
-                    (int)d.position().getY() - Spielkonstanten.SPIELERGROESSE/2);
+                    (int)d.position().getX() - GameConstants.SPIELERGROESSE/2,
+                    (int)d.position().getY() - GameConstants.SPIELERGROESSE/2);
             }
             else
             {
                 g2d.drawImage(
                     rotateImage(_opposingPlayerImg, 180-d.richtung()),
                     null,
-                    (int)d.position().getX() - Spielkonstanten.SPIELERGROESSE/2,
-                    (int)d.position().getY() - Spielkonstanten.SPIELERGROESSE/2);
+                    (int)d.position().getX() - GameConstants.SPIELERGROESSE/2,
+                    (int)d.position().getY() - GameConstants.SPIELERGROESSE/2);
             }   
         }
     }
@@ -92,8 +92,8 @@ public class PlayingFieldGraphics extends JPanel
     {
         g2d.setStroke(new BasicStroke(15));
        
-        int start_x = Spielkonstanten.BALKEN_X;
-        int end_x = start_x + d.leben() * Spielkonstanten.BALKEN_LAENGE / Spielkonstanten.MAX_LEBEN;
+        int start_x = GameConstants.BALKEN_X;
+        int end_x = start_x + d.leben() * GameConstants.BALKEN_LAENGE / GameConstants.MAX_LEBEN;
         int y = 10;
         GradientPaint pat
            = new GradientPaint(start_x, 10, Color.RED,
@@ -101,7 +101,7 @@ public class PlayingFieldGraphics extends JPanel
         g2d.setPaint(pat);
         g2d.drawLine(start_x, y, end_x, y);
         
-        end_x = start_x + d.munition() * Spielkonstanten.BALKEN_LAENGE / Spielkonstanten.MAX_MUNITION;
+        end_x = start_x + d.munition() * GameConstants.BALKEN_LAENGE / GameConstants.MAX_MUNITION;
         y = 30;
         pat
            = new GradientPaint(start_x, 10, Color.GRAY,

@@ -145,7 +145,7 @@ public class ServerGUI extends JFrame implements ActionListener
     		Client cl = (Client)_clientList.getSelectedValue();
     		if(_netServer != null && cl != null)
     		{
-    		    _netServer.beendeVerbindung(cl.ip(), cl.port());
+    		    _netServer.beendeVerbindung(cl.ip(), cl.getPort());
     		}
     	}
     	else

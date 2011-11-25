@@ -20,7 +20,7 @@ package sw.server;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 import sw.shared.Paket;
 /**
  * @author Redix, stes, Abbadonn
@@ -38,7 +38,7 @@ public class ServerInfo extends Thread
         _netServer = netServer;
         try
         {
-            _socket = new DatagramSocket(Spielkonstanten.STANDARD_PORT);
+            _socket = new DatagramSocket(GameConstants.STANDARD_PORT);
         }
         catch (Exception e)
         {
@@ -71,10 +71,10 @@ public class ServerInfo extends Thread
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 _socket.receive(packet);
                 String msg = new String(buffer, 0, packet.getLength());
-                if(msg.equals(Spielkonstanten.SERVER_INFO_ANFRAGE))
+                if(msg.equals(GameConstants.SERVER_INFO_ANFRAGE))
                 {
                     Paket info = _netServer.holeServerInfos();
-                    byte[] buf = (Spielkonstanten.SERVER_INFO_ANTWORT + info.toString()).getBytes();
+                    byte[] buf = (GameConstants.SERVER_INFO_ANTWORT + info.toString()).getBytes();
                     DatagramPacket response = new DatagramPacket(buf, buf.length);
                     response.setSocketAddress(packet.getSocketAddress());
                     _socket.send(response);

@@ -22,11 +22,11 @@ import javax.management.AttributeNotFoundException;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SpielerListe
+public class PlayerList
 {
     // Bezugsobjekte
     private PlayerDataSet[] _liste;
-    private SpielerEingabe[] _eingaben;
+    private PlayerInput[] _eingaben;
     // Attribute
 
     // Konstruktor
@@ -35,10 +35,10 @@ public class SpielerListe
      * 
      * @param groesse Die groesse der Liste 
      */
-    public SpielerListe(int groesse)
+    public PlayerList(int groesse)
     {
         _liste = new PlayerDataSet[groesse];
-        _eingaben = new SpielerEingabe[groesse];
+        _eingaben = new PlayerInput[groesse];
     }
 
     // Dienste
@@ -48,7 +48,7 @@ public class SpielerListe
     public void leere()
     {
         _liste = new PlayerDataSet[_liste.length];
-        _eingaben = new SpielerEingabe[_eingaben.length];
+        _eingaben = new PlayerInput[_eingaben.length];
     }
     /**
      * Fügt der Liste einen neuen Datensatz hinzu
@@ -56,7 +56,7 @@ public class SpielerListe
      * @param spieler Der Datensatz
      * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
      */
-    public void fuegeEin(PlayerDataSet spieler, SpielerEingabe eingabe)
+    public void fuegeEin(PlayerDataSet spieler, PlayerInput eingabe)
     {
         int index = leererPlatz();
         if (index == -1)
@@ -64,7 +64,7 @@ public class SpielerListe
             throw new ArrayIndexOutOfBoundsException("Kein Platz in der Liste");
         }
         _liste[index] = spieler;
-        _eingaben[index] = (eingabe == null ? new SpielerEingabe() : eingabe);
+        _eingaben[index] = (eingabe == null ? new PlayerInput() : eingabe);
     }
 
     /**
@@ -140,7 +140,7 @@ public class SpielerListe
     /**
      * @return eingabe
      */
-    public SpielerEingabe eingabeAn(int index)
+    public PlayerInput eingabeAn(int index)
     {
         return _eingaben[index];
     }
@@ -184,7 +184,7 @@ public class SpielerListe
      * @param eingabe Eingabe des Spielers
      * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
      */
-    public boolean versucheSetzeEingabe(String name, SpielerEingabe eingabe)
+    public boolean versucheSetzeEingabe(String name, PlayerInput eingabe)
     {
         for (int i = 0; i < _liste.length; i++)
         {
@@ -243,7 +243,7 @@ public class SpielerListe
      */
     public void update(Paket p)
     {
-        SpielerListe liste = SpielerListe.ausSnapshot(p);
+        PlayerList liste = PlayerList.ausSnapshot(p);
         _liste = liste._liste;
         _eingaben = liste._eingaben;
     }
@@ -254,9 +254,9 @@ public class SpielerListe
      * @param p Das Paket
      * @return Eine neue Spielerlisten-Instanz
      */
-    private static SpielerListe ausSnapshot(Paket p)
+    private static PlayerList ausSnapshot(Paket p)
     {
-        SpielerListe liste = new SpielerListe(p.holeZahl());
+        PlayerList liste = new PlayerList(p.holeZahl());
         int n = p.holeZahl();
         for (int i = 0; i < n; i++)
         {

@@ -23,7 +23,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 
 import sw.shared.Shot;
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -31,46 +31,40 @@ import sw.shared.Spielkonstanten;
  */
 public class ShotGraphics extends Shot
 {
-    private static boolean _istBereit;
+    private static boolean _isReady;
+    private Color _basicColor;
+    private double _startTime;
     
-    // Bezugsobjekte
-    private Color _basisFarbe;
-    
-    // Attribute
-    private double _startZeit;
-    
-    // Konstruktor
     public ShotGraphics(Shot s)
     {
         super(s.startPunkt(), s.richtung(), s.istMaster());
-        _basisFarbe = Color.BLUE;
-        _startZeit = System.currentTimeMillis();
-        _istBereit = true;
+        _basicColor = Color.BLUE;
+        _startTime = System.currentTimeMillis();
+        _isReady = true;
     }
 
-    // Dienste
     public void paint(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
-        g2d.setColor(new Color(_basisFarbe.getRed(), _basisFarbe.getGreen(), _basisFarbe.getBlue(), (int)this.alpha(this.alter())));
+        g2d.setColor(new Color(_basicColor.getRed(), _basicColor.getGreen(), _basicColor.getBlue(), (int)this.getAlphaValue(this.getAge())));
         g2d.setStroke(new BasicStroke(3));
         g.drawLine((int)this.startPunkt().getX(), (int)this.startPunkt().getY(), (int)this.endPunkt().getX(), (int)this.endPunkt().getY());
     }
     
-    public boolean istVeraltet()
+    public boolean getIsOutOfDate()
     {
-        return (this.alter() > Spielkonstanten.SCHUSS_LEBENSDAUER);
+        return (this.getAge() > GameConstants.SCHUSS_LEBENSDAUER);
     }
     
-    private double alter()
+    private double getAge()
     {
-        return System.currentTimeMillis() - _startZeit;
+        return System.currentTimeMillis() - _startTime;
     }
     
-    private double alpha(double zeit)
+    private double getAlphaValue(double zeit)
     {
-        double a = -1020 / (double)(Spielkonstanten.SCHUSS_LEBENSDAUER*Spielkonstanten.SCHUSS_LEBENSDAUER);
-        double d = (double)Spielkonstanten.SCHUSS_LEBENSDAUER / 2;
+        double a = -1020 / (double)(GameConstants.SCHUSS_LEBENSDAUER*GameConstants.SCHUSS_LEBENSDAUER);
+        double d = (double)GameConstants.SCHUSS_LEBENSDAUER / 2;
         double f = 255;
         return a * (zeit - d) * (zeit - d) + f;
     }

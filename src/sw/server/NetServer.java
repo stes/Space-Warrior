@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 import sw.shared.Paket;
 import sw.shared.Pakettype;
-import sw.shared.Spielkonstanten;
-import sw.shared.SpielerEingabe;
+import sw.shared.GameConstants;
+import sw.shared.PlayerInput;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -66,7 +66,7 @@ public class NetServer implements IServer
         for(int i = 1; i <= _clientListe.size(); i++)
         {
             Client cur = _clientListe.get(i);
-            if(adresse.equals(cur.adresse()))
+            if(adresse.equals(cur.getAdress()))
                 return cur;
         }
         return null;
@@ -101,9 +101,9 @@ public class NetServer implements IServer
         for(int i = 1; i <= _clientListe.size(); i++)
         {
         	Client cur = _clientListe.get(i);
-            if(adresse.equals(cur.adresse()))
+            if(adresse.equals(cur.getAdress()))
             {
-                if(cur.istImSpiel())
+                if(cur.getIsPlaying())
                 {
                     _controller.bearbeiteSpielerVerlaesst(cur.name());
                 }
@@ -137,7 +137,7 @@ public class NetServer implements IServer
         Client client = this.sucheClient(name);
         if(client != null)
         {
-            this.sendeNachricht(client.ip(), client.port(), nachricht);
+            this.sendeNachricht(client.ip(), client.getPort(), nachricht);
         }
     }
     
@@ -156,7 +156,7 @@ public class NetServer implements IServer
     public void bearbeiteVerbindungsaufbau(String pClientIP, int pPartnerPort)
     {
         System.out.println("Ein neuer Client versucht zu verbinden (" + pClientIP + ")");
-        if(_clientListe.size() < Spielkonstanten.MAX_SPIELERZAHL)
+        if(_clientListe.size() < GameConstants.MAX_SPIELERZAHL)
         {
             Client neuerClient = new Client(pClientIP, pPartnerPort, "unbekannt");
             _clientListe.add(neuerClient);
@@ -190,14 +190,14 @@ public class NetServer implements IServer
         {
             Paket paket = new Paket(pNachricht);
             
-            if(Pakettype.CL_START_INFO == paket.Typ() && !client.istImSpiel())
+            if(Pakettype.CL_START_INFO == paket.Typ() && !client.getIsPlaying())
             {
                 String name = paket.holeString();
                 Client cl = this.sucheClient(name);
                 if(cl == null)
                 {
-                    client.setzeName(name);
-                    client.betrittSpiel();
+                    client.setName(name);
+                    client.enterGame();
                     _controller.bearbeiteNeuenSpieler(client.name());
                     System.out.println("'" + client.name() + "' hat das Spiel betreten");
                 }
@@ -209,7 +209,7 @@ public class NetServer implements IServer
                     this.beendeVerbindung(pClientIP, pPartnerPort);
                 }
             }
-            else if(Pakettype.CL_CHAT_NACHRICHT == paket.Typ() && client.istImSpiel())
+            else if(Pakettype.CL_CHAT_NACHRICHT == paket.Typ() && client.getIsPlaying())
             {
                 String text = paket.holeString();
                 Paket antwort = new Paket(Pakettype.SV_CHAT_NACHRICHT);
@@ -218,9 +218,9 @@ public class NetServer implements IServer
                 this.sendeRundnachricht(antwort);
                 System.out.println(client.name() + ": " + text);
             }
-            else if(Pakettype.CL_EINGABE == paket.Typ() && client.istImSpiel())
+            else if(Pakettype.CL_EINGABE == paket.Typ() && client.getIsPlaying())
             {
-                _controller.bearbeiteEingabe(client.name(), new SpielerEingabe(paket));
+                _controller.bearbeiteEingabe(client.name(), new PlayerInput(paket));
             }
         }
     }
@@ -235,12 +235,12 @@ public class NetServer implements IServer
             return;
         }
         double aktZeit = System.currentTimeMillis();
-        if(aktZeit - _letzteAktualisierung > Spielkonstanten.SPIELER_AKTUALISIERUNGS_INTERVALL)
+        if(aktZeit - _letzteAktualisierung > GameConstants.SPIELER_AKTUALISIERUNGS_INTERVALL)
         {
             _controller.bearbeiteLeerlauf();
             _letzteAktualisierung = aktZeit;
         }
-        if(aktZeit - _letztesSnapshot > Spielkonstanten.SNAPSHOT_INTERVALL)
+        if(aktZeit - _letztesSnapshot > GameConstants.SNAPSHOT_INTERVALL)
         {
             _controller.bearbeiteSnapshot();
             _letztesSnapshot = aktZeit;
@@ -267,7 +267,7 @@ public class NetServer implements IServer
     {
         Paket info = new Paket((char)0);
         info.fuegeStringAn(_serverName);
-        info.fuegeZahlAn(Spielkonstanten.MAX_SPIELERZAHL);
+        info.fuegeZahlAn(GameConstants.MAX_SPIELERZAHL);
         info.fuegeZahlAn(_clientListe.size());
         return info;
     }

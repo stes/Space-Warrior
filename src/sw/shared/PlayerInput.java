@@ -23,7 +23,7 @@ package sw.shared;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SpielerEingabe
+public class PlayerInput
 {
     // Bezugsobjekte
 
@@ -36,7 +36,7 @@ public class SpielerEingabe
     /**
      * SpielerEingabe Instanz wird erzeugt
      */
-    public SpielerEingabe()
+    public PlayerInput()
     {
     }
     
@@ -47,7 +47,7 @@ public class SpielerEingabe
      * @param drehung Drehung
      * @param schuss Schuss
      */
-    public SpielerEingabe(
+    public PlayerInput(
         int bewegung,
         int drehung,
         int schuss)
@@ -63,7 +63,7 @@ public class SpielerEingabe
      *
      * @param eingabe Eingabe-Paket
      */
-    public SpielerEingabe(Paket eingabe)
+    public PlayerInput(Paket eingabe)
     {
         this(eingabe.holeZahl(), eingabe.holeZahl(),
             eingabe.holeZahl());
@@ -74,7 +74,7 @@ public class SpielerEingabe
      * 
      * @param eingabe zu kopierende Eingabe-Instanz
      */
-    public SpielerEingabe(SpielerEingabe eingabe)
+    public PlayerInput(PlayerInput eingabe)
     {
         this(eingabe.bewegung(), eingabe.drehung(), eingabe.schuss());
     }
@@ -155,9 +155,9 @@ public class SpielerEingabe
     @Override
     public boolean equals(Object other)
     {
-        if(!(other instanceof SpielerEingabe))
+        if(!(other instanceof PlayerInput))
             return false;
-        SpielerEingabe e = (SpielerEingabe) other;
+        PlayerInput e = (PlayerInput) other;
         if(
             e.bewegung() == this.bewegung() &&
             e.drehung() == this.drehung() &&

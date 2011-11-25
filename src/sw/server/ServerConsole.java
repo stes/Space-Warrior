@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.server;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -26,7 +26,7 @@ public class ServerConsole
 {
     public static void main(String[] args)
     {
-        NetServer _netServer = new NetServer(Spielkonstanten.STANDARD_PORT);
+        NetServer _netServer = new NetServer(GameConstants.STANDARD_PORT);
         ServerInfo _serverInfo = new ServerInfo(_netServer);
         _serverInfo.start();
         

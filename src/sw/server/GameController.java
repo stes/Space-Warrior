@@ -17,10 +17,10 @@
  ******************************************************************************/
 package sw.server;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 import sw.shared.PlayerDataSet;
-import sw.shared.SpielerListe;
-import sw.shared.SpielerEingabe;
+import sw.shared.PlayerList;
+import sw.shared.PlayerInput;
 import sw.shared.Shot;
 import sw.shared.Paket;
 import sw.shared.Pakettype;
@@ -33,8 +33,8 @@ import sw.shared.Pakettype;
 public class GameController
 {
     // Bezugsobjekte
-    private SpielerListe _verbundeneSpieler;
-    private SpielerListe _aktiveSpieler;
+    private PlayerList _verbundeneSpieler;
+    private PlayerList _aktiveSpieler;
     private IServer _server;
     
     // Attribute
@@ -47,8 +47,8 @@ public class GameController
      */
     public GameController(IServer server)
     {
-        _verbundeneSpieler = new SpielerListe(Spielkonstanten.MAX_SPIELERZAHL);
-        _aktiveSpieler = new SpielerListe(Spielkonstanten.MAX_SPIELERZAHL);
+        _verbundeneSpieler = new PlayerList(GameConstants.MAX_SPIELERZAHL);
+        _aktiveSpieler = new PlayerList(GameConstants.MAX_SPIELERZAHL);
         _server = server;
     }
         
@@ -107,7 +107,7 @@ public class GameController
      * @param name Der Name des betreffenden Spielers
      * @param eingabe Die Eingabe des Spielers
      */
-    public void bearbeiteEingabe(String name, SpielerEingabe eingabe)
+    public void bearbeiteEingabe(String name, PlayerInput eingabe)
     {
         _aktiveSpieler.versucheSetzeEingabe(name, eingabe);
     }
@@ -142,7 +142,7 @@ public class GameController
             PlayerDataSet daten = _aktiveSpieler.elementAn(i);
             if (daten != null && !daten.name().equals(angreifer.name()))
             {
-                if(shot.abstandZu(daten.position()) < Spielkonstanten.SPIELERGROESSE/2)
+                if(shot.abstandZu(daten.position()) < GameConstants.SPIELERGROESSE/2)
                 {
                     daten.setzeLeben(daten.leben() - shot.schaden());
                     if(daten.leben() <= 0)
@@ -190,7 +190,7 @@ public class GameController
         for(int i = 0; i < _aktiveSpieler.laenge(); i++)
         {
             PlayerDataSet daten = _aktiveSpieler.elementAn(i);
-            SpielerEingabe eingabe = _aktiveSpieler.eingabeAn(i);
+            PlayerInput eingabe = _aktiveSpieler.eingabeAn(i);
             if (daten != null)
             {
                 if (eingabe.schuss() > 0)
@@ -203,8 +203,8 @@ public class GameController
                         _server.sendeRundnachricht(p);
                     }
                 }
-                daten.beschleunige(Spielkonstanten.BESCHLEUNIGUNG * eingabe.bewegung());
-                daten.dreheUm(Spielkonstanten.DREHWINKEL * Math.signum(eingabe.drehung()));
+                daten.beschleunige(GameConstants.BESCHLEUNIGUNG * eingabe.bewegung());
+                daten.dreheUm(GameConstants.DREHWINKEL * Math.signum(eingabe.drehung()));
                 daten.ladeNach();
                 daten.bewege();
             }

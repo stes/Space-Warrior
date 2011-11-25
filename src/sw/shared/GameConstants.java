@@ -23,7 +23,7 @@ package sw.shared;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class Spielkonstanten
+public final class GameConstants
 {
     // Netzwerk
     public final static int STANDARD_PORT = 2489;

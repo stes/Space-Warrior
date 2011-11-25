@@ -22,7 +22,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 import sw.shared.Paket;
 /**
  * @author Redix, stes, Abbadonn
@@ -30,15 +30,15 @@ import sw.shared.Paket;
  */
 public class ServerFinder extends Thread
 {
-    private SWFrame _anwendung;
+    private SWFrame _application;
     private DatagramSocket _socket;
-    private boolean _laeuft;
+    private boolean _isRunning;
     
     public ServerFinder(SWFrame anwendung)
     {
         try
         {
-            _anwendung = anwendung;
+            _application = anwendung;
             _socket = new DatagramSocket();
             _socket.setBroadcast(true);
         }
@@ -48,9 +48,9 @@ public class ServerFinder extends Thread
         }
     }
     
-    public void gibFrei()
+    public void dispose()
     {
-        _laeuft = false;
+        _isRunning = false;
         try
         {
             _socket.close();
@@ -63,7 +63,7 @@ public class ServerFinder extends Thread
     
     public void run()
     {
-        _laeuft = true;
+        _isRunning = true;
         try
         {
             String local = InetAddress.getLocalHost().getHostName();
@@ -73,23 +73,23 @@ public class ServerFinder extends Thread
                 if(addr.length != 4 || addr[0] != (byte)192 || addr[1] != (byte)168)
                     continue;
                 addr[3] = (byte)255;
-                byte[] buffer = Spielkonstanten.SERVER_INFO_ANFRAGE.getBytes();
+                byte[] buffer = GameConstants.SERVER_INFO_ANFRAGE.getBytes();
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-                packet.setSocketAddress(new InetSocketAddress(InetAddress.getByAddress(addr), Spielkonstanten.STANDARD_PORT));
+                packet.setSocketAddress(new InetSocketAddress(InetAddress.getByAddress(addr), GameConstants.STANDARD_PORT));
                 _socket.send(packet);
             }
             
-            while(_laeuft)
+            while(_isRunning)
             {
                 byte[] buf = new byte[1024];
                 DatagramPacket response = new DatagramPacket(buf, buf.length);
                 _socket.receive(response);
-                int len = Math.min(response.getLength(), Spielkonstanten.SERVER_INFO_ANTWORT.length());
+                int len = Math.min(response.getLength(), GameConstants.SERVER_INFO_ANTWORT.length());
                 String msg = new String(buf, 0, len);
-                if(msg.equals(Spielkonstanten.SERVER_INFO_ANTWORT))
+                if(msg.equals(GameConstants.SERVER_INFO_ANTWORT))
                 {
                     Paket info = new Paket(new String(buf, len, response.getLength()));
-                    _anwendung.bearbeiteServerGefunden(response.getAddress().getHostAddress().toString(),
+                    _application.foundServer(response.getAddress().getHostAddress().toString(),
                         info.holeString(), info.holeZahl(), info.holeZahl());
                 }
             }

@@ -17,11 +17,11 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.Spielkonstanten;
+import sw.shared.GameConstants;
 import sw.shared.Pakettype;
 import sw.shared.PlayerDataSet;
-import sw.shared.SpielerListe;
-import sw.shared.SpielerEingabe;
+import sw.shared.PlayerList;
+import sw.shared.PlayerInput;
 import sw.shared.Shot;
 import sw.shared.Paket;
 
@@ -35,65 +35,61 @@ import java.awt.Toolkit;
  */ 
 public class GameController implements AWTEventListener, ClientListener
 {
-    // Bezugsobjekte
-    private SpielerListe _spielerListe;
-    private PlayerDataSet _lokalerSpieler;
+    private PlayerList _playerList;
+    private PlayerDataSet _localPlayer;
     private IClient _client;
-    private SpielerEingabe _status;
-    private SpielerEingabe _alterStatus;
+    private PlayerInput _currentState;
+    private PlayerInput _oldState;
     
-    // Attribute
-    private boolean _istInitialisiert;
+    private boolean _isReady;
     
-    // Konstruktor
     /**
      * creates an new GameController
      */
     public GameController(IClient client)
     {
-        _status = new SpielerEingabe();
-        _alterStatus = new SpielerEingabe();
-        _spielerListe = new SpielerListe(Spielkonstanten.MAX_SPIELERZAHL);
+        _currentState = new PlayerInput();
+        _oldState = new PlayerInput();
+        _playerList = new PlayerList(GameConstants.MAX_SPIELERZAHL);
         _client = client;
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
-        _istInitialisiert = true;
+        _isReady = true;
     }
         
-    // Dienste 
     /**
      * @return the Playerlist
      */
-    public SpielerListe getPlayerList()
+    public PlayerList getPlayerList()
     {
-        return _spielerListe;
+        return _playerList;
     }
 
     /**
      * send a Snapshot to every player
      */
-    public void editSnapshot(Paket snapshot)
+    public void snapshot(Paket snapshot)
     {
-        _spielerListe.update(snapshot);
-        for (int i = 0; i < _spielerListe.laenge(); i++)
+        _playerList.update(snapshot);
+        for (int i = 0; i < _playerList.laenge(); i++)
         {
-            PlayerDataSet d = _spielerListe.elementAn(i);
+            PlayerDataSet d = _playerList.elementAn(i);
             if (d != null && d.lokal())
             {
-                _lokalerSpieler = d;
+                _localPlayer = d;
             }
         }
     }
     
     @Override
-    public void bearbeiteSchuss(Paket paket)
+    public void shot(Paket paket)
     {
         Shot s = Shot.hole(paket);
-        ShotPool.fuegeSchussHinzu(s);
+        ShotPool.addShot(s);
     }
     @Override
-    public void bearbeiteChatNachricht(String name, String text) {}
+    public void chatMessage(String name, String text) {}
     @Override
-    public void bearbeiteTrennung(String grund) {}
+    public void connectionLost(String grund) {}
     @Override
     public void eventDispatched(AWTEvent e)
     {
@@ -106,37 +102,37 @@ public class GameController implements AWTEventListener, ClientListener
                 case 'w':
                 {
                     // vorwärts
-                    _status.setzeBewegung(1);
+                    _currentState.setzeBewegung(1);
                     break;
                 }
                 case 's':
                 {
                     // rückwärts
-                    _status.setzeBewegung(-1);
+                    _currentState.setzeBewegung(-1);
                     break;
                 }
                 case 'a':
                 {
                     // links
-                    _status.setzeDrehung(1);
+                    _currentState.setzeDrehung(1);
                     break;
                 }
                 case 'd':
                 {
                     // rechts
-                    _status.setzeDrehung(-1);
+                    _currentState.setzeDrehung(-1);
                     break;
                 }
                 case 'n':
                 {
                     // normaler Schuss
-                    _status.setzeSchuss(1);
+                    _currentState.setzeSchuss(1);
                     break;
                 }
                 case 'm':
                 {
                     // Masterschuss
-                    _status.setzeSchuss(2);
+                    _currentState.setzeSchuss(2);
                     break;
                 }
             }
@@ -150,38 +146,38 @@ public class GameController implements AWTEventListener, ClientListener
                 case 'w':
                 {
                     // vorwärts
-                    _status.setzeBewegung(-1);
+                    _currentState.setzeBewegung(-1);
                     break;
                 }
                 case 's':
                 {
                     // rückwärts
-                    _status.setzeBewegung(0);
+                    _currentState.setzeBewegung(0);
                     break;
                 }
                 case 'a':
                 {
                     // links
-                    _status.setzeDrehung(0);
+                    _currentState.setzeDrehung(0);
                     break;
                 }
                 case 'd':
                 {
                     // rechts
-                    _status.setzeDrehung(0);
+                    _currentState.setzeDrehung(0);
                     break;
                 }
                 case 'm': case 'n':
                 {
-                    _status.setzeSchuss(0);
+                    _currentState.setzeSchuss(0);
                     break;
                 }
             }
         }
-        if (!_alterStatus.equals(_status))
+        if (!_oldState.equals(_currentState))
         {
-            _alterStatus = new SpielerEingabe(_status);
-            Paket p = _status.pack();
+            _oldState = new PlayerInput(_currentState);
+            Paket p = _currentState.pack();
             //_client.sendeNachricht(p);
         }
     }

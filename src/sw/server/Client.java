@@ -28,7 +28,7 @@ public class Client
     private String _ip;
     private int _port;
     private String _name;
-    private boolean _imSpiel;
+    private boolean _isPlaying;
 
     // Konstruktor
     /**
@@ -43,14 +43,14 @@ public class Client
         _ip = ip;
         _port = port;
         _name = name;
-        _imSpiel = false;
+        _isPlaying = false;
     }
 
     // Dienste
     /**
      * @return ip IPAddresse mit dazugehörigem Port
      */
-    public String adresse()
+    public String getAdress()
     {
         return _ip + ":" + _port;
     }
@@ -68,7 +68,7 @@ public class Client
      * 
      * @param name Name des Clients
      */
-    public void setzeName(String name)
+    public void setName(String name)
     {
         _name = name;
     }
@@ -84,7 +84,7 @@ public class Client
     /**
      * @return port Port des Clients
      */
-    public int port()
+    public int getPort()
     {
         return _port;
     }
@@ -92,17 +92,17 @@ public class Client
     /**
      * wahr, wenn der Client auf den Server verbindet
      */
-    public void betrittSpiel()
+    public void enterGame()
     {
-        _imSpiel = true;
+        _isPlaying = true;
     }
     
     /**
      * @return imSpiel gibt zurück ob der Client im Spiel ist
      */
-    public boolean istImSpiel()
+    public boolean getIsPlaying()
     {
-        return _imSpiel;
+        return _isPlaying;
     }
     
     @Override

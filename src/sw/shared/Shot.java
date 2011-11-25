@@ -85,7 +85,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     public void setzeRichtung(int richtung)
     {
         _richtung = richtung;
-        double reichweite = _istMaster ? Spielkonstanten.MAX_MASTER_REICHWEITE : Spielkonstanten.MAX_REICHWEITE;
+        double reichweite = _istMaster ? GameConstants.MAX_MASTER_REICHWEITE : GameConstants.MAX_REICHWEITE;
         this.setLine(startPunkt(), new Point(
             (int)(startPunkt().getX() + reichweite * Math.sin(Math.toRadians(richtung))),
             (int)(startPunkt().getY() + reichweite * Math.cos(Math.toRadians(richtung)))));
@@ -128,7 +128,7 @@ public class Shot extends java.awt.geom.Line2D.Double
      */
     public int schaden()
     {
-        return this.istMaster() ? Spielkonstanten.MAX_MASTER_SCHADEN : Spielkonstanten.MAX_SCHADEN;
+        return this.istMaster() ? GameConstants.MAX_MASTER_SCHADEN : GameConstants.MAX_SCHADEN;
     }
     
     /**
