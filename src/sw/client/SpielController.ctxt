@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.params=client
+comment0.target=SpielController(IClient)
+comment0.text=\r\n\ Erzeugt\ einen\ neuen\ SpielController\r\n
+comment1.params=
+comment1.target=sw.shared.SpielerListe\ spielerListe()
+comment1.text=\r\n\ @return\ die\ aktuelle\ Spielerliste\r\n
+comment2.params=snapshot
+comment2.target=void\ bearbeiteSnapshot(sw.shared.Paket)
+comment2.text=\r\n\ Sendet\ einen\ Snapshot\ an\ jeden\ Spieler\r\n
+comment3.params=paket
+comment3.target=void\ bearbeiteSchuss(sw.shared.Paket)
+comment4.params=name\ text
+comment4.target=void\ bearbeiteChatNachricht(java.lang.String,\ java.lang.String)
+comment5.params=grund
+comment5.target=void\ bearbeiteTrennung(java.lang.String)
+comment6.params=e
+comment6.target=void\ eventDispatched(java.awt.AWTEvent)
+numComments=7

@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.params=
+comment0.target=BilderContainer()
+comment1.params=
+comment1.target=java.awt.image.BufferedImage\ spielerBild()
+comment2.params=
+comment2.target=java.awt.image.BufferedImage\ gegnerBild()
+comment3.params=
+comment3.target=BilderContainer\ lokaleInstanz()
+comment4.params=
+comment4.target=void\ init()
+numComments=5
