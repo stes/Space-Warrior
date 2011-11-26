@@ -45,7 +45,7 @@ public class ShotGraphics extends Shot
 
     public boolean getIsOutOfDate()
     {
-        return (this.getAge() > GameConstants.SCHUSS_LEBENSDAUER);
+        return (this.getAge() > GameConstants.SHOT_TTL);
     }
     
     public void paint(Graphics g)
@@ -63,8 +63,8 @@ public class ShotGraphics extends Shot
     
     private double getAlphaValue(double zeit)
     {
-        double a = -1020 / (double)(GameConstants.SCHUSS_LEBENSDAUER*GameConstants.SCHUSS_LEBENSDAUER);
-        double d = (double)GameConstants.SCHUSS_LEBENSDAUER / 2;
+        double a = -1020 / (double)(GameConstants.SHOT_TTL*GameConstants.SHOT_TTL);
+        double d = (double)GameConstants.SHOT_TTL / 2;
         double f = 255;
         return a * (zeit - d) * (zeit - d) + f;
     }

@@ -48,7 +48,7 @@ public class GameController implements AWTEventListener, ClientListener
     {
         _currentState = new PlayerInput();
         _oldState = new PlayerInput();
-        _playerList = new PlayerList(GameConstants.MAX_SPIELERZAHL);
+        _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         _isReady = true;

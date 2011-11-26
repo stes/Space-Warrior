@@ -74,16 +74,16 @@ public class PlayingFieldGraphics extends JPanel
                 g2d.drawImage(
                     rotateImage(_localPlayerImg, 180-d.richtung()),
                     null,
-                    (int)d.position().getX() - GameConstants.SPIELERGROESSE/2,
-                    (int)d.position().getY() - GameConstants.SPIELERGROESSE/2);
+                    (int)d.position().getX() - GameConstants.PLAYER_SIZE/2,
+                    (int)d.position().getY() - GameConstants.PLAYER_SIZE/2);
             }
             else
             {
                 g2d.drawImage(
                     rotateImage(_opposingPlayerImg, 180-d.richtung()),
                     null,
-                    (int)d.position().getX() - GameConstants.SPIELERGROESSE/2,
-                    (int)d.position().getY() - GameConstants.SPIELERGROESSE/2);
+                    (int)d.position().getX() - GameConstants.PLAYER_SIZE/2,
+                    (int)d.position().getY() - GameConstants.PLAYER_SIZE/2);
             }   
         }
     }
@@ -109,8 +109,8 @@ public class PlayingFieldGraphics extends JPanel
     {
         g2d.setStroke(new BasicStroke(15));
        
-        int start_x = GameConstants.BALKEN_X;
-        int end_x = start_x + d.leben() * GameConstants.BALKEN_LAENGE / GameConstants.MAX_LEBEN;
+        int start_x = ClientConstants.BAR_X;
+        int end_x = start_x + d.leben() * ClientConstants.BAR_LENGTH / GameConstants.MAX_LIVES;
         int y = 10;
         GradientPaint pat
            = new GradientPaint(start_x, 10, Color.RED,
@@ -118,7 +118,7 @@ public class PlayingFieldGraphics extends JPanel
         g2d.setPaint(pat);
         g2d.drawLine(start_x, y, end_x, y);
         
-        end_x = start_x + d.munition() * GameConstants.BALKEN_LAENGE / GameConstants.MAX_MUNITION;
+        end_x = start_x + d.munition() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
         y = 30;
         pat
            = new GradientPaint(start_x, 10, Color.GRAY,

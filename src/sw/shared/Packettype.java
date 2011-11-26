@@ -26,11 +26,10 @@ public final class Packettype
 {
     // Client
     public final static char CL_START_INFO = 0;
-    public final static char CL_CHAT_NACHRICHT = 1;
-    public final static char CL_EINGABE = 2;
+    public final static char CL_CHAT_MSG = 1;
+    public final static char CL_INPUT = 2;
     
     // Server
-    public final static char SV_TRENN_INFO = 0;
     public final static char SV_CHAT_NACHRICHT = 1;
     public final static char SV_SNAPSHOT = 2;
     public final static char SV_SCHUSS = 3;

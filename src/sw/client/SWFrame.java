@@ -188,7 +188,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
      */
     public void sendChatmessage(String chatNachricht)
     {
-        Packet chat = new Packet(Packettype.CL_CHAT_NACHRICHT);
+        Packet chat = new Packet(Packettype.CL_CHAT_MSG);
         chat.fuegeStringAn(chatNachricht);
         //_client.sendeNachricht(chat);
     }
@@ -203,7 +203,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
             return;
         PlayerDataSet[] spielerScore = new PlayerDataSet[_controller.getPlayerList().count()];
         int anzahl = 0;
-        for(int i = 0; i < GameConstants.MAX_SPIELERZAHL; i++)
+        for(int i = 0; i < GameConstants.MAX_PLAYERS; i++)
         {
             if(_controller.getPlayerList().dataAt(i) != null)
             {
@@ -376,7 +376,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _lstChathistory.setBounds(100, chat, 645, 90);
         this.add(_lstChathistory);
         
-        _tblPoints = new JTable(GameConstants.MAX_SPIELERZAHL, 2);
+        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
         _tblPoints.setBounds(1100, 100, 200, 150);
         _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Spieler");
         _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Punkte");

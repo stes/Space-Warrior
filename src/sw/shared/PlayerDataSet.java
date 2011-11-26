@@ -76,8 +76,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public PlayerDataSet()
     {
-        _lifepoints = GameConstants.MAX_LEBEN;
-        _ammo = GameConstants.MAX_MUNITION;
+        _lifepoints = GameConstants.MAX_LIVES;
+        _ammo = GameConstants.MAX_AMMO;
         _points = 0;
         _location = new Point.Double(0, 0);
     }
@@ -181,21 +181,21 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public void init() 
     {
-        int rand = GameConstants.SPIELERGROESSE/2+1;
-        int x = rand + _random.nextInt(GameConstants.SPIELFELD_BREITE - rand);
-        int y = rand + _random.nextInt(GameConstants.SPIELFELD_HOEHE - rand);
+        int rand = GameConstants.PLAYER_SIZE/2+1;
+        int x = rand + _random.nextInt(GameConstants.PLAYING_FIELD_WIDTH - rand);
+        int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
         _location = new Point.Double(x, y);
         setzeGeschwindigkeit(0);
         setzeRichtung(rand + _random.nextInt(360));
-        setzeLeben(GameConstants.MAX_LEBEN);
-        setzeMunition(GameConstants.MAX_MUNITION);
+        setzeLeben(GameConstants.MAX_LIVES);
+        setzeMunition(GameConstants.MAX_AMMO);
     }
     /**
      * Erhoeht die Munition
      */
     public void ladeNach() 
     {
-        _ammo += (_ammo < GameConstants.MAX_MUNITION-1 ? 1 : 0);
+        _ammo += (_ammo < GameConstants.MAX_AMMO-1 ? 1 : 0);
     }
     // Dienste
     /**
@@ -303,13 +303,13 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public Shot schiesse(boolean master)
     {
-        int noetigeMunition = master ? GameConstants.MUNITION_PRO_MSCHUSS : GameConstants.MUNITION_PRO_SCHUSS;
+        int noetigeMunition = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
         if (_ammo >= noetigeMunition)
         {
             _ammo -= noetigeMunition;
             
-            double zeit = GameConstants.SCHUSS_LEBENSDAUER / 2 /
-                            ((double)GameConstants.SPIELER_AKTUALISIERUNGS_INTERVALL);
+            double zeit = GameConstants.SHOT_TTL / 2 /
+                            ((double)GameConstants.PLAYER_UPDATE_INTERVAL);
             return new Shot(this.positionNach(zeit), (int)_direction, master);
         }
         return null;
@@ -374,8 +374,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
         _speed = geschwindigkeit;
         if (_speed < 0)
             _speed = 0;
-        else if (_speed > GameConstants.MAX_GESCHWINDIGKEIT)
-            _speed = GameConstants.MAX_GESCHWINDIGKEIT;
+        else if (_speed > GameConstants.MAX_SPEED)
+            _speed = GameConstants.MAX_SPEED;
     }
     /**
      * Weist der Munition einen neuen Wert zu
@@ -384,13 +384,13 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     protected void setzeMunition(int wert)
     {
-        if (wert >= 0 && wert <= GameConstants.MAX_MUNITION)
+        if (wert >= 0 && wert <= GameConstants.MAX_AMMO)
         {
             _ammo = wert;
         }
         else
         {
-            throw new IllegalArgumentException("Munition zwischen 0 und " + GameConstants.MAX_MUNITION + " waehlen");
+            throw new IllegalArgumentException("Munition zwischen 0 und " + GameConstants.MAX_AMMO + " waehlen");
         }
     }
     /**
@@ -403,14 +403,14 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
         double x = wert.getX();
         double y = wert.getY();
 
-        if (x + GameConstants.SPIELERGROESSE/2 > GameConstants.SPIELFELD_BREITE)
-            x = GameConstants.SPIELFELD_BREITE - GameConstants.SPIELERGROESSE/2;
-        else if (x - GameConstants.SPIELERGROESSE/2 < 0)
-            x = GameConstants.SPIELERGROESSE/2;
-        if (y + GameConstants.SPIELERGROESSE/2 > GameConstants.SPIELFELD_HOEHE)
-            y = GameConstants.SPIELFELD_HOEHE - GameConstants.SPIELERGROESSE/2;
-        else if (y - GameConstants.SPIELERGROESSE/2 < 0)
-            y = GameConstants.SPIELERGROESSE/2;
+        if (x + GameConstants.PLAYER_SIZE/2 > GameConstants.PLAYING_FIELD_WIDTH)
+            x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE/2;
+        else if (x - GameConstants.PLAYER_SIZE/2 < 0)
+            x = GameConstants.PLAYER_SIZE/2;
+        if (y + GameConstants.PLAYER_SIZE/2 > GameConstants.PLAYING_FIELD_HEIGHT)
+            y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE/2;
+        else if (y - GameConstants.PLAYER_SIZE/2 < 0)
+            y = GameConstants.PLAYER_SIZE/2;
 
         _location = new Point.Double(x, y);
     }

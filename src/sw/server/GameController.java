@@ -43,8 +43,8 @@ public class GameController
      */
     public GameController(IServer server)
     {
-        _connectedPlayers = new PlayerList(GameConstants.MAX_SPIELERZAHL);
-        _activePlayers = new PlayerList(GameConstants.MAX_SPIELERZAHL);
+        _connectedPlayers = new PlayerList(GameConstants.MAX_PLAYERS);
+        _activePlayers = new PlayerList(GameConstants.MAX_PLAYERS);
         _server = server;
     }
         
@@ -171,8 +171,8 @@ public class GameController
                         _server.sendeRundnachricht(p);
                     }
                 }
-                daten.beschleunige(GameConstants.BESCHLEUNIGUNG * eingabe.moveDirection());
-                daten.dreheUm(GameConstants.DREHWINKEL * Math.signum(eingabe.turnDirection()));
+                daten.beschleunige(GameConstants.ACCELERATION * eingabe.moveDirection());
+                daten.dreheUm(GameConstants.ANGEL_OF_ROTATION * Math.signum(eingabe.turnDirection()));
                 daten.ladeNach();
                 daten.bewege();
             }
@@ -194,7 +194,7 @@ public class GameController
             PlayerDataSet daten = _activePlayers.dataAt(i);
             if (daten != null && !daten.name().equals(angreifer.name()))
             {
-                if(shot.abstandZu(daten.position()) < GameConstants.SPIELERGROESSE/2)
+                if(shot.abstandZu(daten.position()) < GameConstants.PLAYER_SIZE/2)
                 {
                     daten.setzeLeben(daten.leben() - shot.schaden());
                     if(daten.leben() <= 0)

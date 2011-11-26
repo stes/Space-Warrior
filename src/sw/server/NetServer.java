@@ -80,7 +80,7 @@ public class NetServer implements IServer
                     this.beendeVerbindung(pClientIP, pPartnerPort);
                 }
             }
-            else if(Packettype.CL_CHAT_NACHRICHT == packet.Typ() && client.getIsPlaying())
+            else if(Packettype.CL_CHAT_MSG == packet.Typ() && client.getIsPlaying())
             {
                 String text = packet.holeString();
                 Packet antwort = new Packet(Packettype.SV_CHAT_NACHRICHT);
@@ -89,7 +89,7 @@ public class NetServer implements IServer
                 this.sendeRundnachricht(antwort);
                 System.out.println(client.name() + ": " + text);
             }
-            else if(Packettype.CL_EINGABE == packet.Typ() && client.getIsPlaying())
+            else if(Packettype.CL_INPUT == packet.Typ() && client.getIsPlaying())
             {
                 _controller.processPlayerInput(client.name(), new PlayerInput(packet));
             }
@@ -100,7 +100,7 @@ public class NetServer implements IServer
     public void bearbeiteVerbindungsaufbau(String pClientIP, int pPartnerPort)
     {
         System.out.println("Ein neuer Client versucht zu verbinden (" + pClientIP + ")");
-        if(_clientListe.size() < GameConstants.MAX_SPIELERZAHL)
+        if(_clientListe.size() < GameConstants.MAX_PLAYERS)
         {
             Client neuerClient = new Client(pClientIP, pPartnerPort, "unbekannt");
             _clientListe.add(neuerClient);
@@ -135,7 +135,7 @@ public class NetServer implements IServer
     {
         Packet info = new Packet((char)0);
         info.fuegeStringAn(_serverName);
-        info.fuegeZahlAn(GameConstants.MAX_SPIELERZAHL);
+        info.fuegeZahlAn(GameConstants.MAX_PLAYERS);
         info.fuegeZahlAn(_clientListe.size());
         return info;
     }
@@ -188,12 +188,12 @@ public class NetServer implements IServer
             return;
         }
         double aktZeit = System.currentTimeMillis();
-        if(aktZeit - _letzteAktualisierung > GameConstants.SPIELER_AKTUALISIERUNGS_INTERVALL)
+        if(aktZeit - _letzteAktualisierung > GameConstants.PLAYER_UPDATE_INTERVAL)
         {
             _controller.tick();
             _letzteAktualisierung = aktZeit;
         }
-        if(aktZeit - _letztesSnapshot > GameConstants.SNAPSHOT_INTERVALL)
+        if(aktZeit - _letztesSnapshot > GameConstants.SNAPSHOT_INTERVAL)
         {
             _controller.broadcastSnapshots();
             _letztesSnapshot = aktZeit;

@@ -117,7 +117,7 @@ public class PlayerInput
      */
     public Packet pack()
     {
-        Packet packet = new Packet(Packettype.CL_EINGABE);
+        Packet packet = new Packet(Packettype.CL_INPUT);
         packet.fuegeZahlAn(_moveDirection);
         packet.fuegeZahlAn(_turnDirection);
         packet.fuegeZahlAn(_isShooting);

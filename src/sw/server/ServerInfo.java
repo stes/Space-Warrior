@@ -72,10 +72,10 @@ public class ServerInfo extends Thread
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 _socket.receive(packet);
                 String msg = new String(buffer, 0, packet.getLength());
-                if(msg.equals(GameConstants.SERVER_INFO_ANFRAGE))
+                if(msg.equals(GameConstants.SERVER_INFO_REQUEST))
                 {
                     Packet info = _netServer.holeServerInfos();
-                    byte[] buf = (GameConstants.SERVER_INFO_ANTWORT + info.toString()).getBytes();
+                    byte[] buf = (GameConstants.SERVER_INFO_RESPONSE + info.toString()).getBytes();
                     DatagramPacket response = new DatagramPacket(buf, buf.length);
                     response.setSocketAddress(packet.getSocketAddress());
                     _socket.send(response);

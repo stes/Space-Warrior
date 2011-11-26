@@ -27,40 +27,43 @@ public final class GameConstants
 {
     // Netzwerk
     public final static int STANDARD_PORT = 2489;
-    public final static int SNAPSHOTS_PRO_SEKUNDE = 20;
-    public final static int SNAPSHOT_INTERVALL = 1000 / SNAPSHOTS_PRO_SEKUNDE;
-    public final static String SERVER_INFO_ANFRAGE = "swinfo?";
-    public final static String SERVER_INFO_ANTWORT = "swinfo!";
+    public final static int SNAPSHOTS_PER_SECOND = 20;
+    public final static int SNAPSHOT_INTERVAL = 1000 / SNAPSHOTS_PER_SECOND;
+    public final static String SERVER_INFO_REQUEST = "swinfo?";
+    public final static String SERVER_INFO_RESPONSE = "swinfo!";
     
     // Gameplay
-    public final static int SPIELER_AKTUALISIERUNGS_INTERVALL = SNAPSHOT_INTERVALL;
-    public final static int MAX_LEBEN = 100;
-    public final static int MAX_MUNITION = 200;
-    public final static int MAX_GESCHWINDIGKEIT = 16;
-    public final static int MAX_BEWEGUNG_PRO_SNAP = MAX_GESCHWINDIGKEIT * SPIELER_AKTUALISIERUNGS_INTERVALL;
-    public final static int MAX_REICHWEITE = 200;
-    public final static int MAX_MASTER_REICHWEITE = 500;
-    public final static int MAX_SPIELERZAHL = 6;
-    public final static int MAX_SCHADEN = 10;
-    public final static int MAX_MASTER_SCHADEN = 25;
-    public final static int MUNITION_PRO_SCHUSS = 20;
-    public final static int MUNITION_PRO_MSCHUSS = 100;
+    public final static int PLAYER_UPDATE_INTERVAL = SNAPSHOT_INTERVAL;
+    
+    // Maximum values
+    public final static int MAX_LIVES = 100;
+    public final static int MAX_AMMO = 200;
+    public final static int MAX_SPEED = 16;
+    public final static int MAX_MOVEMENT = MAX_SPEED * PLAYER_UPDATE_INTERVAL;
+    public final static int MAX_RANGE = 200;
+    public final static int MAX_MASTER_RANGE = 500;
+    public final static int MAX_PLAYERS = 6;
+    public final static int MAX_DAMAGE = 10;
+    public final static int MAX_MASTER_DAMAGE = 25;
+    
+    // Shooting    
+    public final static int AMMO_PER_SHOT = 20;
+    public final static int AMMO_PER_MASTER_SHOT = 100;
 
+    // Movements
+    public final static double ACCELERATION = 0.01 * PLAYER_UPDATE_INTERVAL;
+    public final static double DECELERATION = -0.01 * PLAYER_UPDATE_INTERVAL;
+    public final static double ANGEL_OF_ROTATION = 0.3 * PLAYER_UPDATE_INTERVAL;
     
-    // Steuerung
-    public final static double BESCHLEUNIGUNG = 0.01 * SPIELER_AKTUALISIERUNGS_INTERVALL;
-    public final static double VERZOEGERUNG = -0.01 * SPIELER_AKTUALISIERUNGS_INTERVALL;
-    public final static double DREHWINKEL = 0.3 * SPIELER_AKTUALISIERUNGS_INTERVALL;
+    // Players
+    public final static int PLAYER_SIZE = 64;
     
-    // Darstellung
-    public final static int SPIELERGROESSE = 64;
-    public final static int SCHUSS_LEBENSDAUER = 400;
-    public final static int BALKEN_LAENGE = 400;
-    public final static int BALKEN_X = 10;
+    // Playing field
+    public final static int PLAYING_FIELD_WIDTH = 800;
+    public final static int PLAYING_FIELD_HEIGHT = 600;
+    public final static int REFERENCE_X = 10;
+    public final static int REFERENCE_Y = 10;
     
-    // Spielfeld
-    public final static int SPIELFELD_BREITE = 800;
-    public final static int SPIELFELD_HOEHE = 600;
-    public final static int BEZUGSPUNKT_X = 10;
-    public final static int BEZUGSPUNKT_Y = 10;
+	// Shots
+    public final static int SHOT_TTL = 400;
 }
