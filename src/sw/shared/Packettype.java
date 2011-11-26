@@ -22,7 +22,7 @@ package sw.shared;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class Pakettype
+public final class Packettype
 {
     // Client
     public final static char CL_START_INFO = 0;

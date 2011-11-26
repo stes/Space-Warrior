@@ -36,9 +36,9 @@ public class Shot extends java.awt.geom.Line2D.Double
      * @return Eine neue Schuss-Instanz
      * @throws IllegalArgumentException wenn Pakettyp falsch ist
      */
-    public static Shot hole(Paket p)
+    public static Shot hole(Packet p)
     {
-        if (p.Typ() != Pakettype.SV_SCHUSS)
+        if (p.Typ() != Packettype.SV_SCHUSS)
             throw new IllegalArgumentException();
         return new Shot(
             new Point(p.holeZahl(), p.holeZahl()),
@@ -113,9 +113,9 @@ public class Shot extends java.awt.geom.Line2D.Double
      * 
      * @return Das Paket
      */
-    public Paket pack()
+    public Packet pack()
     {
-        Paket p = new Paket(Pakettype.SV_SCHUSS);
+        Packet p = new Packet(Packettype.SV_SCHUSS);
         p.fuegeZahlAn((int)startPunkt().getX());
         p.fuegeZahlAn((int)startPunkt().getY());
         p.fuegeZahlAn(this.richtung());

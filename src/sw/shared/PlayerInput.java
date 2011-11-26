@@ -28,9 +28,9 @@ public class PlayerInput
     // Bezugsobjekte
 
     // Attribute
-    private int _bewegung;
-    private int _drehung;
-    private int _schuss;
+    private int _moveDirection;
+    private int _turnDirection;
+    private int _isShooting;
     
     // Konstruktor
     /**
@@ -43,57 +43,57 @@ public class PlayerInput
     /**
      * SpielerEingabe Instanz wird erzeugt
      *
-     * @param bewegung Bewegung
-     * @param drehung Drehung
-     * @param schuss Schuss
+     * @param moveDirection Bewegung
+     * @param turnDirection Drehung
+     * @param isShooting Schuss
      */
     public PlayerInput(
-        int bewegung,
-        int drehung,
-        int schuss)
+        int moveDirection,
+        int turnDirection,
+        int isShooting)
     {
         this();
-        _bewegung = bewegung;
-        _drehung = drehung;
-        _schuss = schuss;
+        _moveDirection = moveDirection;
+        _turnDirection = turnDirection;
+        _isShooting = isShooting;
     }
     
     /**
      * Erstellt eine Eingabe-Instanz aus einem Paket
      *
-     * @param eingabe Eingabe-Paket
+     * @param input Eingabe-Paket
      */
-    public PlayerInput(Paket eingabe)
+    public PlayerInput(Packet input)
     {
-        this(eingabe.holeZahl(), eingabe.holeZahl(),
-            eingabe.holeZahl());
+        this(input.holeZahl(), input.holeZahl(),
+            input.holeZahl());
     }
 
     /**
      * ERzeugt eine Eingabe-Instanz aus der übergebenen Eingabe
      * 
-     * @param eingabe zu kopierende Eingabe-Instanz
+     * @param input zu kopierende Eingabe-Instanz
      */
-    public PlayerInput(PlayerInput eingabe)
+    public PlayerInput(PlayerInput input)
     {
-        this(eingabe.bewegung(), eingabe.drehung(), eingabe.schuss());
+        this(input.moveDirection(), input.turnDirection(), input.schuss());
     }
     // Dienste
     
     /**
      * @return die Bewegung
      */
-    public int bewegung()
+    public int moveDirection()
     {
-        return _bewegung;
+        return _moveDirection;
     }
     
     /**
      * @return die Drehung
      */
-    public int drehung()
+    public int turnDirection()
     {
-        return _drehung;
+        return _turnDirection;
     }
     
     @Override
@@ -103,8 +103,8 @@ public class PlayerInput
             return false;
         PlayerInput e = (PlayerInput) other;
         if(
-            e.bewegung() == this.bewegung() &&
-            e.drehung() == this.drehung() &&
+            e.moveDirection() == this.moveDirection() &&
+            e.turnDirection() == this.turnDirection() &&
             e.schuss() == this.schuss())
             return true;
         return false;
@@ -115,13 +115,13 @@ public class PlayerInput
      *
      * @return das Paket
      */
-    public Paket pack()
+    public Packet pack()
     {
-        Paket paket = new Paket(Pakettype.CL_EINGABE);
-        paket.fuegeZahlAn(_bewegung);
-        paket.fuegeZahlAn(_drehung);
-        paket.fuegeZahlAn(_schuss);
-        return paket;
+        Packet packet = new Packet(Packettype.CL_EINGABE);
+        packet.fuegeZahlAn(_moveDirection);
+        packet.fuegeZahlAn(_turnDirection);
+        packet.fuegeZahlAn(_isShooting);
+        return packet;
     }
     
     /**
@@ -129,7 +129,7 @@ public class PlayerInput
      */
     public int schuss()
     {
-        return _schuss;
+        return _isShooting;
     }
     
     /**
@@ -141,7 +141,7 @@ public class PlayerInput
     {
         if (Math.abs(wert) > 1)
             throw new IllegalArgumentException();
-        _bewegung = wert;
+        _moveDirection = wert;
     }
     
     /**
@@ -153,7 +153,7 @@ public class PlayerInput
     {
         if (Math.abs(wert) > 1)
             throw new IllegalArgumentException();
-        _drehung = wert;
+        _turnDirection = wert;
     }
     
     /**
@@ -163,6 +163,6 @@ public class PlayerInput
      */
     public void setzeSchuss(int wert)
     {
-        _schuss = wert;
+        _isShooting = wert;
     }
 }

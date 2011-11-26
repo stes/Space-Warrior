@@ -18,8 +18,8 @@
 package sw.client;
 
 import sw.shared.GameConstants;
-import sw.shared.Pakettype;
-import sw.shared.Paket;
+import sw.shared.Packettype;
+import sw.shared.Packet;
 import sw.shared.PlayerDataSet;
 
 import sw.eastereggs.bf.*;
@@ -188,26 +188,26 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
      */
     public void sendChatmessage(String chatNachricht)
     {
-        Paket chat = new Paket(Pakettype.CL_CHAT_NACHRICHT);
+        Packet chat = new Packet(Packettype.CL_CHAT_NACHRICHT);
         chat.fuegeStringAn(chatNachricht);
         //_client.sendeNachricht(chat);
     }
     
     @Override
-    public void shot(Paket paket) {}
+    public void shot(Packet packet) {}
     
     @Override
-    public void snapshot(Paket paket)
+    public void snapshot(Packet packet)
     {
-        if(_controller.getPlayerList().zaehle() == 0)
+        if(_controller.getPlayerList().count() == 0)
             return;
-        PlayerDataSet[] spielerScore = new PlayerDataSet[_controller.getPlayerList().zaehle()];
+        PlayerDataSet[] spielerScore = new PlayerDataSet[_controller.getPlayerList().count()];
         int anzahl = 0;
         for(int i = 0; i < GameConstants.MAX_SPIELERZAHL; i++)
         {
-            if(_controller.getPlayerList().elementAn(i) != null)
+            if(_controller.getPlayerList().dataAt(i) != null)
             {
-                spielerScore[anzahl] = _controller.getPlayerList().elementAn(i);
+                spielerScore[anzahl] = _controller.getPlayerList().dataAt(i);
                 anzahl++;
             }
         }

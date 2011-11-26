@@ -18,8 +18,8 @@
 package sw.server;
 
 import sw.shared.GameConstants;
-import sw.shared.Paket;
-import sw.shared.Pakettype;
+import sw.shared.Packet;
+import sw.shared.Packettype;
 import sw.shared.PlayerDataSet;
 import sw.shared.PlayerInput;
 import sw.shared.PlayerList;
@@ -32,23 +32,19 @@ import sw.shared.Shot;
 
 public class GameController
 {
-    // Bezugsobjekte
-    private PlayerList _verbundeneSpieler;
-    private PlayerList _aktiveSpieler;
+    private PlayerList _connectedPlayers;
+    private PlayerList _activePlayers;
     private IServer _server;
     
-    // Attribute
-    
-    // Konstruktor
     /**
-     * Erzeugt einen neuen SpielController
+     * Creates a new game controller
      * 
      * @param server IServer
      */
     public GameController(IServer server)
     {
-        _verbundeneSpieler = new PlayerList(GameConstants.MAX_SPIELERZAHL);
-        _aktiveSpieler = new PlayerList(GameConstants.MAX_SPIELERZAHL);
+        _connectedPlayers = new PlayerList(GameConstants.MAX_SPIELERZAHL);
+        _activePlayers = new PlayerList(GameConstants.MAX_SPIELERZAHL);
         _server = server;
     }
         
@@ -58,67 +54,67 @@ public class GameController
      * @param name Der Name des betreffenden Spielers
      * @param eingabe Die Eingabe des Spielers
      */
-    public void bearbeiteEingabe(String name, PlayerInput eingabe)
+    public void processPlayerInput(String name, PlayerInput eingabe)
     {
-        _aktiveSpieler.versucheSetzeEingabe(name, eingabe);
+        _activePlayers.trySetInput(name, eingabe);
     }
     
-    public void bearbeiteLeerlauf()
+    public void tick()
     {
-        this.pruefeRunde();
-        this.aktualisiereDaten();
+        this.checkTurn();
+        this.updateData();
     }
     /**
-     * Ein neuer Spieler ist beigetreten
+     * A new player joined the game
      * 
      * @param name Name des Spielers
      */
     public void bearbeiteNeuenSpieler(String name)
     {
-        PlayerDataSet neu = new PlayerDataSet(name, true);
-        neu.init();
-        _verbundeneSpieler.fuegeEin(neu, null);
+        PlayerDataSet newDataSet = new PlayerDataSet(name, true);
+        newDataSet.init();
+        _connectedPlayers.insert(newDataSet, null);
     }
     /**
-     * Sendet einen Snapshot an jeden Spieler
+     * Sends a snapshot to every player
      */
-    public void bearbeiteSnapshot()
+    public void broadcastSnapshots()
     {
-        for (int i = 0; i < _verbundeneSpieler.laenge(); i++)
+        for (int i = 0; i < _connectedPlayers.size(); i++)
         {
-            PlayerDataSet daten = _verbundeneSpieler.elementAn(i);
+            PlayerDataSet daten = _connectedPlayers.dataAt(i);
             if (daten != null)
             {
-                Paket snapshot = _aktiveSpieler.erstelleSnapshot(daten.name());
+                Packet snapshot = _activePlayers.createSnapshot(daten.name());
                 _server.sendeNachricht(daten.name(), snapshot);
             }
         }
     }
     /**
-     * Ein Spieler hat das Spiel verlassen
+     * A player left the game
      * 
-     * @param name Name des Spielers
+     * @param name the player's name
      */
-    public void bearbeiteSpielerVerlaesst(String name)
+    public void playerLeft(String name)
     {
         PlayerDataSet suchObjekt = new PlayerDataSet(name, true);
-        _verbundeneSpieler.versucheEntfernen(name);
-        _aktiveSpieler.versucheEntfernen(name);
+        _connectedPlayers.tryRemove(name);
+        _activePlayers.tryRemove(name);
     }
     
-    public void pruefeRunde()
+    private void checkTurn()
     {
-        if((_aktiveSpieler.zaehle() == 1 && _verbundeneSpieler.zaehle() > 1) ||
-            (_aktiveSpieler.zaehle() == 0 && _verbundeneSpieler.zaehle() == 1))
+        if((_activePlayers.count() == 1 && _connectedPlayers.count() > 1) ||
+            (_activePlayers.count() == 0 && _connectedPlayers.count() == 1))
         {
-            if(_aktiveSpieler.zaehle() == 1)
+            if(_activePlayers.count() == 1)
             {
-                for (int i = 0; i < _aktiveSpieler.laenge(); i++)
+                for (int i = 0; i < _activePlayers.size(); i++)
                 {
-                    PlayerDataSet daten = _aktiveSpieler.elementAn(i);
+                    PlayerDataSet daten = _activePlayers.dataAt(i);
                     if (daten != null)
                     {
-                        Paket info = new Paket(Pakettype.SV_CHAT_NACHRICHT);
+                        Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
                         info.fuegeStringAn("Server");
                         info.fuegeStringAn(daten.name() + " hat die Runde gewonnen!");
                         _server.sendeRundnachricht(info);
@@ -126,7 +122,7 @@ public class GameController
                     }
                 }
             }
-            this.starteSpiel();
+            this.startGame();
         }
     }
     
@@ -136,33 +132,33 @@ public class GameController
      * zu den aktiven Spielern hinzu und gibt dem Client eine
      * Nachricht aus
      */
-    public void starteSpiel()
+    public void startGame()
     {
         // Liste der aktiven Spieler leeren
-        _aktiveSpieler.leere();
+        _activePlayers.clear();
         // alle verbundenen Spieler in das Spiel einfügen
-        for(int i = 0; i < _verbundeneSpieler.laenge(); i++)
+        for(int i = 0; i < _connectedPlayers.size(); i++)
         {
-            PlayerDataSet daten = _verbundeneSpieler.elementAn(i);
+            PlayerDataSet daten = _connectedPlayers.dataAt(i);
             if (daten != null)
             {
                 daten.init();
-                _aktiveSpieler.fuegeEin(daten, null);
+                _activePlayers.insert(daten, null);
             }
         }
-        Paket info = new Paket(Pakettype.SV_CHAT_NACHRICHT);
+        Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
         info.fuegeStringAn("Server");
         info.fuegeStringAn("Neue Runde");
         _server.sendeRundnachricht(info);
         System.out.println("Neue Runde");
     }
     
-    private void aktualisiereDaten()
+    private void updateData()
     {
-        for(int i = 0; i < _aktiveSpieler.laenge(); i++)
+        for(int i = 0; i < _activePlayers.size(); i++)
         {
-            PlayerDataSet daten = _aktiveSpieler.elementAn(i);
-            PlayerInput eingabe = _aktiveSpieler.eingabeAn(i);
+            PlayerDataSet daten = _activePlayers.dataAt(i);
+            PlayerInput eingabe = _activePlayers.inputAt(i);
             if (daten != null)
             {
                 if (eingabe.schuss() > 0)
@@ -170,13 +166,13 @@ public class GameController
                     Shot s = daten.schiesse(eingabe.schuss() == 2);
                     if (s != null)
                     {
-                        this.fuegeSchadenZu(daten, s);
-                        Paket p = s.pack();
+                        this.addDamage(daten, s);
+                        Packet p = s.pack();
                         _server.sendeRundnachricht(p);
                     }
                 }
-                daten.beschleunige(GameConstants.BESCHLEUNIGUNG * eingabe.bewegung());
-                daten.dreheUm(GameConstants.DREHWINKEL * Math.signum(eingabe.drehung()));
+                daten.beschleunige(GameConstants.BESCHLEUNIGUNG * eingabe.moveDirection());
+                daten.dreheUm(GameConstants.DREHWINKEL * Math.signum(eingabe.turnDirection()));
                 daten.ladeNach();
                 daten.bewege();
             }
@@ -191,11 +187,11 @@ public class GameController
      * @param angreifer Daten des angreifenden Spielers
      * @param shot abgegebener Schuss
      */
-    private void fuegeSchadenZu(PlayerDataSet angreifer, Shot shot)
+    private void addDamage(PlayerDataSet angreifer, Shot shot)
     {
-        for (int i = 0; i < _aktiveSpieler.laenge(); i++)
+        for (int i = 0; i < _activePlayers.size(); i++)
         {
-            PlayerDataSet daten = _aktiveSpieler.elementAn(i);
+            PlayerDataSet daten = _activePlayers.dataAt(i);
             if (daten != null && !daten.name().equals(angreifer.name()))
             {
                 if(shot.abstandZu(daten.position()) < GameConstants.SPIELERGROESSE/2)
@@ -203,7 +199,7 @@ public class GameController
                     daten.setzeLeben(daten.leben() - shot.schaden());
                     if(daten.leben() <= 0)
                     {
-                        _aktiveSpieler.versucheEntfernen(daten.name());
+                        _activePlayers.tryRemove(daten.name());
                         angreifer.setzePunkte(angreifer.punkte() + 1);
                     }
                 }

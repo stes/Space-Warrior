@@ -22,7 +22,7 @@ import sw.shared.PlayerDataSet;
 import sw.shared.PlayerList;
 import sw.shared.PlayerInput;
 import sw.shared.Shot;
-import sw.shared.Paket;
+import sw.shared.Packet;
 
 import java.awt.event.AWTEventListener;
 import java.awt.AWTEvent;
@@ -147,7 +147,7 @@ public class GameController implements AWTEventListener, ClientListener
         if (!_oldState.equals(_currentState))
         {
             _oldState = new PlayerInput(_currentState);
-            Paket p = _currentState.pack();
+            Packet p = _currentState.pack();
             //_client.sendeNachricht(p);
         }
     }
@@ -159,21 +159,21 @@ public class GameController implements AWTEventListener, ClientListener
         return _playerList;
     }
     @Override
-    public void shot(Paket paket)
+    public void shot(Packet packet)
     {
-        Shot s = Shot.hole(paket);
+        Shot s = Shot.hole(packet);
         ShotPool.addShot(s);
     }
     /**
      * send a Snapshot to every player
      */
     @Override
-	public void snapshot(Paket snapshot)
+	public void snapshot(Packet snapshot)
     {
         _playerList.update(snapshot);
-        for (int i = 0; i < _playerList.laenge(); i++)
+        for (int i = 0; i < _playerList.size(); i++)
         {
-            PlayerDataSet d = _playerList.elementAn(i);
+            PlayerDataSet d = _playerList.dataAt(i);
             if (d != null && d.lokal())
             {
                 _localPlayer = d;

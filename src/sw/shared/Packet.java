@@ -20,7 +20,7 @@ package sw.shared;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class Paket
+public class Packet
 {
     private StringBuilder _stringBuilder;
     private String _content;
@@ -34,7 +34,7 @@ public class Paket
      * 
      * @param typ Typ des Pakets
      */
-    public Paket(char typ)
+    public Packet(char typ)
     {
         _stringBuilder = new StringBuilder();
         _content = new String();
@@ -47,7 +47,7 @@ public class Paket
      * 
      * @param text Text als String
      */
-    public Paket(String text)
+    public Packet(String text)
     {
         _stringBuilder = new StringBuilder();
         _content = text;
@@ -71,7 +71,7 @@ public class Paket
      * 
      * @param p 
      */
-    public void fuegePaketAn(Paket p)
+    public void fuegePaketAn(Packet p)
     {
         this.fuegeStringAn(p.toString());
     }
@@ -126,9 +126,9 @@ public class Paket
      * 
      * @return Paket
      */
-    public Paket holePaket()
+    public Packet holePaket()
     {
-        return new Paket(this.holeString());
+        return new Packet(this.holeString());
     }
     
     /**

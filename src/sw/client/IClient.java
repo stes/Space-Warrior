@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.Paket;
+import sw.shared.Packet;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -30,5 +30,5 @@ public interface IClient
      * 
      * @param message the message
      */
-    public void sendMessage(Paket message);
+    public void sendMessage(Packet message);
 }

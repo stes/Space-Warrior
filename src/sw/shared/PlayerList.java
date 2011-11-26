@@ -25,42 +25,38 @@ import javax.management.AttributeNotFoundException;
 public class PlayerList
 {
     /**
-     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
+     * Creates a new Playerlist out of a paket
      * 
-     * @param p Das Paket
-     * @return Eine neue Spielerlisten-Instanz
+     * @param p The paket
+     * @return The new instance
      */
-    private static PlayerList ausSnapshot(Paket p)
+    private static PlayerList fromSnapshot(Packet p)
     {
         PlayerList liste = new PlayerList(p.holeZahl());
         int n = p.holeZahl();
         for (int i = 0; i < n; i++)
         {
-           liste.fuegeEin(PlayerDataSet.hole(p.holePaket()), null);
+           liste.insert(PlayerDataSet.hole(p.holePaket()), null);
         }
         return liste;
     }
-    // Bezugsobjekte
     private PlayerDataSet[] _liste;
-
     private PlayerInput[] _eingaben;
-    // Attribute
-
-    // Konstruktor
+    
     /**
      * Spielerliste Eine neue Spielerliste wird erstellt
      * 
-     * @param groesse Die groesse der Liste 
+     * @param size Die groesse der Liste 
      */
-    public PlayerList(int groesse)
+    public PlayerList(int size)
     {
-        _liste = new PlayerDataSet[groesse];
-        _eingaben = new PlayerInput[groesse];
+        _liste = new PlayerDataSet[size];
+        _eingaben = new PlayerInput[size];
     }
     /**
      * @return eingabe
      */
-    public PlayerInput eingabeAn(int index)
+    public PlayerInput inputAt(int index)
     {
         return _eingaben[index];
     }
@@ -68,7 +64,7 @@ public class PlayerList
     /**
      * @return liste
      */
-    public PlayerDataSet elementAn(int index)
+    public PlayerDataSet dataAt(int index)
     {
         return _liste[index];
     }
@@ -80,9 +76,9 @@ public class PlayerList
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört
      */
-    public void entferne(String name) throws AttributeNotFoundException
+    public void remove(String name) throws AttributeNotFoundException
     {
-        if (versucheEntfernen(name))
+        if (tryRemove(name))
             return;
         throw new AttributeNotFoundException();
     }
@@ -92,11 +88,11 @@ public class PlayerList
      * 
      * @return Das Paket
      */
-    public Paket erstelleSnapshot(String lokalerName)
+    public Packet createSnapshot(String lokalerName)
     {
-        Paket p = new Paket(Pakettype.SV_SNAPSHOT);
-        p.fuegeZahlAn(this.laenge());
-        p.fuegeZahlAn(this.zaehle());
+        Packet p = new Packet(Packettype.SV_SNAPSHOT);
+        p.fuegeZahlAn(this.size());
+        p.fuegeZahlAn(this.count());
         for (PlayerDataSet s : _liste)
         {
             if (s != null)
@@ -114,9 +110,9 @@ public class PlayerList
      * @param spieler Der Datensatz
      * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
      */
-    public void fuegeEin(PlayerDataSet spieler, PlayerInput eingabe)
+    public void insert(PlayerDataSet spieler, PlayerInput eingabe)
     {
-        int index = leererPlatz();
+        int index = findEmptyPlace();
         if (index == -1)
         {
             throw new ArrayIndexOutOfBoundsException("Kein Platz in der Liste");
@@ -130,7 +126,7 @@ public class PlayerList
      * 
      * @return Die Listengroesse
      */
-    public int laenge()
+    public int size()
     {
         return _liste.length;
     }
@@ -139,7 +135,7 @@ public class PlayerList
     /**
      * Die Spielerdaten werden aus der Liste geloescht
      */
-    public void leere()
+    public void clear()
     {
         _liste = new PlayerDataSet[_liste.length];
         _eingaben = new PlayerInput[_eingaben.length];
@@ -152,9 +148,9 @@ public class PlayerList
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört
      */
-    public PlayerDataSet suche(String name) throws AttributeNotFoundException
+    public PlayerDataSet find(String name) throws AttributeNotFoundException
     {
-        PlayerDataSet s = versucheSuche(name);
+        PlayerDataSet s = tryFind(name);
         if (s != null)
             return s;
         throw new AttributeNotFoundException();
@@ -165,9 +161,9 @@ public class PlayerList
      * 
      * @param p Das Paket
      */
-    public void update(Paket p)
+    public void update(Packet p)
     {
-        PlayerList liste = PlayerList.ausSnapshot(p);
+        PlayerList liste = PlayerList.fromSnapshot(p);
         _liste = liste._liste;
         _eingaben = liste._eingaben;
     }
@@ -179,7 +175,7 @@ public class PlayerList
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wird
      */
-    public boolean versucheEntfernen(String name)
+    public boolean tryRemove(String name)
     {
         for (int i = 0; i < _liste.length; i++)
         {
@@ -199,7 +195,7 @@ public class PlayerList
      * @param eingabe Eingabe des Spielers
      * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
      */
-    public boolean versucheSetzeEingabe(String name, PlayerInput eingabe)
+    public boolean trySetInput(String name, PlayerInput eingabe)
     {
         for (int i = 0; i < _liste.length; i++)
         {
@@ -221,7 +217,7 @@ public class PlayerList
      * @param name Der Spielername
      * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
      */
-    public PlayerDataSet versucheSuche(String name)
+    public PlayerDataSet tryFind(String name)
     {
         for (PlayerDataSet s : _liste)
         {
@@ -236,7 +232,7 @@ public class PlayerList
      * 
      * @return Die Anzahl der belegten Elemente
      */
-    public int zaehle()
+    public int count()
     {
         int n = 0;
         for (int i = 0; i < _liste.length; i++)
@@ -253,7 +249,7 @@ public class PlayerList
      * @return nächster freier Platz in der Liste
      * @return -1 , wenn kein freier Platz mehr verfügbar ist
      */
-    private int leererPlatz()
+    private int findEmptyPlace()
     {
         for (int i = 0; i < _liste.length; i++)
         {

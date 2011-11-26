@@ -23,7 +23,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import sw.shared.GameConstants;
-import sw.shared.Paket;
+import sw.shared.Packet;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -89,7 +89,7 @@ public class ServerFinder extends Thread
                 String msg = new String(buf, 0, len);
                 if(msg.equals(GameConstants.SERVER_INFO_ANTWORT))
                 {
-                    Paket info = new Paket(new String(buf, len, response.getLength()));
+                    Packet info = new Packet(new String(buf, len, response.getLength()));
                     _application.foundServer(response.getAddress().getHostAddress().toString(),
                         info.holeString(), info.holeZahl(), info.holeZahl());
                 }

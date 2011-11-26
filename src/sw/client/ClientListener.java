@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.Paket;
+import sw.shared.Packet;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -43,14 +43,14 @@ public interface ClientListener
     /**
      * Wird ausgeführt, wenn der Client einen Schuss empfängt
      * 
-     * @param paket Der Schuss
+     * @param packet Der Schuss
      */
-    public void shot(Paket paket);
+    public void shot(Packet packet);
     
     /**
      * Wird ausgeführt, wenn der Client einen Snapshot empfängt
      * 
-     * @param paket Der Snapshot
+     * @param packet Der Snapshot
      */
-    public void snapshot(Paket paket);
+    public void snapshot(Packet packet);
 }

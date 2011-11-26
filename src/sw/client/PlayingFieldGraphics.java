@@ -63,11 +63,11 @@ public class PlayingFieldGraphics extends JPanel
         super.paint(g);
         Graphics2D g2d = (Graphics2D)g;
         ShotPool.paint(g);
-        for (int i = 0 ; i < _spieler.laenge(); i++)
+        for (int i = 0 ; i < _spieler.size(); i++)
         {
-            if (_spieler.elementAn(i) == null)
+            if (_spieler.dataAt(i) == null)
                 continue;
-            PlayerDataSet d = _spieler.elementAn(i);
+            PlayerDataSet d = _spieler.dataAt(i);
             if (d.lokal())
             {
                 this.zeigeStatusbalken(g2d, d);

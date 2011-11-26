@@ -39,9 +39,9 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      * @return Eine neue SpielerDaten-Instanz
      * @throws IllegalArgumentException wenn Pakettyp falsch ist
      */
-    public static PlayerDataSet hole(Paket p)
+    public static PlayerDataSet hole(Packet p)
     {
-        if (p.Typ() != Pakettype.SNAP_SPIELERDATEN)
+        if (p.Typ() != Packettype.SNAP_SPIELERDATEN)
             throw new IllegalArgumentException();
         String name = p.holeString();
         boolean lokal = p.holeBoolean();
@@ -246,9 +246,9 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      * @param lokal true, wenn auch lokale Werte übernommen werden sollen
      * @return Das Paket
      */
-    public Paket pack(boolean lokal)
+    public Packet pack(boolean lokal)
     {
-        Paket p = new Paket(Pakettype.SNAP_SPIELERDATEN);
+        Packet p = new Packet(Packettype.SNAP_SPIELERDATEN);
         p.fuegeStringAn(this.name());
         p.fuegeBooleanAn(lokal);
         p.fuegeZahlAn((int)this.position().getX());

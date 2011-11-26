@@ -20,8 +20,8 @@ package sw.server;
 import java.util.ArrayList;
 
 import sw.shared.GameConstants;
-import sw.shared.Paket;
-import sw.shared.Pakettype;
+import sw.shared.Packet;
+import sw.shared.Packettype;
 import sw.shared.PlayerInput;
 
 /**
@@ -59,11 +59,11 @@ public class NetServer implements IServer
         Client client = this.sucheClient(pClientIP, pPartnerPort);
         if(client != null)
         {
-            Paket paket = new Paket(pNachricht);
+            Packet packet = new Packet(pNachricht);
             
-            if(Pakettype.CL_START_INFO == paket.Typ() && !client.getIsPlaying())
+            if(Packettype.CL_START_INFO == packet.Typ() && !client.getIsPlaying())
             {
-                String name = paket.holeString();
+                String name = packet.holeString();
                 Client cl = this.sucheClient(name);
                 if(cl == null)
                 {
@@ -74,24 +74,24 @@ public class NetServer implements IServer
                 }
                 else
                 {
-                    Paket info = new Paket(Pakettype.SV_TRENN_INFO);
+                    Packet info = new Packet(Packettype.SV_TRENN_INFO);
                     info.fuegeStringAn("Der Name \"" + name + "\" wird bereits verwendet.");
                     this.sendeNachricht(pClientIP, pPartnerPort, info);
                     this.beendeVerbindung(pClientIP, pPartnerPort);
                 }
             }
-            else if(Pakettype.CL_CHAT_NACHRICHT == paket.Typ() && client.getIsPlaying())
+            else if(Packettype.CL_CHAT_NACHRICHT == packet.Typ() && client.getIsPlaying())
             {
-                String text = paket.holeString();
-                Paket antwort = new Paket(Pakettype.SV_CHAT_NACHRICHT);
+                String text = packet.holeString();
+                Packet antwort = new Packet(Packettype.SV_CHAT_NACHRICHT);
                 antwort.fuegeStringAn(client.name());
                 antwort.fuegeStringAn(text);
                 this.sendeRundnachricht(antwort);
                 System.out.println(client.name() + ": " + text);
             }
-            else if(Pakettype.CL_EINGABE == paket.Typ() && client.getIsPlaying())
+            else if(Packettype.CL_EINGABE == packet.Typ() && client.getIsPlaying())
             {
-                _controller.bearbeiteEingabe(client.name(), new PlayerInput(paket));
+                _controller.processPlayerInput(client.name(), new PlayerInput(packet));
             }
         }
     }
@@ -107,7 +107,7 @@ public class NetServer implements IServer
         }
         else
         {
-            Paket info = new Paket(Pakettype.SV_TRENN_INFO);
+            Packet info = new Packet(Packettype.SV_TRENN_INFO);
             info.fuegeStringAn("Der Server ist voll.");
             this.sendeNachricht(pClientIP, pPartnerPort, info);
             this.beendeVerbindung(pClientIP, pPartnerPort);
@@ -131,9 +131,9 @@ public class NetServer implements IServer
      *
      * @return Paket mit Serverinfos
      */
-    public Paket holeServerInfos()
+    public Packet holeServerInfos()
     {
-        Paket info = new Paket((char)0);
+        Packet info = new Packet((char)0);
         info.fuegeStringAn(_serverName);
         info.fuegeZahlAn(GameConstants.MAX_SPIELERZAHL);
         info.fuegeZahlAn(_clientListe.size());
@@ -147,7 +147,7 @@ public class NetServer implements IServer
      * @param nachricht Die Nachricht
      */
     @Override
-    public void sendeNachricht(String name, Paket nachricht)
+    public void sendeNachricht(String name, Packet nachricht)
     {
         Client client = this.sucheClient(name);
         if(client != null)
@@ -162,7 +162,7 @@ public class NetServer implements IServer
      * @param nachricht Die Nachricht
      */
     @Override
-    public void sendeRundnachricht(Paket nachricht)
+    public void sendeRundnachricht(Packet nachricht)
     {
         this.sendeAnAlle(nachricht.toString());
     }
@@ -190,12 +190,12 @@ public class NetServer implements IServer
         double aktZeit = System.currentTimeMillis();
         if(aktZeit - _letzteAktualisierung > GameConstants.SPIELER_AKTUALISIERUNGS_INTERVALL)
         {
-            _controller.bearbeiteLeerlauf();
+            _controller.tick();
             _letzteAktualisierung = aktZeit;
         }
         if(aktZeit - _letztesSnapshot > GameConstants.SNAPSHOT_INTERVALL)
         {
-            _controller.bearbeiteSnapshot();
+            _controller.broadcastSnapshots();
             _letztesSnapshot = aktZeit;
         }
     }
@@ -221,7 +221,7 @@ public class NetServer implements IServer
             {
                 if(cur.getIsPlaying())
                 {
-                    _controller.bearbeiteSpielerVerlaesst(cur.name());
+                    _controller.playerLeft(cur.name());
                 }
                 System.out.println("'" + cur.name() + "' hat die Verbindung zum Server getrennt");
                 _clientListe.remove(i);
@@ -236,7 +236,7 @@ public class NetServer implements IServer
      * @param port Port des Empfängers
      * @param nachricht Die Nachricht
      */
-    private void sendeNachricht(String ip, int port, Paket nachricht)
+    private void sendeNachricht(String ip, int port, Packet nachricht)
     {
         //this.sendeAnEinen(ip, port, nachricht.toString());
     }

@@ -20,7 +20,7 @@ package sw.client;
 import java.util.ArrayList;
 
 import sw.shared.Nachrichtentyp;
-import sw.shared.Paket;
+import sw.shared.Packet;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -43,7 +43,7 @@ public class NetClient implements IClient
         //super(ip, port, false);
         _clientListener = new ArrayList<ClientListener>();
         this.setzeTrennGrundZurueck();
-        Paket start = new Paket(Nachrichtentyp.CL_START_INFO);
+        Packet start = new Packet(Nachrichtentyp.CL_START_INFO);
         start.fuegeStringAn(name);
         this.sendeNachricht(start);
     }
@@ -64,7 +64,7 @@ public class NetClient implements IClient
     }
     
     @Override
-    public void sendeNachricht(Paket nachricht)
+    public void sendeNachricht(Packet nachricht)
     {
         this.sende(nachricht.toString());
     }
@@ -86,39 +86,39 @@ public class NetClient implements IClient
     @Override
     public void bearbeiteNachricht(String nachricht)
     {
-        Paket paket = new Paket(nachricht);
+        Packet packet = new Packet(nachricht);
         
         if (_clientListener == null)
             return;
         
-        if(Nachrichtentyp.SV_TRENN_INFO == paket.Typ())
+        if(Nachrichtentyp.SV_TRENN_INFO == packet.Typ())
         {
-            _letzterTrennGrund = paket.holeString();
+            _letzterTrennGrund = packet.holeString();
         }
-        else if(Nachrichtentyp.SV_CHAT_NACHRICHT == paket.Typ())
+        else if(Nachrichtentyp.SV_CHAT_NACHRICHT == packet.Typ())
         {
-            String name = paket.holeString();
-            String text = paket.holeString();
+            String name = packet.holeString();
+            String text = packet.holeString();
             for (ClientListener l : _clientListener)
             {
                 if (l == null) continue;
                 l.bearbeiteChatNachricht(name, text);
             }
         }
-        else if(Nachrichtentyp.SV_SNAPSHOT == paket.Typ())
+        else if(Nachrichtentyp.SV_SNAPSHOT == packet.Typ())
         {
             for (ClientListener l : _clientListener)
             {
                 if (l == null) continue;
-                l.bearbeiteSnapshot(paket);
+                l.bearbeiteSnapshot(packet);
             }
         }
-        else if(Nachrichtentyp.SV_SCHUSS == paket.Typ())
+        else if(Nachrichtentyp.SV_SCHUSS == packet.Typ())
         {
             for (ClientListener l : _clientListener)
             {
                 if (l == null) continue;
-                l.bearbeiteSchuss(paket);
+                l.bearbeiteSchuss(packet);
             }
         }
     }

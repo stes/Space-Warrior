@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.server;
 
-import sw.shared.Paket;
+import sw.shared.Packet;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -32,12 +32,12 @@ public interface IServer
      * @param name Name des Empfängers
      * @param nachricht Die Nachricht
      */
-    public void sendeNachricht(String name, Paket nachricht);
+    public void sendeNachricht(String name, Packet nachricht);
     
     /**
      * Sendet eine Nachricht an alle verbundenen Clients
      * 
      * @param nachricht Die Nachricht
      */
-    public void sendeRundnachricht(Paket nachricht);
+    public void sendeRundnachricht(Packet nachricht);
 }
