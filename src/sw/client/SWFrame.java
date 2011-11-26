@@ -127,9 +127,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     /**
     * guckt ob der Chatbutton gedrückt wurde
     */
-    public void _btnChatGeklickt()
+    public void btnChat_Action(ActionEvent e)
     {
-        this.processInput();
+    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
+    	{
+    		this.processInput();
+    	}
     }
     
     /**
@@ -147,16 +150,25 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     }
     
     /**
-    * guckt ob der Verbindenbutton geklickt wurde
+    * 
     */
-    /*public void _btnVerbindenGeklickt()
+    public void btnConnect_Action(ActionEvent e)
     {
         if ( !_txtName.getText().isEmpty())
         {
-            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
+        	System.out.println("connect");
+            //this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
         }
  
-    }*/
+    }
+    
+    public void btnUpdate_Action(ActionEvent e)
+    {
+    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
+    	{
+    		System.out.println("update server list");
+    	}
+    }
     
     /**
     * guckt ob die Eingabe des Chats gedrückt wurde
@@ -362,18 +374,17 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         
         _btnConnect = new JButton("Verbinden");
         _btnConnect.setBounds(640, 10, 100, 25);
-        _btnConnect.addActionListener(new ActionDelegate(this, "txtChatmessage_Action"));
-        //_btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
+        _btnConnect.addActionListener(new ActionDelegate(this, "btnConnect_Action"));
         this.add(_btnConnect);
         
         _btnChat = new JButton("Chat");
         _btnChat.setBounds(640, chat+100, 100, 25);
-        //_btnChat.setzeBearbeiterGeklickt("_btnChatGeklickt");
+        _btnChat.addActionListener(new ActionDelegate(this, "btnChat_Action"));
         this.add(_btnChat);
         
         _btnUpdate = new JButton("Aktualisieren");
         _btnUpdate.setBounds(1100, 620, 100, 25);
-        //_btnAktualisieren.setzeBearbeiterGeklickt("_btnAktualisierenGeklickt");
+        _btnUpdate.addActionListener(new ActionDelegate(this, "btnUpdate_Action"));
         this.add(_btnUpdate);
         
         _lblIPAdress = new JLabel("IP-Adresse");
@@ -399,6 +410,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _tblServers.getColumnModel().getColumn(0).setHeaderValue("Server");
         _tblServers.getColumnModel().getColumn(1).setHeaderValue("Spieler/Max");
         _tblServers.getColumnModel().getColumn(0).setWidth(110);
+        
         this.add(_tblServers);
         //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
     }
