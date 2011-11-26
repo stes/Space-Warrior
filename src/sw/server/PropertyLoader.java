@@ -2,14 +2,10 @@ package sw.server;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Properties;
-import java.util.logging.Logger;
-
-import me.stes.scp.PlayerInfo;
-import me.stes.scp.Team;
 
 public class PropertyLoader
 {
@@ -28,24 +24,43 @@ public class PropertyLoader
 	{
 		_properties = new Properties();
 		_propertiesFile = new File(System.getProperty("user.dir") + "/config.ini");
-		if (!_propertiesFile.exists())
-			this.init();
-		this.load();
+		try
+		{
+			if (!_propertiesFile.exists())
+				this.init();
+			this.load();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	private void load()
+	/**
+	 * @return the maximum number of players
+	 */
+	public String getMaxPlayers()
 	{
-		FileInputStream in = new FileInputStream(System.getProperty("user.dir") + "/config.ini");
-		_properties.load(in);
-		
-		_serverName = _properties.getProperty("Server_Name");
-		_maxPlayers = _properties.getProperty("Max_Players");
-		_port = _properties.getProperty("Port");
-		
-		in.close();
+		return _maxPlayers;
 	}
 	
-	private void init()
+	/**
+	 * @return the port
+	 */
+	public String getPort()
+	{
+		return _port;
+	}
+
+	/**
+	 * @return the server name
+	 */
+	public String getServerName()
+	{
+		return _serverName;
+	}
+
+	private void init() throws IOException
 	{
 		_propertiesFile.createNewFile();
 		
@@ -57,51 +72,39 @@ public class PropertyLoader
 		_properties.store(out, "This file contains the server properties.");
 	}
 
-	/**
-	 * @return the _serverName
-	 */
-	public String getServerName()
+	private void load() throws IOException
 	{
-		return _serverName;
+		FileInputStream in = new FileInputStream(System.getProperty("user.dir") + "/config.ini");
+		_properties.load(in);
+		
+		this.setServerName(_properties.getProperty("Server_Name"));
+		this.setMaxPlayers(_properties.getProperty("Max_Players"));
+		this.setPort(_properties.getProperty("Port"));
+		
+		in.close();
 	}
 
 	/**
-	 * @param _serverName the _serverName to set
+	 * @param maxPlayers the maximum number of players
 	 */
-	private void setServerName(String _serverName)
+	private void setMaxPlayers(String maxPlayers)
 	{
-		this._serverName = _serverName;
+		this._maxPlayers = maxPlayers;
 	}
 
 	/**
-	 * @return the _maxPlayers
+	 * @param port the port
 	 */
-	public String getMaxPlayers()
+	private void setPort(String port)
 	{
-		return _maxPlayers;
+		this._port = port;
 	}
 
 	/**
-	 * @param _maxPlayers the _maxPlayers to set
+	 * @param serverName the server name
 	 */
-	private void setMaxPlayers(String _maxPlayers)
+	private void setServerName(String serverName)
 	{
-		this._maxPlayers = _maxPlayers;
-	}
-
-	/**
-	 * @return the _port
-	 */
-	public String getPort()
-	{
-		return _port;
-	}
-
-	/**
-	 * @param _port the _port to set
-	 */
-	private void setPort(String _port)
-	{
-		this._port = _port;
+		this._serverName = serverName;
 	}
 }
