@@ -49,7 +49,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 */
 public class SWFrame extends JFrame implements WindowListener, ClientListener
 {
-    // Objekte    
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1575599799999464878L;
+	
+	// Objekte    
     private BfInterpreter _bfInterpreter;
     private JTextField _txtIPAdresse;
     private JTextField _txtName;

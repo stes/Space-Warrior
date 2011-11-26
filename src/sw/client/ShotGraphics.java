@@ -31,7 +31,12 @@ import sw.shared.GameConstants;
  */
 public class ShotGraphics extends Shot
 {
-    private static boolean _isReady;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7174363740068442519L;
+	
+	private static boolean _isReady;
     private Color _basicColor;
     private double _startTime;
     
