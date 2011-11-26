@@ -25,12 +25,18 @@ import sw.shared.PlayerDataSet;
 import sw.eastereggs.bf.*;
 import sw.eastereggs.fortytwo.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -83,7 +89,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     {
         //Initialisierung der Oberklasse
         super("Space Warrior");
-        this.setSize(1400, 800);
+        this.setSize(1400, 900);
         this.initComponents();
         
         this.setVisible(true);
@@ -155,9 +161,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     /**
     * guckt ob die Eingabe des Chats gedrückt wurde
     */
-    public void _txtChatnachrichtEingabeBestaetigt()
+    public void txtChatmessage_Action(ActionEvent e)
     {
-        this.processInput();
+        System.out.println("chat textfeld");
     }
     
     @Override
@@ -351,11 +357,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         
         _txtChatmessage = new JTextField("");
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
-        ////_txtChatnachricht.eventhandlerblablabla("_txtChatnachrichtEingabeBestaetigt");
+        _txtChatmessage.addActionListener(new ActionDelegate(this, "txtChatmessage_Action"));
         this.add(_txtChatmessage);
         
         _btnConnect = new JButton("Verbinden");
         _btnConnect.setBounds(640, 10, 100, 25);
+        _btnConnect.addActionListener(new ActionDelegate(this, "txtChatmessage_Action"));
         //_btnVerbinden.setzeBearbeiterGeklickt("_btnVerbindenGeklickt");
         this.add(_btnConnect);
         
@@ -467,6 +474,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
             _serverFinder = new ServerFinder(this);
             _serverFinder.start();
         }
-    }
+    }    
 }
 

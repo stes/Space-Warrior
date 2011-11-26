@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import sw.shared.Nachrichtentyp;
 import sw.shared.Packet;
+import sw.shared.Packettype;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -43,7 +44,7 @@ public class NetClient implements IClient
         //super(ip, port, false);
         _clientListener = new ArrayList<ClientListener>();
         this.setzeTrennGrundZurueck();
-        Packet start = new Packet(Nachrichtentyp.CL_START_INFO);
+        Packet start = new Packet(Packettype.CL_START_INFO);
         start.fuegeStringAn(name);
         this.sendeNachricht(start);
     }
