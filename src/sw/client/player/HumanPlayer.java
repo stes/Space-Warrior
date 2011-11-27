@@ -118,9 +118,7 @@ public class HumanPlayer extends Player implements AWTEventListener
         if (!this.getOldState().equals(this.getCurrentState()))
         {
             this.setOldState(new PlayerInput(this.getCurrentState()));
-            //Packet p = this.getCurrentState().pack();
-            //_client.sendPacket(p);
-            // TODO invoke sending the new input
+            this.getStateManager().stateUpdated(this.getCurrentState());
         }
     }
 }

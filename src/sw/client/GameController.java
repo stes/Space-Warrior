@@ -23,6 +23,7 @@ import sw.client.player.Player;
 import sw.shared.GameConstants;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 import sw.shared.data.Shot;
 
@@ -83,4 +84,11 @@ public class GameController implements ClientListener, IGameStateManager
             }
         }
     }
+
+	@Override
+	public void stateUpdated(PlayerInput input)
+	{
+        Packet p = input.pack();
+        _client.sendPacket(p);
+	}
 }

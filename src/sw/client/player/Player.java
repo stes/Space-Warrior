@@ -29,6 +29,9 @@ public abstract class Player
     public Player(IGameStateManager gameStateManager)
     {
     	_stateManager = gameStateManager;
+    	_currentState = new PlayerInput();
+    	_oldState = new PlayerInput();
+    	_dataSet = new PlayerDataSet();
     }
     
 	/**

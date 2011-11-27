@@ -1,5 +1,6 @@
 package sw.client;
 
+import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 
 public interface IGameStateManager
@@ -11,4 +12,6 @@ public interface IGameStateManager
 	
 	//TODO further methods that can be generalized for easy connection
 	// between player and controller
+	
+	public void stateUpdated(PlayerInput input);
 }
