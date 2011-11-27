@@ -22,24 +22,24 @@ package sw.shared;
  */
 public class Packet
 {
+	// TODO: use byte array here
     private StringBuilder _stringBuilder;
     private String _content;
     private int _position;
-    private char _typ;
+    private byte _type;
 
 
-    // Konstruktor
     /**
      * Paket um Daten verschiedener Typen zu übermitteln
      * 
      * @param typ Typ des Pakets
      */
-    public Packet(char typ)
+    public Packet(byte type)
     {
         _stringBuilder = new StringBuilder();
         _content = new String();
-        _typ = (char)((typ) & 0x3F | 0x40);
-        _stringBuilder.append(_typ);
+        _type = type;
+        _stringBuilder.append((char)_type);
     }
     
     /**
@@ -47,11 +47,11 @@ public class Packet
      * 
      * @param text Text als String
      */
-    public Packet(String text)
+    public Packet(byte[] data, int len)
     {
         _stringBuilder = new StringBuilder();
-        _content = text;
-        _typ = (char)((_content.charAt(0)) & 0x3F);
+        _content = new String(data, 0, len);
+        _type = data[0];
         _position++;
     }
     
@@ -62,7 +62,7 @@ public class Packet
      */
     public void fuegeBooleanAn(boolean bool)
     {
-        char data = (char) (bool ? 1 : 0);
+    	byte data = (byte) (bool ? 1 : 0);
         _stringBuilder.append(data);
     }
 
@@ -73,7 +73,8 @@ public class Packet
      */
     public void fuegePaketAn(Packet p)
     {
-        this.fuegeStringAn(p.toString());
+    	byte[] data = p.getData();
+        this.fuegeStringAn(new String(data, 0, data.length));
     }
     
     /**
@@ -83,13 +84,10 @@ public class Packet
      */
     public void fuegeStringAn(String text)
     {
-        text = text.replace("\n", "");
-        text = text.replace("\r", "");
         this.fuegeZahlAn(text.length());
         _stringBuilder.append(text);
     }
     
-    // Dienste
     /**
      * fügt Zahlen als Typ an
      * 
@@ -97,15 +95,12 @@ public class Packet
      */
     public void fuegeZahlAn(int zahl)
     {
-        char[] data = new char[6];
+    	char[] data = new char[4];
         
-        // workaround: '\n' und '\r' dürfen nicht enthalten sein
-        data[0] = (char) ( (zahl >> 30) & 0x03 | 0x40);
-        data[1] = (char) ( (zahl >> 24) & 0x3F | 0x40);
-        data[2] = (char) ( (zahl >> 18) & 0x3F | 0x40);
-        data[3] = (char) ( (zahl >> 12) & 0x3F | 0x40);
-        data[4] = (char) ( (zahl >> 6) & 0x3F | 0x40);
-        data[5] = (char) ( zahl & 0x3F | 0x40);
+        data[0] = (char) ( (zahl >> 24) & 0xFF);
+        data[1] = (char) ( (zahl >> 16) & 0xFF);
+        data[2] = (char) ( (zahl >> 8) & 0xFF);
+        data[3] = (char) ( zahl & 0xFF);
         
         _stringBuilder.append(data);
     }
@@ -128,7 +123,8 @@ public class Packet
      */
     public Packet holePaket()
     {
-        return new Packet(this.holeString());
+    	byte[] data = this.holeString().getBytes();
+        return new Packet(data, data.length);
     }
     
     /**
@@ -150,28 +146,25 @@ public class Packet
      */
     public int holeZahl()
     {
-        int zahl = (_content.charAt(_position) & 0x03) << 30;
-        zahl |= (_content.charAt(_position+1) & 0x3F) << 24;
-        zahl |= (_content.charAt(_position+2) & 0x3F) << 18;
-        zahl |= (_content.charAt(_position+3) & 0x3F) << 12;
-        zahl |= (_content.charAt(_position+4) & 0x3F) << 6;
-        zahl |= (_content.charAt(_position+5) & 0x3F);
+        int zahl = (_content.charAt(_position) & 0xFF) << 24;
+        zahl |= (_content.charAt(_position+1) & 0xFF) << 16;
+        zahl |= (_content.charAt(_position+2) & 0xFF) << 8;
+        zahl |= (_content.charAt(_position+3) & 0xFF);
         
-        _position += 6;
+        _position += 4;
         return zahl;
     }
     
-    @Override
-    public String toString()
+    public byte[] getData()
     {
-        return _stringBuilder.toString();
+        return _stringBuilder.toString().getBytes();
     }
     
     /**
      * @return gibt den Typ zurück
      */
-    public char Typ()
+    public byte type()
     {
-        return _typ;
+        return _type;
     }
 }

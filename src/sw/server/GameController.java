@@ -86,7 +86,7 @@ public class GameController
             if (daten != null)
             {
                 Packet snapshot = _activePlayers.createSnapshot(daten.name());
-                _server.sendeNachricht(daten.name(), snapshot);
+                _server.sendPacket(daten.name(), snapshot);
             }
         }
     }
@@ -97,7 +97,7 @@ public class GameController
      */
     public void playerLeft(String name)
     {
-        PlayerDataSet suchObjekt = new PlayerDataSet(name, true);
+        //PlayerDataSet suchObjekt = new PlayerDataSet(name, true);
         _connectedPlayers.tryRemove(name);
         _activePlayers.tryRemove(name);
     }
@@ -117,7 +117,7 @@ public class GameController
                         Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
                         info.fuegeStringAn("Server");
                         info.fuegeStringAn(daten.name() + " hat die Runde gewonnen!");
-                        _server.sendeRundnachricht(info);
+                        _server.sendBroadcast(info);
                         break;
                     }
                 }
@@ -149,7 +149,7 @@ public class GameController
         Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
         info.fuegeStringAn("Server");
         info.fuegeStringAn("Neue Runde");
-        _server.sendeRundnachricht(info);
+        _server.sendBroadcast(info);
         System.out.println("Neue Runde");
     }
     
@@ -168,7 +168,7 @@ public class GameController
                     {
                         this.addDamage(daten, s);
                         Packet p = s.pack();
-                        _server.sendeRundnachricht(p);
+                        _server.sendBroadcast(p);
                     }
                 }
                 daten.beschleunige(GameConstants.ACCELERATION * eingabe.moveDirection());

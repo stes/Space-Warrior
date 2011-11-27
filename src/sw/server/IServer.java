@@ -25,19 +25,7 @@ import sw.shared.Packet;
 
 public interface IServer
 {
-    // Dienste
-     /**
-     * Sendet eine Nachricht an einen Client
-     * 
-     * @param name Name des Empfängers
-     * @param nachricht Die Nachricht
-     */
-    public void sendeNachricht(String name, Packet nachricht);
+    public void sendPacket(String name, Packet packet);
     
-    /**
-     * Sendet eine Nachricht an alle verbundenen Clients
-     * 
-     * @param nachricht Die Nachricht
-     */
-    public void sendeRundnachricht(Packet nachricht);
+    public void sendBroadcast(Packet packet);
 }

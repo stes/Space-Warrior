@@ -25,6 +25,5 @@ public class Program
     public static void main(String[] args)
     {
         SWFrame swa = new SWFrame();
-        
     }
 }

@@ -26,9 +26,7 @@ public class ServerConsole
 {
     public static void main(String[] args)
     {
-        NetServer _netServer = new NetServer(GameConstants.STANDARD_PORT);
-        ServerInfo _serverInfo = new ServerInfo(_netServer);
-        _serverInfo.start();
+        SWServer _netServer = new SWServer(GameConstants.STANDARD_PORT);
         
         while (true)
         {

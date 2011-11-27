@@ -18,8 +18,6 @@
 package sw.shared;
 
 /**
- * TODO: Dokumentation
- * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */

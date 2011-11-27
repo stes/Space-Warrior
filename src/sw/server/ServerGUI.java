@@ -40,11 +40,11 @@ import javax.swing.JTextField;
 public class ServerGUI extends JFrame implements ActionListener
 {
 	private JTextArea _area;
-	private JList _clientList;
+	private JList<Client> _clientList;
 	private JScrollPane _scroll;
 	private JButton _kickButton;
 	private JTextField _nameField;
-	private NetServer _netServer;
+	private SWServer _netServer;
 	
 	/**
 	 * erstellt eine GUI für die Serverkonsole
@@ -68,7 +68,7 @@ public class ServerGUI extends JFrame implements ActionListener
 		_scroll = new JScrollPane(_area);
 		_scroll.setBounds(10, 10, width/3*2-20, height-90);
 		
-		_clientList = new JList();
+		_clientList = new JList<Client>();
 		_clientList.setBounds(20+width/3*2-20, 10, width/3-30, height-90);
 		
 		_kickButton = new JButton("Kick");
@@ -114,12 +114,12 @@ public class ServerGUI extends JFrame implements ActionListener
     		Client cl = (Client)_clientList.getSelectedValue();
     		if(_netServer != null && cl != null)
     		{
-    		    _netServer.beendeVerbindung(cl.ip(), cl.getPort());
+    		    _netServer.drop(cl.getClientID());
     		}
     	}
     	else
     	{
-    	    _netServer.setzeServerName(e.getActionCommand());
+    	    _netServer.setServerName(e.getActionCommand());
     	    _nameField.setText("");
         }
     }
@@ -129,7 +129,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	 * 
 	 * @param data
 	 */
-	public void setClientList(Vector<?> data)
+	public void setClientList(Vector<Client> data)
 	{
 		_clientList.setListData(data);
 	}
@@ -137,11 +137,11 @@ public class ServerGUI extends JFrame implements ActionListener
 	/**
 	 * setzt den Netserver
 	 * 
-	 * @param netServer
+	 * @param sWServer
 	 */
-	public void setNetServer(NetServer netServer)
+	public void setNetServer(SWServer sWServer)
 	{
-	    _netServer = netServer;
+	    _netServer = sWServer;
 	}
 	
     /**

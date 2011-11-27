@@ -17,26 +17,13 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.GameConstants;
-import sw.shared.Packettype;
-import sw.shared.Packet;
-import sw.shared.PlayerDataSet;
-
-import sw.eastereggs.bf.*;
-import sw.eastereggs.fortytwo.*;
-
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -47,6 +34,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import sw.eastereggs.bf.BfInterpreter;
+import sw.eastereggs.fortytwo.FortyTwo;
+import sw.shared.GameConstants;
+import sw.shared.Packet;
+import sw.shared.Packettype;
+import sw.shared.PlayerDataSet;
 
 
 /**
@@ -77,8 +71,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     private PlayingFieldGraphics _playingField;
     private GameController _controller;
     
-    //private NetClient _client;
-    private ServerFinder _serverFinder;
+    private SWClient _client;
     
     // Attribute
     
@@ -95,21 +88,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         this.setVisible(true);
         this.toFront();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        try {
+        try
+        {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
+		}
+        catch (Exception e)
+        {
 			e.printStackTrace();
 		}
+        
+        _client = new SWClient();
+        _controller = new GameController(_client);  
+        _client.addClientListener(this);
+        _client.addClientListener(_controller);
         
         this.initEastereggs();
         //this.bildschirm().addWindowListener(this);
@@ -157,7 +148,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         if ( !_txtName.getText().isEmpty())
         {
         	System.out.println("connect");
-            //this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
+            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
         }
  
     }
@@ -179,23 +170,33 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     }
     
     @Override
-    public void chatMessage(String name, String text)
+    public void connected()
     {
-        _lstChathistory.append(name + ": " + text);
+    	this.disableComponents();
+        this.initAfterConnection();
+        
+        // ugly!!!
+        new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
     }
     
     @Override
-    public void connectionLost(String grund)
+    public void disconnected()
     {
-        //if (_client != null)
+        /*if (_client != null)
         {
-            //_client.gibFrei();
-            //_client = null;
-            //_spielfeld.verstecke();
-            //_spielfeld.gibFrei();
-        }
+            _client.gibFrei();
+            _client = null;
+            _spielfeld.verstecke();
+            _spielfeld.gibFrei();
+        }*/
         this.enableComponents();
-        _lstChathistory.append(grund);
+        _lstChathistory.append("connection lost");
+    }
+    
+    @Override
+    public void chatMessage(String name, String text)
+    {
+        _lstChathistory.append(name + ": " + text);
     }
     
     public void foundServer(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
@@ -237,7 +238,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         
         java.util.Arrays.sort(spielerScore);
         
-        for(int i = 0; i < spielerScore.length; i++)
+        /*for(int i = 0; i < spielerScore.length; i++)
         {
             _tblPoints.setValueAt(spielerScore[spielerScore.length-i].name(), i, 0);
             _tblPoints.setValueAt(spielerScore[spielerScore.length-i].punkte(), i, 1);
@@ -246,21 +247,14 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         {
             _tblPoints.setValueAt("", i, 0);
             _tblPoints.setValueAt("", i, 1);
-        }
+        }*/
     }
     
-    //@Override
     public void tick()
     {
         if (_playingField != null)
         {
             _playingField.repaint();
-        }
-        if(_serverFinder != null /*&& _uhr.verstricheneZeit() > 5000*/)
-        {
-            _serverFinder.dispose();
-            _serverFinder = null;
-            _btnUpdate.setEnabled(true);
         }
     }
     
@@ -271,17 +265,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     public void windowClosed(WindowEvent e) { }
     
     @Override
-    public void windowClosing(WindowEvent e)
-    {
-        //if (_client != null)
-        {
-            //_client.gibFrei();
-        }
-        if (_serverFinder != null)
-        {
-            _serverFinder.dispose();
-        }
-    }
+    public void windowClosing(WindowEvent e) { } // TODO: shutdown
     
     @Override
     public void windowDeactivated(WindowEvent e) { }
@@ -298,25 +282,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     /**
      * Verbindet den Client mit einem Server.
      */
-    /*private void verbinde(String ip, String name)
+    private void verbinde(String ip, String name)
     {
-        if(_client != null)
-            return;
-        
-        _client = new NetClient(ip, Spielkonstanten.STANDARD_PORT, name);
-        
-        if(_client.vorhanden())
-        {
-            this.deaktiviereElemente();
-            this.initNachVerbindung();
-        }
-        else
-        {
-            _lstChatverlauf.append("Fehler: konnte nicht zum Server verbinden");
-            _client.gibFrei();
-            _client = null;
-        }
-    }*/
+        _client.connect(ip, GameConstants.STANDARD_PORT, name);
+    }
     
     private void disableComponents()
     {
@@ -341,17 +310,16 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _tblServers.setVisible(true);
         _btnUpdate.setEnabled(true);
     }
+    
     /**
      * Die Variablen werden mit den Serverdaten angepasst
      */
     private void initAfterConnection()
     {
-        //_spielController = new SpielController(_client);  
-        //_client.fuegeClientListenerHinzu(_spielController);
-        //_client.fuegeClientListenerHinzu(this);
         _playingField = new PlayingFieldGraphics(_controller.getPlayerList());
         this.add(_playingField);
     }
+    
     /**
      * Die Variablen der einzelnen Elemente der GUI werden gesetzt.
      */
@@ -414,6 +382,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         this.add(_tblServers);
         //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
     }
+    
     private void initEastereggs()
     {
         OutputStream output = new OutputStream()
@@ -440,11 +409,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
             }
         };
         
-        System.setOut(new PrintStream(output, true));
+        //System.setOut(new PrintStream(output, true));
         System.setIn(input);
         
         _bfInterpreter = new BfInterpreter();
     }
+    
     private void processInput()
     {
         String nachricht = _txtChatmessage.getText();
@@ -479,13 +449,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
      */
     private void updateServerList()
     {
-        if(_serverFinder == null)
-        {
-            //_serverListe.setzeZeilenanzahl(0);
-            _btnUpdate.setEnabled(true);
-            _serverFinder = new ServerFinder(this);
-            _serverFinder.start();
-        }
     }    
 }
 

@@ -38,7 +38,7 @@ public class Shot extends java.awt.geom.Line2D.Double
      */
     public static Shot hole(Packet p)
     {
-        if (p.Typ() != Packettype.SV_SCHUSS)
+        if (p.type() != Packettype.SV_SCHUSS)
             throw new IllegalArgumentException();
         return new Shot(
             new Point(p.holeZahl(), p.holeZahl()),

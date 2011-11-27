@@ -74,7 +74,7 @@ public class ServerFinder extends Thread
                 if(addr.length != 4 || addr[0] != (byte)192 || addr[1] != (byte)168)
                     continue;
                 addr[3] = (byte)255;
-                byte[] buffer = GameConstants.SERVER_INFO_REQUEST.getBytes();
+                byte[] buffer = GameConstants.SERVER_INFO_REQUEST;
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 packet.setSocketAddress(new InetSocketAddress(InetAddress.getByAddress(addr), GameConstants.STANDARD_PORT));
                 _socket.send(packet);
@@ -85,11 +85,12 @@ public class ServerFinder extends Thread
                 byte[] buf = new byte[1024];
                 DatagramPacket response = new DatagramPacket(buf, buf.length);
                 _socket.receive(response);
-                int len = Math.min(response.getLength(), GameConstants.SERVER_INFO_RESPONSE.length());
+                int len = Math.min(response.getLength(), GameConstants.SERVER_INFO_RESPONSE.length);
                 String msg = new String(buf, 0, len);
                 if(msg.equals(GameConstants.SERVER_INFO_RESPONSE))
                 {
-                    Packet info = new Packet(new String(buf, len, response.getLength()));
+                	byte[] data = java.util.Arrays.copyOfRange(buf, len, response.getLength());
+                    Packet info = new Packet(data, data.length);
                     _application.foundServer(response.getAddress().getHostAddress().toString(),
                         info.holeString(), info.holeZahl(), info.holeZahl());
                 }

@@ -25,10 +25,5 @@ import sw.shared.Packet;
 
 public interface IClient
 {
-    /**
-     * sends a message to the server
-     * 
-     * @param message the message
-     */
-    public void sendMessage(Packet message);
+	public void sendPacket(Packet packet);
 }

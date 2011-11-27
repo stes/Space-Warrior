@@ -84,7 +84,7 @@ public class PlayingFieldGraphics extends JPanel
                     null,
                     (int)d.position().getX() - GameConstants.PLAYER_SIZE/2,
                     (int)d.position().getY() - GameConstants.PLAYER_SIZE/2);
-            }   
+            }
         }
     }
     

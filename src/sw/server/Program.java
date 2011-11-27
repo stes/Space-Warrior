@@ -19,7 +19,6 @@ package sw.server;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import sw.shared.GameConstants;
@@ -34,37 +33,35 @@ public class Program implements WindowListener
         (new Program()).run();
     }
     private ServerGUI _serverGUI;
-    private NetServer _netServer;
-    
-    private ServerInfo _serverInfo;
+    private SWServer _netServer;
     
     public Program()
     {
         _serverGUI = new ServerGUI(800, 400);
-        _netServer = new NetServer(GameConstants.STANDARD_PORT);
+        _netServer = new SWServer(GameConstants.STANDARD_PORT);
         _serverGUI.setNetServer(_netServer);
-        _serverInfo = new ServerInfo(_netServer);
-        _serverInfo.start();
         
         _serverGUI.addWindowListener(this);
     }
     
     public void run()
     {
-        int letzteLaenge = 0;
+        int lastSize = 0;
         while (true)
         {
-            ArrayList<Client> clientListe = _netServer.clListe();
-            if(clientListe.size() != letzteLaenge)
+            Client[] clients = _netServer.clListe();
+            Vector<Client> clientList = new Vector<Client>();
+            for(Client cl : clients)
             {
-                Vector<Client> liste = new Vector<Client>();
-                for(int i = 1; i <= clientListe.size(); i++)
-                {
-                    Client cur = clientListe.get(i);
-                    liste.add(cur);
-                }
-                _serverGUI.setClientList(liste);
-                letzteLaenge = clientListe.size();
+            	if(cl != null)
+            	{
+            		clientList.add(cl);
+            	}
+            }
+            if(clientList.size() != lastSize)
+            {
+            	_serverGUI.setClientList(clientList);
+            	lastSize = clientList.size();
             }
             _netServer.tick();
         }
@@ -75,21 +72,13 @@ public class Program implements WindowListener
     @Override
 	public void windowClosed(WindowEvent e) { }
     @Override
-	public void windowClosing(WindowEvent e)
-    {
-        if (_netServer != null)
-        {
-            //_netServer.gibFrei();
-            _serverInfo.gibFrei();
-        }
-    }
+	public void windowClosing(WindowEvent e) { } // TODO: shutdown
     @Override
 	public void windowDeactivated(WindowEvent e) { }
     @Override
 	public void windowDeiconified(WindowEvent e) { }
     @Override
 	public void windowIconified(WindowEvent e) { }
-
     @Override
 	public void windowOpened(WindowEvent e) { }
 }

@@ -53,12 +53,15 @@ public class GameController implements AWTEventListener, ClientListener
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         _isReady = true;
     }
+    
+    @Override
+    public void connected() {}
+    
+    @Override
+    public void disconnected() {}
         
     @Override
     public void chatMessage(String name, String text) {}
-
-    @Override
-    public void connectionLost(String grund) {}
     
     @Override
     public void eventDispatched(AWTEvent e)
@@ -66,7 +69,7 @@ public class GameController implements AWTEventListener, ClientListener
         if (e.getID() == KeyEvent.KEY_TYPED)
         {
             KeyEvent keyEvent = (KeyEvent)e;
-            char eingabe = ((KeyEvent)e).getKeyChar();
+            char eingabe = keyEvent.getKeyChar();
             switch (eingabe)
             {
                 case 'w':
@@ -110,7 +113,7 @@ public class GameController implements AWTEventListener, ClientListener
         else if (e.getID() == KeyEvent.KEY_RELEASED)
         {
             KeyEvent keyEvent = (KeyEvent)e;
-            char eingabe = ((KeyEvent)e).getKeyChar();
+            char eingabe = keyEvent.getKeyChar();
             switch (eingabe)
             {
                 case 'w':
@@ -148,7 +151,7 @@ public class GameController implements AWTEventListener, ClientListener
         {
             _oldState = new PlayerInput(_currentState);
             Packet p = _currentState.pack();
-            //_client.sendeNachricht(p);
+            _client.sendPacket(p);
         }
     }
     /**

@@ -41,7 +41,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public static PlayerDataSet hole(Packet p)
     {
-        if (p.Typ() != Packettype.SNAP_SPIELERDATEN)
+        if (p.type() != Packettype.SNAP_SPIELERDATEN)
             throw new IllegalArgumentException();
         String name = p.holeString();
         boolean lokal = p.holeBoolean();

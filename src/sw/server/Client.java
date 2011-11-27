@@ -22,84 +22,37 @@ package sw.server;
  */
 public class Client
 {
-    // Bezugsobjekte
-
-    // Attribute
-    private String _ip;
-    private int _port;
+    private int _clientID;
     private String _name;
     private boolean _isPlaying;
 
-    // Konstruktor
-    /**
-     * Ein neuer Client wird auf dem Server hinzugefügt
-     * 
-     * @param ip Ip des Clients
-     * @param port Port des Clients
-     * @param name Name des Clients
-     */
-    public Client(String ip, int port, String name)
+    public Client(int clientID, String name)
     {
-        _ip = ip;
-        _port = port;
+    	_clientID = clientID;
         _name = name;
         _isPlaying = false;
     }
-
-    /**
-     * wahr, wenn der Client auf den Server verbindet
-     */
+    
     public void enterGame()
     {
         _isPlaying = true;
     }
     
-    // Dienste
-    /**
-     * @return ip IPAddresse mit dazugehörigem Port
-     */
-    public String getAdress()
+    public int getClientID()
     {
-        return _ip + ":" + _port;
+        return _clientID;
     }
     
-    /**
-     * @return imSpiel gibt zurück ob der Client im Spiel ist
-     */
-    public boolean getIsPlaying()
+    public boolean isPlaying()
     {
         return _isPlaying;
     }
     
-    /**
-     * @return port Port des Clients
-     */
-    public int getPort()
-    {
-        return _port;
-    }
-    
-    /**
-     * @return ip IPAddresse des Clients
-     */
-    public String ip()
-    {
-        return _ip;
-    }
-    
-    /**
-     * @return name Name des Clients
-     */
     public String name()
     {
         return _name;
     }
     
-    /**
-     * setzt den vom Client eingegebenen Namen
-     * 
-     * @param name Name des Clients
-     */
     public void setName(String name)
     {
         _name = name;

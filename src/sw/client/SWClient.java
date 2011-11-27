@@ -17,9 +17,9 @@
  ******************************************************************************/
 package sw.client;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
-import sw.shared.Nachrichtentyp;
 import sw.shared.Packet;
 import sw.shared.Packettype;
 
@@ -27,10 +27,10 @@ import sw.shared.Packettype;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class NetClient implements IClient
+public class SWClient implements IClient, NetworkClientListener
 {
-    private String _letzterTrennGrund;
-
+	private UDPClient _netClient;
+	
     private ArrayList<ClientListener> _clientListener;
     
     /**
@@ -39,87 +39,78 @@ public class NetClient implements IClient
      * @param ip Die IP Adresse des Servers
      * @param port Der Port
      */
-    public NetClient(String ip, int port, String name)
+    public SWClient()
     {
-        //super(ip, port, false);
+    	_netClient = new UDPClient();
+    	_netClient.addNetworkClientListener(this);
         _clientListener = new ArrayList<ClientListener>();
-        this.setzeTrennGrundZurueck();
-        Packet start = new Packet(Packettype.CL_START_INFO);
+    }
+    
+    public void connect(String ip, int port, String name)
+    {
+    	_netClient.connect(new InetSocketAddress(ip, port));
+    	_netClient.start();
+    	Packet start = new Packet(Packettype.CL_START_INFO);
         start.fuegeStringAn(name);
-        this.sendeNachricht(start);
+        this.sendPacket(start);
     }
     
-    /**
-     * Fügt einen neuen ClientListener hinzu
-     * 
-     * @param l Der Listener
-     */
-    public void fuegeClientListenerHinzu(ClientListener l)
+    public void addClientListener(ClientListener listener)
     {
-        _clientListener.add(l);
-    }
-    
-    private void setzeTrennGrundZurueck()
-    {
-        _letzterTrennGrund = "Verbindung verloren";
+        _clientListener.add(listener);
     }
     
     @Override
-    public void sendeNachricht(Packet nachricht)
+    public void sendPacket(Packet packet)
     {
-        this.sende(nachricht.toString());
+    	byte[] data = packet.getData();
+        _netClient.send(data, data.length);
     }
     
     @Override
-    public void bearbeiteVerbindungsverlust()
+    public void clientConnected()
     {
-        if (_clientListener != null)
+        for (ClientListener l : _clientListener)
         {
-            for (ClientListener l : _clientListener)
-            {
-                if (l == null) continue;
-                l.bearbeiteTrennung(_letzterTrennGrund);
-            }
+            l.connected();
         }
-        this.setzeTrennGrundZurueck();
     }
     
     @Override
-    public void bearbeiteNachricht(String nachricht)
+    public void clientDisconnected()
     {
-        Packet packet = new Packet(nachricht);
-        
-        if (_clientListener == null)
-            return;
-        
-        if(Nachrichtentyp.SV_TRENN_INFO == packet.Typ())
+        for (ClientListener l : _clientListener)
         {
-            _letzterTrennGrund = packet.holeString();
+            l.disconnected();
         }
-        else if(Nachrichtentyp.SV_CHAT_NACHRICHT == packet.Typ())
+    }
+    
+    @Override
+    public void clientReceivedMessage(byte[] data, int len)
+    {
+        Packet packet = new Packet(data, len);
+        
+        if(Packettype.SV_CHAT_NACHRICHT == packet.type())
         {
             String name = packet.holeString();
             String text = packet.holeString();
             for (ClientListener l : _clientListener)
             {
-                if (l == null) continue;
-                l.bearbeiteChatNachricht(name, text);
+                l.chatMessage(name, text);
             }
         }
-        else if(Nachrichtentyp.SV_SNAPSHOT == packet.Typ())
+        else if(Packettype.SV_SNAPSHOT == packet.type())
         {
             for (ClientListener l : _clientListener)
             {
-                if (l == null) continue;
-                l.bearbeiteSnapshot(packet);
+                l.snapshot(packet);
             }
         }
-        else if(Nachrichtentyp.SV_SCHUSS == packet.Typ())
+        else if(Packettype.SV_SCHUSS == packet.type())
         {
             for (ClientListener l : _clientListener)
             {
-                if (l == null) continue;
-                l.bearbeiteSchuss(packet);
+                l.shot(packet);
             }
         }
     }
