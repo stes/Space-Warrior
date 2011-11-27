@@ -9,14 +9,13 @@ import java.awt.event.KeyListener;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import sw.client.ActionDelegate;
 import sw.client.IGameStateManager;
-import sw.client.components.PlayingFieldGraphics;
-import sw.eastereggs.bf.BfInterpreter;
-import sw.eastereggs.fortytwo.FortyTwo;
+import sw.client.player.HumanPlayer;
+import sw.client.player.Player;
 import sw.shared.GameConstants;
 
 public class GamePanel extends JPanel
@@ -26,12 +25,16 @@ public class GamePanel extends JPanel
 	 */
 	private static final long serialVersionUID = -8751902318746091633L;
 	
+	// component section
 	private GamePanel _self;
     private PlayingFieldGraphics _playingField;
     private AbstractButton _btnChat;
     private JTextField _txtChatmessage;
-    private JTextArea _lstChathistory;
-	private IGameStateManager _stateManager;
+    private JTextArea _lstChathistory;    
+    private JTable _tblPoints;
+	
+    // other references
+    private IGameStateManager _stateManager;
     //private BfInterpreter _bfInterpreter; TODO integrate later
     
 	public GamePanel(int width, int height, IGameStateManager stateManager)
@@ -39,22 +42,22 @@ public class GamePanel extends JPanel
 		super();
 		_self = this;
 		_stateManager = stateManager;
+		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
 		this.setBackground(Color.RED);
-		this.initComponents();
 	}
-	
-    /**
-	    * invoked after chat button is pressed
-	    */
-	    public void btnChat_Action(ActionEvent e)
-	    {
-	    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
-	    	{
-	    		this.processInput();
-	    	}
-	    }
+
+	/**
+    * invoked after chat button is pressed
+    */
+	public void btnChat_Action(ActionEvent e)
+	{
+		if (e.getID() == ActionEvent.ACTION_PERFORMED)
+		{
+			this.processInput();
+		}
+	}
 	    
     public void updatePlayingField()
     {
@@ -131,7 +134,7 @@ public class GamePanel extends JPanel
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				// TODO Auto-generated method stub
+				// TODO test
 				if (e.getKeyCode() == KeyEvent.VK_ENTER)
 				{
 					_self.processInput();
@@ -145,12 +148,24 @@ public class GamePanel extends JPanel
         _lstChathistory.setBounds(100, chat, 645, 90);
         this.add(_lstChathistory);
         
+        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
+        _tblPoints.setBounds(1100, 100, 200, 150);
+        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
+        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
+        this.add(_tblPoints);
+        
+
         _playingField = new PlayingFieldGraphics(_stateManager.getPlayerList());
         _playingField.setBounds(
         		GameConstants.REFERENCE_X,
         		GameConstants.REFERENCE_Y,
         		GameConstants.PLAYING_FIELD_WIDTH,
         		GameConstants.PLAYING_FIELD_HEIGHT);
+		Player localPlayer = _stateManager.getLocalPlayer();
+        if (localPlayer instanceof HumanPlayer)
+        {
+        	_playingField.addKeyListener((HumanPlayer)localPlayer);
+        }
         this.add(_playingField);
     }
 }

@@ -15,15 +15,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client.components;
+package sw.client.gui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.event.AWTEventListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
+import java.awt.AWTEvent;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
@@ -36,7 +41,7 @@ import sw.shared.data.PlayerList;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldGraphics extends JPanel
+public class PlayingFieldGraphics extends JPanel implements MouseListener
 {
     /**
 	 * 
@@ -49,12 +54,17 @@ public class PlayingFieldGraphics extends JPanel
     private BufferedImage _backgroundImg;
     
     /**
-     * Spielfeld wird erzeugt
+     * Creates a new playing field given a reference to the player list
      * 
+     * @param playerList a player list (may be empty)
+     * @throws IllegalArgumentException if playerList is null
      */
     public PlayingFieldGraphics(PlayerList playerList)
     {
         super();
+        this.addMouseListener(this);
+        if (playerList == null)
+        	throw new IllegalArgumentException("argument playerList must not be null");
         this.setLayout(null);
         _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
         _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
@@ -85,7 +95,6 @@ public class PlayingFieldGraphics extends JPanel
             if (_playerList.dataAt(i) == null)
                 continue;
             PlayerDataSet d = _playerList.dataAt(i);
-            System.out.println(d.position().toString());
             if (d.lokal())
             {
                 this.paintBars(g2d, d);
@@ -144,4 +153,36 @@ public class PlayingFieldGraphics extends JPanel
         g2d.setPaint(pat);
         g2d.drawLine(start_x, y, end_x, y);
     }
+
+	@Override
+	public void mouseClicked(MouseEvent arg0)
+	{
+
+	}
+	@Override
+	public void mouseEntered(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent arg0)
+	{
+		System.out.println(this.isFocusOwner());
+		this.requestFocusInWindow();
+		System.out.println(this.isFocusOwner());
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

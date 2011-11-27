@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.client.components.ShotPool;
+import java.awt.event.KeyListener;
+
+import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.GameConstants;
@@ -90,5 +92,15 @@ public class GameController implements ClientListener, IGameStateManager
 	{
         Packet p = input.pack();
         _client.sendPacket(p);
+	}
+	
+	public boolean getIsPlayerHuman()
+	{
+		return (_localPlayer instanceof HumanPlayer);
+	}
+	@Override
+	public Player getLocalPlayer()
+	{
+		return _localPlayer;
 	}
 }
