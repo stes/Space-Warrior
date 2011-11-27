@@ -29,7 +29,7 @@ public class ShotPool
 {
     // Bezugsobjekte
     private static ArrayList<ShotGraphics> _schuesse;
-    private static PlayingFieldGraphics _spielfeld;
+    private static PlayingFieldPanel _spielfeld;
     
     // Attribute
  
@@ -46,12 +46,12 @@ public class ShotPool
     /**
      * Initialisiert den Schusspool
      * 
-     * @param playingFieldGraphics Das Spielfeld, auf dem gezeichnet werden soll
+     * @param playingFieldPanel Das Spielfeld, auf dem gezeichnet werden soll
      */
-    public static void init(PlayingFieldGraphics playingFieldGraphics)
+    public static void init(PlayingFieldPanel playingFieldPanel)
     {
         _schuesse = new ArrayList<ShotGraphics>(100);
-        _spielfeld = playingFieldGraphics;
+        _spielfeld = playingFieldPanel;
     }
     
     // Dienste    

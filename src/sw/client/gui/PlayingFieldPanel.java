@@ -41,7 +41,7 @@ import sw.shared.data.PlayerList;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldGraphics extends JPanel implements MouseListener
+public class PlayingFieldPanel extends JPanel implements MouseListener
 {
     /**
 	 * 
@@ -59,7 +59,7 @@ public class PlayingFieldGraphics extends JPanel implements MouseListener
      * @param playerList a player list (may be empty)
      * @throws IllegalArgumentException if playerList is null
      */
-    public PlayingFieldGraphics(PlayerList playerList)
+    public PlayingFieldPanel(PlayerList playerList)
     {
         super();
         this.addMouseListener(this);

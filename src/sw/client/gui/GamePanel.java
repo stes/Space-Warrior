@@ -27,7 +27,7 @@ public class GamePanel extends JPanel
 	
 	// component section
 	private GamePanel _self;
-    private PlayingFieldGraphics _playingField;
+    private PlayingFieldPanel _playingField;
     private AbstractButton _btnChat;
     private JTextField _txtChatmessage;
     private JTextArea _lstChathistory;    
@@ -155,7 +155,7 @@ public class GamePanel extends JPanel
         this.add(_tblPoints);
         
 
-        _playingField = new PlayingFieldGraphics(_stateManager.getPlayerList());
+        _playingField = new PlayingFieldPanel(_stateManager.getPlayerList());
         _playingField.setBounds(
         		GameConstants.REFERENCE_X,
         		GameConstants.REFERENCE_Y,

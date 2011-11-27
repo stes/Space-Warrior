@@ -38,7 +38,7 @@ import sw.client.gui.GamePanel;
 import sw.client.gui.LoginEvent;
 import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
-import sw.client.gui.PlayingFieldGraphics;
+import sw.client.gui.PlayingFieldPanel;
 import sw.client.player.HumanPlayer;
 import sw.eastereggs.bf.BfInterpreter;
 import sw.eastereggs.fortytwo.FortyTwo;
