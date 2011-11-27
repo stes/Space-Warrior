@@ -55,13 +55,13 @@ public class PlayingFieldGraphics extends JPanel
     public PlayingFieldGraphics(PlayerList playerList)
     {
         super();
+        this.setLayout(null);
         _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
         _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
         _backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
         _spieler = playerList;
         ShotPool.init(this);
         this.setBackground(Color.BLACK);
-        this.invalidate();
     }
     /**
      * Paints the playing field with its contents
@@ -73,10 +73,10 @@ public class PlayingFieldGraphics extends JPanel
         Graphics2D g2d = (Graphics2D)g;
         g2d.drawImage(
         		_backgroundImg,
-        		GameConstants.REFERENCE_X + 100,
-        		GameConstants.REFERENCE_Y + 100,
-        		GameConstants.PLAYING_FIELD_WIDTH,
-        		GameConstants.PLAYING_FIELD_HEIGHT,
+        		this.getX(),
+        		this.getY(),
+        		this.getWidth(),
+        		this.getHeight(),
         		null);
         
         ShotPool.paint(g);
@@ -87,7 +87,7 @@ public class PlayingFieldGraphics extends JPanel
             PlayerDataSet d = _spieler.dataAt(i);
             if (d.lokal())
             {
-                this.zeigeStatusbalken(g2d, d);
+                this.paintBars(g2d, d);
                 g2d.drawImage(
                     rotateImage(_localPlayerImg, 180-d.richtung()),
                     null,
@@ -122,7 +122,7 @@ public class PlayingFieldGraphics extends JPanel
         return rotatedImage;
     }
     
-    private void zeigeStatusbalken(Graphics2D g2d, PlayerDataSet d)
+    private void paintBars(Graphics2D g2d, PlayerDataSet d)
     {
         g2d.setStroke(new BasicStroke(15));
        
