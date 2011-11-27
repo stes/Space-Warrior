@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 /**
@@ -16,9 +17,9 @@ import javax.swing.JFrame;
 public class ActionDelegate implements ActionListener
 {
 	private String _methodName;
-	private JFrame _parent;
+	private JComponent _parent;
 	
-	public ActionDelegate(JFrame parent, String method)
+	public ActionDelegate(JComponent parent, String method)
 	{
 		_parent = parent;
 		_methodName = method;
@@ -27,7 +28,7 @@ public class ActionDelegate implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		Class<? extends JFrame> cl = _parent.getClass();
+		Class<? extends JComponent> cl = _parent.getClass();
 		try
 		{
 			Method m = cl.getMethod(_methodName, e.getClass());
