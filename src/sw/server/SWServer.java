@@ -31,7 +31,7 @@ public class SWServer implements IServer, NetworkServerListener
     private Client[] _clients;
     private PropertyLoader _propertyLoader;
     
-    private long _lastSnapshot;
+    private int _tick;
     private long _lastUpdate;
     
     private String _serverName;
@@ -46,7 +46,6 @@ public class SWServer implements IServer, NetworkServerListener
     	_netServer.addNetworkServerListener(this);
     	_netServer.start();
         _clients = new Client[GameConstants.MAX_PLAYERS];
-        _lastSnapshot = System.currentTimeMillis();
         _lastUpdate = System.currentTimeMillis();
         this.setServerName("Server");
     }
@@ -108,15 +107,15 @@ public class SWServer implements IServer, NetworkServerListener
     public void tick()
     {
         long curTime = System.currentTimeMillis();
-        if(curTime - _lastUpdate > GameConstants.PLAYER_UPDATE_INTERVAL)
+        if(curTime - _lastUpdate > GameConstants.TICK_INTERVAL)
         {
             _controller.tick();
+            if((_tick % 2) == 0) // save bandwidth
+            {
+            	_controller.broadcastSnapshots();
+            }
             _lastUpdate = curTime;
-        }
-        if(curTime - _lastSnapshot > GameConstants.SNAPSHOT_INTERVAL)
-        {
-            _controller.broadcastSnapshots();
-            _lastSnapshot = curTime;
+            _tick++;
         }
     }
     
