@@ -28,12 +28,17 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import sw.client.components.PlayingFieldGraphics;
+import sw.client.gui.GamePanel;
+import sw.client.gui.LoginEvent;
+import sw.client.gui.LoginListener;
+import sw.client.gui.LoginPanel;
 import sw.eastereggs.bf.BfInterpreter;
 import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
@@ -46,7 +51,7 @@ import sw.shared.data.PlayerDataSet;
 * @author Redix, stes, Abbadonn
 * @version 25.11.11
 */
-public class SWFrame extends JFrame implements WindowListener, ClientListener
+public class SWFrame extends JFrame implements WindowListener, ClientListener, LoginListener
 {
     /**
 	 * 
@@ -54,23 +59,30 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
 	private static final long serialVersionUID = 1575599799999464878L;
 	
 	// Objekte    
-    private BfInterpreter _bfInterpreter;
-    private JTextField _txtIPAdresse;
-    private JTextField _txtName;
-    private JTextField _txtChatmessage;
-    private AbstractButton _btnConnect;
-    private AbstractButton _btnChat;
-    private AbstractButton _btnUpdate;
-    private JLabel _lblIPAdress;
-    private JLabel _lblName;
-    private JTextArea _lstChathistory;
-    private JTable _tblPoints;
-    private JTable _tblServers;
+//    private BfInterpreter _bfInterpreter;
     
-    private PlayingFieldGraphics _playingField;
+//    private JTextField _txtIPAdresse;
+//    private JTextField _txtName;
+//    private JTextField _txtChatmessage;
+//    private AbstractButton _btnConnect;
+//    private AbstractButton _btnChat;
+//    private AbstractButton _btnUpdate;
+//    private JLabel _lblIPAdress;
+//    private JLabel _lblName;
+//    private JTextArea _lstChathistory;
+//    private JTable _tblPoints;
+//    private JTable _tblServers;
+    
+//    private PlayingFieldGraphics _playingField;
     private GameController _controller;
     
+
+    
     private SWClient _client;
+
+    private GamePanel _gamePanel;
+    private LoginPanel _loginPanel;
+    private JPanel _activePanel;
     
     // Attribute
     
@@ -88,7 +100,15 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _client.addClientListener(_controller);
         
         this.setSize(1400, 900);
-        this.initComponents();
+        
+        _gamePanel = new GamePanel(1400, 900, _controller);
+        _loginPanel = new LoginPanel(1400, 900);
+        
+        _loginPanel.addLoginListener(this);
+      
+        this.setGUIMode(GUIMode.LOGIN);
+
+        //this.initComponents();
         //this.initAfterConnection(); for test purposes
         this.setVisible(true);
         this.toFront();
@@ -102,84 +122,49 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
 			e.printStackTrace();
 		}
 
-        this.initEastereggs();
+//        this.initEastereggs();
         this.updateServerList();
     }
+      
+
     
-    /**
-    * guckt ob der Aktuilisierungsbutton geklickt wurde
-    */
-    public void _btnAktualisierenGeklickt()
-    {
-        this.updateServerList();
-    }
-    
-    /**
-     * ändert die Markierung der angeklickten IPAddresse
-     */
-    public void _tblMarkierungGeaendert()
-    {
-        for(int i = 0; i <= _tblServers.getRowCount(); i++)
-        {
-            if(_tblServers.isRowSelected(i))
-            {
-                _txtIPAdresse.setText((String) _tblServers.getValueAt(i, 2));
-            }
-        }
-    }
-    
-    /**
-    * guckt ob der Chatbutton gedrückt wurde
-    */
-    public void btnChat_Action(ActionEvent e)
-    {
-    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
-    	{
-    		this.processInput();
-    	}
-    }
-    
-    /**
-    * 
-    */
-    public void btnConnect_Action(ActionEvent e)
-    {
-        if ( !_txtName.getText().isEmpty())
-        {
-        	System.out.println("connect");
-            this.verbinde(_txtIPAdresse.getText());
-        }
- 
-    }
-    
-    public void btnUpdate_Action(ActionEvent e)
-    {
-    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
-    	{
-    		System.out.println("update server list");
-    	}
-    }
-    
-    @Override
-    public void chatMessage(String name, String text)
-    {
-        _lstChathistory.append(name + ": " + text);
-    }
-    
-    @Override
-    public void connected()
-    {
-    	this.disableComponents();
-        this.initAfterConnection();
-        
-        // ugly!!!
-        // indeed.
-        new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
-        
-        Packet start = new Packet(Packettype.CL_START_INFO);
-        start.addString("test");
-        _client.sendPacket(start);
-    }
+//    /**
+//	    * invoked after connect button is pressed
+//	    */
+//	    public void btnConnect_Action(ActionEvent e)
+//	    {
+//	        if ( !_txtName.getText().isEmpty())
+//	        {
+//	        	System.out.println("connect");
+//	            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
+//	        }
+//	 
+//	    }
+//	    
+//	    public void btnUpdate_Action(ActionEvent e)
+//	    {
+//	    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
+//	    	{
+//	    		System.out.println("update server list");
+//	    	}
+//	    }
+//    
+//    @Override
+//    public void chatMessage(String name, String text)
+//    {
+//        _lstChathistory.append(name + ": " + text);
+//    }
+//    
+//    @Override
+//    public void connected()
+//    {
+//    	this.disableComponents();
+//        this.initAfterConnection();
+//        
+//        // ugly!!!
+//        // indeed.
+//        new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
+//    }
     
     @Override
     public void disconnected()
@@ -191,17 +176,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
             _spielfeld.verstecke();
             _spielfeld.gibFrei();
         }*/
-        this.enableComponents();
-        _lstChathistory.append("connection lost");
+//        this.enableComponents();
+//        _lstChathistory.append("connection lost");
+    	System.out.println("connection lost");
     }
     
-    public void foundServer(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
-    {
-        //_serverListe.();  new line
-        _tblServers.setValueAt(serverName, _tblServers.getRowCount()-1, 0);
-        _tblServers.setValueAt(spielerZahl + "/" + maxSpielerZahl, _tblServers.getRowCount()-1, 1);
-        _tblServers.setValueAt(serverIp, _tblServers.getRowCount()-1, 2);
-    }
+
     
     /**
      * Die eingegebene Nachricht wird an den Chatverlauf gesendet.
@@ -210,7 +190,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     {
         Packet chat = new Packet(Packettype.CL_CHAT_MSG);
         chat.addString(chatNachricht);
-        _client.sendPacket(chat);
+        //_client.sendeNachricht(chat);
     }
 	
     @Override
@@ -233,6 +213,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         }
         
         java.util.Arrays.sort(spielerScore);
+        this.repaint();
         
         /*for(int i = 0; i < spielerScore.length; i++)
         {
@@ -248,11 +229,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     
     public void tick()
     {
-        if (_playingField != null)
-        {
-            _playingField.repaint();
-        }
     }
+    
     
     /**
     * guckt ob die Eingabe des Chats gedrückt wurde
@@ -283,165 +261,65 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     @Override
     public void windowOpened(WindowEvent e) { }
     
-    private void disableComponents()
-    {
-        _txtIPAdresse.setEnabled(false);
-        _txtName.setEnabled(false);
-        _btnConnect.setEnabled(false);
-        _lblIPAdress.setEnabled(false);
-        _lblName.setEnabled(false);
-        _tblPoints.setVisible(true);
-        _tblServers.setVisible(false);
-        _btnUpdate.setEnabled(false);
-    }
-    
-    private void enableComponents()
-    {
-        _txtIPAdresse.setEnabled(true);
-        _txtName.setEnabled(true);
-        _btnConnect.setEnabled(true);
-        _lblIPAdress.setEnabled(true);
-        _lblName.setEnabled(true);
-        _tblPoints.setVisible(false);
-        _tblServers.setVisible(true);
-        _btnUpdate.setEnabled(true);
-    }
+//    private void disableComponents()
+//    {
+//        _txtIPAdresse.setEnabled(false);
+//        _txtName.setEnabled(false);
+//        _btnConnect.setEnabled(false);
+//        _lblIPAdress.setEnabled(false);
+//        _lblName.setEnabled(false);
+//        _tblPoints.setVisible(true);
+//        _tblServers.setVisible(false);
+//        _btnUpdate.setEnabled(false);
+//    }
+//    
+//    private void enableComponents()
+//    {
+//        _txtIPAdresse.setEnabled(true);
+//        _txtName.setEnabled(true);
+//        _btnConnect.setEnabled(true);
+//        _lblIPAdress.setEnabled(true);
+//        _lblName.setEnabled(true);
+//        _tblPoints.setVisible(false);
+//        _tblServers.setVisible(true);
+//        _btnUpdate.setEnabled(true);
+//    }
 
-    /**
-     * Die Variablen werden mit den Serverdaten angepasst
-     */
-    private void initAfterConnection()
-    {
-        _playingField = new PlayingFieldGraphics(_controller.getPlayerList());
-        this.add(_playingField);
-        this.setVisible(true);
-    }
+     
+//    private void initEastereggs()
+//    {
+//        OutputStream output = new OutputStream()
+//        {
+//            @Override
+//            public void write(byte[] b, int off, int len)
+//            {
+//                _lstChathistory.append(new String(b, off, len));
+//            }
+//            
+//            @Override
+//            public void write(int b) throws IOException
+//            {
+//                _lstChathistory.append(String.valueOf((char) b));
+//            }
+//        };
+//        
+//        InputStream input = new InputStream()
+//        {
+//            @Override
+//            public int read()
+//            {
+//                return 0;
+//            }
+//        };
+//        
+//        //System.setOut(new PrintStream(output, true));
+//        // -.-
+//        System.setIn(input);
+//        
+//        _bfInterpreter = new BfInterpreter();
+//    }
     
-    /**
-     * Die Variablen der einzelnen Elemente der GUI werden gesetzt.
-     */
-    private void initComponents()
-    {
-        int chat = 700;
-        
-        _txtIPAdresse = new JTextField();
-        _txtIPAdresse.setBounds(220, 10, 400, 25);
-        this.add(_txtIPAdresse);
-        
-        _txtName = new JTextField();
-        _txtName.setBounds(220, 50, 400, 25);
-        this.add(_txtName);
-        
-        _txtChatmessage = new JTextField("");
-        _txtChatmessage.setBounds(100, chat+100, 520, 25);
-        _txtChatmessage.addActionListener(new ActionDelegate(this, "txtChatmessage_Action"));
-        this.add(_txtChatmessage);
-        
-        _btnConnect = new JButton("Verbinden");
-        _btnConnect.setBounds(640, 10, 100, 25);
-        _btnConnect.addActionListener(new ActionDelegate(this, "btnConnect_Action"));
-        this.add(_btnConnect);
-        
-        _btnChat = new JButton("Chat");
-        _btnChat.setBounds(640, chat+100, 100, 25);
-        _btnChat.addActionListener(new ActionDelegate(this, "btnChat_Action"));
-        this.add(_btnChat);
-        
-        _btnUpdate = new JButton("Aktualisieren");
-        _btnUpdate.setBounds(1100, 620, 100, 25);
-        _btnUpdate.addActionListener(new ActionDelegate(this, "btnUpdate_Action"));
-        this.add(_btnUpdate);
-        
-        _lblIPAdress = new JLabel("IP-Adresse");
-        _lblIPAdress.setBounds(100, 10, 100, 25);
-        this.add(_lblIPAdress);
-        
-        _lblName = new JLabel("Name");
-        _lblName.setBounds(100, 50, 100, 25);
-        this.add(_lblName);
-        
-        _lstChathistory = new JTextArea();
-        _lstChathistory.setBounds(100, chat, 645, 90);
-        this.add(_lstChathistory);
-        
-        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
-        _tblPoints.setBounds(1100, 100, 200, 150);
-        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Spieler");
-        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Punkte");
-        this.add(_tblPoints);
-        
-        _tblServers = new JTable(0, 3);
-        _tblServers.setBounds(1100, 300, 200, 300);
-        _tblServers.getColumnModel().getColumn(0).setHeaderValue("Server");
-        _tblServers.getColumnModel().getColumn(1).setHeaderValue("Spieler/Max");
-        _tblServers.getColumnModel().getColumn(0).setWidth(110);
-        
-        this.add(_tblServers);
-        //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
-    }
-    
-    private void initEastereggs()
-    {
-        OutputStream output = new OutputStream()
-        {
-            @Override
-            public void write(byte[] b, int off, int len)
-            {
-                _lstChathistory.append(new String(b, off, len));
-            }
-            
-            @Override
-            public void write(int b) throws IOException
-            {
-                _lstChathistory.append(String.valueOf((char) b));
-            }
-        };
-        
-        InputStream input = new InputStream()
-        {
-            @Override
-            public int read()
-            {
-                return 0;
-            }
-        };
-        
-        //System.setOut(new PrintStream(output, true));
-        // -.-
-        System.setIn(input);
-        
-        _bfInterpreter = new BfInterpreter();
-    }
-    
-    private void processInput()
-    {
-        String nachricht = _txtChatmessage.getText();
-        if ( !nachricht.isEmpty())
-        {
-            if (!FortyTwo.answer(nachricht))
-            {
-                if (nachricht.startsWith("/"))
-                {
-                    if (nachricht.startsWith("/bf"))
-                    {
-                        System.out.println("[BF]" + nachricht);
-                        _bfInterpreter.readCode(nachricht);
-                    }
-                    if (nachricht.startsWith("/exe"))
-                    {
-                        System.out.println("[BF] Execute");
-                        _bfInterpreter.execute();
-                    }
-                }
-                else
-                {
-                    sendChatmessage(nachricht);
-                    _txtChatmessage.setText("");
-                }
-            }
-        }
-        _txtChatmessage.setText("");
-    }
+
     
     /**
      * aktualisiert die Serverliste
@@ -452,9 +330,47 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     /**
      * Verbindet den Client mit einem Server.
      */
-    private void verbinde(String ip)
+    private void verbinde(String ip, String name)
     {
-        _client.connect(ip, GameConstants.STANDARD_PORT);
-    }    
-}
+        _client.connect(ip, GameConstants.STANDARD_PORT, name);
+    }
 
+	@Override
+	public void connected()
+	{
+		this.setGUIMode(GUIMode.GAME);
+	}
+
+	@Override
+	public void chatMessage(String name, String text)
+	{
+		// TODO Auto-generated method stub
+		
+	}    
+	
+	private enum GUIMode {LOGIN, GAME}
+	private void setGUIMode(GUIMode mode)
+	{
+		if (_activePanel != null)
+			this.remove(_activePanel);
+		if (mode == GUIMode.LOGIN)
+		{
+			_activePanel = _loginPanel;
+		}
+		else if (mode == GUIMode.GAME)
+		{
+			_activePanel = _gamePanel;
+		}
+		this.add(_activePanel);
+		this.setVisible(true);
+		this.repaint();
+	}
+
+
+
+	@Override
+	public void login(LoginEvent e)
+	{
+		this.verbinde(e.getIPAdress(), e.getLoginName());
+	}
+}

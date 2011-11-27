@@ -46,9 +46,9 @@ public class PlayerList
     private PlayerInput[] _eingaben;
     
     /**
-     * Spielerliste Eine neue Spielerliste wird erstellt
+     * playerlist creates a new playerlist
      * 
-     * @param size Die groesse der Liste 
+     * @param size size of the list 
      */
     public PlayerList(int size)
     {
@@ -56,7 +56,7 @@ public class PlayerList
         _eingaben = new PlayerInput[size];
     }
     /**
-     * @return eingabe
+     * @return input
      */
     public PlayerInput inputAt(int index)
     {
@@ -64,7 +64,7 @@ public class PlayerList
     }
 
     /**
-     * @return liste
+     * @return list
      */
     public PlayerDataSet dataAt(int index)
     {
@@ -72,11 +72,11 @@ public class PlayerList
     }
     
     /**
-     * Entfernt den Spieler mit dem angegebenen Namen aus der
-     * Liste
+     * removes the player with the specified name from the
+     * list
      * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört
+     * @param name playername
+     * @return the record belongs to the player
      */
     public void remove(String name) throws AttributeNotFoundException
     {
@@ -86,9 +86,9 @@ public class PlayerList
     }
     
     /**
-     * Schreibt die Spielerliste in ein Snapshot und gibt dieses zurueck
+     * Writes the list of players in a snapshot and returns
      * 
-     * @return Das Paket
+     * @return the packet
      */
     public Packet createSnapshot(String lokalerName)
     {
@@ -107,10 +107,10 @@ public class PlayerList
     }
     
     /**
-     * Fügt der Liste einen neuen Datensatz hinzu
+     * adds a data record to the list
      * 
-     * @param spieler Der Datensatz
-     * @param eingabe Die aktuelle Spielereingabe, null fuer Standardwert
+     * @param player the data record
+     * @param input the current player input, null for default
      */
     public void insert(PlayerDataSet spieler, PlayerInput eingabe)
     {
@@ -124,9 +124,9 @@ public class PlayerList
     }
     
     /**
-     * Gibt die Groesse der Liste zurueck
+     * returns the current size of the list
      * 
-     * @return Die Listengroesse
+     * @return the size
      */
     public int size()
     {
@@ -135,7 +135,7 @@ public class PlayerList
     
     // Dienste
     /**
-     * Die Spielerdaten werden aus der Liste geloescht
+     * the player data is deleted from the list
      */
     public void clear()
     {
@@ -144,11 +144,10 @@ public class PlayerList
     }
     
     /**
-     * Sucht den Spieler mit dem angegebenen Namen in der
-     * Liste
+     * searching for the name of the player in the list
      * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört
+     * @param name name of the player
+     * @return the data record belongs to the player
      */
     public PlayerDataSet find(String name) throws AttributeNotFoundException
     {
@@ -159,9 +158,9 @@ public class PlayerList
     }
     
     /**
-     * Updated das Paket
+     * Updated the packet
      * 
-     * @param p Das Paket
+     * @param p the packet
      */
     public void update(Packet p)
     {
@@ -171,11 +170,11 @@ public class PlayerList
     }
     
     /**
-     * Entfernt den Spieler mit dem angegebenen Namen aus der
-     * Liste
+     * deletes the player with the given name from the list
      * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wird
+     * @param name name of the player
+     * @return the data record that belongs to the player 
+     * or null if no player is found
      */
     public boolean tryRemove(String name)
     {
@@ -191,11 +190,12 @@ public class PlayerList
     }
     
     /**
-     * Setzt die Eingabe des Spielers
+     * sets the player input
      * 
-     * @param name Der Spielername
-     * @param eingabe Eingabe des Spielers
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
+     * @param name name of the player
+     * @param input player input
+     * @return the data record that belongs to the player 
+     * or null if no player is found
      */
     public boolean trySetInput(String name, PlayerInput eingabe)
     {
@@ -213,11 +213,11 @@ public class PlayerList
     
     
     /**
-     * Sucht den Spieler mit dem angegebenen Namen in der
-     * Liste
+     * looking for the player with the given name in the list
      * 
-     * @param name Der Spielername
-     * @return Der Datensatz der zum Spieler gehört oder null wenn kein Spieler gefunden wurde
+     * @param name name of the player
+     * @return the data record that belongs to the player 
+     * or null if no player is found
      */
     public PlayerDataSet tryFind(String name)
     {
@@ -230,9 +230,9 @@ public class PlayerList
     }
     
     /**
-     * Zaehlt die Anzahl der belegten Elemente in der Liste
+     * counts the number of occupied elements in the list
      * 
-     * @return Die Anzahl der belegten Elemente
+     * @return number of occupied elements
      */
     public int count()
     {
@@ -248,8 +248,8 @@ public class PlayerList
     }
     
     /**
-     * @return nächster freier Platz in der Liste
-     * @return -1 , wenn kein freier Platz mehr verfügbar ist
+     * @return next free space in the list
+     * @return -1 , if no free space is available
      */
     private int findEmptyPlace()
     {
