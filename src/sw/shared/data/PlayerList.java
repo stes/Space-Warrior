@@ -46,7 +46,7 @@ public class PlayerList
     private PlayerInput[] _eingaben;
     
     /**
-     * playerlist creates a new playerlist
+     * creates a new playerlist of the specified size
      * 
      * @param size size of the list 
      */

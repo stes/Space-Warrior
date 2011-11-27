@@ -20,19 +20,34 @@ package sw.client;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginEvent;
 import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
+import sw.client.gui.PlayingFieldGraphics;
+import sw.client.player.HumanPlayer;
+import sw.eastereggs.bf.BfInterpreter;
+import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerDataSet;
+
+
 /**
 * @author Redix, stes, Abbadonn
 * @version 25.11.11
@@ -43,41 +58,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	 * 
 	 */
 	private static final long serialVersionUID = 1575599799999464878L;
-	
-	// Objekte    
-//    private BfInterpreter _bfInterpreter;
-    
-//    private JTextField _txtIPAdresse;
-//    private JTextField _txtName;
-//    private JTextField _txtChatmessage;
-//    private AbstractButton _btnConnect;
-//    private AbstractButton _btnChat;
-//    private AbstractButton _btnUpdate;
-//    private JLabel _lblIPAdress;
-//    private JLabel _lblName;
-//    private JTextArea _lstChathistory;
-//    private JTable _tblPoints;
-//    private JTable _tblServers;
-    
-//    private PlayingFieldGraphics _playingField;
+ 
     private GameController _controller;
-    
-
-    
     private SWClient _client;
 
     private GamePanel _gamePanel;
     private LoginPanel _loginPanel;
     private JPanel _activePanel;
     
-    // Attribute
-    
     /**
      * Konstruktor
      */
     public SWFrame()
     {
-        //Initialisierung der Oberklasse
         super("Space Warrior");
         
         _client = new SWClient();
@@ -93,9 +86,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         _loginPanel.addLoginListener(this);
       
         this.setGUIMode(GUIMode.LOGIN);
-
-        //this.initComponents();
-        //this.initAfterConnection(); for test purposes
         this.setVisible(true);
         this.toFront();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -107,25 +97,11 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         {
 			e.printStackTrace();
 		}
-
 //        this.initEastereggs();
         this.updateServerList();
     }
       
 
-    
-//    /**
-//	    * invoked after connect button is pressed
-//	    */
-//	    public void btnConnect_Action(ActionEvent e)
-//	    {
-//	        if ( !_txtName.getText().isEmpty())
-//	        {
-//	        	System.out.println("connect");
-//	            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
-//	        }
-//	 
-//	    }
 //	    
 //	    public void btnUpdate_Action(ActionEvent e)
 //	    {
@@ -134,40 +110,13 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 //	    		System.out.println("update server list");
 //	    	}
 //	    }
-//    
-//    @Override
-//    public void chatMessage(String name, String text)
-//    {
-//        _lstChathistory.append(name + ": " + text);
-//    }
-//    
-//    @Override
-//    public void connected()
-//    {
-//    	this.disableComponents();
-//        this.initAfterConnection();
-//        
-//        // ugly!!!
-//        // indeed.
-//        new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
-//    }
     
     @Override
     public void disconnected()
     {
-        /*if (_client != null)
-        {
-            _client.gibFrei();
-            _client = null;
-            _spielfeld.verstecke();
-            _spielfeld.gibFrei();
-        }*/
-//        this.enableComponents();
-//        _lstChathistory.append("connection lost");
+    	this.setGUIMode(GUIMode.LOGIN);
     	System.out.println("connection lost");
     }
-    
-
     
     /**
      * Die eingegebene Nachricht wird an den Chatverlauf gesendet.

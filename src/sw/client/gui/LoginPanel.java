@@ -13,7 +13,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import sw.client.ActionDelegate;
 import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
 
@@ -32,7 +31,6 @@ public class LoginPanel extends JPanel
     private AbstractButton _btnUpdate;
     private JLabel _lblIPAdress;
     private JLabel _lblName;
-    private JTable _tblPoints;
     private JTable _tblServers;
     
     private ArrayList<LoginListener> _loginListener;
@@ -124,7 +122,7 @@ public class LoginPanel extends JPanel
         
         _btnUpdate = new JButton("Aktualisieren");
         _btnUpdate.setBounds(1100, 620, 100, 25);
-        _btnUpdate.addActionListener(new ActionDelegate(this, "btnUpdate_Action"));
+        //_btnUpdate.addActionListener(new ActionDelegate(this, "btnUpdate_Action"));
         this.add(_btnUpdate);
         
         _lblIPAdress = new JLabel("IP-Adresse");
@@ -134,13 +132,7 @@ public class LoginPanel extends JPanel
         _lblName = new JLabel("Name");
         _lblName.setBounds(100, 50, 100, 25);
         this.add(_lblName);
-        
-        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
-        _tblPoints.setBounds(1100, 100, 200, 150);
-        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Spieler");
-        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Punkte");
-        this.add(_tblPoints);
-        
+               
         _tblServers = new JTable(0, 3);
         _tblServers.setBounds(1100, 300, 200, 300);
         _tblServers.getColumnModel().getColumn(0).setHeaderValue("Server");
