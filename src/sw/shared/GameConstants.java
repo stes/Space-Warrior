@@ -27,20 +27,19 @@ public final class GameConstants
 {
     // Netzwerk
     public final static int STANDARD_PORT = 2489;
-    public final static int SNAPSHOTS_PER_SECOND = 20;
-    public final static int SNAPSHOT_INTERVAL = 1000 / SNAPSHOTS_PER_SECOND;
     public final static byte[] NET_CONNLESS = new byte[]{(byte)0, (byte)0, (byte)0};
     public final static byte[] SERVER_INFO_REQUEST = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '?'};
     public final static byte[] SERVER_INFO_RESPONSE = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '!'};
     
     // Gameplay
-    public final static int PLAYER_UPDATE_INTERVAL = SNAPSHOT_INTERVAL;
+    public final static int TICKS_PER_SECOND = 40;
+    public final static int TICK_INTERVAL = 1000 / TICKS_PER_SECOND;
     
     // Maximum values
     public final static int MAX_LIVES = 100;
     public final static int MAX_AMMO = 200;
     public final static int MAX_SPEED = 16;
-    public final static int MAX_MOVEMENT = MAX_SPEED * PLAYER_UPDATE_INTERVAL;
+    public final static int MAX_MOVEMENT = MAX_SPEED * TICK_INTERVAL;
     public final static int MAX_RANGE = 200;
     public final static int MAX_MASTER_RANGE = 500;
     public final static int MAX_PLAYERS = 6;
@@ -52,9 +51,9 @@ public final class GameConstants
     public final static int AMMO_PER_MASTER_SHOT = 100;
 
     // Movements
-    public final static double ACCELERATION = 0.01 * PLAYER_UPDATE_INTERVAL;
-    public final static double DECELERATION = -0.01 * PLAYER_UPDATE_INTERVAL;
-    public final static double ANGEL_OF_ROTATION = 0.3 * PLAYER_UPDATE_INTERVAL;
+    public final static double ACCELERATION = 0.01 * TICK_INTERVAL;
+    public final static double DECELERATION = -0.01 * TICK_INTERVAL;
+    public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
     
     // Players
     public final static int PLAYER_SIZE = 64;

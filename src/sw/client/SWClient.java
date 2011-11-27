@@ -50,6 +50,7 @@ public class SWClient implements IClient, NetworkClientListener
     {
     	_netClient.connect(new InetSocketAddress(ip, port));
     	_netClient.start();
+    	// TODO: move to SWFrame
     	Packet start = new Packet(Packettype.CL_START_INFO);
         start.addString(name);
         this.sendPacket(start);

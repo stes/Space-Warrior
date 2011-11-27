@@ -30,21 +30,18 @@ public class UDPConnection
 	public final static int MAX_PACKET_LENGTH = 4*1024;
 	public final static int PACKET_HEADER_LENGTH = 1;
 	
+	public final static byte CTRL_NONE = 0;
+	public final static byte CTRL_KEEPALIVE = 1;
+	public final static byte CTRL_CONNECT = 2;
+	public final static byte CTRL_CONNECTACCEPT = 3;
+	public final static byte CTRL_CLOSE = 4;
+	
     private DatagramSocket _socket;
     private InetSocketAddress _addr;
     private long _lastRecvTime;
     private long _lastSendTime;
     private boolean _timeout;
     private boolean _connected;
-    
-    public enum CTRLMSG
-    {
-    	NONE,
-    	KEEPALIVE,
-    	CONNECT,
-    	CONNECTACCEPT,
-    	CLOSE
-    }
 
     public UDPConnection(DatagramSocket socket, InetSocketAddress addr)
     {
@@ -86,19 +83,19 @@ public class UDPConnection
 			if(now - _lastSendTime > 1000 && _connected)
 			{
 				//System.out.println("send keepalive: " + _addr);
-				sendControl(CTRLMSG.KEEPALIVE);
+				sendControl(CTRL_KEEPALIVE);
 			}
 		}
     }
     
-    private void send(byte[] data, int len, CTRLMSG flag)
+    private void send(byte[] data, int len, byte flag)
     {
     	try
     	{
 	    	if(!_timeout)
 	    	{
 	            byte[] buf = new byte[MAX_PACKET_LENGTH];
-	            buf[0] = (byte)flag.ordinal();
+	            buf[0] = flag;
 	            if(data != null)
 	            {
 	            	int size = Math.min(data.length, buf.length-PACKET_HEADER_LENGTH);
@@ -117,18 +114,18 @@ public class UDPConnection
     
     public void send(byte[] data, int len)
     {
-    	this.send(data, data.length, CTRLMSG.NONE);
+    	this.send(data, data.length, CTRL_NONE);
     }
     
-    public void sendControl(CTRLMSG msg)
+    public void sendControl(byte flag)
     {
-    	this.send(null, 0, msg);
+    	this.send(null, 0, flag);
     }
     
     public void disconnect()
     {
     	System.out.println("disconnect: " + _addr);
-    	sendControl(CTRLMSG.CLOSE);
+    	sendControl(CTRL_CLOSE);
     }
     
     @Override
