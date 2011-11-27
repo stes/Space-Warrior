@@ -310,7 +310,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
             _ammo -= noetigeMunition;
             
             double zeit = GameConstants.SHOT_TTL / 2 /
-                            ((double)GameConstants.PLAYER_UPDATE_INTERVAL);
+                            ((double)GameConstants.TICK_INTERVAL);
             return new Shot(this.positionNach(zeit), (int)_direction, master);
         }
         return null;
