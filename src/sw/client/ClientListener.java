@@ -26,32 +26,32 @@ import sw.shared.Packet;
 public interface ClientListener
 {
     /**
-     * Wird ausgeführt, wenn die Verbindung zum Server hergestellt wurde
+     * Invoked after connection
      */
     public void connected();
 	
     /**
-     * Wird ausgeführt, wenn der Server die Verbindung beendet
+     * Invoked after disconnect
      */
     public void disconnected();
     
     /**
-     * Wird ausgeführt, wenn eine Chatnachricht erhalten wurde
+     * Invoked when a chat message was received
      * 
-     * @param name Der Name des Absenders
-     * @param text Der Text, der gesendet wurde
+     * @param name the addresser's name
+     * @param text the chat message
      */
     public void chatMessage(String name, String text);
     
     /**
-     * Wird ausgeführt, wenn der Client einen Schuss empfängt
+     * Invoked when a shot was received
      * 
-     * @param packet Der Schuss
+     * @param packet the shot
      */
     public void shot(Packet packet);
     
     /**
-     * Wird ausgeführt, wenn der Client einen Snapshot empfängt
+     * Invoked when a snapshot was received
      * 
      * @param packet Der Snapshot
      */

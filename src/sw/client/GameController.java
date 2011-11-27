@@ -32,13 +32,12 @@ import java.awt.Toolkit;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */ 
-public class GameController implements AWTEventListener, ClientListener
+public class GameController implements ClientListener, IGameStateManager
 {
     private PlayerList _playerList;
-    private PlayerDataSet _localPlayer;
     private IClient _client;
-    private PlayerInput _currentState;
-    private PlayerInput _oldState;
+    private Player _localPlayer;
+
     private boolean _isReady;
     
     /**
@@ -46,11 +45,9 @@ public class GameController implements AWTEventListener, ClientListener
      */
     public GameController(IClient client)
     {
-        _currentState = new PlayerInput();
-        _oldState = new PlayerInput();
+    	_localPlayer = new HumanPlayer(this);
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
         _isReady = true;
     }
     
@@ -62,101 +59,8 @@ public class GameController implements AWTEventListener, ClientListener
         
     @Override
     public void chatMessage(String name, String text) {}
-    
+   
     @Override
-    public void eventDispatched(AWTEvent e)
-    {
-        if (e.getID() == KeyEvent.KEY_TYPED)
-        {
-            KeyEvent keyEvent = (KeyEvent)e;
-            char eingabe = keyEvent.getKeyChar();
-            switch (eingabe)
-            {
-                case 'w':
-                {
-                    // vorwärts
-                    _currentState.setzeBewegung(1);
-                    break;
-                }
-                case 's':
-                {
-                    // rückwärts
-                    _currentState.setzeBewegung(-1);
-                    break;
-                }
-                case 'a':
-                {
-                    // links
-                    _currentState.setzeDrehung(1);
-                    break;
-                }
-                case 'd':
-                {
-                    // rechts
-                    _currentState.setzeDrehung(-1);
-                    break;
-                }
-                case 'n':
-                {
-                    // normaler Schuss
-                    _currentState.setzeSchuss(1);
-                    break;
-                }
-                case 'm':
-                {
-                    // Masterschuss
-                    _currentState.setzeSchuss(2);
-                    break;
-                }
-            }
-        }
-        else if (e.getID() == KeyEvent.KEY_RELEASED)
-        {
-            KeyEvent keyEvent = (KeyEvent)e;
-            char eingabe = keyEvent.getKeyChar();
-            switch (eingabe)
-            {
-                case 'w':
-                {
-                    // vorwärts
-                    _currentState.setzeBewegung(-1);
-                    break;
-                }
-                case 's':
-                {
-                    // rückwärts
-                    _currentState.setzeBewegung(0);
-                    break;
-                }
-                case 'a':
-                {
-                    // links
-                    _currentState.setzeDrehung(0);
-                    break;
-                }
-                case 'd':
-                {
-                    // rechts
-                    _currentState.setzeDrehung(0);
-                    break;
-                }
-                case 'm': case 'n':
-                {
-                    _currentState.setzeSchuss(0);
-                    break;
-                }
-            }
-        }
-        if (!_oldState.equals(_currentState))
-        {
-            _oldState = new PlayerInput(_currentState);
-            Packet p = _currentState.pack();
-            _client.sendPacket(p);
-        }
-    }
-    /**
-     * @return the Playerlist
-     */
     public PlayerList getPlayerList()
     {
         return _playerList;
@@ -167,9 +71,7 @@ public class GameController implements AWTEventListener, ClientListener
         Shot s = Shot.hole(packet);
         ShotPool.addShot(s);
     }
-    /**
-     * send a Snapshot to every player
-     */
+
     @Override
 	public void snapshot(Packet snapshot)
     {
@@ -179,7 +81,7 @@ public class GameController implements AWTEventListener, ClientListener
             PlayerDataSet d = _playerList.dataAt(i);
             if (d != null && d.lokal())
             {
-                _localPlayer = d;
+                _localPlayer.setDataSet(d);
             }
         }
     }
