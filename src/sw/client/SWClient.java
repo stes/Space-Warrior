@@ -51,7 +51,7 @@ public class SWClient implements IClient, NetworkClientListener
     	_netClient.connect(new InetSocketAddress(ip, port));
     	_netClient.start();
     	Packet start = new Packet(Packettype.CL_START_INFO);
-        start.fuegeStringAn(name);
+        start.addString(name);
         this.sendPacket(start);
     }
     
@@ -90,23 +90,23 @@ public class SWClient implements IClient, NetworkClientListener
     {
         Packet packet = new Packet(data, len);
         
-        if(Packettype.SV_CHAT_NACHRICHT == packet.type())
+        if(Packettype.SV_CHAT_NACHRICHT == packet.getType())
         {
-            String name = packet.holeString();
-            String text = packet.holeString();
+            String name = packet.getString();
+            String text = packet.getString();
             for (ClientListener l : _clientListener)
             {
                 l.chatMessage(name, text);
             }
         }
-        else if(Packettype.SV_SNAPSHOT == packet.type())
+        else if(Packettype.SV_SNAPSHOT == packet.getType())
         {
             for (ClientListener l : _clientListener)
             {
                 l.snapshot(packet);
             }
         }
-        else if(Packettype.SV_SCHUSS == packet.type())
+        else if(Packettype.SV_SCHUSS == packet.getType())
         {
             for (ClientListener l : _clientListener)
             {

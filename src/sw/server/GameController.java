@@ -115,8 +115,8 @@ public class GameController
                     if (daten != null)
                     {
                         Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
-                        info.fuegeStringAn("Server");
-                        info.fuegeStringAn(daten.name() + " hat die Runde gewonnen!");
+                        info.addString("Server");
+                        info.addString(daten.name() + " hat die Runde gewonnen!");
                         _server.sendBroadcast(info);
                         break;
                     }
@@ -147,8 +147,8 @@ public class GameController
             }
         }
         Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
-        info.fuegeStringAn("Server");
-        info.fuegeStringAn("Neue Runde");
+        info.addString("Server");
+        info.addString("Neue Runde");
         _server.sendBroadcast(info);
         System.out.println("Neue Runde");
     }

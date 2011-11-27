@@ -60,7 +60,7 @@ public class Packet
      * 
      * @param bool
      */
-    public void fuegeBooleanAn(boolean bool)
+    public void addBoolean(boolean bool)
     {
     	byte data = (byte) (bool ? 1 : 0);
         _stringBuilder.append(data);
@@ -71,10 +71,10 @@ public class Packet
      * 
      * @param p 
      */
-    public void fuegePaketAn(Packet p)
+    public void addPacket(Packet p)
     {
     	byte[] data = p.getData();
-        this.fuegeStringAn(new String(data, 0, data.length));
+        this.addString(new String(data, 0, data.length));
     }
     
     /**
@@ -82,9 +82,9 @@ public class Packet
      * 
      * @param text
      */
-    public void fuegeStringAn(String text)
+    public void addString(String text)
     {
-        this.fuegeZahlAn(text.length());
+        this.addNumber(text.length());
         _stringBuilder.append(text);
     }
     
@@ -93,7 +93,7 @@ public class Packet
      * 
      * @param zahl
      */
-    public void fuegeZahlAn(int zahl)
+    public void addNumber(int zahl)
     {
     	char[] data = new char[4];
         
@@ -110,7 +110,7 @@ public class Packet
      * 
      * @return bool
      */
-    public boolean holeBoolean()
+    public boolean getBoolean()
     {
         _position++;
         return _content.charAt(_position-1) == 1;
@@ -121,9 +121,9 @@ public class Packet
      * 
      * @return Paket
      */
-    public Packet holePaket()
+    public Packet getPacket()
     {
-    	byte[] data = this.holeString().getBytes();
+    	byte[] data = this.getString().getBytes();
         return new Packet(data, data.length);
     }
     
@@ -132,9 +132,9 @@ public class Packet
      * 
      * @return string
      */
-    public String holeString()
+    public String getString()
     {
-        int laenge = this.holeZahl();
+        int laenge = this.getInt();
         _position += laenge;
         return _content.substring(_position-laenge, _position);
     }
@@ -144,7 +144,7 @@ public class Packet
      * 
      * @return zahl
      */
-    public int holeZahl()
+    public int getInt()
     {
         int zahl = (_content.charAt(_position) & 0xFF) << 24;
         zahl |= (_content.charAt(_position+1) & 0xFF) << 16;
@@ -163,7 +163,7 @@ public class Packet
     /**
      * @return gibt den Typ zurück
      */
-    public byte type()
+    public byte getType()
     {
         return _type;
     }

@@ -41,19 +41,19 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
      */
     public static PlayerDataSet hole(Packet p)
     {
-        if (p.type() != Packettype.SNAP_SPIELERDATEN)
+        if (p.getType() != Packettype.SNAP_SPIELERDATEN)
             throw new IllegalArgumentException();
-        String name = p.holeString();
-        boolean lokal = p.holeBoolean();
+        String name = p.getString();
+        boolean lokal = p.getBoolean();
         
         PlayerDataSet daten = new PlayerDataSet(name, lokal);
         
-        daten.setzePosition(new Point(p.holeZahl(), p.holeZahl()));
-        daten.setzeRichtung(p.holeZahl());
-        daten.setzePunkte(p.holeZahl());
+        daten.setzePosition(new Point(p.getInt(), p.getInt()));
+        daten.setzeRichtung(p.getInt());
+        daten.setzePunkte(p.getInt());
         
-        daten.setzeLeben(p.holeZahl());
-        daten.setzeMunition(p.holeZahl());
+        daten.setzeLeben(p.getInt());
+        daten.setzeMunition(p.getInt());
         //daten.setzeGeschwindigkeit(p.holeZahl());
 
         return daten;
@@ -249,17 +249,17 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
     public Packet pack(boolean lokal)
     {
         Packet p = new Packet(Packettype.SNAP_SPIELERDATEN);
-        p.fuegeStringAn(this.name());
-        p.fuegeBooleanAn(lokal);
-        p.fuegeZahlAn((int)this.position().getX());
-        p.fuegeZahlAn((int)this.position().getY());
-        p.fuegeZahlAn((int)this.richtung());
-        p.fuegeZahlAn(this.punkte());
+        p.addString(this.name());
+        p.addBoolean(lokal);
+        p.addNumber((int)this.position().getX());
+        p.addNumber((int)this.position().getY());
+        p.addNumber((int)this.richtung());
+        p.addNumber(this.punkte());
         
         int x = lokal ? 1 : 0;
         
-        p.fuegeZahlAn(this.leben() * x);
-        p.fuegeZahlAn(this.munition() * x);
+        p.addNumber(this.leben() * x);
+        p.addNumber(this.munition() * x);
         //p.fuegeZahlAn(this.geschwindigkeit() * x);
         
         return p;

@@ -29,11 +29,11 @@ import sw.shared.Packet;
 public class ServerInfo extends Thread
 {
     private DatagramSocket _socket;
-    private NetServer _netServer;
+    private SWServer _netServer;
     private boolean _laeuft;
 
     // Konstruktor
-    public ServerInfo(NetServer netServer)
+    public ServerInfo(SWServer netServer)
     {
         _netServer = netServer;
         try

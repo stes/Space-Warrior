@@ -63,8 +63,8 @@ public class PlayerInput
      */
     public PlayerInput(Packet input)
     {
-        this(input.holeZahl(), input.holeZahl(),
-            input.holeZahl());
+        this(input.getInt(), input.getInt(),
+            input.getInt());
     }
 
     /**
@@ -116,9 +116,9 @@ public class PlayerInput
     public Packet pack()
     {
         Packet packet = new Packet(Packettype.CL_INPUT);
-        packet.fuegeZahlAn(_moveDirection);
-        packet.fuegeZahlAn(_turnDirection);
-        packet.fuegeZahlAn(_isShooting);
+        packet.addNumber(_moveDirection);
+        packet.addNumber(_turnDirection);
+        packet.addNumber(_isShooting);
         return packet;
     }
     

@@ -38,12 +38,12 @@ public class Shot extends java.awt.geom.Line2D.Double
      */
     public static Shot hole(Packet p)
     {
-        if (p.type() != Packettype.SV_SCHUSS)
+        if (p.getType() != Packettype.SV_SCHUSS)
             throw new IllegalArgumentException();
         return new Shot(
-            new Point(p.holeZahl(), p.holeZahl()),
-            p.holeZahl(),
-            p.holeBoolean());
+            new Point(p.getInt(), p.getInt()),
+            p.getInt(),
+            p.getBoolean());
     }
     // Attribute
     private boolean _istMaster;
@@ -116,10 +116,10 @@ public class Shot extends java.awt.geom.Line2D.Double
     public Packet pack()
     {
         Packet p = new Packet(Packettype.SV_SCHUSS);
-        p.fuegeZahlAn((int)startPunkt().getX());
-        p.fuegeZahlAn((int)startPunkt().getY());
-        p.fuegeZahlAn(this.richtung());
-        p.fuegeBooleanAn(this.istMaster());
+        p.addNumber((int)startPunkt().getX());
+        p.addNumber((int)startPunkt().getY());
+        p.addNumber(this.richtung());
+        p.addBoolean(this.istMaster());
         return p;
     }
     

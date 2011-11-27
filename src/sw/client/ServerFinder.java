@@ -92,7 +92,7 @@ public class ServerFinder extends Thread
                 	byte[] data = java.util.Arrays.copyOfRange(buf, len, response.getLength());
                     Packet info = new Packet(data, data.length);
                     _application.foundServer(response.getAddress().getHostAddress().toString(),
-                        info.holeString(), info.holeZahl(), info.holeZahl());
+                        info.getString(), info.getInt(), info.getInt());
                 }
             }
         }

@@ -32,11 +32,11 @@ public class PlayerList
      */
     private static PlayerList fromSnapshot(Packet p)
     {
-        PlayerList liste = new PlayerList(p.holeZahl());
-        int n = p.holeZahl();
+        PlayerList liste = new PlayerList(p.getInt());
+        int n = p.getInt();
         for (int i = 0; i < n; i++)
         {
-           liste.insert(PlayerDataSet.hole(p.holePaket()), null);
+           liste.insert(PlayerDataSet.hole(p.getPacket()), null);
         }
         return liste;
     }
@@ -91,14 +91,14 @@ public class PlayerList
     public Packet createSnapshot(String lokalerName)
     {
         Packet p = new Packet(Packettype.SV_SNAPSHOT);
-        p.fuegeZahlAn(this.size());
-        p.fuegeZahlAn(this.count());
+        p.addNumber(this.size());
+        p.addNumber(this.count());
         for (PlayerDataSet s : _liste)
         {
             if (s != null)
             {
                 boolean lokal = s.name().equals(lokalerName);
-                p.fuegePaketAn(s.pack(lokal));
+                p.addPacket(s.pack(lokal));
             }
         }
         return p;

@@ -23,7 +23,6 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -33,7 +32,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import sw.eastereggs.bf.BfInterpreter;
 import sw.eastereggs.fortytwo.FortyTwo;
@@ -103,7 +101,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _client.addClientListener(_controller);
         
         this.initEastereggs();
-        //this.bildschirm().addWindowListener(this);
         this.updateServerList();
     }
     
@@ -176,6 +173,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         this.initAfterConnection();
         
         // ugly!!!
+        // indeed.
         new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
     }
     
@@ -213,7 +211,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     public void sendChatmessage(String chatNachricht)
     {
         Packet chat = new Packet(Packettype.CL_CHAT_MSG);
-        chat.fuegeStringAn(chatNachricht);
+        chat.addString(chatNachricht);
         //_client.sendeNachricht(chat);
     }
     

@@ -58,9 +58,9 @@ public class SWServer implements IServer, NetworkServerListener
     public Packet holeServerInfos()
     {
         Packet info = new Packet(new byte[]{(byte)0}, 0);
-        info.fuegeStringAn(_serverName);
-        info.fuegeZahlAn(GameConstants.MAX_PLAYERS);
-        info.fuegeZahlAn(0);
+        info.addString(_serverName);
+        info.addNumber(GameConstants.MAX_PLAYERS);
+        info.addNumber(0);
         return info;
     }
     
@@ -145,9 +145,9 @@ public class SWServer implements IServer, NetworkServerListener
 		Client client = _clients[clientID];
         Packet packet = new Packet(data, len);
         
-        if(Packettype.CL_START_INFO == packet.type() && !client.isPlaying())
+        if(Packettype.CL_START_INFO == packet.getType() && !client.isPlaying())
         {
-            String name = packet.holeString();
+            String name = packet.getString();
             Client cl = this.getClientbyName(name);
             if(cl == null)
             {
@@ -160,15 +160,15 @@ public class SWServer implements IServer, NetworkServerListener
             	_netServer.drop(clientID);
             }
         }
-        else if(Packettype.CL_CHAT_MSG == packet.type() && client.isPlaying())
+        else if(Packettype.CL_CHAT_MSG == packet.getType() && client.isPlaying())
         {
-            String text = packet.holeString();
+            String text = packet.getString();
             Packet chat = new Packet(Packettype.SV_CHAT_NACHRICHT);
-            chat.fuegeStringAn(client.name());
-            chat.fuegeStringAn(text);
+            chat.addString(client.name());
+            chat.addString(text);
             this.sendPacket(-1, chat);
         }
-        else if(Packettype.CL_INPUT == packet.type() && client.isPlaying())
+        else if(Packettype.CL_INPUT == packet.getType() && client.isPlaying())
         {
             _controller.processPlayerInput(client.name(), new PlayerInput(packet));
         }

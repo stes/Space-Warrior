@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,7 +41,7 @@ import javax.swing.JTextField;
 public class ServerGUI extends JFrame implements ActionListener
 {
 	private JTextArea _area;
-	private JList<Client> _clientList;
+	private JList/*<Client>*/ _clientList;
 	private JScrollPane _scroll;
 	private JButton _kickButton;
 	private JTextField _nameField;
@@ -68,7 +69,7 @@ public class ServerGUI extends JFrame implements ActionListener
 		_scroll = new JScrollPane(_area);
 		_scroll.setBounds(10, 10, width/3*2-20, height-90);
 		
-		_clientList = new JList<Client>();
+		_clientList = new JList/*<Client>*/();
 		_clientList.setBounds(20+width/3*2-20, 10, width/3-30, height-90);
 		
 		_kickButton = new JButton("Kick");

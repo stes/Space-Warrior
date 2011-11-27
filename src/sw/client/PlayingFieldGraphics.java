@@ -62,6 +62,13 @@ public class PlayingFieldGraphics extends JPanel
     {
         super.paint(g);
         Graphics2D g2d = (Graphics2D)g;
+        g2d.drawImage(
+        		this._backgroundImg,
+        		GameConstants.REFERENCE_X,
+        		GameConstants.REFERENCE_Y,
+        		GameConstants.PLAYING_FIELD_WIDTH,
+        		GameConstants.PLAYING_FIELD_HEIGHT,
+        		null);
         ShotPool.paint(g);
         for (int i = 0 ; i < _spieler.size(); i++)
         {
