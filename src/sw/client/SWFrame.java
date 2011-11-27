@@ -83,7 +83,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         super("Space Warrior");
         
         _client = new SWClient();
-        _controller = new GameController(_client);  
+        _controller = new GameController(_client);
         _client.addClientListener(this);
         _client.addClientListener(_controller);
         

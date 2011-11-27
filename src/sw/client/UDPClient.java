@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.NetworkReceiver;
 import sw.shared.net.UDPConnection;
-import sw.shared.net.UDPConnection.CTRLMSG;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -57,7 +56,7 @@ public class UDPClient extends Thread implements NetworkListener
     public void connect(InetSocketAddress addr)
     {
     	_server = new UDPConnection(_socket, addr);
-    	_server.sendControl(CTRLMSG.CONNECT);
+    	_server.sendControl(UDPConnection.CTRL_CONNECT);
     }
     
     public void addNetworkClientListener(NetworkClientListener listener)
@@ -113,14 +112,14 @@ public class UDPClient extends Thread implements NetworkListener
     	if(_server != null && _server.equals(addr))
     	{
 	    	_server.messageReceived();
-			if(flag == (byte)CTRLMSG.NONE.ordinal())
+			if(flag == UDPConnection.CTRL_NONE)
 			{
 				for (NetworkClientListener l : _networkClientListener)
 				{
 					l.clientReceivedMessage(data, len);
 				}
 			}
-			else if(flag == (byte)CTRLMSG.CONNECTACCEPT.ordinal())
+			else if(flag == UDPConnection.CTRL_CONNECTACCEPT)
 			{
 				System.out.println("connected: " + _server);
 				_server.setConnected();
@@ -129,7 +128,7 @@ public class UDPClient extends Thread implements NetworkListener
 					l.clientConnected();
 				}
 			}
-			else if(flag == (byte)CTRLMSG.CLOSE.ordinal())
+			else if(flag == UDPConnection.CTRL_CLOSE)
 			{
 				System.out.println("disconnect");
 				_server = null;
