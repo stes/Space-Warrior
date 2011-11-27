@@ -19,8 +19,8 @@ public class PropertyLoader
 	private File _propertiesFile;
 	
 	private String _serverName;
-	private String _maxPlayers;
-	private String _port;
+	private int _maxPlayers;
+	private int _port;
 	
 	/**
 	 * Creates a new property loader
@@ -44,7 +44,7 @@ public class PropertyLoader
 	/**
 	 * @return the maximum number of players
 	 */
-	public String getMaxPlayers()
+	public int getMaxPlayers()
 	{
 		return _maxPlayers;
 	}
@@ -52,7 +52,7 @@ public class PropertyLoader
 	/**
 	 * @return the port
 	 */
-	public String getPort()
+	public int getPort()
 	{
 		return _port;
 	}
@@ -85,8 +85,8 @@ public class PropertyLoader
 		_properties.load(in);
 		
 		this.setServerName(_properties.getProperty("Server_Name"));
-		this.setMaxPlayers(_properties.getProperty("Max_Players"));
-		this.setPort(_properties.getProperty("Port"));
+		this.setMaxPlayers(Integer.parseInt(_properties.getProperty("Max_Players")));
+		this.setPort(Integer.parseInt(_properties.getProperty("Port")));
 		
 		in.close();
 	}
@@ -94,7 +94,7 @@ public class PropertyLoader
 	/**
 	 * @param maxPlayers the maximum number of players
 	 */
-	private void setMaxPlayers(String maxPlayers)
+	private void setMaxPlayers(int maxPlayers)
 	{
 		this._maxPlayers = maxPlayers;
 	}
@@ -102,7 +102,7 @@ public class PropertyLoader
 	/**
 	 * @param port the port
 	 */
-	private void setPort(String port)
+	private void setPort(int port)
 	{
 		this._port = port;
 	}

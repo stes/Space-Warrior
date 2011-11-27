@@ -42,7 +42,7 @@ public class SWServer implements IServer, NetworkServerListener
     {
     	_propertyLoader = new PropertyLoader();
     	_controller = new GameController(this);
-    	_netServer = new UDPServer(GameConstants.STANDARD_PORT, GameConstants.MAX_PLAYERS);
+    	_netServer = new UDPServer(_propertyLoader.getPort(), _propertyLoader.getMaxPlayers());
     	_netServer.addNetworkServerListener(this);
     	_netServer.start();
         _clients = new Client[GameConstants.MAX_PLAYERS];
@@ -60,8 +60,8 @@ public class SWServer implements IServer, NetworkServerListener
     public Packet holeServerInfos()
     {
         Packet info = new Packet(new byte[]{(byte)0}, 0);
-        info.addString(_serverName);
-        info.addNumber(GameConstants.MAX_PLAYERS);
+        info.addString(_propertyLoader.getServerName());
+        info.addNumber(_propertyLoader.getMaxPlayers());
         info.addNumber(0);
         return info;
     }
