@@ -21,14 +21,15 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-
-import sw.shared.GameConstants;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class UDPConnection
 {
+	public final static int MAX_PACKET_LENGTH = 4*1024;
+	public final static int PACKET_HEADER_LENGTH = 1;
+	
     private DatagramSocket _socket;
     private InetSocketAddress _addr;
     private long _lastRecvTime;
@@ -96,11 +97,12 @@ public class UDPConnection
     	{
 	    	if(!_timeout)
 	    	{
-	            byte[] buf = new byte[GameConstants.MAX_PACKET_LENGTH];
+	            byte[] buf = new byte[MAX_PACKET_LENGTH];
 	            buf[0] = (byte)flag.ordinal();
 	            if(data != null)
 	            {
-	            	System.arraycopy(data, 0, buf, 1, data.length-1);
+	            	int size = Math.min(data.length, buf.length-PACKET_HEADER_LENGTH);
+	            	System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, size);
 	            }
 	            DatagramPacket packet = new DatagramPacket(buf, buf.length, _addr);
 				_socket.send(packet);

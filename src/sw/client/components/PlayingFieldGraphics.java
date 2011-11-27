@@ -79,13 +79,6 @@ public class PlayingFieldGraphics extends JPanel
         		GameConstants.PLAYING_FIELD_HEIGHT,
         		null);
         
-        g2d.drawImage(
-                rotateImage(_opposingPlayerImg, 180-5),
-                null,
-                100 - GameConstants.PLAYER_SIZE/2,
-                100 - GameConstants.PLAYER_SIZE/2);
-        
-        
         ShotPool.paint(g);
         for (int i = 0 ; i < _spieler.size(); i++)
         {

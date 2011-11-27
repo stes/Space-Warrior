@@ -47,8 +47,8 @@ public class Shot extends java.awt.geom.Line2D.Double
         if (p.getType() != Packettype.SV_SCHUSS)
             throw new IllegalArgumentException();
         return new Shot(
-            new Point(p.getInt(), p.getInt()),
-            p.getInt(),
+            new Point(p.getNumber(), p.getNumber()),
+            p.getNumber(),
             p.getBoolean());
     }
     // Attribute

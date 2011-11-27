@@ -65,8 +65,8 @@ public class PlayerInput
      */
     public PlayerInput(Packet input)
     {
-        this(input.getInt(), input.getInt(),
-            input.getInt());
+        this(input.getNumber(), input.getNumber(),
+            input.getNumber());
     }
 
     /**

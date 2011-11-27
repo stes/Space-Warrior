@@ -49,13 +49,13 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
         
         PlayerDataSet daten = new PlayerDataSet(name, lokal);
         
-        daten.setzePosition(new Point(p.getInt(), p.getInt()));
-        daten.setzeRichtung(p.getInt());
-        daten.setzePunkte(p.getInt());
+        daten.setzePosition(new Point(p.getNumber(), p.getNumber()));
+        daten.setzeRichtung(p.getNumber());
+        daten.setzePunkte(p.getNumber());
         
-        daten.setzeLeben(p.getInt());
-        daten.setzeMunition(p.getInt());
-        //daten.setzeGeschwindigkeit(p.holeZahl());
+        daten.setzeLeben(p.getNumber());
+        daten.setzeMunition(p.getNumber());
+        //daten.setzeGeschwindigkeit(p.getNumber());
 
         return daten;
     }

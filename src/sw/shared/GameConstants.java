@@ -29,7 +29,6 @@ public final class GameConstants
     public final static int STANDARD_PORT = 2489;
     public final static int SNAPSHOTS_PER_SECOND = 20;
     public final static int SNAPSHOT_INTERVAL = 1000 / SNAPSHOTS_PER_SECOND;
-    public final static int MAX_PACKET_LENGTH = 4*1024;
     public final static byte[] NET_CONNLESS = new byte[]{(byte)0, (byte)0, (byte)0};
     public final static byte[] SERVER_INFO_REQUEST = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '?'};
     public final static byte[] SERVER_INFO_RESPONSE = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '!'};

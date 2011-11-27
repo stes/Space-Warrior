@@ -53,8 +53,8 @@ public class SWServer implements IServer, NetworkServerListener
     
     public void setServerName(String name)
     {
-        System.out.println("server name: " + name);
-        _serverName = name;
+    	_serverName = name;
+        System.out.println("server name: " + _serverName);
     }
     
     public Packet holeServerInfos()
