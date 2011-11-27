@@ -49,15 +49,7 @@ public class Program implements WindowListener
         int lastSize = 0;
         while (true)
         {
-            Client[] clients = _netServer.clListe();
-            Vector<Client> clientList = new Vector<Client>();
-            for(Client cl : clients)
-            {
-            	if(cl != null)
-            	{
-            		clientList.add(cl);
-            	}
-            }
+            Vector<Client> clientList = _netServer.clListe();
             if(clientList.size() != lastSize)
             {
             	_serverGUI.setClientList(clientList);

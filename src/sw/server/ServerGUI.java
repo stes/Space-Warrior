@@ -119,7 +119,7 @@ public class ServerGUI extends JFrame implements ActionListener
     		Client cl = (Client)_clientList.getSelectedValue();
     		if(_netServer != null && cl != null)
     		{
-    		    _netServer.drop(cl.getClientID());
+    		    _netServer.drop(cl);
     		}
     	}
     	else

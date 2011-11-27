@@ -147,7 +147,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         if ( !_txtName.getText().isEmpty())
         {
         	System.out.println("connect");
-            this.verbinde(_txtIPAdresse.getText(), _txtName.getText());
+            this.verbinde(_txtIPAdresse.getText());
         }
  
     }
@@ -175,6 +175,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         // ugly!!!
         // indeed.
         new Thread(new Runnable(){public void run() {while(true) { tick(); }}}).start();
+        
+        Packet start = new Packet(Packettype.CL_START_INFO);
+        start.addString("test");
+        _client.sendPacket(start);
     }
     
     @Override
@@ -206,7 +210,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     {
         Packet chat = new Packet(Packettype.CL_CHAT_MSG);
         chat.addString(chatNachricht);
-        //_client.sendeNachricht(chat);
+        _client.sendPacket(chat);
     }
 	
     @Override
@@ -448,9 +452,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     /**
      * Verbindet den Client mit einem Server.
      */
-    private void verbinde(String ip, String name)
+    private void verbinde(String ip)
     {
-        _client.connect(ip, GameConstants.STANDARD_PORT, name);
+        _client.connect(ip, GameConstants.STANDARD_PORT);
     }    
 }
 

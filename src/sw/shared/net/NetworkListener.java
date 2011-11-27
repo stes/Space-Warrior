@@ -17,14 +17,15 @@
  ******************************************************************************/
 package sw.shared.net;
 
-import java.net.InetSocketAddress;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public interface NetworkListener
 {
-	public void messageReceived(InetSocketAddress addr, byte flag, byte[] data, int len);
+	public void connected(UDPConnection connection);
+	
+	public void disconnected(UDPConnection connection);
 
-	public void messageReceivedConnless(InetSocketAddress addr, byte[] data, int len);
+	public void receivedMessage(UDPConnection connection, byte[] data, int len);
 }

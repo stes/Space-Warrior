@@ -17,18 +17,24 @@
  ******************************************************************************/
 package sw.server;
 
+import java.net.InetSocketAddress;
+import java.util.Vector;
+
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerInput;
+import sw.shared.net.NetworkListener;
+import sw.shared.net.UDPConnection;
+import sw.shared.net.UDPHost;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWServer implements IServer, NetworkServerListener
+public class SWServer implements IServer, NetworkListener
 {
-	private UDPServer _netServer;
-    private Client[] _clients;
+	private UDPHost _netServer;
+    private Vector<Client> _clients;
     private PropertyLoader _propertyLoader;
     
     private int _tick;
@@ -42,10 +48,11 @@ public class SWServer implements IServer, NetworkServerListener
     {
     	_propertyLoader = new PropertyLoader();
     	_controller = new GameController(this);
-    	_netServer = new UDPServer(_propertyLoader.getPort(), _propertyLoader.getMaxPlayers());
-    	_netServer.addNetworkServerListener(this);
+    	_netServer = new UDPHost(new InetSocketAddress(_propertyLoader.getPort()), _propertyLoader.getMaxPlayers());
+    	_netServer.setAcceptConnections();
+    	_netServer.addNetworkListener(this);
     	_netServer.start();
-        _clients = new Client[GameConstants.MAX_PLAYERS];
+        _clients = new Vector<Client>();
         _lastUpdate = System.currentTimeMillis();
         this.setServerName("Server");
     }
@@ -67,11 +74,23 @@ public class SWServer implements IServer, NetworkServerListener
     
     private Client getClientbyName(String name)
     {
-    	for(int i = 0; i < _clients.length; i++)
+    	for(int i = 0; i < _clients.size(); i++)
     	{
-    		if(_clients[i] != null && _clients[i].name().equals(name))
+    		if(_clients.get(i).name().equals(name))
     		{
-    			return _clients[i];
+    			return _clients.get(i);
+    		}
+    	}
+    	return null;
+    }
+    
+    private Client getClientbyConnection(UDPConnection connection)
+    {
+    	for(int i = 0; i < _clients.size(); i++)
+    	{
+    		if(_clients.get(i).getConnection().equals(connection))
+    		{
+    			return _clients.get(i);
     		}
     	}
     	return null;
@@ -80,28 +99,29 @@ public class SWServer implements IServer, NetworkServerListener
     @Override
     public void sendPacket(String name, Packet packet)
     {
-    	Client cl = this.getClientbyName(name);
-    	if(cl != null)
+    	Client client = this.getClientbyName(name);
+    	if(client != null)
     	{
-    		this.sendPacket(cl.getClientID(), packet);
+    		this.sendPacket(client, packet);
     	}
     }
     
     public void sendBroadcast(Packet packet)
     {
-    	this.sendPacket(-1, packet);
+    	byte[] data = packet.getData();
+    	_netServer.broadcast(data, data.length);
     }
     
-    private void sendPacket(int clientID, Packet packet)
+    private void sendPacket(Client client, Packet packet)
     {
     	byte[] data = packet.getData();
-    	_netServer.send(clientID, data, data.length);
+    	client.getConnection().send(data, data.length);
     }
     
 	// TODO: remove
-	public void drop(int clientID)
+	public void drop(Client client)
 	{
-		_netServer.drop(clientID);
+		client.getConnection().disconnect();
 	}
    
     public void tick()
@@ -119,31 +139,32 @@ public class SWServer implements IServer, NetworkServerListener
         }
     }
     
-    protected Client[] clListe()
+    protected Vector<Client> clListe()
     {
         return _clients;
     }
 
 	@Override
-	public void serverClientConnected(int clientID) 
+	public void connected(UDPConnection connection) 
 	{
-		_clients[clientID] = new Client(clientID, "connecting client");
+		_clients.add(new Client(connection, "connecting client"));
 	}
 
 	@Override
-	public void serverClientDisconnected(int clientID)
+	public void disconnected(UDPConnection connection)
 	{
-		if(_clients[clientID].isPlaying())
+		Client client = this.getClientbyConnection(connection);
+		if(client.isPlaying())
         {
-            _controller.playerLeft(_clients[clientID].name());
+            _controller.playerLeft(client.name());
         }
-		_clients[clientID] = null;
+		_clients.remove(client);
 	}
 
 	@Override
-	public void serverReceivedMessage(int clientID, byte[] data, int len)
+	public void receivedMessage(UDPConnection connection, byte[] data, int len)
 	{
-		Client client = _clients[clientID];
+		Client client = this.getClientbyConnection(connection);
         Packet packet = new Packet(data, len);
         
         if(Packettype.CL_START_INFO == packet.getType() && !client.isPlaying())
@@ -158,7 +179,7 @@ public class SWServer implements IServer, NetworkServerListener
             }
             else
             {
-            	_netServer.drop(clientID);
+            	connection.disconnect();
             }
         }
         else if(Packettype.CL_CHAT_MSG == packet.getType() && client.isPlaying())
@@ -167,7 +188,7 @@ public class SWServer implements IServer, NetworkServerListener
             Packet chat = new Packet(Packettype.SV_CHAT_NACHRICHT);
             chat.addString(client.name());
             chat.addString(text);
-            this.sendPacket(-1, chat);
+            this.sendBroadcast(chat);
         }
         else if(Packettype.CL_INPUT == packet.getType() && client.isPlaying())
         {
