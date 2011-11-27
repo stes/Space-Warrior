@@ -20,33 +20,19 @@ package sw.client;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import sw.client.components.PlayingFieldGraphics;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginEvent;
 import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
-import sw.eastereggs.bf.BfInterpreter;
-import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerDataSet;
-
-
 /**
 * @author Redix, stes, Abbadonn
 * @version 25.11.11
@@ -190,7 +176,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
         Packet chat = new Packet(Packettype.CL_CHAT_MSG);
         chat.addString(chatNachricht);
-        //_client.sendeNachricht(chat);
+        _client.sendPacket(chat);
     }
 	
     @Override
@@ -330,15 +316,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     /**
      * Verbindet den Client mit einem Server.
      */
-    private void verbinde(String ip, String name)
+    private void verbinde(String ip)
     {
-        _client.connect(ip, GameConstants.STANDARD_PORT, name);
+        _client.connect(ip, GameConstants.STANDARD_PORT);
     }
 
 	@Override
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
+		
+		Packet start = new Packet(Packettype.CL_START_INFO);
+		start.addString(_loginPanel.getName());
+		_client.sendPacket(start);
 	}
 
 	@Override
@@ -371,6 +361,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	@Override
 	public void login(LoginEvent e)
 	{
-		this.verbinde(e.getIPAdress(), e.getLoginName());
+		this.verbinde(e.getIPAdress());
 	}
 }
