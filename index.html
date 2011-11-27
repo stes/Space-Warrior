@@ -94,6 +94,36 @@ However, we would be glad if you could check out this site frequently to stay up
 <br/> Twitter: @Space_Warrior
       
       </p>
+    <p>
+	  <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+		<script>
+			new TWTR.Widget({
+			  version: 2,
+			  type: 'profile',
+			  rpp: 4,
+			  interval: 30000,
+			  width: 250,
+			  height: 300,
+			  theme: {
+				shell: {
+				  background: '#333333',
+				  color: '#ffffff'
+				},
+				tweets: {
+				  background: '#000000',
+				  color: '#ffffff',
+				  links: '#4aed05'
+				}
+			  },
+			  features: {
+				scrollbar: false,
+				loop: false,
+				live: false,
+				behavior: 'all'
+			  }
+			}).render().setUser('Space_Warrior').start();
+		</script>
+	  </p>
     
 
     <h2>Download</h2>
@@ -112,34 +142,6 @@ However, we would be glad if you could check out this site frequently to stay up
     </div>
 
   </div>
-<script src="http://widgets.twimg.com/j/2/widget.js"></script>
-<script>
-new TWTR.Widget({
-  version: 2,
-  type: 'profile',
-  rpp: 4,
-  interval: 30000,
-  width: 250,
-  height: 300,
-  theme: {
-    shell: {
-      background: '#333333',
-      color: '#ffffff'
-    },
-    tweets: {
-      background: '#000000',
-      color: '#ffffff',
-      links: '#4aed05'
-    }
-  },
-  features: {
-    scrollbar: false,
-    loop: false,
-    live: false,
-    behavior: 'all'
-  }
-}).render().setUser('Space_Warrior').start();
-</script>
 </body>
 
 </html>
