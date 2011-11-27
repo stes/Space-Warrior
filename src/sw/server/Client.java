@@ -16,19 +16,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.server;
+
+import sw.shared.net.UDPConnection;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class Client
 {
-    private int _clientID;
+    private UDPConnection _connection;
     private String _name;
     private boolean _isPlaying;
 
-    public Client(int clientID, String name)
+    public Client(UDPConnection connection, String name)
     {
-    	_clientID = clientID;
+    	_connection = connection;
         _name = name;
         _isPlaying = false;
     }
@@ -38,9 +41,9 @@ public class Client
         _isPlaying = true;
     }
     
-    public int getClientID()
+    public UDPConnection getConnection()
     {
-        return _clientID;
+        return _connection;
     }
     
     public boolean isPlaying()

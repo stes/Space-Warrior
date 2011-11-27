@@ -36,31 +36,37 @@ public class UDPConnection
 	public final static byte CTRL_CONNECTACCEPT = 3;
 	public final static byte CTRL_CLOSE = 4;
 	
+	public enum ConnectionState
+	{
+		OFFLINE,
+		CONNECTING,
+		ONLINE,
+		ERROR,
+	}
+	
     private DatagramSocket _socket;
     private InetSocketAddress _addr;
     private long _lastRecvTime;
     private long _lastSendTime;
-    private boolean _timeout;
-    private boolean _connected;
+    
+    private ConnectionState _state;
 
     public UDPConnection(DatagramSocket socket, InetSocketAddress addr)
     {
     	_socket = socket;
     	_addr = addr;
-    	_timeout = false;
-    	_connected = false;
+    	_state = ConnectionState.OFFLINE;
     	this.messageReceived();
-    	System.out.println("new connection: " + _addr);
     }
     
-    public void setConnected()
+    public void setState(ConnectionState state)
     {
-    	_connected = true;
+    	_state = state;
     }
     
-    public boolean timeout()
+    public ConnectionState getState()
     {
-    	return _timeout;
+    	return _state;
     }
     
     public void messageReceived()
@@ -72,18 +78,18 @@ public class UDPConnection
     {
     	long now = System.currentTimeMillis();
 		
-		if(!_timeout)
+		if(_state == ConnectionState.CONNECTING || _state == ConnectionState.ONLINE)
 		{
 			if((now - _lastRecvTime) > 1000*10)
 			{
 				System.out.println("timeout: " + _addr);
-				_timeout = true;
+				_state = ConnectionState.ERROR;
 			}
 			
-			if(now - _lastSendTime > 1000 && _connected)
+			if(now - _lastSendTime > 1000 && _state == ConnectionState.ONLINE)
 			{
-				//System.out.println("send keepalive: " + _addr);
-				sendControl(CTRL_KEEPALIVE);
+				//System.out.println("send keepalive to " + _addr);
+				this.sendControl(CTRL_KEEPALIVE);
 			}
 		}
     }
@@ -92,16 +98,18 @@ public class UDPConnection
     {
     	try
     	{
-	    	if(!_timeout)
+	    	if(_state != ConnectionState.ERROR)
 	    	{
 	            byte[] buf = new byte[MAX_PACKET_LENGTH];
 	            buf[0] = flag;
+	            int packetSize = PACKET_HEADER_LENGTH;
 	            if(data != null)
 	            {
 	            	int size = Math.min(data.length, buf.length-PACKET_HEADER_LENGTH);
 	            	System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, size);
+	            	packetSize += size;
 	            }
-	            DatagramPacket packet = new DatagramPacket(buf, buf.length, _addr);
+	            DatagramPacket packet = new DatagramPacket(buf, packetSize, _addr);
 				_socket.send(packet);
 	    		_lastSendTime = System.currentTimeMillis();
 	    	}
@@ -114,7 +122,10 @@ public class UDPConnection
     
     public void send(byte[] data, int len)
     {
-    	this.send(data, data.length, CTRL_NONE);
+    	if(_state == ConnectionState.ONLINE)
+    	{
+    		this.send(data, data.length, CTRL_NONE);
+    	}
     }
     
     public void sendControl(byte flag)
@@ -124,14 +135,20 @@ public class UDPConnection
     
     public void disconnect()
     {
-    	System.out.println("disconnect: " + _addr);
-    	sendControl(CTRL_CLOSE);
+    	System.out.println("disconnected from  " + _addr);
+    	this.sendControl(CTRL_CLOSE);
+    	_state = ConnectionState.OFFLINE;
     }
     
     @Override
     public boolean equals(Object obj)
     {
-    	if(obj instanceof InetSocketAddress)
+    	if(obj instanceof UDPConnection)
+    	{
+    		UDPConnection con = (UDPConnection) obj;
+    		return _addr.equals(con._addr);
+    	}
+    	else if(obj instanceof InetSocketAddress)
     	{
     		InetSocketAddress addr = (InetSocketAddress) obj;
     		return _addr.equals(addr);

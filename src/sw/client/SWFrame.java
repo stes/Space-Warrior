@@ -125,7 +125,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
         Packet chat = new Packet(Packettype.CL_CHAT_MSG);
         chat.addString(chatNachricht);
-        //_client.sendeNachricht(chat);
+        _client.sendPacket(chat);
     }
 	
     @Override
@@ -265,15 +265,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     /**
      * Verbindet den Client mit einem Server.
      */
-    private void verbinde(String ip, String name)
+    private void verbinde(String ip)
     {
-        _client.connect(ip, GameConstants.STANDARD_PORT, name);
+        _client.connect(ip, GameConstants.STANDARD_PORT);
     }
 
 	@Override
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
+		
+		Packet start = new Packet(Packettype.CL_START_INFO);
+		start.addString(_loginPanel.getName());
+		_client.sendPacket(start);
 	}
 
 	@Override
@@ -306,6 +310,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	@Override
 	public void login(LoginEvent e)
 	{
-		this.verbinde(e.getIPAdress(), e.getLoginName());
+		this.verbinde(e.getIPAdress());
 	}
 }

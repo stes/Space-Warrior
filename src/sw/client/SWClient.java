@@ -22,14 +22,17 @@ import java.util.ArrayList;
 
 import sw.shared.Packettype;
 import sw.shared.data.Packet;
-
+import sw.shared.net.NetworkListener;
+import sw.shared.net.UDPConnection;
+import sw.shared.net.UDPHost;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWClient implements IClient, NetworkClientListener
+public class SWClient implements IClient, NetworkListener
 {
-	private UDPClient _netClient;
+	private UDPHost _netClient;
+	private UDPConnection _server;
 	
     private ArrayList<ClientListener> _clientListener;
     
@@ -41,19 +44,15 @@ public class SWClient implements IClient, NetworkClientListener
      */
     public SWClient()
     {
-    	_netClient = new UDPClient();
-    	_netClient.addNetworkClientListener(this);
+    	_netClient = new UDPHost(null, 1);
+    	_netClient.addNetworkListener(this);
         _clientListener = new ArrayList<ClientListener>();
     }
     
-    public void connect(String ip, int port, String name)
+    public void connect(String ip, int port)
     {
     	_netClient.connect(new InetSocketAddress(ip, port));
     	_netClient.start();
-    	// TODO: move to SWFrame
-    	Packet start = new Packet(Packettype.CL_START_INFO);
-        start.addString(name);
-        this.sendPacket(start);
     }
     
     public void addClientListener(ClientListener listener)
@@ -64,13 +63,17 @@ public class SWClient implements IClient, NetworkClientListener
     @Override
     public void sendPacket(Packet packet)
     {
-    	byte[] data = packet.getData();
-        _netClient.send(data, data.length);
+    	if(_server != null)
+    	{
+	    	byte[] data = packet.getData();
+	    	_server.send(data, data.length);
+    	}
     }
     
     @Override
-    public void clientConnected()
+    public void connected(UDPConnection connection)
     {
+    	_server = connection;
         for (ClientListener l : _clientListener)
         {
             l.connected();
@@ -78,8 +81,9 @@ public class SWClient implements IClient, NetworkClientListener
     }
     
     @Override
-    public void clientDisconnected()
+    public void disconnected(UDPConnection connection)
     {
+    	_server = null;
         for (ClientListener l : _clientListener)
         {
             l.disconnected();
@@ -87,7 +91,7 @@ public class SWClient implements IClient, NetworkClientListener
     }
     
     @Override
-    public void clientReceivedMessage(byte[] data, int len)
+    public void receivedMessage(UDPConnection connection, byte[] data, int len)
     {
         Packet packet = new Packet(data, len);
         
