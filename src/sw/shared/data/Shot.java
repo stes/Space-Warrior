@@ -23,7 +23,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 
 /**
- * Datenstruktur zur Repräsentation eines Schusses
+ * data structure to represent a shot
  * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -35,12 +35,12 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 */
 	private static final long serialVersionUID = 7824231109006024749L;
 
-	/**
-     * Erstellt einen neuen Datensatz aus dem übergebenen Paket
-     * 
-     * @param p Das Paket
-     * @return Eine neue Schuss-Instanz
-     * @throws IllegalArgumentException wenn Pakettyp falsch ist
+   /** 
+     * Creates a new record from the given parcel
+     *
+     * @Param p The packet
+     * @Return a new instance of shot-
+     * @Throws IllegalArgumentException if packet type is incorrect
      */
     public static Shot hole(Packet p)
     {
@@ -59,10 +59,10 @@ public class Shot extends java.awt.geom.Line2D.Double
     private int _richtung;
     
     /**
-     * Erstellt einen neuen Schuss
+     * creates a new shot
      *
-     * @param startPunkt Der Startpunkt des Schusses
-     * @param richtung Die Richtung des Schusses
+     * @param startpoint startpoint of the shot
+     * @param direction direction of the shot
      */
     public Shot(Point startPunkt, int richtung)
     {
@@ -70,11 +70,11 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
 
     /**
-     * Erstellt einen neuen Schuss
+     * creates a new shot
      *
-     * @param startPunkt Der Startpunkt des Schusses
-     * @param richtung Die Richtung des Schusses
-     * @param master true, wenn ein Masterschuss vorliegt
+     * @param startpoint startpoint of the shot
+     * @param direction direction of the shot
+     * @param master true, if a mastershot is given
      */
     public Shot(Point startPunkt, int richtung, boolean master)
     {
@@ -82,12 +82,12 @@ public class Shot extends java.awt.geom.Line2D.Double
         _istMaster = master;
         setzeRichtung(richtung);
     }
-    /**
-     * Berechnet den Anstand zum angegebenen Punkt
-     * 
-     * @param p Der Punkt
-     * @return Der Abstand
-     */
+   /**
+    * Calculates the decency to specified point
+    *
+    * @Param p The point
+    * @Return The distance
+    */
     public double abstandZu(Point p)
     {
         return this.ptLineDist(p.getX(), p.getY());
@@ -99,7 +99,7 @@ public class Shot extends java.awt.geom.Line2D.Double
 	}
     
     /**
-     * @return der Endpunkt
+     * @return the endpoint
      */
     public Point endPunkt()
     {
@@ -107,7 +107,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
     
     /**
-     * @return true, wenn es sich um einen Masterschuss handelt
+     * @return true, if there is a master shot
      */
     public boolean istMaster()
     {
@@ -115,9 +115,9 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
     
     /**
-     * Schreibt den Schuss in ein Paket und gibt dieses zurueck
+     * writes the shot into a packet and passes it back
      * 
-     * @return Das Paket
+     * @return the packet
      */
     public Packet pack()
     {
@@ -130,7 +130,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
     
 	/**
-     * @return Die Richtung im Gradmaß
+     * @return the direction in degrees
      */
     public int richtung()
     {
@@ -138,7 +138,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
     
     /**
-     * @return Der Schaden, den der Schuss zufügt
+     * @return the damage from the shot
      */
     public int schaden()
     {
@@ -146,9 +146,9 @@ public class Shot extends java.awt.geom.Line2D.Double
     }
     
     /**
-     * Weist dem Schuss eine neue Richtung zu
+     * assigns a new direction to the shot
      * 
-     * @param richtung Die neue Richtung im Gradmaß
+     * @param direction new direction in degrees
      */
     public void setzeRichtung(int richtung)
     {
@@ -161,7 +161,7 @@ public class Shot extends java.awt.geom.Line2D.Double
     
     // Dienste
     /**
-     * @return der Startpunkt
+     * @return the startpoint
      */
     public Point startPunkt()
     {

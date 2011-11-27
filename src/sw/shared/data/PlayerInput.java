@@ -34,18 +34,18 @@ public class PlayerInput
     
     // Konstruktor
     /**
-     * SpielerEingabe Instanz wird erzeugt
+     * player input  instance is created
      */
     public PlayerInput()
     {
     }
     
     /**
-     * SpielerEingabe Instanz wird erzeugt
+     * player input  instance is created
      *
-     * @param moveDirection Bewegung
-     * @param turnDirection Drehung
-     * @param isShooting Schuss
+     * @param moveDirection movement
+     * @param turnDirection rotation
+     * @param isShooting shot
      */
     public PlayerInput(
         int moveDirection,
@@ -59,9 +59,9 @@ public class PlayerInput
     }
     
     /**
-     * Erstellt eine Eingabe-Instanz aus einem Paket
+     * creates a input-instance from a packet
      *
-     * @param input Eingabe-Paket
+     * @param input input-packet
      */
     public PlayerInput(Packet input)
     {
@@ -70,9 +70,9 @@ public class PlayerInput
     }
 
     /**
-     * ERzeugt eine Eingabe-Instanz aus der übergebenen Eingabe
+     * creates a input-instance from the given input
      * 
-     * @param input zu kopierende Eingabe-Instanz
+     * @param input to copy the input instance
      */
     public PlayerInput(PlayerInput input)
     {
@@ -81,7 +81,7 @@ public class PlayerInput
     // Dienste
     
     /**
-     * @return die Bewegung
+     * @return the movement
      */
     public int moveDirection()
     {
@@ -89,7 +89,7 @@ public class PlayerInput
     }
     
     /**
-     * @return die Drehung
+     * @return the rotation
      */
     public int turnDirection()
     {
@@ -111,9 +111,9 @@ public class PlayerInput
     }
     
     /**
-     * Schreibt die Eingabe in ein Paket und gibt dieses zurueck
+     * writes the command in a packet and passes it back
      *
-     * @return das Paket
+     * @return the packet
      */
     public Packet pack()
     {
@@ -125,7 +125,7 @@ public class PlayerInput
     }
     
     /**
-     * @return der Schuss
+     * @return the shot
      */
     public int schuss()
     {
@@ -133,9 +133,9 @@ public class PlayerInput
     }
     
     /**
-     * setzt die Bewegung
+     * sets the movement
      *
-     * @param wert die Bewegung
+     * @param value the movement
      */
     public void setzeBewegung(int wert)
     {
@@ -145,9 +145,9 @@ public class PlayerInput
     }
     
     /**
-     * setzt die Drehung
+     * sets the rotation
      *
-     * @param wert die Drehung
+     * @param value the rotation
      */
     public void setzeDrehung(int wert)
     {
@@ -157,9 +157,9 @@ public class PlayerInput
     }
     
     /**
-     * setzt den Schuss
+     * sets the shot
      *
-     * @param wert der Schuss
+     * @param value the shot
      */
     public void setzeSchuss(int wert)
     {
