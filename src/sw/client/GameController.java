@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sw.client;
 
-import java.awt.event.KeyListener;
-
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
@@ -39,8 +37,6 @@ public class GameController implements ClientListener, IGameStateManager
     private IClient _client;
     private Player _localPlayer;
 
-    private boolean _isReady;
-    
     /**
      * creates an new GameController
      */
@@ -49,7 +45,6 @@ public class GameController implements ClientListener, IGameStateManager
     	_localPlayer = new HumanPlayer(this);
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
-        _isReady = true;
     }
     
     @Override

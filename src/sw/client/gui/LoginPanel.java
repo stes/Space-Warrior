@@ -10,11 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import sw.eastereggs.fortytwo.FortyTwo;
-import sw.shared.GameConstants;
 
 public class LoginPanel extends JPanel
 {
@@ -81,7 +77,8 @@ public class LoginPanel extends JPanel
     	return _txtIPAdresse.getText();
     }
     
-    public String getName()
+    @Override
+	public String getName()
     {
     	return _txtName.getText();
     }

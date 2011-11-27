@@ -20,28 +20,15 @@ package sw.client;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginEvent;
 import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
-import sw.client.gui.PlayingFieldPanel;
-import sw.client.player.HumanPlayer;
-import sw.eastereggs.bf.BfInterpreter;
-import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packet;

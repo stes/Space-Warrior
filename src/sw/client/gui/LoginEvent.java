@@ -1,7 +1,5 @@
 package sw.client.gui;
 
-import java.awt.AWTEvent;
-import java.awt.Event;
 import java.util.EventObject;
 
 public class LoginEvent extends EventObject
