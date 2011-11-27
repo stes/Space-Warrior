@@ -93,9 +93,11 @@ However, we would be glad if you could check out this site frequently to stay up
       <p>Email: space_warrior@ymail.com
 <br/> Twitter: @Space_Warrior
       
-      </p>
-    <p>
-	  <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+      </p>  
+
+	  <div class="twitter">
+	  <p>
+		<script src="http://widgets.twimg.com/j/2/widget.js"></script>
 		<script>
 			new TWTR.Widget({
 			  version: 2,
@@ -104,28 +106,32 @@ However, we would be glad if you could check out this site frequently to stay up
 			  interval: 30000,
 			  width: 250,
 			  height: 300,
-			  theme: {
-				shell: {
+			  theme: 
+			  {
+				shell: 
+				{
 				  background: '#333333',
 				  color: '#ffffff'
 				},
-				tweets: {
+				tweets: 
+				{
 				  background: '#000000',
 				  color: '#ffffff',
-				  links: '#4aed05'
+				  links: '#eb9f07'
 				}
 			  },
-			  features: {
-				scrollbar: false,
+			  features: 
+			  {
+				scrollbar: true,
 				loop: false,
-				live: false,
+				live: true,
 				behavior: 'all'
 			  }
 			}).render().setUser('Space_Warrior').start();
 		</script>
 	  </p>
-    
-
+	  </div>
+	  
     <h2>Download</h2>
     <p>
       You can download this project in either
