@@ -1,12 +1,12 @@
-package sw.client;
+package sw.client.player;
 
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 
-import sw.shared.Packet;
-import sw.shared.PlayerInput;
+import sw.client.IGameStateManager;
+import sw.shared.data.PlayerInput;
 
 /**
  * A player controlled by a human using the keyboard<p>

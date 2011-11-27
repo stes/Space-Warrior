@@ -1,4 +1,6 @@
-package sw.client;
+package sw.client.player;
+
+import sw.client.IGameStateManager;
 
 /**
  * The basic class for an artificial intelligence player

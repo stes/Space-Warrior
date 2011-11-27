@@ -1,6 +1,6 @@
 package sw.client;
 
-import sw.shared.PlayerList;
+import sw.shared.data.PlayerList;
 
 public interface IGameStateManager
 {

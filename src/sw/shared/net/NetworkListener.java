@@ -15,17 +15,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.server;
+package sw.shared.net;
 
-import sw.shared.data.Packet;
+import java.net.InetSocketAddress;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-
-public interface IServer
+public interface NetworkListener
 {
-    public void sendPacket(String name, Packet packet);
-    
-    public void sendBroadcast(Packet packet);
+	public void messageReceived(InetSocketAddress addr, byte flag, byte[] data, int len);
+
+	public void messageReceivedConnless(InetSocketAddress addr, byte[] data, int len);
 }

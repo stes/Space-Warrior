@@ -21,7 +21,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import sw.shared.GameConstants;
-import sw.shared.Packet;
+import sw.shared.data.Packet;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

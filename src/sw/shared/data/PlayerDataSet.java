@@ -15,12 +15,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+package sw.shared.data;
 
 import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
+import sw.shared.Packettype;
 
 /**
  * Klasse zur Verwaltung von Spielerdaten

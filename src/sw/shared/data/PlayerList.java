@@ -15,9 +15,11 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+package sw.shared.data;
 
 import javax.management.AttributeNotFoundException;
+
+import sw.shared.Packettype;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

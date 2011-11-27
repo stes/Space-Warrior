@@ -20,8 +20,8 @@ package sw.client;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
-import sw.shared.Packet;
 import sw.shared.Packettype;
+import sw.shared.data.Packet;
 
 /**
  * @author Redix, stes, Abbadonn

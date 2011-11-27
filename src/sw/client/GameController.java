@@ -17,17 +17,15 @@
  ******************************************************************************/
 package sw.client;
 
+import sw.client.components.ShotPool;
+import sw.client.player.HumanPlayer;
+import sw.client.player.Player;
 import sw.shared.GameConstants;
-import sw.shared.PlayerDataSet;
-import sw.shared.PlayerList;
-import sw.shared.PlayerInput;
-import sw.shared.Shot;
-import sw.shared.Packet;
+import sw.shared.data.Packet;
+import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerList;
+import sw.shared.data.Shot;
 
-import java.awt.event.AWTEventListener;
-import java.awt.AWTEvent;
-import java.awt.event.KeyEvent;
-import java.awt.Toolkit;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

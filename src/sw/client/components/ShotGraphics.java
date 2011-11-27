@@ -15,15 +15,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.awt.Color;
 
-import sw.shared.Shot;
 import sw.shared.GameConstants;
+import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -36,7 +36,7 @@ public class ShotGraphics extends Shot
 	 */
 	private static final long serialVersionUID = 7174363740068442519L;
 	
-	private static boolean _isReady;
+	//private static boolean _isReady; TODO remove if no longer used
     private Color _basicColor;
     private double _startTime;
     
@@ -45,7 +45,7 @@ public class ShotGraphics extends Shot
         super(s.startPunkt(), s.richtung(), s.istMaster());
         _basicColor = Color.BLUE;
         _startTime = System.currentTimeMillis();
-        _isReady = true;
+        //_isReady = true; TODO remove if no longer used
     }
 
     public boolean getIsOutOfDate()
@@ -56,7 +56,14 @@ public class ShotGraphics extends Shot
     public void paint(Graphics g)
     {
         Graphics2D g2d = (Graphics2D)g;
-        g2d.setColor(new Color(_basicColor.getRed(), _basicColor.getGreen(), _basicColor.getBlue(), (int)this.getAlphaValue(this.getAge())));
+        g2d.setColor(
+        		new Color(
+        				_basicColor.getRed(),
+        				_basicColor.getGreen(),
+        				_basicColor.getBlue(),
+        				(int)this.getAlphaValue(this.getAge())
+        				)
+        		);
         g2d.setStroke(new BasicStroke(3));
         g.drawLine((int)this.startPunkt().getX(), (int)this.startPunkt().getY(), (int)this.endPunkt().getX(), (int)this.endPunkt().getY());
     }

@@ -1,7 +1,8 @@
-package sw.client;
+package sw.client.player;
 
-import sw.shared.PlayerDataSet;
-import sw.shared.PlayerInput;
+import sw.client.IGameStateManager;
+import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerInput;
 
 /**
  * An abstract player which manages the local player data and
@@ -51,26 +52,24 @@ public abstract class Player
 	{
 		return _oldState;
 	}
-	/**
-	 * @param _oldState the _oldState to set
-	 */
-	protected void setOldState(PlayerInput _oldState)
+
+	protected void setOldState(PlayerInput oldState)
 	{
-		this._oldState = _oldState;
+		this._oldState = oldState;
 	}
 	/**
-	 * @return the _localPlayer
+	 * @return the player data set
 	 */
 	protected PlayerDataSet getDataSet()
 	{
 		return _dataSet;
 	}
 	/**
-	 * @param _localPlayer the _localPlayer to set
+	 * @param data the new player data set
 	 */
-	protected void setDataSet(PlayerDataSet _localPlayer)
+	public void setDataSet(PlayerDataSet data)
 	{
-		this._dataSet = _localPlayer;
+		this._dataSet = data;
 	}
 
 	public IGameStateManager getStateManager()

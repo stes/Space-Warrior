@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,9 +27,10 @@ import java.awt.GradientPaint;
 
 import javax.swing.JPanel;
 
-import sw.shared.PlayerList;
-import sw.shared.PlayerDataSet;
+import sw.client.ClientConstants;
 import sw.shared.GameConstants;
+import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerList;
 
 /**
  * @author Redix, stes, Abbadonn

@@ -18,9 +18,9 @@
 package sw.server;
 
 import sw.shared.GameConstants;
-import sw.shared.Packet;
 import sw.shared.Packettype;
-import sw.shared.PlayerInput;
+import sw.shared.data.Packet;
+import sw.shared.data.PlayerInput;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -29,6 +29,7 @@ public class SWServer implements IServer, NetworkServerListener
 {
 	private UDPServer _netServer;
     private Client[] _clients;
+    private PropertyLoader _propertyLoader;
     
     private long _lastSnapshot;
     private long _lastUpdate;
@@ -39,6 +40,7 @@ public class SWServer implements IServer, NetworkServerListener
     
     public SWServer(int port)
     {
+    	_propertyLoader = new PropertyLoader();
     	_controller = new GameController(this);
     	_netServer = new UDPServer(GameConstants.STANDARD_PORT, GameConstants.MAX_PLAYERS);
     	_netServer.addNetworkServerListener(this);

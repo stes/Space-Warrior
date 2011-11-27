@@ -21,10 +21,10 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
-import sw.shared.NetworkListener;
-import sw.shared.NetworkReceiver;
-import sw.shared.UDPConnection;
-import sw.shared.UDPConnection.CTRLMSG;
+import sw.shared.net.NetworkListener;
+import sw.shared.net.NetworkReceiver;
+import sw.shared.net.UDPConnection;
+import sw.shared.net.UDPConnection.CTRLMSG;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

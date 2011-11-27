@@ -15,12 +15,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.components;
 
 import java.util.ArrayList;
 import java.awt.Graphics;
 
-import sw.shared.Shot;
+import sw.shared.data.Shot;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

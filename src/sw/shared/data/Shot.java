@@ -15,9 +15,12 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+package sw.shared.data;
 
 import java.awt.Point;
+
+import sw.shared.GameConstants;
+import sw.shared.Packettype;
 
 /**
  * Datenstruktur zur Repräsentation eines Schusses
@@ -27,9 +30,12 @@ import java.awt.Point;
  */
 public class Shot extends java.awt.geom.Line2D.Double
 {
-    // Bezugsobjekte
-
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7824231109006024749L;
+
+	/**
      * Erstellt einen neuen Datensatz aus dem übergebenen Paket
      * 
      * @param p Das Paket

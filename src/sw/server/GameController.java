@@ -18,12 +18,12 @@
 package sw.server;
 
 import sw.shared.GameConstants;
-import sw.shared.Packet;
 import sw.shared.Packettype;
-import sw.shared.PlayerDataSet;
-import sw.shared.PlayerInput;
-import sw.shared.PlayerList;
-import sw.shared.Shot;
+import sw.shared.data.Packet;
+import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerInput;
+import sw.shared.data.PlayerList;
+import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn

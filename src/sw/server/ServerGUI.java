@@ -40,6 +40,10 @@ import javax.swing.JTextField;
 
 public class ServerGUI extends JFrame implements ActionListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2967561560162321268L;
 	private JTextArea _area;
 	private JList/*<Client>*/ _clientList;
 	private JScrollPane _scroll;

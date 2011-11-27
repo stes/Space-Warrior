@@ -33,12 +33,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import sw.client.components.PlayingFieldGraphics;
 import sw.eastereggs.bf.BfInterpreter;
 import sw.eastereggs.fortytwo.FortyTwo;
 import sw.shared.GameConstants;
-import sw.shared.Packet;
 import sw.shared.Packettype;
-import sw.shared.PlayerDataSet;
+import sw.shared.data.Packet;
+import sw.shared.data.PlayerDataSet;
 
 
 /**
@@ -402,6 +403,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         };
         
         //System.setOut(new PrintStream(output, true));
+        // -.-
         System.setIn(input);
         
         _bfInterpreter = new BfInterpreter();
