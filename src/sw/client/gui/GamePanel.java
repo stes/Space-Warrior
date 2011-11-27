@@ -38,9 +38,9 @@ public class GamePanel extends JPanel
 	{
 		super();
 		_self = this;
+		_stateManager = stateManager;
 		this.setLayout(null);
 		this.setSize(width, height);
-		_stateManager = stateManager;
 		this.setBackground(Color.RED);
 		this.initComponents();
 	}

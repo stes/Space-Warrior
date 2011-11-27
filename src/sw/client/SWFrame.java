@@ -28,6 +28,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -81,6 +82,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 
     private GamePanel _gamePanel;
     private LoginPanel _loginPanel;
+    private JPanel _activePanel;
     
     // Attribute
     
@@ -211,6 +213,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         }
         
         java.util.Arrays.sort(spielerScore);
+        this.repaint();
         
         /*for(int i = 0; i < spielerScore.length; i++)
         {
@@ -228,7 +231,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
     }
     
-
     
     /**
     * guckt ob die Eingabe des Chats gedrückt wurde
@@ -349,18 +351,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	private enum GUIMode {LOGIN, GAME}
 	private void setGUIMode(GUIMode mode)
 	{
+		if (_activePanel != null)
+			this.remove(_activePanel);
 		if (mode == GUIMode.LOGIN)
 		{
-			this.remove(_gamePanel);
-			this.add(_loginPanel);
+			_activePanel = _loginPanel;
 		}
 		else if (mode == GUIMode.GAME)
 		{
-			this.remove(_loginPanel);
-			this.add(_gamePanel);
+			_activePanel = _gamePanel;
 		}
+		this.add(_activePanel);
 		this.setVisible(true);
-		this.invalidate();
+		this.repaint();
 	}
 
 

@@ -43,7 +43,7 @@ public class PlayingFieldGraphics extends JPanel
 	 */
 	private static final long serialVersionUID = -8647279084154615455L;
 	
-	private PlayerList _spieler;
+	private PlayerList _playerList;
     private BufferedImage _localPlayerImg;
     private BufferedImage _opposingPlayerImg;
     private BufferedImage _backgroundImg;
@@ -59,7 +59,7 @@ public class PlayingFieldGraphics extends JPanel
         _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
         _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
         _backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
-        _spieler = playerList;
+        _playerList = playerList;
         ShotPool.init(this);
         this.setBackground(Color.BLACK);
     }
@@ -80,11 +80,12 @@ public class PlayingFieldGraphics extends JPanel
         		null);
         
         ShotPool.paint(g);
-        for (int i = 0 ; i < _spieler.size(); i++)
+        for (int i = 0 ; i < _playerList.size(); i++)
         {
-            if (_spieler.dataAt(i) == null)
+            if (_playerList.dataAt(i) == null)
                 continue;
-            PlayerDataSet d = _spieler.dataAt(i);
+            PlayerDataSet d = _playerList.dataAt(i);
+            System.out.println(d.position().toString());
             if (d.lokal())
             {
                 this.paintBars(g2d, d);
