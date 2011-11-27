@@ -71,7 +71,7 @@ public class ImageContainer
     
     public BufferedImage getBackgroundImg()
     {
-    	return _backgroundImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
+    	return _backgroundImg.getSubimage(0, 0, _backgroundImg.getWidth(), _backgroundImg.getHeight());
     }
     
     // Dienste
@@ -82,6 +82,6 @@ public class ImageContainer
     
     public BufferedImage getOpposingPlayerImg()
     {
-        return _opposingPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
+        return _opposingPlayerImg.getSubimage(0, 0, _opposingPlayerImg.getWidth(), _opposingPlayerImg.getHeight());
     }
 }

@@ -80,9 +80,15 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     {
         //Initialisierung der Oberklasse
         super("Space Warrior");
+        
+        _client = new SWClient();
+        _controller = new GameController(_client);  
+        _client.addClientListener(this);
+        _client.addClientListener(_controller);
+        
         this.setSize(1400, 900);
         this.initComponents();
-        
+        //this.initAfterConnection(); for test purposes
         this.setVisible(true);
         this.toFront();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -94,12 +100,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         {
 			e.printStackTrace();
 		}
-        
-        _client = new SWClient();
-        _controller = new GameController(_client);  
-        _client.addClientListener(this);
-        _client.addClientListener(_controller);
-        
+
         this.initEastereggs();
         this.updateServerList();
     }
@@ -110,17 +111,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     public void _btnAktualisierenGeklickt()
     {
         this.updateServerList();
-    }
-    
-    /**
-    * guckt ob der Chatbutton gedrückt wurde
-    */
-    public void btnChat_Action(ActionEvent e)
-    {
-    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
-    	{
-    		this.processInput();
-    	}
     }
     
     /**
@@ -135,6 +125,17 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
                 _txtIPAdresse.setText((String) _tblServers.getValueAt(i, 2));
             }
         }
+    }
+    
+    /**
+    * guckt ob der Chatbutton gedrückt wurde
+    */
+    public void btnChat_Action(ActionEvent e)
+    {
+    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
+    	{
+    		this.processInput();
+    	}
     }
     
     /**
@@ -158,12 +159,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     	}
     }
     
-    /**
-    * guckt ob die Eingabe des Chats gedrückt wurde
-    */
-    public void txtChatmessage_Action(ActionEvent e)
+    @Override
+    public void chatMessage(String name, String text)
     {
-        System.out.println("chat textfeld");
+        _lstChathistory.append(name + ": " + text);
     }
     
     @Override
@@ -191,12 +190,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _lstChathistory.append("connection lost");
     }
     
-    @Override
-    public void chatMessage(String name, String text)
-    {
-        _lstChathistory.append(name + ": " + text);
-    }
-    
     public void foundServer(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
     {
         //_serverListe.();  new line
@@ -204,7 +197,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _tblServers.setValueAt(spielerZahl + "/" + maxSpielerZahl, _tblServers.getRowCount()-1, 1);
         _tblServers.setValueAt(serverIp, _tblServers.getRowCount()-1, 2);
     }
-	
+    
     /**
      * Die eingegebene Nachricht wird an den Chatverlauf gesendet.
      */
@@ -214,7 +207,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         chat.addString(chatNachricht);
         //_client.sendeNachricht(chat);
     }
-    
+	
     @Override
     public void shot(Packet packet) {}
     
@@ -256,6 +249,14 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         }
     }
     
+    /**
+    * guckt ob die Eingabe des Chats gedrückt wurde
+    */
+    public void txtChatmessage_Action(ActionEvent e)
+    {
+        System.out.println("chat textfeld");
+    }
+    
     @Override
     public void windowActivated(WindowEvent e) { }
     
@@ -277,14 +278,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     @Override
     public void windowOpened(WindowEvent e) { }
     
-    /**
-     * Verbindet den Client mit einem Server.
-     */
-    private void verbinde(String ip, String name)
-    {
-        _client.connect(ip, GameConstants.STANDARD_PORT, name);
-    }
-    
     private void disableComponents()
     {
         _txtIPAdresse.setEnabled(false);
@@ -296,7 +289,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _tblServers.setVisible(false);
         _btnUpdate.setEnabled(false);
     }
-
+    
     private void enableComponents()
     {
         _txtIPAdresse.setEnabled(true);
@@ -308,7 +301,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         _tblServers.setVisible(true);
         _btnUpdate.setEnabled(true);
     }
-    
+
     /**
      * Die Variablen werden mit den Serverdaten angepasst
      */
@@ -316,6 +309,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
     {
         _playingField = new PlayingFieldGraphics(_controller.getPlayerList());
         this.add(_playingField);
+        this.setVisible(true);
     }
     
     /**
@@ -442,11 +436,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener
         }
         _txtChatmessage.setText("");
     }
+    
     /**
      * aktualisiert die Serverliste
      */
     private void updateServerList()
     {
+    }
+    /**
+     * Verbindet den Client mit einem Server.
+     */
+    private void verbinde(String ip, String name)
+    {
+        _client.connect(ip, GameConstants.STANDARD_PORT, name);
     }    
 }
 

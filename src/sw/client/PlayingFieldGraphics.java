@@ -37,7 +37,12 @@ import sw.shared.GameConstants;
  */
 public class PlayingFieldGraphics extends JPanel
 {
-    private PlayerList _spieler;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8647279084154615455L;
+	
+	private PlayerList _spieler;
     private BufferedImage _localPlayerImg;
     private BufferedImage _opposingPlayerImg;
     private BufferedImage _backgroundImg;
@@ -51,24 +56,35 @@ public class PlayingFieldGraphics extends JPanel
         super();
         _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
         _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
+        _backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
         _spieler = playerList;
         ShotPool.init(this);
+        this.setBackground(Color.BLACK);
+        this.invalidate();
     }
     /**
-     * Zeichnet das Spielfeld
+     * Paints the playing field with its contents
      */
     @Override
-    public void paint(Graphics g)
+    public void paintComponent(Graphics g)
     {
-        super.paint(g);
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
         g2d.drawImage(
-        		this._backgroundImg,
-        		GameConstants.REFERENCE_X,
-        		GameConstants.REFERENCE_Y,
+        		_backgroundImg,
+        		GameConstants.REFERENCE_X + 100,
+        		GameConstants.REFERENCE_Y + 100,
         		GameConstants.PLAYING_FIELD_WIDTH,
         		GameConstants.PLAYING_FIELD_HEIGHT,
         		null);
+        
+        g2d.drawImage(
+                rotateImage(_opposingPlayerImg, 180-5),
+                null,
+                100 - GameConstants.PLAYER_SIZE/2,
+                100 - GameConstants.PLAYER_SIZE/2);
+        
+        
         ShotPool.paint(g);
         for (int i = 0 ; i < _spieler.size(); i++)
         {
