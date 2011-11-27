@@ -34,8 +34,8 @@ public class PlayerList
      */
     private static PlayerList fromSnapshot(Packet p)
     {
-        PlayerList liste = new PlayerList(p.getInt());
-        int n = p.getInt();
+        PlayerList liste = new PlayerList(p.getNumber());
+        int n = p.getNumber();
         for (int i = 0; i < n; i++)
         {
            liste.insert(PlayerDataSet.hole(p.getPacket()), null);

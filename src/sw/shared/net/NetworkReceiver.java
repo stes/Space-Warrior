@@ -21,8 +21,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-
-import sw.shared.GameConstants;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -48,7 +46,7 @@ public class NetworkReceiver extends Thread
 	{
 		try
         {
-        	byte[] buffer = new byte[GameConstants.MAX_PACKET_LENGTH];
+        	byte[] buffer = new byte[UDPConnection.MAX_PACKET_LENGTH];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             
             while(true)
@@ -56,7 +54,7 @@ public class NetworkReceiver extends Thread
             	// TODO: connless
                 _socket.receive(packet);
             	byte flag = buffer[0];
-            	byte[] data = java.util.Arrays.copyOfRange(buffer, 1, packet.getLength());
+            	byte[] data = java.util.Arrays.copyOfRange(buffer, UDPConnection.PACKET_HEADER_LENGTH, packet.getLength());
             	for (NetworkListener l : _networkListener)
 				{
 					l.messageReceived((InetSocketAddress)packet.getSocketAddress(), flag, data, data.length);

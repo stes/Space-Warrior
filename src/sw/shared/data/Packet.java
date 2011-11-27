@@ -16,155 +16,116 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.shared.data;
+
+import sw.shared.net.UDPConnection;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class Packet
 {
-	// TODO: use byte array here
-    private StringBuilder _stringBuilder;
-    private String _content;
-    private int _position;
-    private byte _type;
-
-
-    /**
-     * Paket um Daten verschiedener Typen zu übermitteln
-     * 
-     * @param typ Typ des Pakets
-     */
+    private byte[] _data;
+    private int _cur;
+    
     public Packet(byte type)
     {
-        _stringBuilder = new StringBuilder();
-        _content = new String();
-        _type = type;
-        _stringBuilder.append((char)_type);
+    	_data = new byte[UDPConnection.MAX_PACKET_LENGTH-UDPConnection.PACKET_HEADER_LENGTH];
+    	_data[0] = type;
+    	_cur = 1;
     }
     
-    /**
-     * Paket um Strings zu übermitteln
-     * 
-     * @param text Text als String
-     */
     public Packet(byte[] data, int len)
     {
-        _stringBuilder = new StringBuilder();
-        _content = new String(data, 0, len);
-        _type = data[0];
-        _position++;
+    	_data = data;
+    	_cur = 1;
     }
     
-    /**
-     * fügt ein bool an
-     * 
-     * @param bool
-     */
-    public void addBoolean(boolean bool)
+    public byte getType()
     {
-    	byte data = (byte) (bool ? 1 : 0);
-        _stringBuilder.append(data);
-    }
-
-    /**
-     * fügt ein weiteres Paket an
-     * 
-     * @param p 
-     */
-    public void addPacket(Packet p)
-    {
-    	byte[] data = p.getData();
-        this.addString(new String(data, 0, data.length));
-    }
-    
-    /**
-     * fügt einen Text an
-     * 
-     * @param text
-     */
-    public void addString(String text)
-    {
-        this.addNumber(text.length());
-        _stringBuilder.append(text);
-    }
-    
-    /**
-     * fügt Zahlen als Typ an
-     * 
-     * @param zahl
-     */
-    public void addNumber(int zahl)
-    {
-    	char[] data = new char[4];
-        
-        data[0] = (char) ( (zahl >> 24) & 0xFF);
-        data[1] = (char) ( (zahl >> 16) & 0xFF);
-        data[2] = (char) ( (zahl >> 8) & 0xFF);
-        data[3] = (char) ( zahl & 0xFF);
-        
-        _stringBuilder.append(data);
-    }
-    
-    /**
-     * holt einen bool aus einem Paket
-     * 
-     * @return bool
-     */
-    public boolean getBoolean()
-    {
-        _position++;
-        return _content.charAt(_position-1) == 1;
-    }
-    
-    /**
-     * holt ein weiteres Paket 
-     * 
-     * @return Paket
-     */
-    public Packet getPacket()
-    {
-    	byte[] data = this.getString().getBytes();
-        return new Packet(data, data.length);
-    }
-    
-    /**
-     * holt einen String aus einem Paket
-     * 
-     * @return string
-     */
-    public String getString()
-    {
-        int laenge = this.getInt();
-        _position += laenge;
-        return _content.substring(_position-laenge, _position);
-    }
-    
-    /**
-     * holt eine Zahl aus einem paket
-     * 
-     * @return zahl
-     */
-    public int getInt()
-    {
-        int zahl = (_content.charAt(_position) & 0xFF) << 24;
-        zahl |= (_content.charAt(_position+1) & 0xFF) << 16;
-        zahl |= (_content.charAt(_position+2) & 0xFF) << 8;
-        zahl |= (_content.charAt(_position+3) & 0xFF);
-        
-        _position += 4;
-        return zahl;
+        return _data[0];
     }
     
     public byte[] getData()
     {
-        return _stringBuilder.toString().getBytes();
+        return java.util.Arrays.copyOf(_data, _cur);
     }
     
-    /**
-     * @return gibt den Typ zurück
-     */
-    public byte getType()
+    public void addByte(byte data)
     {
-        return _type;
+    	_data[_cur] = data;
+    	_cur++;
+    }
+    
+    public void addBytes(byte[] data, int len)
+    {
+    	int size = Math.min(len, _data.length-_cur);
+    	this.addNumber(size);
+    	System.arraycopy(data, 0, _data, _cur, size);
+    	_cur += size;
+    }
+    
+    public void addNumber(int zahl)
+    {
+    	this.addByte((byte) ( (zahl >> 24) & 0xFF ));
+    	this.addByte((byte) ( (zahl >> 16) & 0xFF ));
+    	this.addByte((byte) ( (zahl >> 8) & 0xFF ));
+    	this.addByte((byte) ( zahl & 0xFF ));
+    }
+    
+    public void addBoolean(boolean bool)
+    {
+    	this.addByte((byte) (bool ? 1 : 0));
+    }
+    
+    public void addPacket(Packet p)
+    {
+    	byte[] data = p.getData();
+        this.addBytes(data, data.length);
+    }
+    
+    public void addString(String text)
+    {
+    	byte[] data = text.getBytes();
+    	this.addBytes(data, data.length);
+    }
+    
+    public byte getByte()
+    {
+    	_cur++;
+    	return _data[_cur-1];
+    }
+    
+    public byte[] getBytes()
+    {
+    	int size = this.getNumber();
+    	_cur += size;
+    	return java.util.Arrays.copyOfRange(_data, _cur-size, _cur);
+    }
+    
+    public int getNumber()
+    {
+        int zahl = (getByte() & 0xFF) << 24;
+        zahl |= (getByte() & 0xFF) << 16;
+        zahl |= (getByte() & 0xFF) << 8;
+        zahl |= (getByte() & 0xFF);
+        
+        return zahl;
+    }
+    
+    public boolean getBoolean()
+    {
+        return getByte() == (byte)1;
+    }
+    
+    public Packet getPacket()
+    {
+    	byte[] data = this.getBytes();
+        return new Packet(data, data.length);
+    }
+    
+    public String getString()
+    {
+    	byte[] data = this.getBytes();
+        return new String(data, 0, data.length);
     }
 }
