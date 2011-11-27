@@ -41,6 +41,7 @@ public class UDPConnection
 		OFFLINE,
 		CONNECTING,
 		ONLINE,
+		DISCONNECTED,
 		ERROR,
 	}
 	
@@ -137,7 +138,7 @@ public class UDPConnection
     {
     	System.out.println("disconnected from  " + _addr);
     	this.sendControl(CTRL_CLOSE);
-    	_state = ConnectionState.OFFLINE;
+    	_state = ConnectionState.DISCONNECTED;
     }
     
     @Override

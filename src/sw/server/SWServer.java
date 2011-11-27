@@ -107,7 +107,7 @@ public class SWServer implements IServer, NetworkListener
     }
     
     @Override
-	public void sendBroadcast(Packet packet)
+    public void sendBroadcast(Packet packet)
     {
     	byte[] data = packet.getData();
     	_netServer.broadcast(data, data.length);

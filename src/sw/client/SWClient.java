@@ -47,12 +47,12 @@ public class SWClient implements IClient, NetworkListener
     	_netClient = new UDPHost(null, 1);
     	_netClient.addNetworkListener(this);
         _clientListener = new ArrayList<ClientListener>();
+        _netClient.start();
     }
     
     public void connect(String ip, int port)
     {
     	_netClient.connect(new InetSocketAddress(ip, port));
-    	_netClient.start();
     }
     
     public void addClientListener(ClientListener listener)

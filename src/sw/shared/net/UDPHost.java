@@ -198,9 +198,13 @@ public class UDPHost extends Thread
 		    		if(_connections[i] == null)
 		    			continue;
 		    		
-	    			if(_connections[i].getState() == ConnectionState.ERROR)
+	    			if(_connections[i].getState() == ConnectionState.ERROR || _connections[i].getState() == ConnectionState.DISCONNECTED)
 	    			{
-	    				System.out.println(_connections[i] + " disconnected (error)");
+	    				if(_connections[i].getState() == ConnectionState.ERROR)
+	    					System.out.println(_connections[i] + " disconnected (error)");
+	    				else
+	    					System.out.println(_connections[i] + " disconnected");
+	    				
 	    				for (NetworkListener l : _networkListener)
 	    				{
 	    					l.disconnected(_connections[i]);
