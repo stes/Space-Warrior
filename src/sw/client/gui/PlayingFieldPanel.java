@@ -151,34 +151,16 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
     }
 
 	@Override
-	public void mouseClicked(MouseEvent arg0)
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e)
 	{
-
+		this.requestFocusInWindow();	
 	}
 	@Override
-	public void mouseEntered(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mousePressed(MouseEvent arg0)
-	{
-		System.out.println(this.isFocusOwner());
-		this.requestFocusInWindow();
-		System.out.println(this.isFocusOwner());
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent arg0)
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseReleased(MouseEvent e) {}
 }

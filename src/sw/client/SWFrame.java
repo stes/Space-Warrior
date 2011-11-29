@@ -66,7 +66,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         
         System.out.println("init");
         
-        this.setSize(1400, 900);
+        this.setSize(
+        		GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
+        		GameConstants.REFERENCE_Y + GameConstants.PLAYING_FIELD_HEIGHT);
         
         _gamePanel = new GamePanel(1400, 900, _controller, _client);
         _loginPanel = new LoginPanel(1400, 900);

@@ -3,17 +3,10 @@ package sw.client.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import sw.client.ClientListener;
 import sw.client.IClient;
@@ -31,12 +24,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	 */
 	private static final long serialVersionUID = -8751902318746091633L;
 	
-	// component section
-	private GamePanel _self;
-    private PlayingFieldPanel _playingField;
-    private AbstractButton _btnChat;
-    private JTextField _txtChatmessage;
-    private JTextArea _lstChathistory;    
+	private PlayingFieldPanel _playingField;
+    @SuppressWarnings("unused")
+	private AbstractButton _btnChat; //TODO remove?
+    private TransparentTextField _txtChatmessage;
+    private TransparentTextArea _lstChathistory;    
     private JTable _tblPoints;
 	
     // other references
@@ -47,15 +39,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
-		_self = this;
 		_stateManager = stateManager;
 		_client = client;
 		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
 		this.setBackground(Color.RED);
-		
-		_txtChatmessage.addActionListener(this);
 	}
 
 	/**
@@ -115,18 +104,17 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     {
         int chat = 700;
         
-        _btnChat = new JButton("Chat");
-        _btnChat.setBounds(640, chat+100, 100, 25);
-        this.add(_btnChat);
-        _btnChat.addActionListener(this);
+//        _btnChat = new JButton("Chat");
+//        _btnChat.setBounds(640, chat+100, 100, 25);
+//        this.add(_btnChat);
+//        _btnChat.addActionListener(this);
     	
-        _txtChatmessage = new JTextField("");
+        _txtChatmessage = new TransparentTextField();
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
         this.add(_txtChatmessage);
         _txtChatmessage.addActionListener(this);
     	
-    	
-        _lstChathistory = new JTextArea();
+        _lstChathistory = new TransparentTextArea();
         _lstChathistory.setBounds(100, chat, 645, 90);
         this.add(_lstChathistory);
         
@@ -136,7 +124,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
         this.add(_tblPoints);
         
-
         _playingField = new PlayingFieldPanel(_stateManager.getPlayerList());
         _playingField.setBounds(
         		GameConstants.REFERENCE_X,
@@ -160,7 +147,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	@Override
 	public void chatMessage(String name, String text)
 	{
-		_lstChathistory.append("[" + name + "] " + text + "\n");
+		_lstChathistory.append("[ " + name + " ] " + text + "\n");
 	}
 
 	@Override

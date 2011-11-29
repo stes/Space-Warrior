@@ -87,8 +87,6 @@ public class HumanPlayer extends Player implements KeyListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-		// TODO rin
-		System.out.println(e.getKeyChar());
         char eingabe = e.getKeyChar();
         switch (eingabe)
         {
