@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sw.client;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -67,8 +66,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         
         this.setSize(1400, 900);
         
-        _gamePanel = new GamePanel(1400, 900, _controller);
+        _gamePanel = new GamePanel(1400, 900, _controller, _client);
         _loginPanel = new LoginPanel(1400, 900);
+        
+        _client.addClientListener(_gamePanel);
         
         _loginPanel.addLoginListener(this);
       
@@ -103,16 +104,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
     	this.setGUIMode(GUIMode.LOGIN);
     	System.out.println("connection lost");
-    }
-    
-    /**
-     * Die eingegebene Nachricht wird an den Chatverlauf gesendet.
-     */
-    public void sendChatmessage(String chatNachricht)
-    {
-        Packet chat = new Packet(Packettype.CL_CHAT_MSG);
-        chat.addString(chatNachricht);
-        _client.sendPacket(chat);
     }
 	
     @Override
@@ -153,15 +144,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
     }
     
-    
-    /**
-    * guckt ob die Eingabe des Chats gedrückt wurde
-    */
-    public void txtChatmessage_Action(ActionEvent e)
-    {
-        System.out.println("chat textfeld");
-    }
-    
     @Override
     public void windowActivated(WindowEvent e) { }
     
@@ -183,30 +165,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     @Override
     public void windowOpened(WindowEvent e) { }
     
-//    private void disableComponents()
-//    {
-//        _txtIPAdresse.setEnabled(false);
-//        _txtName.setEnabled(false);
-//        _btnConnect.setEnabled(false);
-//        _lblIPAdress.setEnabled(false);
-//        _lblName.setEnabled(false);
-//        _tblPoints.setVisible(true);
-//        _tblServers.setVisible(false);
-//        _btnUpdate.setEnabled(false);
-//    }
-//    
-//    private void enableComponents()
-//    {
-//        _txtIPAdresse.setEnabled(true);
-//        _txtName.setEnabled(true);
-//        _btnConnect.setEnabled(true);
-//        _lblIPAdress.setEnabled(true);
-//        _lblName.setEnabled(true);
-//        _tblPoints.setVisible(false);
-//        _tblServers.setVisible(true);
-//        _btnUpdate.setEnabled(true);
-//    }
-
      
 //    private void initEastereggs()
 //    {
@@ -250,9 +208,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     {
     }
     /**
-     * Verbindet den Client mit einem Server.
+     * Connects to a server
      */
-    private void verbinde(String ip)
+    private void connect(String ip)
     {
         _client.connect(ip, GameConstants.STANDARD_PORT);
     }
@@ -268,11 +226,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	}
 
 	@Override
-	public void chatMessage(String name, String text)
-	{
-		// TODO Auto-generated method stub
-		
-	}    
+	public void chatMessage(String name, String text) {}    
 	
 	private enum GUIMode {LOGIN, GAME}
 	private void setGUIMode(GUIMode mode)
@@ -297,6 +251,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	@Override
 	public void login(LoginEvent e)
 	{
-		this.verbinde(e.getIPAdress());
+		this.connect(e.getIPAdress());
 	}
 }

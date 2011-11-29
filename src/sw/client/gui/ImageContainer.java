@@ -59,8 +59,9 @@ public class ImageContainer
     {
         try
         {
+        	//_backgroundImg = ImageIO.read(ClassLoader.getSystemResourceAsStream("rsc/Hintergrund.png"));
         	_backgroundImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Hintergrund.png"));
-            _localPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship3Grey.gif"));
+        	_localPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship3Grey.gif"));
             _opposingPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship2Grey.gif"));
         }
         catch (IOException e)

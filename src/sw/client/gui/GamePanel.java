@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -13,12 +15,16 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import sw.client.ClientListener;
+import sw.client.IClient;
 import sw.client.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.GameConstants;
+import sw.shared.Packettype;
+import sw.shared.data.Packet;
 
-public class GamePanel extends JPanel
+public class GamePanel extends JPanel implements ClientListener
 {
 	/**
 	 * 
@@ -35,13 +41,15 @@ public class GamePanel extends JPanel
 	
     // other references
     private IGameStateManager _stateManager;
+    private IClient _client;
     //private BfInterpreter _bfInterpreter; TODO integrate later
     
-	public GamePanel(int width, int height, IGameStateManager stateManager)
+	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
 		_self = this;
 		_stateManager = stateManager;
+		_client = client;
 		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
@@ -69,32 +77,36 @@ public class GamePanel extends JPanel
     
     private void processInput()
     {
-        String nachricht = _txtChatmessage.getText();
-        if ( !nachricht.isEmpty())
-        {
-//            if (!FortyTwo.answer(nachricht))
-//            {
-//                if (nachricht.startsWith("/"))
+		Packet p = new Packet(Packettype.CL_CHAT_MSG);
+		p.addString(_txtChatmessage.getText());
+		_client.sendPacket(p);
+		
+		
+//        if ( !nachricht.isEmpty())
+//        {
+////            if (!FortyTwo.answer(nachricht))
+////            {
+////                if (nachricht.startsWith("/"))
+////                {
+////                    if (nachricht.startsWith("/bf"))
+////                    {
+////                        System.out.println("[BF]" + nachricht);
+////                        _bfInterpreter.readCode(nachricht);
+////                    }
+////                    if (nachricht.startsWith("/exe"))
+////                    {
+////                        System.out.println("[BF] Execute");
+////                        _bfInterpreter.execute();
+////                    }
+////                }
+////                else
 //                {
-//                    if (nachricht.startsWith("/bf"))
-//                    {
-//                        System.out.println("[BF]" + nachricht);
-//                        _bfInterpreter.readCode(nachricht);
-//                    }
-//                    if (nachricht.startsWith("/exe"))
-//                    {
-//                        System.out.println("[BF] Execute");
-//                        _bfInterpreter.execute();
-//                    }
+//                	// TODO send message
+//                    //sendChatmessage(nachricht);
 //                }
-//                else
-                {
-                	// TODO send message
-                    //sendChatmessage(nachricht);
-                }
-//            }
-        }
-        _txtChatmessage.setText("");
+////            }
+//        }
+//        _txtChatmessage.setText("");
     }
 
     private void initComponents()
@@ -103,12 +115,51 @@ public class GamePanel extends JPanel
         
         _btnChat = new JButton("Chat");
         _btnChat.setBounds(640, chat+100, 100, 25);
+        _btnChat.addMouseListener(new MouseListener()
+		{
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0)
+			{
+				System.out.println("test");
+				_self.processInput();
+			}
+		});
         _btnChat.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				_lstChathistory.append(_txtChatmessage.getText());
+				System.out.println("test");
+				_self.processInput();
 			}
 		});
         this.add(_btnChat);
@@ -168,4 +219,22 @@ public class GamePanel extends JPanel
         }
         this.add(_playingField);
     }
+
+	@Override
+	public void connected() {}
+
+	@Override
+	public void disconnected() {}
+
+	@Override
+	public void chatMessage(String name, String text)
+	{
+		_lstChathistory.append("[" + name + "] " + text);
+	}
+
+	@Override
+	public void shot(Packet packet)	{}
+
+	@Override
+	public void snapshot(Packet packet) {}
 }
