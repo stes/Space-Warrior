@@ -24,7 +24,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packet;
 
-public class GamePanel extends JPanel implements ClientListener
+public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
 	/**
 	 * 
@@ -54,6 +54,8 @@ public class GamePanel extends JPanel implements ClientListener
 		this.setLayout(null);
 		this.setSize(width, height);
 		this.setBackground(Color.RED);
+		
+		_txtChatmessage.addActionListener(this);
 	}
 
 	/**
@@ -115,95 +117,24 @@ public class GamePanel extends JPanel implements ClientListener
         
         _btnChat = new JButton("Chat");
         _btnChat.setBounds(640, chat+100, 100, 25);
-        _btnChat.addMouseListener(new MouseListener()
-		{
-			
-			@Override
-			public void mouseReleased(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{
-				System.out.println("test");
-				_self.processInput();
-			}
-		});
-        _btnChat.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				System.out.println("test");
-				_self.processInput();
-			}
-		});
         this.add(_btnChat);
+        _btnChat.addActionListener(this);
     	
         _txtChatmessage = new JTextField("");
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
-        _txtChatmessage.addKeyListener(new KeyListener()
-        {
-			@Override
-			public void keyTyped(KeyEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e)
-			{
-				// TODO test
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				{
-					_self.processInput();
-				}
-			}
-		});
         this.add(_txtChatmessage);
+        _txtChatmessage.addActionListener(this);
     	
     	
         _lstChathistory = new JTextArea();
-        _lstChathistory.setBounds(100, chat, 645, 90);
+        _lstChathistory.setBounds(300, chat, 645, 90);
         this.add(_lstChathistory);
         
-        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
-        _tblPoints.setBounds(1100, 100, 200, 150);
-        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
-        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
-        this.add(_tblPoints);
+//        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
+//        _tblPoints.setBounds(1100, 100, 200, 150);
+//        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
+//        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
+//        this.add(_tblPoints);
         
 
         _playingField = new PlayingFieldPanel(_stateManager.getPlayerList());
@@ -229,7 +160,8 @@ public class GamePanel extends JPanel implements ClientListener
 	@Override
 	public void chatMessage(String name, String text)
 	{
-		_lstChathistory.append("[" + name + "] " + text);
+		System.out.println("blubb");
+//		_lstChathistory.append("[" + name + "] " + text);
 	}
 
 	@Override
@@ -237,4 +169,12 @@ public class GamePanel extends JPanel implements ClientListener
 
 	@Override
 	public void snapshot(Packet packet) {}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("blubber");
+		this.processInput();
+		
+	}
 }
