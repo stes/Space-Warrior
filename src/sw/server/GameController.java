@@ -95,7 +95,7 @@ public class GameController
      * 
      * @param name the player's name
      */
-    public void playerLeft(String name)
+    public void playerLeft(String name, String reason)
     {
         //PlayerDataSet suchObjekt = new PlayerDataSet(name, true);
         _connectedPlayers.tryRemove(name);

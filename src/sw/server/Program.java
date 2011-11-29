@@ -33,13 +33,13 @@ public class Program implements WindowListener
         (new Program()).run();
     }
     private ServerGUI _serverGUI;
-    private SWServer _netServer;
+    private SWServer _server;
     
     public Program()
     {
         _serverGUI = new ServerGUI(800, 400);
-        _netServer = new SWServer(GameConstants.STANDARD_PORT);
-        _serverGUI.setNetServer(_netServer);
+        _server = new SWServer(GameConstants.STANDARD_PORT);
+        _serverGUI.setNetServer(_server);
         
         _serverGUI.addWindowListener(this);
     }
@@ -49,13 +49,13 @@ public class Program implements WindowListener
         int lastSize = 0;
         while (true)
         {
-            Vector<Client> clientList = _netServer.clListe();
+            Vector<Client> clientList = _server.clListe();
             if(clientList.size() != lastSize)
             {
             	_serverGUI.setClientList(clientList);
             	lastSize = clientList.size();
             }
-            _netServer.tick();
+            _server.tick();
         }
     }
     
@@ -64,7 +64,11 @@ public class Program implements WindowListener
     @Override
 	public void windowClosed(WindowEvent e) { }
     @Override
-	public void windowClosing(WindowEvent e) { } // TODO: shutdown
+	public void windowClosing(WindowEvent e)
+    {
+    	// TODO: is this everything?
+    	_server.close();
+    }
     @Override
 	public void windowDeactivated(WindowEvent e) { }
     @Override

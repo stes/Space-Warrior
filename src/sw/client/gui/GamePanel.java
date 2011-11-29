@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	public void connected() {}
 
 	@Override
-	public void disconnected() {}
+	public void disconnected(String reason) {} // TODO: show reason
 
 	@Override
 	public void chatMessage(String name, String text)

@@ -17,18 +17,21 @@
  ******************************************************************************/
 package sw.shared.net;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
-
-import sw.shared.net.UDPConnection.ConnectionState;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class UDPHost extends Thread
 {
+	public final static int MAX_PACKET_LENGTH = 4*1024;
+	public final static int PACKET_HEADER_LENGTH = 1;
+	
     private DatagramSocket _socket;
     private UDPConnection[] _connections;
     
@@ -61,15 +64,30 @@ public class UDPHost extends Thread
         }
     }
     
+    public void close(String info)
+    {
+    	for(UDPConnection con : _connections)
+    	{
+    		if(con != null)
+    		{
+    			con.disconnect(info);
+    		}
+    	}
+    	_socket.close();
+    }
+    
+    public void close()
+    {
+    	this.close("");
+    }
+    
     public void connect(InetSocketAddress addr)
     {
     	int slot = this.getFreeSlot();
     	if(slot != -1)
     	{
-    		System.out.println("connecting to " + addr);
-    		_connections[slot] = new UDPConnection(_socket, addr);
-    		_connections[slot].setState(ConnectionState.CONNECTING);
-    		_connections[slot].sendControl(UDPConnection.CTRL_CONNECT);
+    		_connections[slot] = new UDPConnection(this, addr);
+    		_connections[slot].connect();
     	}
     }
     
@@ -83,26 +101,41 @@ public class UDPHost extends Thread
     	_acceptConnections = true;
     }
     
+    public void broadcast(byte[] data, int len)
+    {
+		for(UDPConnection con : _connections)
+    	{
+    		if(con != null)
+    		{
+    			con.send(data, len);
+    		}
+    	}
+    }
+    
     public void run()
 	{
-		try
-        {
-        	byte[] buffer = new byte[UDPConnection.MAX_PACKET_LENGTH];
+    	try
+		{
+        	byte[] buffer = new byte[MAX_PACKET_LENGTH];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             
             while(true)
             {
             	// TODO: connless
-                _socket.receive(packet);
+				_socket.receive(packet);
             	byte flag = buffer[0];
-            	byte[] data = java.util.Arrays.copyOfRange(buffer, UDPConnection.PACKET_HEADER_LENGTH, packet.getLength());
+            	byte[] data = java.util.Arrays.copyOfRange(buffer, PACKET_HEADER_LENGTH, packet.getLength());
 				this.messageReceived((InetSocketAddress)packet.getSocketAddress(), flag, data, data.length);
             }
-        }
-        catch (Exception e)
-        {
-        	e.printStackTrace();
-        }
+		}
+        catch (SocketException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
     
     private int getFreeSlot()
@@ -117,50 +150,73 @@ public class UDPHost extends Thread
 		return -1;
     }
     
-    public void broadcast(byte[] data, int len)
+    private void send(InetSocketAddress addr, byte flag, byte[] data, int len)
     {
-		for(int i = 0; i < _connections.length; i++)
+    	try
     	{
-    		if(_connections[i] != null)
-    		{
-    			_connections[i].send(data, len);
-    		}
+            byte[] buf = new byte[MAX_PACKET_LENGTH];
+            buf[0] = flag;
+            int packetSize = PACKET_HEADER_LENGTH;
+            if(data != null)
+            {
+            	int size = Math.min(data.length, buf.length-PACKET_HEADER_LENGTH);
+            	System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, size);
+            	packetSize += size;
+            }
+            DatagramPacket packet = new DatagramPacket(buf, packetSize, addr);
+            _socket.send(packet);
     	}
+    	catch (IOException e)
+    	{
+			e.printStackTrace();
+		}
+    }
+    
+    protected void send(InetSocketAddress addr, byte[] data, int len)
+    {
+    	this.send(addr, UDPConnection.CTRL_NONE, data, len);
+    }
+    
+    protected void sendControl(InetSocketAddress addr, byte flag, byte[] data, int len)
+    {
+    	this.send(addr, flag, data, len);
+    }
+    
+    protected void sendControl(InetSocketAddress addr, byte flag)
+    {
+    	this.send(addr, flag, null, 0);
+    }
+    
+    protected void invokeConnected(UDPConnection con)
+    {
+    	for(NetworkListener l : _networkListener)
+			l.connected(con);
+    }
+    
+    protected void invokeDisconnected(UDPConnection con, String reason)
+    {
+    	for(NetworkListener l : _networkListener)
+			l.disconnected(con, reason);
+    	for(int i = 0; i < _connections.length; i++)
+    	{
+    		if(_connections[i] != null && _connections[i].equals(con))
+    			_connections[i] = null;
+    	}
+    }
+    
+    protected void invokeReceivedMessage(UDPConnection con, byte[] data, int len)
+    {
+    	for(NetworkListener l : _networkListener)
+			l.receivedMessage(con, data, len);
     }
     
     private void messageReceived(InetSocketAddress addr, byte flag, byte[] data, int len)
     {
     	for(int i = 0; i < _connections.length; i++)
     	{
-    		UDPConnection con = _connections[i];
-    		if(con != null && con.equals(addr))
+    		if(_connections[i] != null && _connections[i].equals(addr))
     		{
-    			con.messageReceived();
-    			if(flag == UDPConnection.CTRL_NONE && con.getState() == ConnectionState.ONLINE)
-    			{
-    				for (NetworkListener l : _networkListener)
-    				{
-    					l.receivedMessage(con, data, len);
-    				}
-    			}
-    			else if(flag == UDPConnection.CTRL_CONNECTACCEPT && con.getState() == ConnectionState.CONNECTING)
-				{
-    				System.out.println("connected to " + addr);
-    				_connections[i].setState(ConnectionState.ONLINE);
-					for (NetworkListener l : _networkListener)
-    				{
-    					l.connected(con);
-    				}
-				}
-				else if(flag == UDPConnection.CTRL_CLOSE)
-				{
-					System.out.println(addr + " disconnected");
-					for (NetworkListener l : _networkListener)
-    				{
-    					l.disconnected(con);
-    				}
-					_connections[i] = null;
-				}
+    			_connections[i].received(flag, data, len);
     			return;
     		}
     	}
@@ -170,15 +226,13 @@ public class UDPHost extends Thread
     		int slot = this.getFreeSlot();
     		if(slot != -1)
     		{
-    			System.out.println("accepted connection from " + addr);
-    			_connections[slot] = new UDPConnection(_socket, addr);
-    			_connections[slot].setState(ConnectionState.ONLINE);
-    			_connections[slot].sendControl(UDPConnection.CTRL_CONNECTACCEPT);
-    			for (NetworkListener l : _networkListener)
-				{
-					l.connected(_connections[slot]);
-				}
-    			return;
+    			_connections[slot] = new UDPConnection(this, addr);
+    			_connections[slot].received(flag, data, len);
+    		}
+    		else
+    		{
+    			byte[] info = "The server is full".getBytes();
+    			this.sendControl(addr, UDPConnection.CTRL_CLOSE, info, info.length);
     		}
 		}
     }
@@ -195,23 +249,7 @@ public class UDPHost extends Thread
 	    	{
 		    	for(int i = 0; i < _connections.length; i++)
 		    	{
-		    		if(_connections[i] == null)
-		    			continue;
-		    		
-	    			if(_connections[i].getState() == ConnectionState.ERROR || _connections[i].getState() == ConnectionState.DISCONNECTED)
-	    			{
-	    				if(_connections[i].getState() == ConnectionState.ERROR)
-	    					System.out.println(_connections[i] + " disconnected (error)");
-	    				else
-	    					System.out.println(_connections[i] + " disconnected");
-	    				
-	    				for (NetworkListener l : _networkListener)
-	    				{
-	    					l.disconnected(_connections[i]);
-	    				}
-	    				_connections[i] = null;
-	    			}
-	    			else
+		    		if(_connections[i] != null && !_connections[i].error())
 	    			{
 	    				_connections[i].update();
 	    			}

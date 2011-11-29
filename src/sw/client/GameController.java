@@ -51,7 +51,7 @@ public class GameController implements ClientListener, IGameStateManager
     public void connected() {}
     
     @Override
-    public void disconnected() {}
+    public void disconnected(String reason) {}
         
     @Override
     public void chatMessage(String name, String text) {}

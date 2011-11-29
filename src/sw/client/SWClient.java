@@ -50,6 +50,11 @@ public class SWClient implements IClient, NetworkListener
         _netClient.start();
     }
     
+    public void close()
+    {
+    	_netClient.close("quit");
+    }
+    
     public void connect(String ip, int port)
     {
     	_netClient.connect(new InetSocketAddress(ip, port));
@@ -81,12 +86,12 @@ public class SWClient implements IClient, NetworkListener
     }
     
     @Override
-    public void disconnected(UDPConnection connection)
+    public void disconnected(UDPConnection connection, String reason)
     {
     	_server = null;
         for (ClientListener l : _clientListener)
         {
-            l.disconnected();
+            l.disconnected(reason);
         }
     }
     

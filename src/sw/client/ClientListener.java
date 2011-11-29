@@ -33,7 +33,7 @@ public interface ClientListener
     /**
      * Invoked after disconnect
      */
-    public void disconnected();
+    public void disconnected(String reason);
     
     /**
      * Invoked when a chat message was received

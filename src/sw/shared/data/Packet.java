@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.shared.data;
 
-import sw.shared.net.UDPConnection;
+import sw.shared.net.UDPHost;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -29,7 +29,7 @@ public class Packet
     
     public Packet(byte type)
     {
-    	_data = new byte[UDPConnection.MAX_PACKET_LENGTH-UDPConnection.PACKET_HEADER_LENGTH];
+    	_data = new byte[UDPHost.MAX_PACKET_LENGTH-UDPHost.PACKET_HEADER_LENGTH];
     	_data[0] = type;
     	_cur = 1;
     }

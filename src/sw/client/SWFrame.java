@@ -64,6 +64,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         _client.addClientListener(this);
         _client.addClientListener(_controller);
         
+        this.addWindowListener(this);
+        
         System.out.println("init");
         
         this.setSize(
@@ -104,10 +106,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 //	    }
     
     @Override
-    public void disconnected()
+    public void disconnected(String reason)
     {
     	this.setGUIMode(GUIMode.LOGIN);
-    	System.out.println("connection lost");
     }
 	
     @Override
@@ -155,7 +156,11 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     public void windowClosed(WindowEvent e) { }
     
     @Override
-    public void windowClosing(WindowEvent e) { } // TODO: shutdown
+    public void windowClosing(WindowEvent e)
+    {
+    	// TODO: is this everything?
+    	_client.close();
+    }
     
     @Override
     public void windowDeactivated(WindowEvent e) { }

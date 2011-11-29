@@ -57,6 +57,11 @@ public class SWServer implements IServer, NetworkListener
         this.setServerName("Server");
     }
     
+    public void close()
+    {
+    	_netServer.close("Server shutdown");
+    }
+    
     public void setServerName(String name)
     {
     	_serverName = name;
@@ -120,9 +125,14 @@ public class SWServer implements IServer, NetworkListener
     }
     
 	// TODO: remove
+	public void drop(Client client, String reason)
+	{
+		client.getConnection().disconnect(reason);
+	}
+	
 	public void drop(Client client)
 	{
-		client.getConnection().disconnect();
+		this.drop(client, "");
 	}
    
     public void tick()
@@ -152,12 +162,12 @@ public class SWServer implements IServer, NetworkListener
 	}
 
 	@Override
-	public void disconnected(UDPConnection connection)
+	public void disconnected(UDPConnection connection, String reason)
 	{
 		Client client = this.getClientbyConnection(connection);
 		if(client.isPlaying())
         {
-            _controller.playerLeft(client.name());
+            _controller.playerLeft(client.name(), reason);
         }
 		_clients.remove(client);
 	}
@@ -180,7 +190,7 @@ public class SWServer implements IServer, NetworkListener
             }
             else
             {
-            	connection.disconnect();
+            	connection.disconnect("The name '" + name + "' is already in use");
             }
         }
         else if(Packettype.CL_CHAT_MSG == packet.getType() && client.isPlaying())

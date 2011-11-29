@@ -25,7 +25,7 @@ public interface NetworkListener
 {
 	public void connected(UDPConnection connection);
 	
-	public void disconnected(UDPConnection connection);
+	public void disconnected(UDPConnection connection, String reason);
 
 	public void receivedMessage(UDPConnection connection, byte[] data, int len);
 }

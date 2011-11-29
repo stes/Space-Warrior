@@ -118,7 +118,7 @@ public class ServerGUI extends JFrame implements ActionListener
     		Client cl = (Client)_clientList.getSelectedValue();
     		if(_netServer != null && cl != null)
     		{
-    		    _netServer.drop(cl);
+    		    _netServer.drop(cl, "You were kicked");
     		}
     	}
     	else
