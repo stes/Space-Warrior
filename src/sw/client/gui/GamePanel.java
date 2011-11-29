@@ -108,7 +108,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 //                }
 ////            }
 //        }
-//        _txtChatmessage.setText("");
+		_txtChatmessage.setText("");
     }
 
     private void initComponents()
@@ -127,14 +127,14 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     	
     	
         _lstChathistory = new JTextArea();
-        _lstChathistory.setBounds(300, chat, 645, 90);
+        _lstChathistory.setBounds(100, chat, 645, 90);
         this.add(_lstChathistory);
         
-//        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
-//        _tblPoints.setBounds(1100, 100, 200, 150);
-//        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
-//        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
-//        this.add(_tblPoints);
+        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
+        _tblPoints.setBounds(1100, 100, 200, 150);
+        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
+        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
+        this.add(_tblPoints);
         
 
         _playingField = new PlayingFieldPanel(_stateManager.getPlayerList());
@@ -160,8 +160,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	@Override
 	public void chatMessage(String name, String text)
 	{
-		System.out.println("blubb");
-//		_lstChathistory.append("[" + name + "] " + text);
+		_lstChathistory.append("[" + name + "] " + text + "\n");
 	}
 
 	@Override
@@ -173,8 +172,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		System.out.println("blubber");
 		this.processInput();
-		
 	}
 }

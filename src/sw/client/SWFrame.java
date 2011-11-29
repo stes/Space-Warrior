@@ -64,6 +64,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         _client.addClientListener(this);
         _client.addClientListener(_controller);
         
+        System.out.println("init");
+        
         this.setSize(1400, 900);
         
         _gamePanel = new GamePanel(1400, 900, _controller, _client);
@@ -242,6 +244,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 			_activePanel = _gamePanel;
 		}
 		this.add(_activePanel);
+		System.out.println("switch mode");
 		this.setVisible(true);
 		this.repaint();
 	}
