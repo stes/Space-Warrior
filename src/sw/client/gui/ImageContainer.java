@@ -20,6 +20,8 @@ package sw.client.gui;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -59,10 +61,9 @@ public class ImageContainer
     {
         try
         {
-        	//_backgroundImg = ImageIO.read(ClassLoader.getSystemResourceAsStream("rsc/Hintergrund.png"));
-        	_backgroundImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Hintergrund.png"));
-        	_localPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship3Grey.gif"));
-            _opposingPlayerImg = ImageIO.read(new File(System.getProperty("user.dir") + "\\Ship2Grey.gif"));
+        	_backgroundImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Hintergrund.png"));
+        	_localPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship3Grey.gif"));
+            _opposingPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship2Grey.gif"));
         }
         catch (IOException e)
         {
