@@ -190,7 +190,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
 		_location = new Point.Double(x, y);
 		setzeGeschwindigkeit(0);
-		setzeRichtung(rand + _random.nextInt(360));
+		setzeRichtung(_random.nextInt(360));
 		setzeLeben(GameConstants.MAX_LIVES);
 		setzeMunition(GameConstants.MAX_AMMO);
 	}
@@ -355,7 +355,10 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	*/
 	public void setzeRichtung(double value)
 	{
-		_direction = value % 360;
+		double v = value;
+		while(v<0)
+			v+=360;
+		_direction = v % 360;
 	}
 	
 	/**
@@ -365,7 +368,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	*/
 	public void setzeRichtung(int value)
 	{
-		_direction = value % 360;
+		this.setzeRichtung((double)value);
 	}
 	
 	/**

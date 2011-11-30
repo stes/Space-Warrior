@@ -13,6 +13,8 @@ public interface IGameStateManager
 	
 	public Player getLocalPlayer();
 	
+	public boolean isReady();
+	
 	//TODO further methods that can be generalized for easy connection
 	// between player and controller
 	

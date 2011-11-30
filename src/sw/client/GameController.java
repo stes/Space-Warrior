@@ -20,6 +20,7 @@ package sw.client;
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
+import sw.client.player.ai.SampleAIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerDataSet;
@@ -36,22 +37,36 @@ public class GameController implements ClientListener, IGameStateManager
     private PlayerList _playerList;
     private IClient _client;
     private Player _localPlayer;
+    
+    private boolean _isConnected;
 
     /**
      * creates an new GameController
      */
     public GameController(IClient client)
     {
-    	_localPlayer = new HumanPlayer(this);
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
     }
     
-    @Override
-    public void connected() {}
+    public void init()
+    {
+    	_localPlayer = new HumanPlayer(this);
+    	//_localPlayer = new SampleAIPlayer(this);
+    }
     
     @Override
-    public void disconnected(String reason) {}
+    public void connected()
+    {
+    	setIsConnected(true);
+    	this.init();
+    }
+    
+    @Override
+    public void disconnected(String reason)
+    {
+    	setIsConnected(false);
+    }
         
     @Override
     public void chatMessage(String name, String text) {}
@@ -97,5 +112,21 @@ public class GameController implements ClientListener, IGameStateManager
 	public Player getLocalPlayer()
 	{
 		return _localPlayer;
+	}
+
+	private void setIsConnected(boolean _isConnected)
+	{
+		this._isConnected = _isConnected;
+	}
+
+	public boolean isConnected()
+	{
+		return _isConnected;
+	}
+
+	@Override
+	public boolean isReady()
+	{
+		return this.isConnected();
 	}
 }

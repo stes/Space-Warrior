@@ -28,15 +28,6 @@ public class HumanPlayer extends Player implements KeyListener
 		super(stateManager);
         //Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 	}
-
-    private void update()
-    {
-        if (!this.getOldState().equals(this.getCurrentState()))
-        {
-            this.setOldState(new PlayerInput(this.getCurrentState()));
-            this.getStateManager().stateUpdated(this.getCurrentState());
-        }
-    }
     
 	@Override
 	public void keyPressed(KeyEvent arg0)

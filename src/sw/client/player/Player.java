@@ -3,6 +3,7 @@ package sw.client.player;
 import sw.client.IGameStateManager;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.PlayerList;
 
 /**
  * An abstract player which manages the local player data and
@@ -34,6 +35,23 @@ public abstract class Player
     	_dataSet = new PlayerDataSet();
     }
     
+    protected void sendInput()
+    {
+    	if (_stateManager.isReady())
+    	{
+    		_stateManager.stateUpdated(this.getCurrentState());
+    	}
+    }
+    
+    protected void update()
+    {
+        if (!this.getOldState().equals(this.getCurrentState()))
+        {
+            this.setOldState(new PlayerInput(this.getCurrentState()));
+            this.sendInput();
+        }
+    }
+    
 	/**
 	 * @return the _currentState
 	 */
@@ -51,12 +69,12 @@ public abstract class Player
 	/**
 	 * @return the _oldState
 	 */
-	protected PlayerInput getOldState()
+	private PlayerInput getOldState()
 	{
 		return _oldState;
 	}
 
-	protected void setOldState(PlayerInput oldState)
+	private void setOldState(PlayerInput oldState)
 	{
 		this._oldState = oldState;
 	}
@@ -67,16 +85,16 @@ public abstract class Player
 	{
 		return _dataSet;
 	}
+	
+	protected PlayerList getPlayerList()
+	{
+		return _stateManager.getPlayerList();
+	}
 	/**
 	 * @param data the new player data set
 	 */
 	public void setDataSet(PlayerDataSet data)
 	{
 		this._dataSet = data;
-	}
-
-	public IGameStateManager getStateManager()
-	{
-		return _stateManager;
 	}
 }
