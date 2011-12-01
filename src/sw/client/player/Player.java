@@ -1,8 +1,26 @@
+/*******************************************************************************
+ * Space Warrior - an open source multiplayer shooter
+ * Copyright (C) 2011 Redix stes Abbadonn
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package sw.client.player;
 
 import sw.client.IGameStateManager;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.PlayerList;
 
 /**
  * An abstract player which manages the local player data and
@@ -34,6 +52,23 @@ public abstract class Player
     	_dataSet = new PlayerDataSet();
     }
     
+    protected void sendInput()
+    {
+    	if (_stateManager.isReady())
+    	{
+    		_stateManager.stateUpdated(this.getCurrentState());
+    	}
+    }
+    
+    protected void update()
+    {
+        if (!this.getOldState().equals(this.getCurrentState()))
+        {
+            this.setOldState(new PlayerInput(this.getCurrentState()));
+            this.sendInput();
+        }
+    }
+    
 	/**
 	 * @return the _currentState
 	 */
@@ -51,12 +86,12 @@ public abstract class Player
 	/**
 	 * @return the _oldState
 	 */
-	protected PlayerInput getOldState()
+	private PlayerInput getOldState()
 	{
 		return _oldState;
 	}
 
-	protected void setOldState(PlayerInput oldState)
+	private void setOldState(PlayerInput oldState)
 	{
 		this._oldState = oldState;
 	}
@@ -67,16 +102,16 @@ public abstract class Player
 	{
 		return _dataSet;
 	}
+	
+	protected PlayerList getPlayerList()
+	{
+		return _stateManager.getPlayerList();
+	}
 	/**
 	 * @param data the new player data set
 	 */
 	public void setDataSet(PlayerDataSet data)
 	{
 		this._dataSet = data;
-	}
-
-	public IGameStateManager getStateManager()
-	{
-		return _stateManager;
 	}
 }

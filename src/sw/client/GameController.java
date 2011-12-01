@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes Abbadonn
+ * Copyright (C) 2011 Redix stes Abbadonn
  * 
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.client;
 
@@ -36,22 +36,36 @@ public class GameController implements ClientListener, IGameStateManager
     private PlayerList _playerList;
     private IClient _client;
     private Player _localPlayer;
+    
+    private boolean _isConnected;
 
     /**
      * creates an new GameController
      */
     public GameController(IClient client)
     {
-    	_localPlayer = new HumanPlayer(this);
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
     }
     
-    @Override
-    public void connected() {}
+    public void init()
+    {
+    	_localPlayer = new HumanPlayer(this);
+    	//_localPlayer = new SampleAIPlayer(this);
+    }
     
     @Override
-    public void disconnected(String reason) {}
+    public void connected()
+    {
+    	setIsConnected(true);
+    	this.init();
+    }
+    
+    @Override
+    public void disconnected(String reason)
+    {
+    	setIsConnected(false);
+    }
         
     @Override
     public void chatMessage(String name, String text) {}
@@ -97,5 +111,21 @@ public class GameController implements ClientListener, IGameStateManager
 	public Player getLocalPlayer()
 	{
 		return _localPlayer;
+	}
+
+	private void setIsConnected(boolean _isConnected)
+	{
+		this._isConnected = _isConnected;
+	}
+
+	public boolean isConnected()
+	{
+		return _isConnected;
+	}
+
+	@Override
+	public boolean isReady()
+	{
+		return this.isConnected();
 	}
 }

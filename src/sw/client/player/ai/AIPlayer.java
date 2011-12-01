@@ -15,25 +15,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+package sw.client.player.ai;
+
+import sw.client.IGameStateManager;
+import sw.client.player.Player;
+
 /**
- * Eine Sammlung von Konstanten fuer den Netzwerkverkehr
+ * The basic class for an artificial intelligence player
  * 
  * @author Redix, stes, Abbadonn
- * @version 25.11.11
+ * @version 27.11.2011
  */
-public final class Packettype
+public abstract class AIPlayer extends Player
 {
-    // Client
-    public final static byte CL_START_INFO = 0;
-    public final static byte CL_CHAT_MSG = 1;
-    public final static byte CL_INPUT = 2;
-    
-    // Server
-    public final static byte SV_CHAT_NACHRICHT = 1;
-    public final static byte SV_SNAPSHOT = 2;
-    public final static byte SV_SCHUSS = 3;
-    
-    // Snapshot Typen
-    public final static byte SNAP_SPIELERDATEN = 4;
+	private AIPlayer _self;
+	private Thread _actionThread;
+	
+	public AIPlayer(IGameStateManager stateManager)
+	{
+		super(stateManager);
+		_self = this;
+		_actionThread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				_self.init();
+				while(true)
+				{
+					_self.tick();
+				}
+			}
+		};
+		_actionThread.start();
+	}
+	
+	/**
+	 * Initializes the player
+	 */
+	protected abstract void init();
+	
+	/**
+	 * Called frequently, used to process data and give new instructions
+	 * to the game controller
+	 */
+	protected abstract void tick();
 }

@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Space Warrior - an open source multiplayer shooter
- *     Copyright (C) 2011 Redix stes Abbadonn
+ * Copyright (C) 2011 Redix stes Abbadonn
  * 
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.shared.data;
 
@@ -190,7 +190,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
 		_location = new Point.Double(x, y);
 		setzeGeschwindigkeit(0);
-		setzeRichtung(rand + _random.nextInt(360));
+		setzeRichtung(_random.nextInt(360));
 		setzeLeben(GameConstants.MAX_LIVES);
 		setzeMunition(GameConstants.MAX_AMMO);
 	}
@@ -355,7 +355,10 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	*/
 	public void setzeRichtung(double value)
 	{
-		_direction = value % 360;
+		double v = value;
+		while(v<0)
+			v+=360;
+		_direction = v % 360;
 	}
 	
 	/**
@@ -365,7 +368,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	*/
 	public void setzeRichtung(int value)
 	{
-		_direction = value % 360;
+		this.setzeRichtung((double)value);
 	}
 	
 	/**
