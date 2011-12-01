@@ -86,11 +86,11 @@ public class LoginPanel extends JPanel
 			
 	}
 	
-    public void foundServer(String serverIp, String serverName, int maxSpielerZahl, int spielerZahl)
+    public void foundServer(String serverIp, String serverName, int maxPlayers, int playerCount)
     {
         //_serverListe.();  new line
         _tblServers.setValueAt(serverName, _tblServers.getRowCount()-1, 0);
-        _tblServers.setValueAt(spielerZahl + "/" + maxSpielerZahl, _tblServers.getRowCount()-1, 1);
+        _tblServers.setValueAt(playerCount + "/" + maxPlayers, _tblServers.getRowCount()-1, 1);
         _tblServers.setValueAt(serverIp, _tblServers.getRowCount()-1, 2);
     }
 	
@@ -155,7 +155,7 @@ public class LoginPanel extends JPanel
         _tblServers = new JTable(0, 3);
         _tblServers.setBounds(1100, 300, 200, 300);
         _tblServers.getColumnModel().getColumn(0).setHeaderValue("Server");
-        _tblServers.getColumnModel().getColumn(1).setHeaderValue("Spieler/Max");
+        _tblServers.getColumnModel().getColumn(1).setHeaderValue("Players/Max");
         _tblServers.getColumnModel().getColumn(0).setWidth(110);
         
         this.add(_tblServers);

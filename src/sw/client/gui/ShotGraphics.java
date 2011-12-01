@@ -42,7 +42,7 @@ public class ShotGraphics extends Shot
     
     public ShotGraphics(Shot s)
     {
-        super(s.startPunkt(), s.richtung(), s.istMaster());
+        super(s.startPoint(), s.getDirection(), s.isMaster());
         _basicColor = Color.BLUE;
         _startTime = System.currentTimeMillis();
         //_isReady = true; TODO remove if no longer used
@@ -65,7 +65,7 @@ public class ShotGraphics extends Shot
         				)
         		);
         g2d.setStroke(new BasicStroke(3));
-        g.drawLine((int)this.startPunkt().getX(), (int)this.startPunkt().getY(), (int)this.endPunkt().getX(), (int)this.endPunkt().getY());
+        g.drawLine((int)this.startPoint().getX(), (int)this.startPoint().getY(), (int)this.endPoint().getX(), (int)this.endPoint().getY());
     }
     
     private double getAge()

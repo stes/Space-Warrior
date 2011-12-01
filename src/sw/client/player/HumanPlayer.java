@@ -62,30 +62,30 @@ public class HumanPlayer extends Player implements KeyListener
             case 'w':
             {
                 // forwards
-                this.getCurrentState().setzeBewegung(-1);
+                this.getCurrentState().setDirection(-1);
                 break;
             }
             case 's':
             {
                 // backwards
-                this.getCurrentState().setzeBewegung(0);
+                this.getCurrentState().setDirection(0);
                 break;
             }
             case 'a':
             {
                 // left
-                this.getCurrentState().setzeDrehung(0);
+                this.getCurrentState().setRotation(0);
                 break;
             }
             case 'd':
             {
                 // right
-                this.getCurrentState().setzeDrehung(0);
+                this.getCurrentState().setRotation(0);
                 break;
             }
             case 'm': case 'n':
             {
-                this.getCurrentState().setzeSchuss(0);
+                this.getCurrentState().setShot(0);
                 break;
             }
         }
@@ -101,37 +101,37 @@ public class HumanPlayer extends Player implements KeyListener
             case 'w':
             {
                 // forwards
-                this.getCurrentState().setzeBewegung(1);
+                this.getCurrentState().setDirection(1);
                 break;
             }
             case 's':
             {
                 // backwards
-                this.getCurrentState().setzeBewegung(-1);
+                this.getCurrentState().setDirection(-1);
                 break;
             }
             case 'a':
             {
                 // Left
-                this.getCurrentState().setzeDrehung(1);
+                this.getCurrentState().setRotation(1);
                 break;
             }
             case 'd':
             {
                 // right
-                this.getCurrentState().setzeDrehung(-1);
+                this.getCurrentState().setRotation(-1);
                 break;
             }
             case 'n':
             {
                 // normal shot
-                this.getCurrentState().setzeSchuss(1);
+                this.getCurrentState().setShot(1);
                 break;
             }
             case 'm':
             {
                 // master shot
-                this.getCurrentState().setzeSchuss(2);
+                this.getCurrentState().setShot(2);
                 break;
             }
         }

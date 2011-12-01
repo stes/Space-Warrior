@@ -86,7 +86,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     
     private void processInput()
     {
-		Packer p = new Packer(Packettype.CL_CHAT_MSG);
+		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
 		p.writeUTF(_txtChatmessage.getText());
 		_client.sendPacket(p);
 		

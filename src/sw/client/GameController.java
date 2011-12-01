@@ -110,7 +110,7 @@ public class GameController implements ClientListener, IGameStateManager
     @Override
     public void shot(Unpacker packet)
     {
-        Shot s = Shot.hole(packet);
+        Shot s = Shot.read(packet);
         ShotPool.addShot(s);
     }
 
@@ -121,7 +121,7 @@ public class GameController implements ClientListener, IGameStateManager
         for (int i = 0; i < _playerList.size(); i++)
         {
             PlayerDataSet d = _playerList.dataAt(i);
-            if (d != null && d.lokal())
+            if (d != null && d.local())
             {
                 _localPlayer.setDataSet(d);
             }
@@ -131,7 +131,7 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
-        Packer p = input.pack();
+        Packer p = input.write();
         _client.sendPacket(p);
 	}
 	

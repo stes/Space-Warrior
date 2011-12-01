@@ -48,7 +48,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	private JScrollPane _scroll;
 	private JButton _kickButton;
 	private JTextField _nameField;
-	private SWServer _netServer;
+	private SWServer _server;
 	
 	/**
 	 * erstellt eine GUI für die Serverkonsole
@@ -116,14 +116,14 @@ public class ServerGUI extends JFrame implements ActionListener
     	if(e.getActionCommand().equals("Kick"))
     	{
     		Client cl = (Client)_clientList.getSelectedValue();
-    		if(_netServer != null && cl != null)
+    		if(_server != null && cl != null)
     		{
-    		    _netServer.drop(cl, "You were kicked");
+    		    _server.drop(cl, "You were kicked");
     		}
     	}
     	else
     	{
-    	    _netServer.setServerName(e.getActionCommand());
+    	    _server.setServerName(e.getActionCommand());
     	    _nameField.setText("");
         }
     }
@@ -143,9 +143,9 @@ public class ServerGUI extends JFrame implements ActionListener
 	 * 
 	 * @param sWServer
 	 */
-	public void setNetServer(SWServer sWServer)
+	public void setNetServer(SWServer server)
 	{
-	    _netServer = sWServer;
+	    _server = server;
 	}
 	
     /**

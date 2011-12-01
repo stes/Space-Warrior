@@ -52,11 +52,11 @@ public class GameController
      * Bearbeitet eine Eingabe vom Server
      * 
      * @param name Der Name des betreffenden Spielers
-     * @param eingabe Die Eingabe des Spielers
+     * @param input Die Eingabe des Spielers
      */
-    public void processPlayerInput(String name, PlayerInput eingabe)
+    public void processPlayerInput(String name, PlayerInput input)
     {
-        _activePlayers.trySetInput(name, eingabe);
+        _activePlayers.trySetInput(name, input);
     }
     
     public void tick()
@@ -82,11 +82,11 @@ public class GameController
     {
         for (int i = 0; i < _connectedPlayers.size(); i++)
         {
-            PlayerDataSet daten = _connectedPlayers.dataAt(i);
-            if (daten != null)
+            PlayerDataSet data = _connectedPlayers.dataAt(i);
+            if (data != null)
             {
-                Packer snapshot = _activePlayers.createSnapshot(daten.name());
-                _server.sendPacket(daten.name(), snapshot);
+                Packer snapshot = _activePlayers.createSnapshot(data.getName());
+                _server.sendPacket(data.getName(), snapshot);
             }
         }
     }
@@ -111,12 +111,12 @@ public class GameController
             {
                 for (int i = 0; i < _activePlayers.size(); i++)
                 {
-                    PlayerDataSet daten = _activePlayers.dataAt(i);
-                    if (daten != null)
+                    PlayerDataSet data = _activePlayers.dataAt(i);
+                    if (data != null)
                     {
-                        Packer info = new Packer(Packettype.SV_CHAT_NACHRICHT);
+                        Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
                         info.writeUTF("Server");
-                        info.writeUTF(daten.name() + " hat die Runde gewonnen!");
+                        info.writeUTF(data.getName() + " hat die Runde gewonnen!");
                         _server.sendBroadcast(info);
                         break;
                     }
@@ -126,7 +126,6 @@ public class GameController
         }
     }
     
-    // Dienste
     /**
      * startet ein neues Spiel und fügt alle verbundenen Spieler
      * zu den aktiven Spielern hinzu und gibt dem Client eine
@@ -139,42 +138,42 @@ public class GameController
         // alle verbundenen Spieler in das Spiel einfügen
         for(int i = 0; i < _connectedPlayers.size(); i++)
         {
-            PlayerDataSet daten = _connectedPlayers.dataAt(i);
-            if (daten != null)
+            PlayerDataSet data = _connectedPlayers.dataAt(i);
+            if (data != null)
             {
-                daten.init();
-                _activePlayers.insert(daten, null);
+                data.init();
+                _activePlayers.insert(data, null);
             }
         }
-        Packer info = new Packer(Packettype.SV_CHAT_NACHRICHT);
+        Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
         info.writeUTF("Server");
-        info.writeUTF("Neue Runde");
+        info.writeUTF("New round");
         _server.sendBroadcast(info);
-        System.out.println("Neue Runde");
+        System.out.println("New round");
     }
     
     private void updateData()
     {
         for(int i = 0; i < _activePlayers.size(); i++)
         {
-            PlayerDataSet daten = _activePlayers.dataAt(i);
-            PlayerInput eingabe = _activePlayers.inputAt(i);
-            if (daten != null)
+            PlayerDataSet data = _activePlayers.dataAt(i);
+            PlayerInput input = _activePlayers.inputAt(i);
+            if (data != null)
             {
-                if (eingabe.schuss() > 0)
+                if (input.shot() > 0)
                 {
-                    Shot s = daten.schiesse(eingabe.schuss() == 2);
+                    Shot s = data.shoot(input.shot() == 2);
                     if (s != null)
                     {
-                        this.addDamage(daten, s);
-                        Packer p = s.pack();
+                        this.addDamage(data, s);
+                        Packer p = s.write();
                         _server.sendBroadcast(p);
                     }
                 }
-                daten.beschleunige(GameConstants.ACCELERATION * eingabe.moveDirection());
-                daten.dreheUm(GameConstants.ANGEL_OF_ROTATION * Math.signum(eingabe.turnDirection()));
-                daten.ladeNach();
-                daten.bewege();
+                data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
+                data.rotate(GameConstants.ANGEL_OF_ROTATION * Math.signum(input.turnDirection()));
+                data.ladeNach();
+                data.move();
             }
         }
     }
@@ -184,23 +183,23 @@ public class GameController
      * Wenn ein Spieler kein Leben mehr hat kriegt der Angreifer einen
      * Punkt
      * 
-     * @param angreifer Daten des angreifenden Spielers
+     * @param attacker Daten des angreifenden Spielers
      * @param shot abgegebener Schuss
      */
-    private void addDamage(PlayerDataSet angreifer, Shot shot)
+    private void addDamage(PlayerDataSet attacker, Shot shot)
     {
         for (int i = 0; i < _activePlayers.size(); i++)
         {
-            PlayerDataSet daten = _activePlayers.dataAt(i);
-            if (daten != null && !daten.name().equals(angreifer.name()))
+            PlayerDataSet data = _activePlayers.dataAt(i);
+            if (data != null && !data.getName().equals(attacker.getName()))
             {
-                if(shot.abstandZu(daten.position()) < GameConstants.PLAYER_SIZE/2)
+                if(shot.distanceTo(data.getPosition()) < GameConstants.PLAYER_SIZE/2)
                 {
-                    daten.setzeLeben(daten.leben() - shot.schaden());
-                    if(daten.leben() <= 0)
+                    data.setLifepoints(data.getLifepoints() - shot.getDamage());
+                    if(data.getLifepoints() <= 0)
                     {
-                        _activePlayers.tryRemove(daten.name());
-                        angreifer.setzePunkte(angreifer.punkte() + 1);
+                        _activePlayers.tryRemove(data.getName());
+                        attacker.setScore(attacker.getScore() + 1);
                     }
                 }
             }

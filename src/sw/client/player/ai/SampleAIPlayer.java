@@ -35,26 +35,26 @@ public class SampleAIPlayer extends AIPlayer
 		if (getDataSet().xPosition() < 150)
 		{
 			turn = true;
-			this.getCurrentState().setzeDrehung((int)Math.signum(90-getDataSet().richtung()));
+			this.getCurrentState().setRotation((int)Math.signum(90-getDataSet().getDirection()));
 		}
 		if (getDataSet().yPosition() < 150)
 		{
 			turn = true;
-			this.getCurrentState().setzeDrehung(-(int)Math.signum(180-getDataSet().richtung()));
+			this.getCurrentState().setRotation(-(int)Math.signum(180-getDataSet().getDirection()));
 		}
 		if (getDataSet().xPosition() > GameConstants.PLAYING_FIELD_WIDTH-150)
 		{
 			turn = true;
-			this.getCurrentState().setzeDrehung((int)Math.signum(270-getDataSet().richtung()));
+			this.getCurrentState().setRotation((int)Math.signum(270-getDataSet().getDirection()));
 		}
 		if (getDataSet().yPosition() > GameConstants.PLAYING_FIELD_HEIGHT-150)
 		{
 			turn = true;
-			this.getCurrentState().setzeDrehung((int)Math.signum(180-getDataSet().richtung()));
+			this.getCurrentState().setRotation((int)Math.signum(180-getDataSet().getDirection()));
 		}
 		if (!turn)
 		{
-			this.getCurrentState().setzeDrehung(0);
+			this.getCurrentState().setRotation(0);
 		}
 		this.update();
 	}
@@ -62,11 +62,11 @@ public class SampleAIPlayer extends AIPlayer
 	@Override
 	protected void init()
 	{
-		System.out.println(getDataSet().richtung());
+		System.out.println(getDataSet().getDirection());
 		PlayerInput inp = getCurrentState();
-		inp.setzeBewegung(1);
-		inp.setzeDrehung(0);
-		inp.setzeSchuss(0);
+		inp.setDirection(1);
+		inp.setRotation(0);
+		inp.setShot(0);
 	}
 
 }

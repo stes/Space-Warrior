@@ -69,7 +69,7 @@ public class SWServer implements IServer, NetworkListener
         System.out.println("server name: " + _serverName);
     }
     
-    public Packer holeServerInfos()
+    public Packer getServerInfos()
     {
         Packer info = new Packer((byte)0);
         info.writeUTF(_propertyLoader.getServerName());
@@ -82,7 +82,7 @@ public class SWServer implements IServer, NetworkListener
     {
     	for(int i = 0; i < _clients.size(); i++)
     	{
-    		if(_clients.get(i).name().equals(name))
+    		if(_clients.get(i).getName().equals(name))
     		{
     			return _clients.get(i);
     		}
@@ -168,7 +168,7 @@ public class SWServer implements IServer, NetworkListener
 		Client client = this.getClientbyConnection(connection);
 		if(client.isPlaying())
         {
-            _controller.playerLeft(client.name(), reason);
+            _controller.playerLeft(client.getName(), reason);
         }
 		_clients.remove(client);
 	}
@@ -187,24 +187,24 @@ public class SWServer implements IServer, NetworkListener
             {
                 client.setName(name);
                 client.enterGame();
-                _controller.bearbeiteNeuenSpieler(client.name());
+                _controller.bearbeiteNeuenSpieler(client.getName());
             }
             else
             {
             	connection.disconnect("The name '" + name + "' is already in use");
             }
         }
-        else if(Packettype.CL_CHAT_MSG == packet.getType() && client.isPlaying())
+        else if(Packettype.CL_CHAT_MESSAGE == packet.getType() && client.isPlaying())
         {
             String text = packet.readUTF();
-            Packer chat = new Packer(Packettype.SV_CHAT_NACHRICHT);
-            chat.writeUTF(client.name());
+            Packer chat = new Packer(Packettype.SV_CHAT_MESSAGE);
+            chat.writeUTF(client.getName());
             chat.writeUTF(text);
             this.sendBroadcast(chat);
         }
         else if(Packettype.CL_INPUT == packet.getType() && client.isPlaying())
         {
-            _controller.processPlayerInput(client.name(), new PlayerInput(packet));
+            _controller.processPlayerInput(client.getName(), new PlayerInput(packet));
         }
 	}
 	

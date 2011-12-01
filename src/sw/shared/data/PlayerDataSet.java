@@ -24,387 +24,412 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 
 /**
-* Klasse zur Verwaltung von Spielerdaten
-* 
-* @author Redix, stes, Abbadonn
-* @version 25.11.11
-*/
+ * Klasse zur Verwaltung von Spielerdaten
+ * 
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
+ */
 public class PlayerDataSet implements Comparable<PlayerDataSet>
 {
 	private static Random _random = new Random();
-	
+
 	private String _name;
 	private Point.Double _location;
 	private int _lifepoints;
 	private int _ammo;
 	private double _direction;
 	private double _speed;
-	private int _points;
-	
+	private int _score;
+
 	private boolean _isLocal;
 
 	/**
-	* creates a new data record from the given packet
-	* 
-	* @param p the packet
-	* @return a new player data-Instance
-	* @throws IllegalArgumentException if packet type is wrong
-	*/
-	public static PlayerDataSet hole(Unpacker p)
+	 * creates a new data record from the given packet
+	 * 
+	 * @param p
+	 *            the packet
+	 * @return a new player data-Instance
+	 * @throws IllegalArgumentException
+	 *             if packet type is wrong
+	 */
+	public static PlayerDataSet read(Unpacker p)
 	{
-		if (p.readByte() != Packettype.SNAP_SPIELERDATEN)
+		if (p.readByte() != Packettype.SNAP_PLAYERDATA)
+		{
 			throw new IllegalArgumentException();
+		}
 		String name = p.readUTF();
 		boolean lokal = p.readBoolean();
-		
-		PlayerDataSet daten = new PlayerDataSet(name, lokal);
-		
-		daten.setzePosition(new Point.Double(p.readDouble(), p.readDouble()));
-		daten.setzeRichtung(p.readDouble());
-		daten.setzePunkte(p.readInt());
-		
-		daten.setzeLeben(p.readInt());
-		daten.setzeMunition(p.readInt());
 
-		return daten;
+		PlayerDataSet data = new PlayerDataSet(name, lokal);
+
+		data.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
+		data.setDirection(p.readDouble());
+		data.setScore(p.readShort());
+
+		data.setLifepoints(p.readShort());
+		data.setAmmo(p.readShort());
+
+		return data;
 	}
-	
+
 	/**
-	* Creates a new Player Data record
-	*/
+	 * Creates a new Player Data record
+	 */
 	public PlayerDataSet()
 	{
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
-		_points = 0;
+		_score = 0;
 		_location = new Point.Double(0, 0);
 	}
-	
+
 	/**
-	* Creates a new Player Data record out of an existing
-	* 
-	* @param dataset The source data record which should be copied
-	*/
+	 * Creates a new Player Data record out of an existing
+	 * 
+	 * @param dataset
+	 *            The source data record which should be copied
+	 */
 	public PlayerDataSet(PlayerDataSet dataset)
 	{
-		_name = dataset.name();
-		_isLocal = dataset.lokal();
-		_location = dataset.position();
-		_direction = dataset.richtung();
-		_points = dataset.punkte();
-		
+		_name = dataset.getName();
+		_isLocal = dataset.local();
+		_location = dataset.getPosition();
+		_direction = dataset.getDirection();
+		_score = dataset.getScore();
+
 		if (_isLocal)
 		{
-			_lifepoints = dataset.leben();
-			_ammo = dataset.munition();
-			_speed = dataset.geschwindigkeit();
+			_lifepoints = dataset.getLifepoints();
+			_ammo = dataset.getAmmo();
+			_speed = dataset.getSpeed();
 		}
 	}
-	
+
 	/**
-	* Creates a new Player Data record
-	* 
-	* @param name The player's Name
-	* @param local true, if player should be local
-	*/
+	 * Creates a new Player Data record
+	 * 
+	 * @param name
+	 *            The player's Name
+	 * @param local
+	 *            true, if player should be local
+	 */
 	public PlayerDataSet(String name, boolean local)
 	{
 		this();
 		_name = name;
 		_isLocal = local;
 	}
-	
+
 	/**
-	* Creates a new Player Data record
-	* 
-	* @param name The player's name
-	* @param position the initial location
-	* @param lokal true, if player should be local
-	*/
-	public PlayerDataSet(String name, Point position, boolean local) 
+	 * Creates a new Player Data record
+	 * 
+	 * @param name
+	 *            The player's name
+	 * @param position
+	 *            the initial location
+	 * @param lokal
+	 *            true, if player should be local
+	 */
+	public PlayerDataSet(String name, Point.Double position, boolean local)
 	{
 		this(name, local);
-		_location = new Point.Double(position.x, position.y);
+		_location = position;
 	}
 
 	/**
-	* increases the speed to a constant value
-	*/
-	public void beschleunige(double betrag) 
+	 * increases the speed to a constant value
+	 */
+	public void accelerate(double value)
 	{
-		setzeGeschwindigkeit(geschwindigkeit() + betrag);
+		this.setSpeed(getSpeed() + value);
 	}
-	
+
 	/**
-	* moves the character with the actual speed
-	*/
-	public void bewege() 
+	 * moves the character with the actual speed
+	 */
+	public void move()
 	{
-		double b = Math.toRadians(richtung());
-		int x = (int)(geschwindigkeit() * Math.sin(b));
-		int y = (int)(geschwindigkeit() * Math.cos(b));
-		this.setzePosition(new Point.Double(this.xPosition() + x, this.yPosition() + y));
+		double b = Math.toRadians(getDirection());
+		double x = getSpeed() * Math.sin(b);
+		double y = getSpeed() * Math.cos(b);
+		this.setPosition(new Point.Double(this.xPosition() + x, this
+				.yPosition() + y));
 	}
-	
+
 	@Override
 	public int compareTo(PlayerDataSet spieler)
 	{
-		if(_points < spieler.punkte())
+		if (_score < spieler.getScore())
 			return -1;
-		if(_points > spieler.punkte())
+		if (_score > spieler.getScore())
 			return 1;
 		return 0;
 	}
-	
+
 	/**
-	* turns the character indicated by the angel anti-clockwise
-	* 
-	* @param angel the rotation angle in degrees
-	*/
-	public void dreheUm(double winkel) 
+	 * turns the character indicated by the angel anti-clockwise
+	 * 
+	 * @param angel
+	 *            the rotation angle in degrees
+	 */
+	public void rotate(double winkel)
 	{
-		setzeRichtung(richtung() + winkel);
+		setDirection(getDirection() + winkel);
 	}
-	
+
 	/**
-	* Indicates the current speed back
-	* 
-	* @return the current speed
-	* @throws IllegalStateException if the player is not local
-	*/
-	public double geschwindigkeit() throws IllegalStateException
+	 * Indicates the current speed back
+	 * 
+	 * @return the current speed
+	 * @throws IllegalStateException
+	 *             if the player is not local
+	 */
+	public double getSpeed() throws IllegalStateException
 	{
 		if (_isLocal)
+		{
 			return _speed;
+		}
 		else
-			throw new IllegalStateException("Spieler ist nicht lokal");
+		{
+			throw new IllegalStateException("Player is not local");
+		}
 	}
 
 	/**
-	* initializes the player data with standard values
-	*/
-	public void init() 
+	 * initializes the player data with standard values
+	 */
+	public void init()
 	{
-		int rand = GameConstants.PLAYER_SIZE/2+1;
-		int x = rand + _random.nextInt(GameConstants.PLAYING_FIELD_WIDTH - rand);
-		int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
+		int rand = GameConstants.PLAYER_SIZE / 2 + 1;
+		int x = rand
+				+ _random.nextInt(GameConstants.PLAYING_FIELD_WIDTH - rand);
+		int y = rand
+				+ _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
 		_location = new Point.Double(x, y);
-		setzeGeschwindigkeit(0);
-		setzeRichtung(_random.nextInt(360));
-		setzeLeben(GameConstants.MAX_LIVES);
-		setzeMunition(GameConstants.MAX_AMMO);
-	}
-	
-	/**
-	* increases the munition
-	*/
-	public void ladeNach() 
-	{
-		_ammo += (_ammo < GameConstants.MAX_AMMO-1 ? 1 : 0);
+		this.setSpeed(0);
+		this.setDirection((double) _random.nextInt(360));
+		this.setLifepoints(GameConstants.MAX_LIVES);
+		this.setAmmo(GameConstants.MAX_AMMO);
 	}
 
 	/**
-	* return the current health
-	* 
-	* @return the current health
-	* @throws IllegalStateException if the player is not local
-	*/
-	public int leben() throws IllegalStateException
+	 * increases the munition
+	 */
+	public void ladeNach()
+	{
+		_ammo += (_ammo < GameConstants.MAX_AMMO - 1 ? 1 : 0);
+	}
+
+	/**
+	 * return the current health
+	 * 
+	 * @return the current health
+	 * @throws IllegalStateException
+	 *             if the player is not local
+	 */
+	public int getLifepoints() throws IllegalStateException
 	{
 		if (_isLocal)
+		{
 			return _lifepoints;
+		}
 		else
+		{
 			throw new IllegalStateException("Spieler ist nicht lokal");
+		}
 	}
-	
+
 	/**
-	* @return true, if the player is local
-	*/
-	public boolean lokal()
+	 * @return true, if the player is local
+	 */
+	public boolean local()
 	{
 		return _isLocal;
 	}
-	
+
 	/**
-	* returns the current munition
-	* 
-	* @return the current munition
-	* @throws IllegalStateException if the player is not local
-	*/
-	public int munition() throws IllegalStateException
+	 * returns the current munition
+	 * 
+	 * @return the current munition
+	 * @throws IllegalStateException
+	 *             if the player is not local
+	 */
+	public int getAmmo() throws IllegalStateException
 	{
 		if (_isLocal)
+		{
 			return _ammo;
+		}
 		else
+		{
 			throw new IllegalStateException("Spieler ist nicht lokal");
+		}
 	}
-	
+
 	/**
-	* returns the name of the player
-	* 
-	* @return the name
-	*/
-	public String name()
+	 * returns the name of the player
+	 * 
+	 * @return the name
+	 */
+	public String getName()
 	{
 		return _name;
 	}
-	
+
 	/**
-	* Writes the player data into a packet and returns it
-	* 
-	* @param lokal true, although local values ??should be taken
-	* @return the packet
-	*/
-	public void pack(Packer p, boolean lokal)
+	 * Writes the player data into a packet and returns it
+	 * 
+	 * @param lokal
+	 *            true, although local values ??should be taken
+	 * @return the packet
+	 */
+	public void write(Packer p, boolean lokal)
 	{
-		p.writeByte(Packettype.SNAP_SPIELERDATEN);
-		p.writeUTF(this.name());
+		p.writeByte(Packettype.SNAP_PLAYERDATA);
+		p.writeUTF(this.getName());
 		p.writeBoolean(lokal);
-		p.writeDouble(this.position().getX());
-		p.writeDouble(this.position().getY());
-		p.writeDouble(this.richtung());
-		p.writeInt(this.punkte());
-		
+		p.writeDouble(this.getPosition().getX());
+		p.writeDouble(this.getPosition().getY());
+		p.writeDouble(this.getDirection());
+		p.writeShort(this.getScore());
+
 		int x = lokal ? 1 : 0;
-		
-		p.writeInt(this.leben() * x);
-		p.writeInt(this.munition() * x);
+
+		p.writeShort(this.getLifepoints() * x);
+		p.writeShort(this.getAmmo() * x);
 	}
-	
+
 	/**
-	* @return the position of the player
-	*/
-	public Point.Double position()
+	 * @return the position of the player
+	 */
+	public Point.Double getPosition()
 	{
 		return _location;
 	}
-	
+
 	/**
-	* returns the current score
-	* 
-	* @return the current score
-	*/
-	public int punkte()
+	 * returns the current score
+	 * 
+	 * @return the current score
+	 */
+	public int getScore()
 	{
-		return _points;
+		return _score;
 	}
-	
+
 	/**
-	* returns the current direction
-	* 
-	* @returns the current direction in degrees
-	*/
-	public double richtung()
+	 * returns the current direction
+	 * 
+	 * @returns the current direction in degrees
+	 */
+	public double getDirection()
 	{
 		return _direction;
 	}
-	
+
 	/**
-	* decreases the munition and returns a new object shot
-	*/
-	public Shot schiesse() 
+	 * decreases the munition and returns a new object shot
+	 * 
+	 * @param master
+	 *            true, if a master shot will be given
+	 */
+	public Shot shoot(boolean master)
 	{
-		return this.schiesse(false);
-	}
-	
-	/**
-	* decreases the munition and returns a new object shot
-	* 
-	* @param master true, if a master shot will be given
-	*/
-	public Shot schiesse(boolean master)
-	{
-		int noetigeMunition = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
-		if (_ammo >= noetigeMunition)
+		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT
+				: GameConstants.AMMO_PER_SHOT;
+		if (_ammo >= neededAmmo)
 		{
-			_ammo -= noetigeMunition;
-			
-			double zeit = GameConstants.SHOT_TTL / 2 /
-					((double)GameConstants.TICK_INTERVAL);
-			return new Shot(this.positionNach(zeit), (int)_direction, master);
+			_ammo -= neededAmmo;
+
+			double time = GameConstants.SHOT_TTL / 2
+					/ ((double) GameConstants.TICK_INTERVAL);
+			return new Shot(this.positionAfter(time), _direction, master);
 		}
 		return null;
 	}
-	
+
 	/**
-	* assigns a new value to the health
-	* 
-	* @param value new health
-	*/
-	public void setzeLeben(int wert)
+	 * assigns a new value to the health
+	 * 
+	 * @param value
+	 *            new health
+	 */
+	public void setLifepoints(int wert)
 	{
 		_lifepoints = wert;
 	}
-	
+
 	/**
-	* assigns a new value to the score
-	* 
-	* @param value new score
-	*/
-	public void setzePunkte(int wert)
+	 * assigns a new value to the score
+	 * 
+	 * @param value
+	 *            new score
+	 */
+	public void setScore(int wert)
 	{
-		_points = wert;
+		_score = wert;
 	}
-	
+
 	/**
-	* assigns a new direction
-	* 
-	* @param speed new direction in degrees
-	*/
-	public void setzeRichtung(double value)
+	 * assigns a new direction
+	 * 
+	 * @param speed
+	 *            new direction in degrees
+	 */
+	public void setDirection(double value)
 	{
 		double v = value;
-		while(v<0)
-			v+=360;
+		while (v < 0)
+		{
+			v += 360;
+		}
 		_direction = v % 360;
 	}
-	
+
 	/**
-	* assigns a new direction
-	* 
-	* @param speed new direction in degrees
-	*/
-	public void setzeRichtung(int value)
+	 * @return the horizontal position of the player
+	 */
+	public double xPosition()
 	{
-		this.setzeRichtung((double)value);
+		return getPosition().getX();
 	}
-	
+
 	/**
-	* @return the horizontal position of the player
-	*/
-	public int xPosition()
+	 * @return The vertical position of the player
+	 */
+	public double yPosition()
 	{
-		return (int)position().getX();
+		return getPosition().getY();
 	}
-	
+
 	/**
-	* @return The vertical position of the player
-	*/
-	public int yPosition()
-	{
-		return (int)position().getY();
-	}
-	
-	/**
-	* assigns a new speed
-	* 
-	* @param speed new speed
-	*/
-	protected void setzeGeschwindigkeit(double geschwindigkeit)
+	 * assigns a new speed
+	 * 
+	 * @param speed
+	 *            new speed
+	 */
+	protected void setSpeed(double geschwindigkeit)
 	{
 		_speed = geschwindigkeit;
 		if (_speed < 0)
+		{
 			_speed = 0;
+		}
 		else if (_speed > GameConstants.MAX_SPEED)
+		{
 			_speed = GameConstants.MAX_SPEED;
+		}
 	}
-	
+
 	/**
-	* assigns a new value to the ammunition
-	* 
-	* @param value new value of the ammunition
-	*/
-	protected void setzeMunition(int wert)
+	 * assigns a new value to the ammunition
+	 * 
+	 * @param value
+	 *            new value of the ammunition
+	 */
+	protected void setAmmo(int wert)
 	{
 		if (wert >= 0 && wert <= GameConstants.MAX_AMMO)
 		{
@@ -412,36 +437,43 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		}
 		else
 		{
-			throw new IllegalArgumentException("Munition zwischen 0 und " + GameConstants.MAX_AMMO + " waehlen");
+			throw new IllegalArgumentException("Munition zwischen 0 und "
+					+ GameConstants.MAX_AMMO + " waehlen");
 		}
 	}
-	
+
 	/**
-	* assigns a new value to the position
-	* 
-	* @param value new position
-	*/
-	protected void setzePosition(Point.Double wert)
+	 * assigns a new value to the position
+	 * 
+	 * @param value
+	 *            new position
+	 */
+	protected void setPosition(Point.Double wert)
 	{
 		double x = wert.getX();
 		double y = wert.getY();
 
-		if (x + GameConstants.PLAYER_SIZE/2 > GameConstants.PLAYING_FIELD_WIDTH)
-			x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE/2;
-		else if (x - GameConstants.PLAYER_SIZE/2 < 0)
-			x = GameConstants.PLAYER_SIZE/2;
-		if (y + GameConstants.PLAYER_SIZE/2 > GameConstants.PLAYING_FIELD_HEIGHT)
-			y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE/2;
-		else if (y - GameConstants.PLAYER_SIZE/2 < 0)
-			y = GameConstants.PLAYER_SIZE/2;
+		if (x + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_WIDTH)
+			x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE
+					/ 2;
+		else if (x - GameConstants.PLAYER_SIZE / 2 < 0)
+			x = GameConstants.PLAYER_SIZE / 2;
+		if (y + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_HEIGHT)
+			y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE
+					/ 2;
+		else if (y - GameConstants.PLAYER_SIZE / 2 < 0)
+			y = GameConstants.PLAYER_SIZE / 2;
 
 		_location = new Point.Double(x, y);
 	}
-	private Point.Double positionNach(double zeitintervall)
+
+	private Point.Double positionAfter(double zeitintervall)
 	{
-		double weg = zeitintervall * this.geschwindigkeit();
-		return new Point.Double(
-			this.position().getX() + weg * Math.sin(Math.toRadians(this.richtung())),
-			this.position().getY() + weg * Math.cos(Math.toRadians(this.richtung())));
+		double weg = zeitintervall * this.getSpeed();
+		return new Point.Double(this.getPosition().getX() + weg
+				* Math.sin(Math.toRadians(this.getDirection())), this
+				.getPosition().getY()
+				+ weg
+				* Math.cos(Math.toRadians(this.getDirection())));
 	}
 }

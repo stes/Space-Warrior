@@ -51,7 +51,7 @@ public class Client
         return _isPlaying;
     }
     
-    public String name()
+    public String getName()
     {
         return _name;
     }

@@ -21,7 +21,6 @@ import java.awt.Point;
 
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-
 /**
  * data structure to represent a shot
  * 
@@ -30,140 +29,140 @@ import sw.shared.Packettype;
  */
 public class Shot extends java.awt.geom.Line2D.Double
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 7824231109006024749L;
 
-   /** 
-     * Creates a new record from the given parcel
-     *
-     * @Param p The packet
-     * @Return a new instance of shot-
-     * @Throws IllegalArgumentException if packet type is incorrect
-     */
-    public static Shot hole(Unpacker p)
-    {
-        if (p.getType() != Packettype.SV_SCHUSS)
-            throw new IllegalArgumentException();
-        return new Shot(
-            new Point.Double(p.readDouble(), p.readDouble()),
-            	p.readInt(), p.readBoolean());
-    }
-    // Attribute
-    private boolean _istMaster;
-    
-    // Konstruktor
+	private boolean _isMaster;
+	private double _direction;
 
-    private int _richtung;
-    
-    /**
-     * creates a new shot
-     *
-     * @param startpoint startpoint of the shot
-     * @param direction direction of the shot
-     */
-    public Shot(Point.Double startPunkt, int richtung)
-    {
-        this(startPunkt, richtung, false);
-    }
+	/**
+	 * Creates a new record from the given parcel
+	 * 
+	 * @Param p The packet
+	 * @Return a new instance of shot-
+	 * @Throws IllegalArgumentException if packet type is incorrect
+	 */
+	public static Shot read(Unpacker p)
+	{
+		if (p.getType() != Packettype.SV_SHOT)
+		{
+			throw new IllegalArgumentException();
+		}
+		return new Shot(new Point.Double(p.readDouble(), p.readDouble()),
+				p.readDouble(), p.readBoolean());
+	}
 
-    /**
-     * creates a new shot
-     *
-     * @param startpoint startpoint of the shot
-     * @param direction direction of the shot
-     * @param master true, if a mastershot is given
-     */
-    public Shot(Point.Double startPunkt, int richtung, boolean master)
-    {
-        super(startPunkt, new Point(0,0));
-        _istMaster = master;
-        setzeRichtung(richtung);
-    }
-   /**
-    * Calculates the decency to specified point
-    *
-    * @Param p The point
-    * @Return The distance
-    */
-    public double abstandZu(Point p)
-    {
-        return this.ptLineDist(p.getX(), p.getY());
-    }
-    
-    public double abstandZu(Point.Double p)
+	/**
+	 * creates a new shot
+	 * 
+	 * @param startpoint
+	 *            startpoint of the shot
+	 * @param direction
+	 *            direction of the shot
+	 */
+	public Shot(Point.Double startPunkt, double direction)
+	{
+		this(startPunkt, direction, false);
+	}
+
+	/**
+	 * creates a new shot
+	 * 
+	 * @param startpoint
+	 *            startpoint of the shot
+	 * @param direction
+	 *            direction of the shot
+	 * @param master
+	 *            true, if a mastershot is given
+	 */
+	public Shot(Point.Double startPunkt, double direction, boolean master)
+	{
+		super(startPunkt, new Point.Double(0, 0));
+		_isMaster = master;
+		setDirection(direction);
+	}
+
+	/**
+	 * Calculates the decency to specified point
+	 * 
+	 * @Param p The point
+	 * @Return The distance
+	 */
+	public double distanceTo(Point.Double p)
 	{
 		return this.ptLineDist(p.getX(), p.getY());
 	}
-    
-    /**
-     * @return the endpoint
-     */
-    public Point endPunkt()
-    {
-        return new Point((int)this.getX2(), (int)this.getY2());
-    }
-    
-    /**
-     * @return true, if there is a master shot
-     */
-    public boolean istMaster()
-    {
-        return _istMaster;
-    }
-    
-    /**
-     * writes the shot into a packet and passes it back
-     * 
-     * @return the packet
-     */
-    public Packer pack()
-    {
-    	Packer p = new Packer(Packettype.SV_SCHUSS);
-        p.writeDouble(startPunkt().getX());
-        p.writeDouble(startPunkt().getY());
-        p.writeInt(this.richtung());
-        p.writeBoolean(this.istMaster());
-        return p;
-    }
-    
+
 	/**
-     * @return the direction in degrees
-     */
-    public int richtung()
-    {
-        return _richtung;
-    }
-    
-    /**
-     * @return the damage from the shot
-     */
-    public int schaden()
-    {
-        return this.istMaster() ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
-    }
-    
-    /**
-     * assigns a new direction to the shot
-     * 
-     * @param direction new direction in degrees
-     */
-    public void setzeRichtung(int richtung)
-    {
-        _richtung = richtung;
-        double reichweite = _istMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-        this.setLine(startPunkt(), new Point(
-            (int)(startPunkt().getX() + reichweite * Math.sin(Math.toRadians(richtung))),
-            (int)(startPunkt().getY() + reichweite * Math.cos(Math.toRadians(richtung)))));
-    }
-    
-    // Dienste
-    /**
-     * @return the startpoint
-     */
-    public Point.Double startPunkt()
-    {
-        return new Point.Double(this.getX1(), this.getY1());
-    }
+	 * @return the endpoint
+	 */
+	public Point.Double endPoint()
+	{
+		return new Point.Double(this.getX2(), this.getY2());
+	}
+
+	/**
+	 * @return true, if there is a master shot
+	 */
+	public boolean isMaster()
+	{
+		return _isMaster;
+	}
+
+	/**
+	 * writes the shot into a packet and passes it back
+	 * 
+	 * @return the packet
+	 */
+	public Packer write()
+	{
+		Packer p = new Packer(Packettype.SV_SHOT);
+		p.writeDouble(startPoint().getX());
+		p.writeDouble(startPoint().getY());
+		p.writeDouble(this.getDirection());
+		p.writeBoolean(this.isMaster());
+		return p;
+	}
+
+	/**
+	 * @return the direction in degrees
+	 */
+	public double getDirection()
+	{
+		return _direction;
+	}
+
+	/**
+	 * @return the damage from the shot
+	 */
+	public int getDamage()
+	{
+		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE
+				: GameConstants.MAX_DAMAGE;
+	}
+
+	/**
+	 * assigns a new direction to the shot
+	 * 
+	 * @param direction
+	 *            new direction in degrees
+	 */
+	public void setDirection(double direction)
+	{
+		_direction = direction;
+		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE
+				: GameConstants.MAX_RANGE;
+		this.setLine(
+				startPoint(),
+				new Point.Double((startPoint().getX() + range
+						* Math.sin(Math.toRadians(direction))), (startPoint()
+						.getY() + range * Math.cos(Math.toRadians(direction)))));
+	}
+
+	/**
+	 * @return the startpoint
+	 */
+	public Point.Double startPoint()
+	{
+		return new Point.Double(this.getX1(), this.getY1());
+	}
 }

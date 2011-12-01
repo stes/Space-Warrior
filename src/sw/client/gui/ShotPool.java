@@ -28,8 +28,8 @@ import sw.shared.data.Shot;
 public class ShotPool
 {
     // Bezugsobjekte
-    private static ArrayList<ShotGraphics> _schuesse;
-    private static PlayingFieldPanel _spielfeld;
+    private static ArrayList<ShotGraphics> _shots;
+    private static PlayingFieldPanel _playingField;
     
     // Attribute
  
@@ -40,7 +40,7 @@ public class ShotPool
      */
     public static void addShot(Shot shot)
     {
-        _schuesse.add(new ShotGraphics(shot));
+        _shots.add(new ShotGraphics(shot));
     }
     
     /**
@@ -50,8 +50,8 @@ public class ShotPool
      */
     public static void init(PlayingFieldPanel playingFieldPanel)
     {
-        _schuesse = new ArrayList<ShotGraphics>(100);
-        _spielfeld = playingFieldPanel;
+        _shots = new ArrayList<ShotGraphics>(100);
+        _playingField = playingFieldPanel;
     }
     
     // Dienste    
@@ -60,18 +60,18 @@ public class ShotPool
      */
     public static void paint(Graphics g)
     {
-        if (_schuesse.size() > 0)
+        if (_shots.size() > 0)
         {
-            for (int i = 0; i < _schuesse.size(); i++)
+            for (int i = 0; i < _shots.size(); i++)
             {
-                if (_schuesse.get(i).getIsOutOfDate())
+                if (_shots.get(i).getIsOutOfDate())
                 {
-                    _schuesse.remove(i);
-                    _spielfeld.repaint();
+                    _shots.remove(i);
+                    _playingField.repaint();
                 }
                 else
                 {
-                    _schuesse.get(i).paint(g);
+                    _shots.get(i).paint(g);
                 }
             }
         }

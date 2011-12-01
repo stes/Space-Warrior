@@ -101,7 +101,7 @@ public class SWClient implements IClient, NetworkListener
     {
         Unpacker packet = new Unpacker(data);
         
-        if(Packettype.SV_CHAT_NACHRICHT == packet.getType())
+        if(Packettype.SV_CHAT_MESSAGE == packet.getType())
         {
             String name = packet.readUTF();
             String text = packet.readUTF();
@@ -117,7 +117,7 @@ public class SWClient implements IClient, NetworkListener
                 l.snapshot(packet);
             }
         }
-        else if(Packettype.SV_SCHUSS == packet.getType())
+        else if(Packettype.SV_SHOT == packet.getType())
         {
             for (ClientListener l : _clientListener)
             {

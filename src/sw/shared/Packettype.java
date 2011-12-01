@@ -26,14 +26,14 @@ public final class Packettype
 {
     // Client
     public final static byte CL_START_INFO = 0;
-    public final static byte CL_CHAT_MSG = 1;
+    public final static byte CL_CHAT_MESSAGE = 1;
     public final static byte CL_INPUT = 2;
     
     // Server
-    public final static byte SV_CHAT_NACHRICHT = 1;
+    public final static byte SV_CHAT_MESSAGE = 1;
     public final static byte SV_SNAPSHOT = 2;
-    public final static byte SV_SCHUSS = 3;
+    public final static byte SV_SHOT = 3;
     
     // Snapshot Typen
-    public final static byte SNAP_SPIELERDATEN = 4;
+    public final static byte SNAP_PLAYERDATA = 4;
 }

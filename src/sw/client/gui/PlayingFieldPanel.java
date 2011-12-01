@@ -93,23 +93,23 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 			if (_stateManager.getPlayerList().dataAt(i) == null)
 				continue;
 			PlayerDataSet d = _stateManager.getPlayerList().dataAt(i);
-			if (d.lokal())
+			if (d.local())
 			{
 				this.paintBars(g2d, d);
-				g2d.drawImage(rotateImage(_localPlayerImg, 180 - d.richtung()),
-						null, (int) d.position().getX()
+				g2d.drawImage(rotateImage(_localPlayerImg, 180 - d.getDirection()),
+						null, (int) d.getPosition().getX()
 								- GameConstants.PLAYER_SIZE / 2, (int) d
-								.position().getY()
+								.getPosition().getY()
 								- GameConstants.PLAYER_SIZE
 								/ 2);
 			}
 			else
 			{
 				g2d.drawImage(
-						rotateImage(_opposingPlayerImg, 180 - d.richtung()),
-						null, (int) d.position().getX()
+						rotateImage(_opposingPlayerImg, 180 - d.getDirection()),
+						null, (int) d.getPosition().getX()
 								- GameConstants.PLAYER_SIZE / 2, (int) d
-								.position().getY()
+								.getPosition().getY()
 								- GameConstants.PLAYER_SIZE
 								/ 2);
 			}
@@ -136,7 +136,7 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 		g2d.setStroke(new BasicStroke(15));
 
 		int start_x = ClientConstants.BAR_X;
-		int end_x = start_x + d.leben() * ClientConstants.BAR_LENGTH
+		int end_x = start_x + d.getLifepoints() * ClientConstants.BAR_LENGTH
 				/ GameConstants.MAX_LIVES;
 		int y = 10;
 		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x,
@@ -144,7 +144,7 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 		g2d.setPaint(pat);
 		g2d.drawLine(start_x, y, end_x, y);
 
-		end_x = start_x + d.munition() * ClientConstants.BAR_LENGTH
+		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH
 				/ GameConstants.MAX_AMMO;
 		y = 30;
 		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(

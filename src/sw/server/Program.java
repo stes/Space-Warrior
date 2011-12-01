@@ -28,10 +28,6 @@ import sw.shared.GameConstants;
  */
 public class Program implements WindowListener
 {
-    public static void main(String[] args)
-    {
-        (new Program()).run();
-    }
     private ServerGUI _serverGUI;
     private SWServer _server;
     
@@ -77,4 +73,9 @@ public class Program implements WindowListener
 	public void windowIconified(WindowEvent e) { }
     @Override
 	public void windowOpened(WindowEvent e) { }
+    
+    public static void main(String[] args)
+    {
+        (new Program()).run();
+    }
 }

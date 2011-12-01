@@ -32,7 +32,6 @@ public class ServerInfo extends Thread
     private SWServer _netServer;
     private boolean _laeuft;
 
-    // Konstruktor
     public ServerInfo(SWServer netServer)
     {
         _netServer = netServer;
@@ -74,7 +73,7 @@ public class ServerInfo extends Thread
                 String msg = new String(buffer, 0, packet.getLength());
                 if(msg.equals(GameConstants.SERVER_INFO_REQUEST))
                 {
-                    Packer info = _netServer.holeServerInfos();
+                    Packer info = _netServer.getServerInfos();
                     byte[] buf = (GameConstants.SERVER_INFO_RESPONSE + info.toString()).getBytes();
                     DatagramPacket response = new DatagramPacket(buf, buf.length);
                     response.setSocketAddress(packet.getSocketAddress());
