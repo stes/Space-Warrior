@@ -63,10 +63,10 @@ public class PlayerInput
      *
      * @param input input-packet
      */
-    public PlayerInput(Packet input)
+    public PlayerInput(Unpacker input)
     {
-        this(input.getNumber(), input.getNumber(),
-            input.getNumber());
+        this(input.readShort(), input.readShort(),
+            input.readShort());
     }
 
     /**
@@ -115,12 +115,12 @@ public class PlayerInput
      *
      * @return the packet
      */
-    public Packet pack()
+    public Packer pack()
     {
-        Packet packet = new Packet(Packettype.CL_INPUT);
-        packet.addNumber(_moveDirection);
-        packet.addNumber(_turnDirection);
-        packet.addNumber(_isShooting);
+        Packer packet = new Packer(Packettype.CL_INPUT);
+        packet.writeShort(_moveDirection);
+        packet.writeShort(_turnDirection);
+        packet.writeShort(_isShooting);
         return packet;
     }
     

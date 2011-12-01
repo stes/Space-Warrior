@@ -22,8 +22,9 @@ import java.util.Vector;
 
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
 import sw.shared.net.UDPHost;
@@ -68,12 +69,12 @@ public class SWServer implements IServer, NetworkListener
         System.out.println("server name: " + _serverName);
     }
     
-    public Packet holeServerInfos()
+    public Packer holeServerInfos()
     {
-        Packet info = new Packet(new byte[]{(byte)0}, 0);
-        info.addString(_propertyLoader.getServerName());
-        info.addNumber(_propertyLoader.getMaxPlayers());
-        info.addNumber(0);
+        Packer info = new Packer((byte)0);
+        info.writeUTF(_propertyLoader.getServerName());
+        info.writeInt(_propertyLoader.getMaxPlayers());
+        info.writeInt(0);
         return info;
     }
     
@@ -102,7 +103,7 @@ public class SWServer implements IServer, NetworkListener
     }
     
     @Override
-    public void sendPacket(String name, Packet packet)
+    public void sendPacket(String name, Packer packet)
     {
     	Client client = this.getClientbyName(name);
     	if(client != null)
@@ -112,15 +113,15 @@ public class SWServer implements IServer, NetworkListener
     }
     
     @Override
-    public void sendBroadcast(Packet packet)
+    public void sendBroadcast(Packer packet)
     {
-    	byte[] data = packet.getData();
+    	byte[] data = packet.toByteArray();
     	_netServer.broadcast(data, data.length);
     }
     
-    private void sendPacket(Client client, Packet packet)
+    private void sendPacket(Client client, Packer packet)
     {
-    	byte[] data = packet.getData();
+    	byte[] data = packet.toByteArray();
     	client.getConnection().send(data, data.length);
     }
     
@@ -176,11 +177,11 @@ public class SWServer implements IServer, NetworkListener
 	public void receivedMessage(UDPConnection connection, byte[] data, int len)
 	{
 		Client client = this.getClientbyConnection(connection);
-        Packet packet = new Packet(data, len);
+        Unpacker packet = new Unpacker(data);
         
         if(Packettype.CL_START_INFO == packet.getType() && !client.isPlaying())
         {
-            String name = packet.getString();
+            String name = packet.readUTF();
             Client cl = this.getClientbyName(name);
             if(cl == null)
             {
@@ -195,10 +196,10 @@ public class SWServer implements IServer, NetworkListener
         }
         else if(Packettype.CL_CHAT_MSG == packet.getType() && client.isPlaying())
         {
-            String text = packet.getString();
-            Packet chat = new Packet(Packettype.SV_CHAT_NACHRICHT);
-            chat.addString(client.name());
-            chat.addString(text);
+            String text = packet.readUTF();
+            Packer chat = new Packer(Packettype.SV_CHAT_NACHRICHT);
+            chat.writeUTF(client.name());
+            chat.writeUTF(text);
             this.sendBroadcast(chat);
         }
         else if(Packettype.CL_INPUT == packet.getType() && client.isPlaying())

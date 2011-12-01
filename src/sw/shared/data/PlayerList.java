@@ -32,13 +32,13 @@ public class PlayerList
      * @param p The paket
      * @return The new instance
      */
-    private static PlayerList fromSnapshot(Packet p)
+    private static PlayerList fromSnapshot(Unpacker p)
     {
-        PlayerList liste = new PlayerList(p.getNumber());
-        int n = p.getNumber();
+        PlayerList liste = new PlayerList(p.readInt());
+        int n = p.readInt();
         for (int i = 0; i < n; i++)
         {
-           liste.insert(PlayerDataSet.hole(p.getPacket()), null);
+           liste.insert(PlayerDataSet.hole(p), null);
         }
         return liste;
     }
@@ -90,17 +90,17 @@ public class PlayerList
      * 
      * @return the packet
      */
-    public Packet createSnapshot(String lokalerName)
+    public Packer createSnapshot(String lokalerName)
     {
-        Packet p = new Packet(Packettype.SV_SNAPSHOT);
-        p.addNumber(this.size());
-        p.addNumber(this.count());
+        Packer p = new Packer(Packettype.SV_SNAPSHOT);
+        p.writeInt(this.size());
+        p.writeInt(this.count());
         for (PlayerDataSet s : _liste)
         {
             if (s != null)
             {
                 boolean lokal = s.name().equals(lokalerName);
-                p.addPacket(s.pack(lokal));
+                s.pack(p, lokal);
             }
         }
         return p;
@@ -162,7 +162,7 @@ public class PlayerList
      * 
      * @param p the packet
      */
-    public void update(Packet p)
+    public void update(Unpacker p)
     {
         PlayerList liste = PlayerList.fromSnapshot(p);
         _liste = liste._liste;

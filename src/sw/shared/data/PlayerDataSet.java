@@ -50,21 +50,21 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	* @return a new player data-Instance
 	* @throws IllegalArgumentException if packet type is wrong
 	*/
-	public static PlayerDataSet hole(Packet p)
+	public static PlayerDataSet hole(Unpacker p)
 	{
-		if (p.getType() != Packettype.SNAP_SPIELERDATEN)
+		if (p.readByte() != Packettype.SNAP_SPIELERDATEN)
 			throw new IllegalArgumentException();
-		String name = p.getString();
-		boolean lokal = p.getBoolean();
+		String name = p.readUTF();
+		boolean lokal = p.readBoolean();
 		
 		PlayerDataSet daten = new PlayerDataSet(name, lokal);
 		
-		daten.setzePosition(new Point(p.getNumber(), p.getNumber()));
-		daten.setzeRichtung(p.getNumber());
-		daten.setzePunkte(p.getNumber());
+		daten.setzePosition(new Point.Double(p.readDouble(), p.readDouble()));
+		daten.setzeRichtung(p.readDouble());
+		daten.setzePunkte(p.readInt());
 		
-		daten.setzeLeben(p.getNumber());
-		daten.setzeMunition(p.getNumber());
+		daten.setzeLeben(p.readInt());
+		daten.setzeMunition(p.readInt());
 
 		return daten;
 	}
@@ -143,7 +143,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		double b = Math.toRadians(richtung());
 		int x = (int)(geschwindigkeit() * Math.sin(b));
 		int y = (int)(geschwindigkeit() * Math.cos(b));
-		this.setzePosition(new Point(this.xPosition() + x, this.yPosition() + y));
+		this.setzePosition(new Point.Double(this.xPosition() + x, this.yPosition() + y));
 	}
 	
 	@Override
@@ -255,22 +255,20 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	* @param lokal true, although local values ??should be taken
 	* @return the packet
 	*/
-	public Packet pack(boolean lokal)
+	public void pack(Packer p, boolean lokal)
 	{
-		Packet p = new Packet(Packettype.SNAP_SPIELERDATEN);
-		p.addString(this.name());
-		p.addBoolean(lokal);
-		p.addNumber((int)this.position().getX());
-		p.addNumber((int)this.position().getY());
-		p.addNumber((int)this.richtung());
-		p.addNumber(this.punkte());
+		p.writeByte(Packettype.SNAP_SPIELERDATEN);
+		p.writeUTF(this.name());
+		p.writeBoolean(lokal);
+		p.writeDouble(this.position().getX());
+		p.writeDouble(this.position().getY());
+		p.writeDouble(this.richtung());
+		p.writeInt(this.punkte());
 		
 		int x = lokal ? 1 : 0;
 		
-		p.addNumber(this.leben() * x);
-		p.addNumber(this.munition() * x);
-		
-		return p;
+		p.writeInt(this.leben() * x);
+		p.writeInt(this.munition() * x);
 	}
 	
 	/**
@@ -423,7 +421,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	* 
 	* @param value new position
 	*/
-	protected void setzePosition(Point wert)
+	protected void setzePosition(Point.Double wert)
 	{
 		double x = wert.getX();
 		double y = wert.getY();
@@ -439,11 +437,11 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 
 		_location = new Point.Double(x, y);
 	}
-	private Point positionNach(double zeitintervall)
+	private Point.Double positionNach(double zeitintervall)
 	{
 		double weg = zeitintervall * this.geschwindigkeit();
-		return new Point(
-			(int)(this.position().getX() + weg * Math.sin(Math.toRadians(this.richtung()))),
-			(int)(this.position().getY() + weg * Math.cos(Math.toRadians(this.richtung()))));
+		return new Point.Double(
+			this.position().getX() + weg * Math.sin(Math.toRadians(this.richtung())),
+			this.position().getY() + weg * Math.cos(Math.toRadians(this.richtung())));
 	}
 }

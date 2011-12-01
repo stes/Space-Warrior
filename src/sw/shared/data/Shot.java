@@ -42,14 +42,13 @@ public class Shot extends java.awt.geom.Line2D.Double
      * @Return a new instance of shot-
      * @Throws IllegalArgumentException if packet type is incorrect
      */
-    public static Shot hole(Packet p)
+    public static Shot hole(Unpacker p)
     {
         if (p.getType() != Packettype.SV_SCHUSS)
             throw new IllegalArgumentException();
         return new Shot(
-            new Point(p.getNumber(), p.getNumber()),
-            p.getNumber(),
-            p.getBoolean());
+            new Point.Double(p.readDouble(), p.readDouble()),
+            	p.readInt(), p.readBoolean());
     }
     // Attribute
     private boolean _istMaster;
@@ -64,7 +63,7 @@ public class Shot extends java.awt.geom.Line2D.Double
      * @param startpoint startpoint of the shot
      * @param direction direction of the shot
      */
-    public Shot(Point startPunkt, int richtung)
+    public Shot(Point.Double startPunkt, int richtung)
     {
         this(startPunkt, richtung, false);
     }
@@ -76,7 +75,7 @@ public class Shot extends java.awt.geom.Line2D.Double
      * @param direction direction of the shot
      * @param master true, if a mastershot is given
      */
-    public Shot(Point startPunkt, int richtung, boolean master)
+    public Shot(Point.Double startPunkt, int richtung, boolean master)
     {
         super(startPunkt, new Point(0,0));
         _istMaster = master;
@@ -119,13 +118,13 @@ public class Shot extends java.awt.geom.Line2D.Double
      * 
      * @return the packet
      */
-    public Packet pack()
+    public Packer pack()
     {
-        Packet p = new Packet(Packettype.SV_SCHUSS);
-        p.addNumber((int)startPunkt().getX());
-        p.addNumber((int)startPunkt().getY());
-        p.addNumber(this.richtung());
-        p.addBoolean(this.istMaster());
+    	Packer p = new Packer(Packettype.SV_SCHUSS);
+        p.writeDouble(startPunkt().getX());
+        p.writeDouble(startPunkt().getY());
+        p.writeInt(this.richtung());
+        p.writeBoolean(this.istMaster());
         return p;
     }
     
@@ -163,8 +162,8 @@ public class Shot extends java.awt.geom.Line2D.Double
     /**
      * @return the startpoint
      */
-    public Point startPunkt()
+    public Point.Double startPunkt()
     {
-        return new Point((int)this.getX1(), (int)this.getY1());
+        return new Point.Double(this.getX1(), this.getY1());
     }
 }

@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -25,5 +25,5 @@ import sw.shared.data.Packet;
 
 public interface IClient
 {
-	public void sendPacket(Packet packet);
+	public void sendPacket(Packer packet);
 }

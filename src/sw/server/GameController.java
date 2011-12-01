@@ -19,7 +19,7 @@ package sw.server;
 
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
@@ -85,7 +85,7 @@ public class GameController
             PlayerDataSet daten = _connectedPlayers.dataAt(i);
             if (daten != null)
             {
-                Packet snapshot = _activePlayers.createSnapshot(daten.name());
+                Packer snapshot = _activePlayers.createSnapshot(daten.name());
                 _server.sendPacket(daten.name(), snapshot);
             }
         }
@@ -114,9 +114,9 @@ public class GameController
                     PlayerDataSet daten = _activePlayers.dataAt(i);
                     if (daten != null)
                     {
-                        Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
-                        info.addString("Server");
-                        info.addString(daten.name() + " hat die Runde gewonnen!");
+                        Packer info = new Packer(Packettype.SV_CHAT_NACHRICHT);
+                        info.writeUTF("Server");
+                        info.writeUTF(daten.name() + " hat die Runde gewonnen!");
                         _server.sendBroadcast(info);
                         break;
                     }
@@ -146,9 +146,9 @@ public class GameController
                 _activePlayers.insert(daten, null);
             }
         }
-        Packet info = new Packet(Packettype.SV_CHAT_NACHRICHT);
-        info.addString("Server");
-        info.addString("Neue Runde");
+        Packer info = new Packer(Packettype.SV_CHAT_NACHRICHT);
+        info.writeUTF("Server");
+        info.writeUTF("Neue Runde");
         _server.sendBroadcast(info);
         System.out.println("Neue Runde");
     }
@@ -167,7 +167,7 @@ public class GameController
                     if (s != null)
                     {
                         this.addDamage(daten, s);
-                        Packet p = s.pack();
+                        Packer p = s.pack();
                         _server.sendBroadcast(p);
                     }
                 }

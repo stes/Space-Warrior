@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.server;
 
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -25,7 +25,7 @@ import sw.shared.data.Packet;
 
 public interface IServer
 {
-    public void sendPacket(String name, Packet packet);
+    public void sendPacket(String name, Packer packet);
     
-    public void sendBroadcast(Packet packet);
+    public void sendBroadcast(Packer packet);
 }
