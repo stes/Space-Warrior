@@ -17,21 +17,23 @@
  ******************************************************************************/
 package sw.client.gui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
+import sw.client.gcontrol.IGameStateManager;
+import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerDataSet;
-import sw.shared.data.PlayerList;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -39,128 +41,141 @@ import sw.shared.data.PlayerList;
  */
 public class PlayingFieldPanel extends JPanel implements MouseListener
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8647279084154615455L;
-	
-	private PlayerList _playerList;
-    private BufferedImage _localPlayerImg;
-    private BufferedImage _opposingPlayerImg;
-    private BufferedImage _backgroundImg;
-    
-    /**
-     * Creates a new playing field given a reference to the player list
-     * 
-     * @param playerList a player list (may be empty)
-     * @throws IllegalArgumentException if playerList is null
-     */
-    public PlayingFieldPanel(PlayerList playerList)
-    {
-        super();
-        this.addMouseListener(this);
-        if (playerList == null)
-        	throw new IllegalArgumentException("argument playerList must not be null");
-        this.setLayout(null);
-        _localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
-        _opposingPlayerImg = ImageContainer.getLocalInstance().getOpposingPlayerImg();
-        _backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
-        _playerList = playerList;
-        ShotPool.init(this);
-        this.setBackground(Color.BLACK);
-    }
-    /**
-     * Paints the playing field with its contents
-     */
-    @Override
-    public void paintComponent(Graphics g)
-    {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
-        g2d.drawImage(
-        		_backgroundImg,
-        		this.getX(),
-        		this.getY(),
-        		this.getWidth(),
-        		this.getHeight(),
-        		null);
-        
-        ShotPool.paint(g);
-        for (int i = 0 ; i < _playerList.size(); i++)
-        {
-            if (_playerList.dataAt(i) == null)
-                continue;
-            PlayerDataSet d = _playerList.dataAt(i);
-            if (d.lokal())
-            {
-                this.paintBars(g2d, d);
-                g2d.drawImage(
-                    rotateImage(_localPlayerImg, 180-d.richtung()),
-                    null,
-                    (int)d.position().getX() - GameConstants.PLAYER_SIZE/2,
-                    (int)d.position().getY() - GameConstants.PLAYER_SIZE/2);
-            }
-            else
-            {
-                g2d.drawImage(
-                    rotateImage(_opposingPlayerImg, 180-d.richtung()),
-                    null,
-                    (int)d.position().getX() - GameConstants.PLAYER_SIZE/2,
-                    (int)d.position().getY() - GameConstants.PLAYER_SIZE/2);
-            }
-        }
-    }
-    
-    private AffineTransform affineTransform(BufferedImage src, double degrees)
-    {
-        return AffineTransform.getRotateInstance(
-            Math.toRadians(degrees),
-            src.getWidth() / 2,
-            src.getHeight() / 2);
-    }
-    
-    private BufferedImage rotateImage(BufferedImage src, double degrees)
-    {
-        BufferedImage rotatedImage = new BufferedImage(src.getWidth(), src
-                .getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = rotatedImage.createGraphics();
-        g.drawImage(src, affineTransform(src, degrees), null);
-        return rotatedImage;
-    }
-    
-    private void paintBars(Graphics2D g2d, PlayerDataSet d)
-    {
-        g2d.setStroke(new BasicStroke(15));
-       
-        int start_x = ClientConstants.BAR_X;
-        int end_x = start_x + d.leben() * ClientConstants.BAR_LENGTH / GameConstants.MAX_LIVES;
-        int y = 10;
-        GradientPaint pat
-           = new GradientPaint(start_x, 10, Color.RED,
-                               end_x, 60, new Color(255, 0, 0, 100));
-        g2d.setPaint(pat);
-        g2d.drawLine(start_x, y, end_x, y);
-        
-        end_x = start_x + d.munition() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
-        y = 30;
-        pat
-           = new GradientPaint(start_x, 10, Color.GRAY,
-                               end_x, 60, new Color(100, 100, 100, 100));
-        g2d.setPaint(pat);
-        g2d.drawLine(start_x, y, end_x, y);
-    }
+
+	private BufferedImage _localPlayerImg;
+	private BufferedImage _opposingPlayerImg;
+	private BufferedImage _backgroundImg;
+
+	private IGameStateManager _stateManager;
+
+	/**
+	 * Creates a new playing field given a reference to the player list
+	 * 
+	 * @param stateManager
+	 *            a game state manager
+	 */
+	public PlayingFieldPanel(IGameStateManager stateManager)
+	{
+		super();
+		this.addMouseListener(this);
+		this.setLayout(null);
+		_stateManager = stateManager;
+		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
+		{
+			this.addKeyListener((HumanPlayer)_stateManager.getLocalPlayer());
+		}
+		_localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
+		_opposingPlayerImg = ImageContainer.getLocalInstance()
+				.getOpposingPlayerImg();
+		_backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
+		ShotPool.init(this);
+		this.setBackground(Color.BLACK);
+	}
+
+	/**
+	 * Paints the playing field with its contents
+	 */
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(_backgroundImg, this.getX(), this.getY(),
+				this.getWidth(), this.getHeight(), null);
+
+		ShotPool.paint(g);
+		for (int i = 0; i < _stateManager.getPlayerList().size(); i++)
+		{
+			if (_stateManager.getPlayerList().dataAt(i) == null)
+				continue;
+			PlayerDataSet d = _stateManager.getPlayerList().dataAt(i);
+			if (d.lokal())
+			{
+				this.paintBars(g2d, d);
+				g2d.drawImage(rotateImage(_localPlayerImg, 180 - d.richtung()),
+						null, (int) d.position().getX()
+								- GameConstants.PLAYER_SIZE / 2, (int) d
+								.position().getY()
+								- GameConstants.PLAYER_SIZE
+								/ 2);
+			}
+			else
+			{
+				g2d.drawImage(
+						rotateImage(_opposingPlayerImg, 180 - d.richtung()),
+						null, (int) d.position().getX()
+								- GameConstants.PLAYER_SIZE / 2, (int) d
+								.position().getY()
+								- GameConstants.PLAYER_SIZE
+								/ 2);
+			}
+		}
+	}
+
+	private AffineTransform affineTransform(BufferedImage src, double degrees)
+	{
+		return AffineTransform.getRotateInstance(Math.toRadians(degrees),
+				src.getWidth() / 2, src.getHeight() / 2);
+	}
+
+	private BufferedImage rotateImage(BufferedImage src, double degrees)
+	{
+		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
+				src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = rotatedImage.createGraphics();
+		g.drawImage(src, affineTransform(src, degrees), null);
+		return rotatedImage;
+	}
+
+	private void paintBars(Graphics2D g2d, PlayerDataSet d)
+	{
+		g2d.setStroke(new BasicStroke(15));
+
+		int start_x = ClientConstants.BAR_X;
+		int end_x = start_x + d.leben() * ClientConstants.BAR_LENGTH
+				/ GameConstants.MAX_LIVES;
+		int y = 10;
+		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x,
+				60, new Color(255, 0, 0, 100));
+		g2d.setPaint(pat);
+		g2d.drawLine(start_x, y, end_x, y);
+
+		end_x = start_x + d.munition() * ClientConstants.BAR_LENGTH
+				/ GameConstants.MAX_AMMO;
+		y = 30;
+		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(
+				100, 100, 100, 100));
+		g2d.setPaint(pat);
+		g2d.drawLine(start_x, y, end_x, y);
+	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e)
+	{
+	}
+
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e)
+	{
+	}
+
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		this.requestFocusInWindow();	
+		this.requestFocusInWindow();
 	}
+
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e)
+	{
+	}
 }

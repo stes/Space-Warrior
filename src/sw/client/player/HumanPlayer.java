@@ -20,7 +20,7 @@ package sw.client.player;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import sw.client.IGameStateManager;
+import sw.client.gcontrol.IGameStateManager;
 
 /**
  * A player controlled by a human using the keyboard<p>
@@ -55,6 +55,7 @@ public class HumanPlayer extends Player implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
+		System.out.println(e.getKeyChar());
         char eingabe = e.getKeyChar();
         switch (eingabe)
         {

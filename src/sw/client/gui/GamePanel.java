@@ -27,7 +27,7 @@ import javax.swing.JTable;
 
 import sw.client.ClientListener;
 import sw.client.IClient;
-import sw.client.IGameStateManager;
+import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.GameConstants;
@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
         this.add(_tblPoints);
         
-        _playingField = new PlayingFieldPanel(_stateManager.getPlayerList());
+        _playingField = new PlayingFieldPanel(_stateManager);
         _playingField.setBounds(
         		GameConstants.REFERENCE_X,
         		GameConstants.REFERENCE_Y,

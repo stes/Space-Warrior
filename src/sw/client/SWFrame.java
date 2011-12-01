@@ -229,7 +229,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
-		
+			
 		Packer start = new Packer(Packettype.CL_START_INFO);
 		start.writeUTF(_loginPanel.getName());
 		_client.sendPacket(start);

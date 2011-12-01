@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client.player;
 
-import sw.client.IGameStateManager;
+import sw.client.gcontrol.IGameStateManager;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;

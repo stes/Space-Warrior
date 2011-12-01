@@ -19,10 +19,12 @@ package sw.client;
 
 import java.io.File;
 
+import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.client.player.ai.AIPlayer;
+import sw.client.player.ai.AIPlayerLoader;
+import sw.client.player.ai.SampleAIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
@@ -59,6 +61,7 @@ public class GameController implements ClientListener, IGameStateManager
     {
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
+		_localPlayer = new HumanPlayer(this);
     }
     
     public void init()
@@ -67,12 +70,14 @@ public class GameController implements ClientListener, IGameStateManager
     	{
     		try
 			{
-				_localPlayer = AIPlayer.load(_aiPlugin, this);
+    			System.out.println("Successfully loaded AI Player.");
+				_localPlayer = AIPlayerLoader.load(_aiPlugin, this);
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 				System.out.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new HumanPlayer(this);
+				_localPlayer = new SampleAIPlayer(this);
 			}
     	}
     	else
