@@ -55,6 +55,7 @@ public class HumanPlayer extends Player implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
+		System.out.println(e.getKeyChar());
         char eingabe = e.getKeyChar();
         switch (eingabe)
         {

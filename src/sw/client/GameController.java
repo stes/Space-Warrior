@@ -62,19 +62,19 @@ public class GameController implements ClientListener, IGameStateManager
     
     public void init()
     {
-    	if (_runAI && _aiPlugin.exists())
-    	{
-    		try
-			{
-				_localPlayer = AIPlayer.load(_aiPlugin, this);
-			}
-			catch (Exception e)
-			{
-				System.out.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new HumanPlayer(this);
-			}
-    	}
-    	else
+//    	if (_runAI && _aiPlugin.exists())
+//    	{
+//    		try
+//			{
+//				_localPlayer = AIPlayer.load(_aiPlugin, this);
+//			}
+//			catch (Exception e)
+//			{
+//				System.out.println("Unable to load AI Player. Loading default player instead");
+//				_localPlayer = new HumanPlayer(this);
+//			}
+//    	}
+//    	else
     	{
     		_localPlayer = new HumanPlayer(this);
     	}
