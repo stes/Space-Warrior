@@ -32,7 +32,8 @@ import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
+import sw.shared.data.Unpacker;
 
 public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
@@ -85,8 +86,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     
     private void processInput()
     {
-		Packet p = new Packet(Packettype.CL_CHAT_MSG);
-		p.addString(_txtChatmessage.getText());
+		Packer p = new Packer(Packettype.CL_CHAT_MSG);
+		p.writeUTF(_txtChatmessage.getText());
 		_client.sendPacket(p);
 		
 		
@@ -168,10 +169,10 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	}
 
 	@Override
-	public void shot(Packet packet)	{}
+	public void shot(Unpacker packet)	{}
 
 	@Override
-	public void snapshot(Packet packet) {}
+	public void snapshot(Unpacker packet) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e)

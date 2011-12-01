@@ -21,7 +21,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import sw.shared.GameConstants;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -74,7 +74,7 @@ public class ServerInfo extends Thread
                 String msg = new String(buffer, 0, packet.getLength());
                 if(msg.equals(GameConstants.SERVER_INFO_REQUEST))
                 {
-                    Packet info = _netServer.holeServerInfos();
+                    Packer info = _netServer.holeServerInfos();
                     byte[] buf = (GameConstants.SERVER_INFO_RESPONSE + info.toString()).getBytes();
                     DatagramPacket response = new DatagramPacket(buf, buf.length);
                     response.setSocketAddress(packet.getSocketAddress());

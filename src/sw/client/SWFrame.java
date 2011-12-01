@@ -30,8 +30,9 @@ import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
+import sw.shared.data.Unpacker;
 
 
 /**
@@ -112,10 +113,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     }
 	
     @Override
-    public void shot(Packet packet) {}
+    public void shot(Unpacker packet) {}
     
     @Override
-    public void snapshot(Packet packet)
+    public void snapshot(Unpacker packet)
     {
         if(_controller.getPlayerList().count() == 0)
             return;
@@ -229,8 +230,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	{
 		this.setGUIMode(GUIMode.GAME);
 			
-		Packet start = new Packet(Packettype.CL_START_INFO);
-		start.addString(_loginPanel.getName());
+		Packer start = new Packer(Packettype.CL_START_INFO);
+		start.writeUTF(_loginPanel.getName());
 		_client.sendPacket(start);
 	}
 

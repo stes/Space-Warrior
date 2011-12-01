@@ -26,11 +26,12 @@ import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
 import sw.client.player.ai.SampleAIPlayer;
 import sw.shared.GameConstants;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 import sw.shared.data.Shot;
+import sw.shared.data.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -107,14 +108,14 @@ public class GameController implements ClientListener, IGameStateManager
         return _playerList;
     }
     @Override
-    public void shot(Packet packet)
+    public void shot(Unpacker packet)
     {
         Shot s = Shot.hole(packet);
         ShotPool.addShot(s);
     }
 
     @Override
-	public void snapshot(Packet snapshot)
+	public void snapshot(Unpacker snapshot)
     {
         _playerList.update(snapshot);
         for (int i = 0; i < _playerList.size(); i++)
@@ -130,7 +131,7 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
-        Packet p = input.pack();
+        Packer p = input.pack();
         _client.sendPacket(p);
 	}
 	

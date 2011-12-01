@@ -21,7 +21,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
 import sw.shared.Packettype;
-import sw.shared.data.Packet;
+import sw.shared.data.Packer;
+import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
 import sw.shared.net.UDPHost;
@@ -66,11 +67,11 @@ public class SWClient implements IClient, NetworkListener
     }
     
     @Override
-    public void sendPacket(Packet packet)
+    public void sendPacket(Packer packet)
     {
     	if(_server != null)
     	{
-	    	byte[] data = packet.getData();
+	    	byte[] data = packet.toByteArray();
 	    	_server.send(data, data.length);
     	}
     }
@@ -98,12 +99,12 @@ public class SWClient implements IClient, NetworkListener
     @Override
     public void receivedMessage(UDPConnection connection, byte[] data, int len)
     {
-        Packet packet = new Packet(data, len);
+        Unpacker packet = new Unpacker(data);
         
         if(Packettype.SV_CHAT_NACHRICHT == packet.getType())
         {
-            String name = packet.getString();
-            String text = packet.getString();
+            String name = packet.readUTF();
+            String text = packet.readUTF();
             for (ClientListener l : _clientListener)
             {
                 l.chatMessage(name, text);

@@ -44,6 +44,7 @@ public abstract class AIPlayer extends Player
 				while(true)
 				{
 					_self.tick();
+					Thread.yield();
 				}
 			}
 		};

@@ -93,7 +93,7 @@ public class UDPConnection
 			}
 			else if(control == UDPConnection.CTRL_CLOSE)
 			{
-				String reason = new String(data, 1, len);
+				String reason = (len > 1) ? new String(data, 1, len-1) : "";
 				if(reason.length() > 0)
 		    		System.out.println("disconnected (" + reason + ")");
 		    	else

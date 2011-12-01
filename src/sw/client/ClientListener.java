@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.data.Packet;
+import sw.shared.data.Unpacker;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -48,12 +48,12 @@ public interface ClientListener
      * 
      * @param packet the shot
      */
-    public void shot(Packet packet);
+    public void shot(Unpacker packet);
     
     /**
      * Invoked when a snapshot was received
      * 
      * @param packet Der Snapshot
      */
-    public void snapshot(Packet packet);
+    public void snapshot(Unpacker packet);
 }
