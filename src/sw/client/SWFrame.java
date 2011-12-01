@@ -77,6 +77,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
         _loginPanel = new LoginPanel(1400, 900);
         
         _client.addClientListener(_gamePanel);
+        _client.addClientListener(_loginPanel);
         
         _loginPanel.addLoginListener(this);
       
@@ -236,7 +237,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	}
 
 	@Override
-	public void chatMessage(String name, String text) {}    
+	public void chatMessage(String name, String text) {}
+	
+	@Override
+	public void serverInfo(Unpacker packet) {}
 	
 	private enum GUIMode {LOGIN, GAME}
 	private void setGUIMode(GUIMode mode)
@@ -263,5 +267,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	public void login(LoginEvent e)
 	{
 		this.connect(e.getIPAdress());
+	}
+
+
+	@Override
+	public void scan()
+	{
+		_client.scan();
 	}
 }

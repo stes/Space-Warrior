@@ -182,7 +182,7 @@ public class UDPHost extends Thread
     	buf[0] = 's';
     	buf[1] = 'w';
     	System.arraycopy(data, 0, buf, 2, len);
-    	this.send(addr, UDPConnection.FLAG_CONNLESS, data, len);
+    	this.send(addr, UDPConnection.FLAG_CONNLESS, buf, buf.length);
     }
     
     protected void send(InetSocketAddress addr, byte[] data, int len)

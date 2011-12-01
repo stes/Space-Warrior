@@ -53,7 +53,14 @@ public interface ClientListener
     /**
      * Invoked when a snapshot was received
      * 
-     * @param packet Der Snapshot
+     * @param packet snapshot
      */
     public void snapshot(Unpacker packet);
+    
+    /**
+     * Invoked when server info was received
+     * 
+     * @param packet server info
+     */
+    public void serverInfo(Unpacker packet);
 }

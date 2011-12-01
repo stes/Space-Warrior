@@ -72,9 +72,9 @@ public class SWServer implements IServer, NetworkListener
     public Packer getServerInfos()
     {
         Packer info = new Packer((byte)0);
-        info.writeUTF(_propertyLoader.getServerName());
-        info.writeInt(_propertyLoader.getMaxPlayers());
-        info.writeInt(0);
+        info.writeUTF(_serverName);
+        info.writeShort(_propertyLoader.getMaxPlayers());
+        info.writeShort(_clients.size());
         return info;
     }
     
@@ -209,5 +209,15 @@ public class SWServer implements IServer, NetworkListener
 	}
 	
 	@Override
-    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len) {}
+    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len)
+	{
+		if(java.util.Arrays.equals(data, GameConstants.SERVER_INFO_REQUEST))
+		{
+			byte[] info = this.getServerInfos().toByteArray();
+			byte[] buf = new byte[GameConstants.SERVER_INFO_RESPONSE.length + info.length];
+			System.arraycopy(GameConstants.SERVER_INFO_RESPONSE, 0, buf, 0, GameConstants.SERVER_INFO_RESPONSE.length);
+			System.arraycopy(info, 0, buf, GameConstants.SERVER_INFO_RESPONSE.length, info.length);
+			_netServer.sendConnless(addr, buf, buf.length);
+		}
+	}
 }

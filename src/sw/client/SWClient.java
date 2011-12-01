@@ -17,9 +17,11 @@
  ******************************************************************************/
 package sw.client;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
+import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
 import sw.shared.data.Unpacker;
@@ -59,6 +61,28 @@ public class SWClient implements IClient, NetworkListener
     public void connect(String ip, int port)
     {
     	_netClient.connect(new InetSocketAddress(ip, port));
+    }
+    
+    public void scan()
+    {
+    	// TODO: improve this
+    	try
+    	{
+    		String local = InetAddress.getLocalHost().getHostName();
+    		for(InetAddress a : InetAddress.getAllByName(local))
+    		{
+    			byte[] addr = a.getAddress();
+    			if(addr.length != 4 || addr[0] != (byte)192 || addr[1] != (byte)168)
+    				continue;
+    			addr[3] = (byte)255;
+    			byte[] buffer = GameConstants.SERVER_INFO_REQUEST;
+    			InetSocketAddress sockAddr = new InetSocketAddress(InetAddress.getByAddress(addr), GameConstants.STANDARD_PORT);
+    			_netClient.sendConnless(sockAddr, buffer, buffer.length);
+    		}
+    	}
+    	catch (Exception e)
+    	{
+    	}
     }
     
     public void addClientListener(ClientListener listener)
@@ -127,5 +151,18 @@ public class SWClient implements IClient, NetworkListener
     }
     
     @Override
-    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len) {}
+    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len)
+    {
+    	byte[] header = java.util.Arrays.copyOf(data, GameConstants.SERVER_INFO_RESPONSE.length);
+    	if(java.util.Arrays.equals(header, GameConstants.SERVER_INFO_RESPONSE))
+		{
+			byte[] info = java.util.Arrays.copyOfRange(data, GameConstants.SERVER_INFO_RESPONSE.length, len);
+			Unpacker packet = new Unpacker(info);
+			
+			for (ClientListener l : _clientListener)
+            {
+                l.serverInfo(packet);
+            }
+		}
+    }
 }

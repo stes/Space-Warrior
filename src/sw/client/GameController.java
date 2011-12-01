@@ -101,6 +101,9 @@ public class GameController implements ClientListener, IGameStateManager
         
     @Override
     public void chatMessage(String name, String text) {}
+    
+	@Override
+	public void serverInfo(Unpacker packet) {}
    
     @Override
     public PlayerList getPlayerList()

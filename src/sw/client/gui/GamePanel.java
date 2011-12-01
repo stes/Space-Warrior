@@ -173,6 +173,9 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 
 	@Override
 	public void snapshot(Unpacker packet) {}
+	
+	@Override
+	public void serverInfo(Unpacker packet) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e)

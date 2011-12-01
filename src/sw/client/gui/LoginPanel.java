@@ -30,9 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import sw.client.ClientListener;
 import sw.client.GameController;
+import sw.shared.data.Unpacker;
 
-public class LoginPanel extends JPanel
+public class LoginPanel extends JPanel implements ClientListener
 {
     /**
 	 * 
@@ -141,7 +143,15 @@ public class LoginPanel extends JPanel
         
         _btnUpdate = new JButton("Aktualisieren");
         _btnUpdate.setBounds(1100, 620, 100, 25);
-        //_btnUpdate.addActionListener(new ActionDelegate(this, "btnUpdate_Action"));
+        _btnUpdate.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				for (LoginListener l : _loginListener)
+					l.scan();
+			}
+		});
         this.add(_btnUpdate);
         
         _lblIPAdress = new JLabel("IP-Adresse");
@@ -181,4 +191,25 @@ public class LoginPanel extends JPanel
 		});
         this.add(_btnChooseAI);
     }
+    
+    @Override
+	public void serverInfo(Unpacker packet)
+	{
+    	String name = packet.readUTF();
+    	int maxPlayers = packet.readShort();
+    	int playerCount = packet.readShort();
+    	
+    	System.out.println(name + " - " + maxPlayers + " - " + playerCount);
+	}
+
+	@Override
+	public void connected() {}
+	@Override
+	public void disconnected(String reason) {}
+	@Override
+	public void chatMessage(String name, String text) {}
+	@Override
+	public void shot(Unpacker packet) {}
+	@Override
+	public void snapshot(Unpacker packet) {}
 }
