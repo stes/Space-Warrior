@@ -31,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import sw.client.GameController;
+
 public class LoginPanel extends JPanel
 {
     /**
@@ -49,8 +51,6 @@ public class LoginPanel extends JPanel
     private JLabel _lblIPAdress;
     private JLabel _lblName;
     private JTable _tblServers;
-    
-    private File _aiFile;
     
     private ArrayList<LoginListener> _loginListener;
 	
@@ -176,7 +176,7 @@ public class LoginPanel extends JPanel
 
 		        if (returnVal == JFileChooser.APPROVE_OPTION)
 		        {
-		            _aiFile = _fileChooser.getSelectedFile();
+		            GameController.setAIPlugin(_fileChooser.getSelectedFile());
 		        }
 			}
 		});

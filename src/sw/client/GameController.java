@@ -18,7 +18,6 @@
 package sw.client;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
@@ -37,10 +36,16 @@ import sw.shared.data.Shot;
  */ 
 public class GameController implements ClientListener, IGameStateManager
 {
+	private static File _aiPlugin;
+	public static void setAIPlugin(File source)
+	{
+		_aiPlugin = source;
+	}
+	
     private PlayerList _playerList;
     private IClient _client;
     private Player _localPlayer;
-    private File _aiPlugin;
+
     
     private boolean _isConnected;
 
@@ -59,7 +64,7 @@ public class GameController implements ClientListener, IGameStateManager
     	{
     		try
 			{
-				_localPlayer = AIPlayer.load(_aiPlugin);
+				_localPlayer = AIPlayer.load(_aiPlugin, this);
 			}
 			catch (Exception e)
 			{

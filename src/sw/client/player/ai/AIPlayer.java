@@ -18,6 +18,7 @@
 package sw.client.player.ai;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,12 +34,12 @@ import sw.client.player.Player;
  */
 public abstract class AIPlayer extends Player
 {
-	public static AIPlayer load(File source) throws ClassNotFoundException, MalformedURLException, InstantiationException, IllegalAccessException
+	public static AIPlayer load(File source, IGameStateManager stateManager) throws ClassNotFoundException, MalformedURLException, InstantiationException, IllegalAccessException, IllegalArgumentException, SecurityException, InvocationTargetException, NoSuchMethodException
 	{
 		URL p = new URL(source.getPath());
 		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());
 		Class<?> c = loader.loadClass("sw.aiplugin.CustomAI");
-		return (AIPlayer)c.newInstance();
+		return (AIPlayer)c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 	}
 	
 	private AIPlayer _self;
