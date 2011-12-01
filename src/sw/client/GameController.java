@@ -18,6 +18,7 @@
 package sw.client;
 
 import java.io.File;
+import java.net.MalformedURLException;
 
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
@@ -46,7 +47,7 @@ public class GameController implements ClientListener, IGameStateManager
     /**
      * creates an new GameController
      */
-    public GameController(IClient client, File aiPlugin)
+    public GameController(IClient client)
     {
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
@@ -56,7 +57,15 @@ public class GameController implements ClientListener, IGameStateManager
     {
     	if (_aiPlugin.exists())
     	{
-    		_localPlayer = AIPlayer.load(_aiPlugin);
+    		try
+			{
+				_localPlayer = AIPlayer.load(_aiPlugin);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Unable to load AI Player. Loading default player instead");
+				_localPlayer = new HumanPlayer(this);
+			}
     	}
     	else
     	{

@@ -33,12 +33,12 @@ import sw.client.player.Player;
  */
 public abstract class AIPlayer extends Player
 {
-	public static AIPlayer load(File source) throws ClassNotFoundException, MalformedURLException
+	public static AIPlayer load(File source) throws ClassNotFoundException, MalformedURLException, InstantiationException, IllegalAccessException
 	{
 		URL p = new URL(source.getPath());
 		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());
 		Class<?> c = loader.loadClass("sw.aiplugin.CustomAI");
-		return null;
+		return (AIPlayer)c.newInstance();
 	}
 	
 	private AIPlayer _self;
