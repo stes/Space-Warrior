@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
-import sw.client.IGameStateManager;
+import sw.client.gcontrol.IGameStateManager;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerInput;
 

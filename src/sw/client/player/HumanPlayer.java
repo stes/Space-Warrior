@@ -20,7 +20,7 @@ package sw.client.player;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import sw.client.IGameStateManager;
+import sw.client.gcontrol.IGameStateManager;
 
 /**
  * A player controlled by a human using the keyboard<p>
