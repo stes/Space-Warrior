@@ -17,6 +17,11 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 import sw.client.IGameStateManager;
 import sw.client.player.Player;
 
@@ -28,6 +33,14 @@ import sw.client.player.Player;
  */
 public abstract class AIPlayer extends Player
 {
+	public static AIPlayer load(File source) throws ClassNotFoundException, MalformedURLException
+	{
+		URL p = new URL(source.getPath());
+		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());
+		Class<?> c = loader.loadClass("sw.aiplugin.CustomAI");
+		return null;
+	}
+	
 	private AIPlayer _self;
 	private Thread _actionThread;
 	

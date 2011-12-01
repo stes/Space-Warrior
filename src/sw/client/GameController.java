@@ -17,9 +17,12 @@
  ******************************************************************************/
 package sw.client;
 
+import java.io.File;
+
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
+import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.Packet;
 import sw.shared.data.PlayerDataSet;
@@ -36,13 +39,14 @@ public class GameController implements ClientListener, IGameStateManager
     private PlayerList _playerList;
     private IClient _client;
     private Player _localPlayer;
+    private File _aiPlugin;
     
     private boolean _isConnected;
 
     /**
      * creates an new GameController
      */
-    public GameController(IClient client)
+    public GameController(IClient client, File aiPlugin)
     {
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
         _client = client;
@@ -50,8 +54,14 @@ public class GameController implements ClientListener, IGameStateManager
     
     public void init()
     {
-    	_localPlayer = new HumanPlayer(this);
-    	//_localPlayer = new SampleAIPlayer(this);
+    	if (_aiPlugin.exists())
+    	{
+    		_localPlayer = AIPlayer.load(_aiPlugin);
+    	}
+    	else
+    	{
+    		_localPlayer = new HumanPlayer(this);
+    	}
     }
     
     @Override

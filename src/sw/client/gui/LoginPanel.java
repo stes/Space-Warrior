@@ -20,10 +20,12 @@ package sw.client.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -42,9 +44,13 @@ public class LoginPanel extends JPanel
     private JTextField _txtName;
     private AbstractButton _btnConnect;
     private AbstractButton _btnUpdate;
+    private JFileChooser _fileChooser;
+    private AbstractButton _btnChooseAI;
     private JLabel _lblIPAdress;
     private JLabel _lblName;
     private JTable _tblServers;
+    
+    private File _aiFile;
     
     private ArrayList<LoginListener> _loginListener;
 	
@@ -155,5 +161,25 @@ public class LoginPanel extends JPanel
         
         this.add(_tblServers);
         //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
+        
+        _fileChooser = new JFileChooser(System.getProperty("user.dir"));
+        
+        _btnChooseAI = new JButton("Choose AI");
+        _btnChooseAI.setBounds(100, 500, 100, 25);
+        _btnChooseAI.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+			    //Handle open button action.
+		        int returnVal = _fileChooser.showOpenDialog(_self);
+
+		        if (returnVal == JFileChooser.APPROVE_OPTION)
+		        {
+		            _aiFile = _fileChooser.getSelectedFile();
+		        }
+			}
+		});
+        this.add(_btnChooseAI);
     }
 }
