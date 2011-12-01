@@ -121,11 +121,12 @@ public class UDPHost extends Thread
             
             while(true)
             {
-            	// TODO: connless
 				_socket.receive(packet);
             	byte flag = buffer[0];
+            	System.out.println((int)flag);
+            	System.out.println(new String(buffer, 0 , packet.getLength()));
             	byte[] data = java.util.Arrays.copyOfRange(buffer, PACKET_HEADER_LENGTH, packet.getLength());
-				this.messageReceived((InetSocketAddress)packet.getSocketAddress(), flag, data, data.length);
+            	this.messageReceived((InetSocketAddress)packet.getSocketAddress(), flag, data, data.length);
             }
 		}
         catch (SocketException e)
@@ -172,19 +173,33 @@ public class UDPHost extends Thread
 		}
     }
     
+    public void sendConnless(InetSocketAddress addr, byte[] data, int len)
+    {
+    	byte[] buf = new byte[2+len];
+    	buf[0] = 's';
+    	buf[1] = 'w';
+    	System.arraycopy(data, 0, buf, 1, len);
+    	this.send(addr, UDPConnection.FLAG_CONNLESS, data, len);
+    }
+    
     protected void send(InetSocketAddress addr, byte[] data, int len)
     {
-    	this.send(addr, UDPConnection.CTRL_NONE, data, len);
+    	this.send(addr, (byte)0, data, len);
     }
     
-    protected void sendControl(InetSocketAddress addr, byte flag, byte[] data, int len)
+    protected void sendControl(InetSocketAddress addr, byte msg, byte[] data, int len)
     {
-    	this.send(addr, flag, data, len);
+    	int size = Math.min(1+len, MAX_PACKET_LENGTH-PACKET_HEADER_LENGTH);
+    	byte[] buf = new byte[size];
+    	buf[0] = msg;
+    	if(size > 1)
+    		System.arraycopy(data, 0, buf, 1, size-1);
+    	this.send(addr, UDPConnection.FLAG_CONTROL, buf, buf.length);
     }
     
-    protected void sendControl(InetSocketAddress addr, byte flag)
+    protected void sendControl(InetSocketAddress addr, byte msg)
     {
-    	this.send(addr, flag, null, 0);
+    	this.sendControl(addr, UDPConnection.FLAG_CONTROL, null, 0);
     }
     
     protected void invokeConnected(UDPConnection con)
@@ -212,6 +227,14 @@ public class UDPHost extends Thread
     
     private void messageReceived(InetSocketAddress addr, byte flag, byte[] data, int len)
     {
+    	if((flag & UDPConnection.FLAG_CONNLESS) > 0 && data.length >= 2 && data[0] == 's' && data[1] == 'w')
+    	{
+    		byte[] buf = java.util.Arrays.copyOfRange(data, 2, len);
+    		for(NetworkListener l : _networkListener)
+    			l.receivedMessageConnless(addr, buf, buf.length);
+    		return;
+    	}
+    	
     	for(int i = 0; i < _connections.length; i++)
     	{
     		if(_connections[i] != null && _connections[i].equals(addr))
@@ -221,7 +244,7 @@ public class UDPHost extends Thread
     		}
     	}
     	
-    	if(flag == UDPConnection.CTRL_CONNECT && _acceptConnections)
+    	if(data.length > 0 && data[0] == UDPConnection.CTRL_CONNECT && _acceptConnections)
 		{
     		int slot = this.getFreeSlot();
     		if(slot != -1)
@@ -236,10 +259,6 @@ public class UDPHost extends Thread
     		}
 		}
     }
-    
-    /*private void messageReceivedConnless(InetSocketAddress addr, byte[] data, int len)
-    {
-    }*/
     
     private class ConnectionUpdater extends Thread
     {

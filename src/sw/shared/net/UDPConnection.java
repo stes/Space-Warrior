@@ -24,11 +24,13 @@ import java.net.InetSocketAddress;
  */
 public class UDPConnection
 {
-	protected final static byte CTRL_NONE = 0;
-	protected final static byte CTRL_KEEPALIVE = 1;
-	protected final static byte CTRL_CONNECT = 2;
-	protected final static byte CTRL_CONNECTACCEPT = 3;
-	protected final static byte CTRL_CLOSE = 4;
+	protected final static byte FLAG_CONTROL = 1;
+	protected final static byte FLAG_CONNLESS = 2;
+	
+	protected final static byte CTRL_KEEPALIVE = 0;
+	protected final static byte CTRL_CONNECT = 1;
+	protected final static byte CTRL_CONNECTACCEPT = 2;
+	protected final static byte CTRL_CLOSE = 3;
 	
 	private enum ConnectionState
 	{
@@ -65,38 +67,43 @@ public class UDPConnection
     	{
 	    	System.out.println("connecting to " + _addr);
 	    	_state = ConnectionState.CONNECTING;
-			_host.sendControl(_addr, UDPConnection.CTRL_CONNECT);
+			this.sendControl(UDPConnection.CTRL_CONNECT);
     	}
     }
     
     protected void received(byte flag, byte[] data, int len)
     {
     	_lastRecvTime = System.currentTimeMillis();
-    	if(_state == ConnectionState.ONLINE && flag == CTRL_NONE)
+    	byte control = data[0];
+    	
+    	if((flag & UDPConnection.FLAG_CONTROL) > 0)
+    	{
+	    	if(_state == ConnectionState.OFFLINE && control == CTRL_CONNECT)
+			{
+	    		System.out.println("accepted connection from " + _addr);
+	    		_state = ConnectionState.ONLINE;
+				this.sendControl(UDPConnection.CTRL_CONNECTACCEPT);
+				_host.invokeConnected(this);
+			}
+			else if(_state == ConnectionState.CONNECTING && control == UDPConnection.CTRL_CONNECTACCEPT)
+			{
+				System.out.println("connected to " + _addr);
+				_state = ConnectionState.ONLINE;
+				_host.invokeConnected(this);
+			}
+			else if(control == UDPConnection.CTRL_CLOSE)
+			{
+				String reason = new String(data, 1, len);
+				if(reason.length() > 0)
+		    		System.out.println("disconnected (" + reason + ")");
+		    	else
+		    		System.out.println("disconnected");
+				_host.invokeDisconnected(this, reason);
+			}
+    	}
+    	else if(_state == ConnectionState.ONLINE)
 		{
 			_host.invokeReceivedMessage(this, data, len);
-		}
-    	else if(_state == ConnectionState.OFFLINE && flag == CTRL_CONNECT)
-		{
-    		System.out.println("accepted connection from " + _addr);
-    		_state = ConnectionState.ONLINE;
-			_host.sendControl(_addr, UDPConnection.CTRL_CONNECTACCEPT);
-			_host.invokeConnected(this);
-		}
-		else if(_state == ConnectionState.CONNECTING && flag == UDPConnection.CTRL_CONNECTACCEPT)
-		{
-			System.out.println("connected to " + _addr);
-			_state = ConnectionState.ONLINE;
-			_host.invokeConnected(this);
-		}
-		else if(flag == UDPConnection.CTRL_CLOSE)
-		{
-			String reason = new String(data, 0, len);
-			if(reason.length() > 0)
-	    		System.out.println("disconnected (" + reason + ")");
-	    	else
-	    		System.out.println("disconnected");
-			_host.invokeDisconnected(this, reason);
 		}
     }
     
@@ -116,9 +123,20 @@ public class UDPConnection
 			if(now - _lastSendTime > 1000 && _state == ConnectionState.ONLINE)
 			{
 				//System.out.println("send keepalive to " + _addr);
-				_host.sendControl(_addr, CTRL_KEEPALIVE);
+				this.sendControl(CTRL_KEEPALIVE);
 			}
 		}
+    }
+    
+    private void sendControl(byte msg, byte[] data, int len)
+    {
+    	_host.sendControl(_addr, msg, data, len);
+    	_lastSendTime = System.currentTimeMillis();
+    }
+    
+    private void sendControl(byte msg)
+    {
+    	this.sendControl(msg, null, 0);
     }
     
     public void send(byte[] data, int len)
@@ -139,7 +157,7 @@ public class UDPConnection
     		else
     			System.out.println("disconnected from  " + _addr);
 	    	byte[] data = reason.getBytes();
-	    	_host.sendControl(_addr, CTRL_CLOSE, data, data.length);
+	    	this.sendControl(CTRL_CLOSE, data, data.length);
 	    	_state = ConnectionState.ERROR;
 	    	_host.invokeDisconnected(this, "");
     	}

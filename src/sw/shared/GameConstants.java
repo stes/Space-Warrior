@@ -27,9 +27,8 @@ public final class GameConstants
 {
     // Netzwerk
     public final static int STANDARD_PORT = 2489;
-    public final static byte[] NET_CONNLESS = new byte[]{(byte)0, (byte)0, (byte)0};
-    public final static byte[] SERVER_INFO_REQUEST = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '?'};
-    public final static byte[] SERVER_INFO_RESPONSE = new byte[]{(byte)0, (byte)0, (byte)0, 's', 'w', 'i', 'n', 'f', 'o', '!'};
+    public final static byte[] SERVER_INFO_REQUEST = new byte[]{'i', 'n', 'f', 'o', '?'};
+    public final static byte[] SERVER_INFO_RESPONSE = new byte[]{'i', 'n', 'f', 'o', '!'};
     
     // Gameplay
     public final static int TICKS_PER_SECOND = 40;
