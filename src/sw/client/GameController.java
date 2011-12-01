@@ -37,9 +37,11 @@ import sw.shared.data.Shot;
 public class GameController implements ClientListener, IGameStateManager
 {
 	private static File _aiPlugin;
+	private static boolean _runAI = false;
 	public static void setAIPlugin(File source)
 	{
 		_aiPlugin = source;
+		_runAI = true;
 	}
 	
     private PlayerList _playerList;
@@ -60,7 +62,7 @@ public class GameController implements ClientListener, IGameStateManager
     
     public void init()
     {
-    	if (_aiPlugin.exists())
+    	if (_runAI && _aiPlugin.exists())
     	{
     		try
 			{
