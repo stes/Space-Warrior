@@ -67,7 +67,7 @@ public class UDPConnection
     	{
 	    	System.out.println("connecting to " + _addr);
 	    	_state = ConnectionState.CONNECTING;
-			this.sendControl(UDPConnection.CTRL_CONNECT);
+			this.sendControl(UDPConnection.CTRL_CONNECT, null, 0);
     	}
     }
     
@@ -82,7 +82,7 @@ public class UDPConnection
 			{
 	    		System.out.println("accepted connection from " + _addr);
 	    		_state = ConnectionState.ONLINE;
-				this.sendControl(UDPConnection.CTRL_CONNECTACCEPT);
+				this.sendControl(UDPConnection.CTRL_CONNECTACCEPT, null, 0);
 				_host.invokeConnected(this);
 			}
 			else if(_state == ConnectionState.CONNECTING && control == UDPConnection.CTRL_CONNECTACCEPT)
@@ -123,7 +123,7 @@ public class UDPConnection
 			if(now - _lastSendTime > 1000 && _state == ConnectionState.ONLINE)
 			{
 				//System.out.println("send keepalive to " + _addr);
-				this.sendControl(CTRL_KEEPALIVE);
+				this.sendControl(CTRL_KEEPALIVE, null, 0);
 			}
 		}
     }
@@ -132,11 +132,6 @@ public class UDPConnection
     {
     	_host.sendControl(_addr, msg, data, len);
     	_lastSendTime = System.currentTimeMillis();
-    }
-    
-    private void sendControl(byte msg)
-    {
-    	this.sendControl(msg, null, 0);
     }
     
     public void send(byte[] data, int len)

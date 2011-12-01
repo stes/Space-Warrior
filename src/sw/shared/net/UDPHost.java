@@ -29,8 +29,8 @@ import java.util.ArrayList;
  */
 public class UDPHost extends Thread
 {
-	public final static int MAX_PACKET_LENGTH = 4*1024;
-	public final static int PACKET_HEADER_LENGTH = 1;
+	private final static int MAX_PACKET_LENGTH = 2*1024;
+	private final static int PACKET_HEADER_LENGTH = 1;
 	
     private DatagramSocket _socket;
     private UDPConnection[] _connections;
@@ -123,8 +123,6 @@ public class UDPHost extends Thread
             {
 				_socket.receive(packet);
             	byte flag = buffer[0];
-            	System.out.println((int)flag);
-            	System.out.println(new String(buffer, 0 , packet.getLength()));
             	byte[] data = java.util.Arrays.copyOfRange(buffer, PACKET_HEADER_LENGTH, packet.getLength());
             	this.messageReceived((InetSocketAddress)packet.getSocketAddress(), flag, data, data.length);
             }
@@ -153,18 +151,23 @@ public class UDPHost extends Thread
     
     private void send(InetSocketAddress addr, byte flag, byte[] data, int len)
     {
+    	int size = PACKET_HEADER_LENGTH + len;
+		if(size > MAX_PACKET_LENGTH) // TODO: exception
+		{
+			System.out.println("error: packet is too big");
+			return;
+		}
+		
+		byte[] buf = new byte[size];
+        buf[0] = flag;
+        if(data != null && len > 0)
+        {
+        	System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, len);
+        }
+    	
     	try
     	{
-            byte[] buf = new byte[MAX_PACKET_LENGTH];
-            buf[0] = flag;
-            int packetSize = PACKET_HEADER_LENGTH;
-            if(data != null)
-            {
-            	int size = Math.min(data.length, buf.length-PACKET_HEADER_LENGTH);
-            	System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, size);
-            	packetSize += size;
-            }
-            DatagramPacket packet = new DatagramPacket(buf, packetSize, addr);
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, addr);
             _socket.send(packet);
     	}
     	catch (IOException e)
@@ -178,7 +181,7 @@ public class UDPHost extends Thread
     	byte[] buf = new byte[2+len];
     	buf[0] = 's';
     	buf[1] = 'w';
-    	System.arraycopy(data, 0, buf, 1, len);
+    	System.arraycopy(data, 0, buf, 2, len);
     	this.send(addr, UDPConnection.FLAG_CONNLESS, data, len);
     }
     
@@ -189,17 +192,11 @@ public class UDPHost extends Thread
     
     protected void sendControl(InetSocketAddress addr, byte msg, byte[] data, int len)
     {
-    	int size = Math.min(1+len, MAX_PACKET_LENGTH-PACKET_HEADER_LENGTH);
-    	byte[] buf = new byte[size];
+    	byte[] buf = new byte[1+len];
     	buf[0] = msg;
-    	if(size > 1)
-    		System.arraycopy(data, 0, buf, 1, size-1);
+    	if(len > 0)
+    		System.arraycopy(data, 0, buf, 1, len);
     	this.send(addr, UDPConnection.FLAG_CONTROL, buf, buf.length);
-    }
-    
-    protected void sendControl(InetSocketAddress addr, byte msg)
-    {
-    	this.sendControl(addr, UDPConnection.FLAG_CONTROL, null, 0);
     }
     
     protected void invokeConnected(UDPConnection con)

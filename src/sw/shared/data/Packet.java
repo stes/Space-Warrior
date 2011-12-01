@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sw.shared.data;
 
-import sw.shared.net.UDPHost;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -29,7 +28,7 @@ public class Packet
     
     public Packet(byte type)
     {
-    	_data = new byte[UDPHost.MAX_PACKET_LENGTH-UDPHost.PACKET_HEADER_LENGTH];
+    	_data = new byte[2*1024-1]; // FIXME
     	_data[0] = type;
     	_cur = 1;
     }
