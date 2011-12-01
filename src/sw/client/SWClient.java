@@ -124,4 +124,7 @@ public class SWClient implements IClient, NetworkListener
             }
         }
     }
+    
+    @Override
+    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len) {}
 }

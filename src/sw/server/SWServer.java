@@ -206,4 +206,7 @@ public class SWServer implements IServer, NetworkListener
             _controller.processPlayerInput(client.name(), new PlayerInput(packet));
         }
 	}
+	
+	@Override
+    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len) {}
 }
