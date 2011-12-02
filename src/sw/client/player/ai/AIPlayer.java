@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
+import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.Player;
 
@@ -26,7 +28,7 @@ import sw.client.player.Player;
  * @author Redix, stes, Abbadonn
  * @version 27.11.2011
  */
-public abstract class AIPlayer extends Player
+public abstract class AIPlayer extends Player implements GameStateChangedListener
 {
 	private AIPlayer _self;
 	private Thread _actionThread;
@@ -61,4 +63,10 @@ public abstract class AIPlayer extends Player
 	 * to the game controller
 	 */
 	protected abstract void tick();
+	
+	@Override
+	public void gameStateChanged(GameStateChangedEvent e)
+	{
+		
+	}
 }

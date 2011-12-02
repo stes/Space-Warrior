@@ -66,6 +66,8 @@ public class LoginPanel extends JPanel implements ClientListener
 		_loginListener = new ArrayList<LoginListener>();
 		
 		this.initComponents();
+		_txtName.setText("test");
+		_txtIPAdresse.setText("localhost");
 		this.repaint();
 	}
 	

@@ -3,6 +3,6 @@
 	<classpathentry excluding="sw/client/ActionDelegate.java|sw/client/ServerFinder.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="lib/TableLayout.jar"/>
+	<classpathentry kind="src" path="/AIPlayers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

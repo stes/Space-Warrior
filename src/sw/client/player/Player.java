@@ -98,7 +98,7 @@ public abstract class Player
 	/**
 	 * @return the player data set
 	 */
-	protected PlayerDataSet getDataSet()
+	public PlayerDataSet getDataSet()
 	{
 		return _dataSet;
 	}

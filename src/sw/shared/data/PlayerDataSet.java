@@ -92,9 +92,9 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	 */
 	public PlayerDataSet(PlayerDataSet dataset)
 	{
-		_name = dataset.getName();
+		_name = new String(dataset.getName());
 		_isLocal = dataset.local();
-		_location = dataset.getPosition();
+		_location = new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY());
 		_direction = dataset.getDirection();
 		_score = dataset.getScore();
 

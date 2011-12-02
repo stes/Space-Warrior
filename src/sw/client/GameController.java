@@ -18,13 +18,17 @@
 package sw.client;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import sw.aiplugin.CustomAI;
+import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
+import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.AIPlayerLoader;
-import sw.client.player.ai.SampleAIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
@@ -51,6 +55,7 @@ public class GameController implements ClientListener, IGameStateManager
     private IClient _client;
     private Player _localPlayer;
 
+    private ArrayList<GameStateChangedListener> _gameStateChangedListener;
     
     private boolean _isConnected;
 
@@ -60,6 +65,7 @@ public class GameController implements ClientListener, IGameStateManager
     public GameController(IClient client)
     {
         _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
+        _gameStateChangedListener = new ArrayList<GameStateChangedListener>();
         _client = client;
 		_localPlayer = new HumanPlayer(this);
     }
@@ -77,13 +83,16 @@ public class GameController implements ClientListener, IGameStateManager
 			{
 				e.printStackTrace();
 				System.out.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new SampleAIPlayer(this);
+				_localPlayer = new HumanPlayer(this);
 			}
     	}
     	else
     	{
+    		System.out.println("no AI player selected, using default player");
     		_localPlayer = new HumanPlayer(this);
     	}
+    	if (_localPlayer instanceof AIPlayer)
+    		_gameStateChangedListener.add((AIPlayer)_localPlayer);
     }
     
     @Override
@@ -129,7 +138,16 @@ public class GameController implements ClientListener, IGameStateManager
                 _localPlayer.setDataSet(d);
             }
         }
+        this.invokeStateChanged(new GameStateChangedEvent(this, _localPlayer.getDataSet(), _playerList));
     }
+
+	private void invokeStateChanged(GameStateChangedEvent e)
+	{
+		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
+			return;
+		for (GameStateChangedListener l : _gameStateChangedListener)
+			l.gameStateChanged(e);
+	}
 
 	@Override
 	public void stateUpdated(PlayerInput input)
