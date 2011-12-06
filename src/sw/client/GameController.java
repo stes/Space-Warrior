@@ -30,6 +30,7 @@ import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Shot;
 import sw.shared.data.Unpacker;
 
@@ -103,7 +104,7 @@ public class GameController implements ClientListener, IGameStateManager
     public void chatMessage(String name, String text) {}
     
 	@Override
-	public void serverInfo(Unpacker packet) {}
+	public void serverInfo(ServerInfo info) {}
    
     @Override
     public PlayerList getPlayerList()

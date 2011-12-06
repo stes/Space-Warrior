@@ -23,7 +23,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientListener;
 import sw.client.IClient;
@@ -33,6 +35,7 @@ import sw.client.player.Player;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
 public class GamePanel extends JPanel implements ClientListener, ActionListener
@@ -46,8 +49,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     @SuppressWarnings("unused")
 	private AbstractButton _btnChat; //TODO remove?
     private TransparentTextField _txtChatmessage;
-    private TransparentTextArea _lstChathistory;    
+    private TransparentTextArea _lstChathistory;
+    private JScrollPane _scroll;
     private JTable _tblPoints;
+    
+    private PlayerTableModel _model;
 	
     // other references
     private IGameStateManager _stateManager;
@@ -59,6 +65,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		super();
 		_stateManager = stateManager;
 		_client = client;
+		_model = new PlayerTableModel();
 		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
@@ -136,11 +143,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _lstChathistory.setBounds(100, chat, 645, 90);
         this.add(_lstChathistory);
         
-        _tblPoints = new JTable(GameConstants.MAX_PLAYERS, 2);
-        _tblPoints.setBounds(1100, 100, 200, 150);
-        _tblPoints.getColumnModel().getColumn(0).setHeaderValue("Player");
-        _tblPoints.getColumnModel().getColumn(1).setHeaderValue("Points");
-        this.add(_tblPoints);
+        _tblPoints = new JTable(_model);
+        
+        _scroll = new JScrollPane(_tblPoints);
+		_scroll.setBounds(1100, 100, 200, 150);
+        
+        this.add(_scroll);
         
         _playingField = new PlayingFieldPanel(_stateManager);
         _playingField.setBounds(
@@ -172,14 +180,63 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	public void shot(Unpacker packet)	{}
 
 	@Override
-	public void snapshot(Unpacker packet) {}
+	public void snapshot(Unpacker packet)
+	{
+		_model.fireTableDataChanged();
+	}
 	
 	@Override
-	public void serverInfo(Unpacker packet) {}
+	public void serverInfo(ServerInfo info) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		this.processInput();
+	}
+	
+	private class PlayerTableModel extends AbstractTableModel
+	{
+		
+		private static final long serialVersionUID = 3882143612301180149L;
+		
+		private String[] _headers = {"Player", "Score"};
+		
+		@Override
+		public String getColumnName(int col)
+		{
+			return _headers[col]; 
+		}
+
+		@Override
+		public int getColumnCount()
+		{
+			return _headers.length;
+		}
+
+		@Override
+		public int getRowCount()
+		{
+			return _stateManager.getPlayerList().count();
+		}
+
+		@Override
+		public Object getValueAt(int row, int col)
+		{
+			switch (col)
+			{
+				case 0:
+					return _stateManager.getPlayerList().dataAt(row).getName();
+				case 1:
+					return _stateManager.getPlayerList().dataAt(row).getScore();
+				default:
+					return null;
+			}
+		}
+		
+		@Override
+		public boolean isCellEditable(int row, int col)
+		{
+			return false;
+		}
 	}
 }
