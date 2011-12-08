@@ -21,24 +21,25 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientListener;
 import sw.client.GameController;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
 public class LoginPanel extends JPanel implements ClientListener
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = -2058618925690808825L;
 	
 	private LoginPanel _self;
@@ -51,7 +52,11 @@ public class LoginPanel extends JPanel implements ClientListener
     private AbstractButton _btnChooseAI;
     private JLabel _lblIPAdress;
     private JLabel _lblName;
+    private JScrollPane _scroll;
     private JTable _tblServers;
+    
+    private Vector<ServerInfo> _servers;
+    private ServerTableModel _model;
     
     private ArrayList<LoginListener> _loginListener;
 	
@@ -64,6 +69,9 @@ public class LoginPanel extends JPanel implements ClientListener
 		this.setBackground(Color.GREEN);
 		
 		_loginListener = new ArrayList<LoginListener>();
+		
+		_servers = new Vector<ServerInfo>();
+		_model = new ServerTableModel();
 		
 		this.initComponents();
 		_txtName.setText("test");
@@ -93,9 +101,9 @@ public class LoginPanel extends JPanel implements ClientListener
     public void foundServer(String serverIp, String serverName, int maxPlayers, int playerCount)
     {
         //_serverListe.();  new line
-        _tblServers.setValueAt(serverName, _tblServers.getRowCount()-1, 0);
+        /*_tblServers.setValueAt(serverName, _tblServers.getRowCount()-1, 0);
         _tblServers.setValueAt(playerCount + "/" + maxPlayers, _tblServers.getRowCount()-1, 1);
-        _tblServers.setValueAt(serverIp, _tblServers.getRowCount()-1, 2);
+        _tblServers.setValueAt(serverIp, _tblServers.getRowCount()-1, 2);*/
     }
 	
     public String getIP()
@@ -150,6 +158,7 @@ public class LoginPanel extends JPanel implements ClientListener
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
+				_servers.clear();
 				for (LoginListener l : _loginListener)
 					l.scan();
 			}
@@ -163,15 +172,13 @@ public class LoginPanel extends JPanel implements ClientListener
         _lblName = new JLabel("Name");
         _lblName.setBounds(100, 50, 100, 25);
         this.add(_lblName);
-               
-        _tblServers = new JTable(0, 3);
-        _tblServers.setBounds(1100, 300, 200, 300);
-        _tblServers.getColumnModel().getColumn(0).setHeaderValue("Server");
-        _tblServers.getColumnModel().getColumn(1).setHeaderValue("Players/Max");
-        _tblServers.getColumnModel().getColumn(0).setWidth(110);
         
-        this.add(_tblServers);
-        //_serverListe.setzeBearbeiterMarkierungGeaendert("_tblMarkierungGeaendert");
+        _tblServers = new JTable(_model);
+        
+        _scroll = new JScrollPane(_tblServers);
+		_scroll.setBounds(1100, 300, 200, 300);
+        
+        this.add(_scroll);
         
         _fileChooser = new JFileChooser(System.getProperty("user.dir"));
         
@@ -195,13 +202,10 @@ public class LoginPanel extends JPanel implements ClientListener
     }
     
     @Override
-	public void serverInfo(Unpacker packet)
+	public void serverInfo(ServerInfo info)
 	{
-    	String name = packet.readUTF();
-    	int maxPlayers = packet.readShort();
-    	int playerCount = packet.readShort();
-    	
-    	System.out.println(name + " - " + maxPlayers + " - " + playerCount);
+    	_servers.add(info);
+    	_model.fireTableDataChanged();
 	}
 
 	@Override
@@ -214,4 +218,49 @@ public class LoginPanel extends JPanel implements ClientListener
 	public void shot(Unpacker packet) {}
 	@Override
 	public void snapshot(Unpacker packet) {}
+	
+	private class ServerTableModel extends AbstractTableModel
+	{
+		private static final long serialVersionUID = 6220705373064394932L;
+		
+		private String[] _headers = {"Server", "Players/Max"};
+		
+		@Override
+		public String getColumnName(int col)
+		{
+			return _headers[col]; 
+		}
+
+		@Override
+		public int getColumnCount()
+		{
+			return _headers.length;
+		}
+
+		@Override
+		public int getRowCount()
+		{
+			return _servers.size();
+		}
+
+		@Override
+		public Object getValueAt(int row, int col)
+		{
+			switch (col)
+			{
+				case 0:
+					return _servers.get(row).getServerName();
+				case 1:
+					return _servers.get(row).getMaxPlayers() + "/" + _servers.get(row).getNumPayers();
+				default:
+					return null;
+			}
+		}
+		
+		@Override
+		public boolean isCellEditable(int row, int col)
+		{
+			return false;
+		}
+	}
 }

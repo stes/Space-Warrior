@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 /**
  * @author Redix, stes, Abbadonn
@@ -60,7 +61,7 @@ public interface ClientListener
     /**
      * Invoked when server info was received
      * 
-     * @param packet server info
+     * @param info server info
      */
-    public void serverInfo(Unpacker packet);
+    public void serverInfo(ServerInfo info);
 }

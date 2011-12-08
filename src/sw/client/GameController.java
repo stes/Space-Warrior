@@ -34,6 +34,7 @@ import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Shot;
 import sw.shared.data.Unpacker;
 
@@ -134,6 +135,24 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
+<<<<<<< HEAD
+=======
+	public void serverInfo(ServerInfo info) {}
+   
+    @Override
+    public PlayerList getPlayerList()
+    {
+        return _playerList;
+    }
+    @Override
+    public void shot(Unpacker packet)
+    {
+        Shot s = Shot.read(packet);
+        ShotPool.addShot(s);
+    }
+
+    @Override
+>>>>>>> 3ebafd22c905e2b78042073b81659ec8e02564a2
 	public void snapshot(Unpacker snapshot)
 	{
 		_playerList.update(snapshot);

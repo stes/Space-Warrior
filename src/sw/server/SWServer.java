@@ -24,6 +24,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
@@ -41,7 +42,7 @@ public class SWServer implements IServer, NetworkListener
     private int _tick;
     private long _lastUpdate;
     
-    private String _serverName;
+    private ServerInfo _serverInfo;
     
     private GameController _controller;
     
@@ -55,7 +56,7 @@ public class SWServer implements IServer, NetworkListener
     	_netServer.start();
         _clients = new Vector<Client>();
         _lastUpdate = System.currentTimeMillis();
-        this.setServerName("Server");
+        _serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
     }
     
     public void close()
@@ -65,17 +66,14 @@ public class SWServer implements IServer, NetworkListener
     
     public void setServerName(String name)
     {
-    	_serverName = name;
-        System.out.println("server name: " + _serverName);
+    	_serverInfo.setServerName(name);
+        System.out.println("server name: " + name);
     }
     
     public Packer getServerInfos()
     {
-        Packer info = new Packer((byte)0);
-        info.writeUTF(_serverName);
-        info.writeShort(_propertyLoader.getMaxPlayers());
-        info.writeShort(_clients.size());
-        return info;
+    	_serverInfo.setNumPayers(_clients.size());
+        return _serverInfo.write();
     }
     
     private Client getClientbyName(String name)
