@@ -8,4 +8,6 @@ package sw.client.gcontrol;
 public interface GameStateChangedListener
 {
 	public void gameStateChanged(GameStateChangedEvent e);
+	
+	public void newRound(GameStateChangedEvent e);
 }

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
+import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerInput;
@@ -67,6 +68,13 @@ public class SampleAIPlayer extends AIPlayer
 		inp.setDirection(1);
 		inp.setRotation(0);
 		inp.setShot(0);
+	}
+
+	@Override
+	public void newRound(GameStateChangedEvent e)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import java.io.Serializable;
+
 import javax.management.AttributeNotFoundException;
 
 import sw.shared.Packettype;
@@ -25,8 +27,13 @@ import sw.shared.Packettype;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerList
+public class PlayerList implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4378922344210371238L;
+	
 	private PlayerDataSet[] _list;
 	private PlayerInput[] _input;
 

@@ -40,126 +40,130 @@ import sw.shared.data.Unpacker;
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
- */ 
+ */
 public class GameController implements ClientListener, IGameStateManager
 {
 	private static File _aiPlugin;
 	private static boolean _runAI = false;
+
 	public static void setAIPlugin(File source)
 	{
 		_aiPlugin = source;
 		_runAI = true;
 	}
-	
-    private PlayerList _playerList;
-    private IClient _client;
-    private Player _localPlayer;
 
-    private ArrayList<GameStateChangedListener> _gameStateChangedListener;
-    
-    private boolean _isConnected;
+	private PlayerList _playerList;
+	private IClient _client;
+	private Player _localPlayer;
 
-    /**
-     * creates an new GameController
-     */
-    public GameController(IClient client)
-    {
-        _playerList = new PlayerList(GameConstants.MAX_PLAYERS);
-        _gameStateChangedListener = new ArrayList<GameStateChangedListener>();
-        _client = client;
-		_localPlayer = new HumanPlayer(this);
-    }
-    
-    public void init()
-    {
-    	if (_runAI && _aiPlugin.exists())
-    	{
-    		try
+	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
+
+	private boolean _isConnected;
+
+	/**
+	 * creates an new GameController
+	 */
+	public GameController(IClient client)
+	{
+		_playerList = new PlayerList(GameConstants.MAX_PLAYERS);
+		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+		_client = client;
+		_localPlayer = new CustomAI(this);
+	}
+
+	public void init()
+	{
+		if (_runAI && _aiPlugin.exists())
+		{
+			try
 			{
-    			System.out.println("Successfully loaded AI Player.");
+				System.out.println("Successfully loaded AI Player.");
 				_localPlayer = AIPlayerLoader.load(_aiPlugin, this);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				System.out.println("Unable to load AI Player. Loading default player instead");
+				System.out
+						.println("Unable to load AI Player. Loading default player instead");
 				_localPlayer = new HumanPlayer(this);
 			}
-    	}
-    	else
-    	{
-    		System.out.println("no AI player selected, using default player");
-    		_localPlayer = new HumanPlayer(this);
-    	}
-    	if (_localPlayer instanceof AIPlayer)
-    		_gameStateChangedListener.add((AIPlayer)_localPlayer);
-    }
-    
-    @Override
-    public void connected()
-    {
-    	setIsConnected(true);
-    	this.init();
-    }
-    
-    @Override
-    public void disconnected(String reason)
-    {
-    	setIsConnected(false);
-    }
-        
-    @Override
-    public void chatMessage(String name, String text) {}
-    
+		}
+		else
+		{
+			System.out.println("no AI player selected, using default player");
+			_localPlayer = new CustomAI(this);
+		}
+		if (_localPlayer instanceof AIPlayer)
+			_gameStateChangedListener.add((AIPlayer) _localPlayer);
+	}
+
 	@Override
-	public void serverInfo(Unpacker packet) {}
-   
-    @Override
-    public PlayerList getPlayerList()
-    {
-        return _playerList;
-    }
-    @Override
-    public void shot(Unpacker packet)
-    {
-        Shot s = Shot.read(packet);
-        ShotPool.addShot(s);
-    }
-
-    @Override
-	public void snapshot(Unpacker snapshot)
-    {
-        _playerList.update(snapshot);
-        for (int i = 0; i < _playerList.size(); i++)
-        {
-            PlayerDataSet d = _playerList.dataAt(i);
-            if (d != null && d.local())
-            {
-                _localPlayer.setDataSet(d);
-            }
-        }
-        this.invokeStateChanged(new GameStateChangedEvent(this, _localPlayer.getDataSet(), _playerList));
-    }
-
-	private void invokeStateChanged(GameStateChangedEvent e)
+	public void connected()
 	{
-		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
-			return;
-		for (GameStateChangedListener l : _gameStateChangedListener)
-			l.gameStateChanged(e);
+		setIsConnected(true);
+		this.init();
+	}
+
+	@Override
+	public void disconnected(String reason)
+	{
+		setIsConnected(false);
+	}
+
+	@Override
+	public void chatMessage(String name, String text)
+	{
+	}
+
+	@Override
+	public void serverInfo(Unpacker packet)
+	{
+	}
+
+	@Override
+	public PlayerList getPlayerList()
+	{
+		return _playerList;
+	}
+
+	@Override
+	public void shot(Unpacker packet)
+	{
+		Shot s = Shot.read(packet);
+		ShotPool.addShot(s);
+	}
+
+	@Override
+	public void snapshot(Unpacker snapshot)
+	{
+		_playerList.update(snapshot);
+		for (int i = 0; i < _playerList.size(); i++)
+		{
+			PlayerDataSet d = _playerList.dataAt(i);
+			if (d != null && d.local())
+			{
+				_localPlayer.setDataSet(d);
+			}
+		}
+		GameStateChangedEvent e = new GameStateChangedEvent(this);
+		e.setLocalDataSet(new PlayerDataSet(_localPlayer.getDataSet()));
+		// TODO only pass a copy!
+		e.setPlayerList(_playerList);
+		this.invokeStateChanged(e);
 	}
 
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
-        Packer p = input.write();
-        _client.sendPacket(p);
+		Packer p = input.write();
+		_client.sendPacket(p);
 	}
-	
+
 	public boolean getIsPlayerHuman()
 	{
 		return (_localPlayer instanceof HumanPlayer);
 	}
+
 	@Override
 	public Player getLocalPlayer()
 	{
@@ -180,5 +184,23 @@ public class GameController implements ClientListener, IGameStateManager
 	public boolean isReady()
 	{
 		return this.isConnected();
+	}
+
+	private void invokeStateChanged(GameStateChangedEvent e)
+	{
+		if (_gameStateChangedListener == null
+				|| _gameStateChangedListener.size() == 0)
+			return;
+		for (GameStateChangedListener l : _gameStateChangedListener)
+			l.gameStateChanged(e);
+	}
+
+	private void invokeNewRound(GameStateChangedEvent e)
+	{
+		if (_gameStateChangedListener == null
+				|| _gameStateChangedListener.size() == 0)
+			return;
+		for (GameStateChangedListener l : _gameStateChangedListener)
+			l.newRound(e);
 	}
 }
