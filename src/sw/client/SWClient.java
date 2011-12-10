@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
@@ -157,11 +158,12 @@ public class SWClient implements IClient, NetworkListener
     	if(java.util.Arrays.equals(header, GameConstants.SERVER_INFO_RESPONSE))
 		{
 			byte[] info = java.util.Arrays.copyOfRange(data, GameConstants.SERVER_INFO_RESPONSE.length, len);
-			Unpacker packet = new Unpacker(info);
+			ServerInfo serverInfo = ServerInfo.read(new Unpacker(info));
+			serverInfo.setAddress(addr);
 			
 			for (ClientListener l : _clientListener)
             {
-                l.serverInfo(packet);
+                l.serverInfo(serverInfo);
             }
 		}
     }

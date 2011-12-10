@@ -32,6 +32,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
 import sw.shared.data.PlayerDataSet;
+import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
 
@@ -240,7 +241,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 	public void chatMessage(String name, String text) {}
 	
 	@Override
-	public void serverInfo(Unpacker packet) {}
+	public void serverInfo(ServerInfo info) {}
 	
 	private enum GUIMode {LOGIN, GAME}
 	private void setGUIMode(GUIMode mode)
