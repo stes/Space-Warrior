@@ -117,11 +117,6 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public void serverInfo(Unpacker packet)
-	{
-	}
-
-	@Override
 	public PlayerList getPlayerList()
 	{
 		return _playerList;
@@ -135,24 +130,6 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-<<<<<<< HEAD
-=======
-	public void serverInfo(ServerInfo info) {}
-   
-    @Override
-    public PlayerList getPlayerList()
-    {
-        return _playerList;
-    }
-    @Override
-    public void shot(Unpacker packet)
-    {
-        Shot s = Shot.read(packet);
-        ShotPool.addShot(s);
-    }
-
-    @Override
->>>>>>> 3ebafd22c905e2b78042073b81659ec8e02564a2
 	public void snapshot(Unpacker snapshot)
 	{
 		_playerList.update(snapshot);
@@ -221,5 +198,12 @@ public class GameController implements ClientListener, IGameStateManager
 			return;
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.newRound(e);
+	}
+
+	@Override
+	public void serverInfo(ServerInfo info)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
