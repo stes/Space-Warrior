@@ -20,7 +20,6 @@ package sw.client;
 import java.io.File;
 import java.util.ArrayList;
 
-import sw.aiplugin.CustomAI;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
