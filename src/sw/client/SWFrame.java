@@ -55,7 +55,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
     private JPanel _activePanel;
     
     /**
-     * Konstruktor
+     * Creates a new SWFrame
      */
     public SWFrame()
     {
@@ -214,7 +214,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 
     
     /**
-     * aktualisiert die Serverliste
+     * updates server list
      */
     private void updateServerList()
     {

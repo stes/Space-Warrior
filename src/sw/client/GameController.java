@@ -191,6 +191,7 @@ public class GameController implements ClientListener, IGameStateManager
 			l.gameStateChanged(e);
 	}
 
+	@SuppressWarnings("unused")
 	private void invokeNewRound(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null
