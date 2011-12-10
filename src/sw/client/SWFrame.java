@@ -19,6 +19,7 @@ package sw.client;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.InetSocketAddress;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -59,15 +60,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 	private JPanel _activePanel;
 
-	//
-	// public void btnUpdate_Action(ActionEvent e)
-	// {
-	// if (e.getID() == ActionEvent.ACTION_PERFORMED)
-	// {
-	// System.out.println("update server list");
-	// }
-	// }
-
 	/**
 	 * Creates a new SWFrame
 	 */
@@ -84,12 +76,11 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 		System.out.println("init");
 
-		this.setSize(GameConstants.REFERENCE_X
-				+ GameConstants.PLAYING_FIELD_WIDTH, GameConstants.REFERENCE_Y
-				+ GameConstants.PLAYING_FIELD_HEIGHT);
+		this.setSize(GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
+				GameConstants.REFERENCE_Y+ GameConstants.PLAYING_FIELD_HEIGHT);
 
-		_gamePanel = new GamePanel(1400, 900, _controller, _client);
-		_loginPanel = new LoginPanel(1400, 900);
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
 
 		_client.addClientListener(_gamePanel);
 		_client.addClientListener(_loginPanel);
@@ -263,9 +254,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	/**
 	 * Connects to a server
 	 */
-	private void connect(String ip)
+	private void connect(InetSocketAddress ip)
 	{
-		_client.connect(ip, GameConstants.STANDARD_PORT);
+		_client.connect(ip.getAddress().getHostAddress(), ip.getPort());
 	}
 
 	private void setGUIMode(GUIMode mode)

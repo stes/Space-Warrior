@@ -58,7 +58,7 @@ public final class GameConstants
     public final static int PLAYER_SIZE = 64;
     
     // Playing field
-    public final static int PLAYING_FIELD_WIDTH = 1200;
+    public final static int PLAYING_FIELD_WIDTH = 1400;
     public final static int PLAYING_FIELD_HEIGHT = 900;
     public final static int REFERENCE_X = 0;
     public final static int REFERENCE_Y = 0;

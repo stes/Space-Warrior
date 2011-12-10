@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -46,8 +45,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	private static final long serialVersionUID = -8751902318746091633L;
 	
 	private PlayingFieldPanel _playingField;
-    @SuppressWarnings("unused")
-	private AbstractButton _btnChat; //TODO remove?
     private TransparentTextField _txtChatmessage;
     private TransparentTextArea _lstChathistory;
     private JScrollPane _scroll;
@@ -58,7 +55,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     // other references
     private IGameStateManager _stateManager;
     private IClient _client;
-    //private BfInterpreter _bfInterpreter; TODO integrate later
     
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
@@ -69,7 +65,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
-		this.setBackground(Color.RED);
+		this.setBackground(Color.BLACK);
 	}
 
 	/**
@@ -96,32 +92,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
 		p.writeUTF(_txtChatmessage.getText());
 		_client.sendPacket(p);
-		
-		
-//        if ( !nachricht.isEmpty())
-//        {
-////            if (!FortyTwo.answer(nachricht))
-////            {
-////                if (nachricht.startsWith("/"))
-////                {
-////                    if (nachricht.startsWith("/bf"))
-////                    {
-////                        System.out.println("[BF]" + nachricht);
-////                        _bfInterpreter.readCode(nachricht);
-////                    }
-////                    if (nachricht.startsWith("/exe"))
-////                    {
-////                        System.out.println("[BF] Execute");
-////                        _bfInterpreter.execute();
-////                    }
-////                }
-////                else
-//                {
-//                	// TODO send message
-//                    //sendChatmessage(nachricht);
-//                }
-////            }
-//        }
 		_txtChatmessage.setText("");
     }
 
@@ -129,11 +99,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     {
         int chat = 700;
         
-//        _btnChat = new JButton("Chat");
-//        _btnChat.setBounds(640, chat+100, 100, 25);
-//        this.add(_btnChat);
-//        _btnChat.addActionListener(this);
-    	
         _txtChatmessage = new TransparentTextField();
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
         this.add(_txtChatmessage);
@@ -141,6 +106,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     	
         _lstChathistory = new TransparentTextArea();
         _lstChathistory.setBounds(100, chat, 645, 90);
+        _lstChathistory.setEditable(false);
         this.add(_lstChathistory);
         
         _tblPoints = new JTable(_model);
@@ -173,11 +139,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	@Override
 	public void chatMessage(String name, String text)
 	{
-		_lstChathistory.append("[ " + name + " ] " + text + "\n");
+		this.appendMessage("[ " + name + " ] " + text + "\n");
 	}
 
 	@Override
-	public void shot(Unpacker packet)	{}
+	public void shot(Unpacker packet) {}
 
 	@Override
 	public void snapshot(Unpacker packet)
@@ -192,6 +158,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		this.processInput();
+	}
+	
+	private void appendMessage(String message)
+	{
+		_lstChathistory.append(message);
+		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
 	}
 	
 	private class PlayerTableModel extends AbstractTableModel

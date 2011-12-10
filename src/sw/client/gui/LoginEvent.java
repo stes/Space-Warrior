@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client.gui;
 
+import java.net.InetSocketAddress;
 import java.util.EventObject;
 
 public class LoginEvent extends EventObject
@@ -26,22 +27,22 @@ public class LoginEvent extends EventObject
 	 */
 	private static final long serialVersionUID = -5796463210269739871L;
 	
-	private String _ipAdress;
+	private InetSocketAddress _ipAdress;
 	private String _loginName;
 
-	public LoginEvent(Object source, String ipAdress, String loginName)
+	public LoginEvent(Object source, InetSocketAddress ipAdress, String loginName)
 	{
 		super(source);
 		this.setIPAdress(ipAdress);
 		this.setLoginName(loginName);
 	}
 
-	public void setIPAdress(String ipAdress)
+	public void setIPAdress(InetSocketAddress ipAdress)
 	{
 		this._ipAdress = ipAdress;
 	}
 
-	public String getIPAdress()
+	public InetSocketAddress getIPAdress()
 	{
 		return _ipAdress;
 	}

@@ -69,7 +69,7 @@ public class GameController implements ClientListener, IGameStateManager
 		_playerList = new PlayerList(GameConstants.MAX_PLAYERS);
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
-		_localPlayer = new CustomAI(this);
+		_localPlayer = new HumanPlayer(this);
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class GameController implements ClientListener, IGameStateManager
 		else
 		{
 			System.out.println("no AI player selected, using default player");
-			_localPlayer = new CustomAI(this);
+			_localPlayer = new HumanPlayer(this);
 		}
 		if (_localPlayer instanceof AIPlayer)
 			_gameStateChangedListener.add((AIPlayer) _localPlayer);
