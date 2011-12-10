@@ -19,6 +19,7 @@ package sw.client;
 
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -26,42 +27,47 @@ import sw.shared.data.Unpacker;
 
 public interface ClientListener
 {
-    /**
-     * Invoked after connection
-     */
-    public void connected();
-	
-    /**
-     * Invoked after disconnect
-     */
-    public void disconnected(String reason);
-    
-    /**
-     * Invoked when a chat message was received
-     * 
-     * @param name the addresser's name
-     * @param text the chat message
-     */
-    public void chatMessage(String name, String text);
-    
-    /**
-     * Invoked when a shot was received
-     * 
-     * @param packet the shot
-     */
-    public void shot(Unpacker packet);
-    
-    /**
-     * Invoked when a snapshot was received
-     * 
-     * @param packet snapshot
-     */
-    public void snapshot(Unpacker packet);
-    
-    /**
-     * Invoked when server info was received
-     * 
-     * @param info server info
-     */
-    public void serverInfo(ServerInfo info);
+	/**
+	 * Invoked when a chat message was received
+	 * 
+	 * @param name
+	 *            the addresser's name
+	 * @param text
+	 *            the chat message
+	 */
+	public void chatMessage(String name, String text);
+
+	/**
+	 * Invoked after connection
+	 */
+	public void connected();
+
+	/**
+	 * Invoked after disconnect
+	 */
+	public void disconnected(String reason);
+
+	/**
+	 * Invoked when server info was received
+	 * 
+	 * @param info
+	 *            server info
+	 */
+	public void serverInfo(ServerInfo info);
+
+	/**
+	 * Invoked when a shot was received
+	 * 
+	 * @param packet
+	 *            the shot
+	 */
+	public void shot(Unpacker packet);
+
+	/**
+	 * Invoked when a snapshot was received
+	 * 
+	 * @param packet
+	 *            snapshot
+	 */
+	public void snapshot(Unpacker packet);
 }

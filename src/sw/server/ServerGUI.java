@@ -32,6 +32,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -44,53 +45,54 @@ public class ServerGUI extends JFrame implements ActionListener
 	 */
 	private static final long serialVersionUID = -2967561560162321268L;
 	private JTextArea _area;
-	private JList/*<Client>*/ _clientList;
+	private JList/* <Client> */_clientList;
 	private JScrollPane _scroll;
 	private JButton _kickButton;
 	private JTextField _nameField;
 	private SWServer _server;
-	
+
 	/**
 	 * erstellt eine GUI für die Serverkonsole
 	 * 
-	 * @param width 
+	 * @param width
 	 * @param height
 	 */
 	public ServerGUI(int width, int height)
 	{
 		super("SW Server");
-		
-	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    this.setBounds(0,0,width,height);
+
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBounds(0, 0, width, height);
 		JPanel panel = (JPanel) this.getContentPane();
-        panel.setPreferredSize(new Dimension(width,height));
-        panel.setLayout(null);
-        
+		panel.setPreferredSize(new Dimension(width, height));
+		panel.setLayout(null);
+
 		_area = new JTextArea();
 		_area.setEditable(false);
-		
+
 		_scroll = new JScrollPane(_area);
-		_scroll.setBounds(10, 10, width/3*2-20, height-90);
-		
-		_clientList = new JList/*<Client>*/();
-		_clientList.setBounds(20+width/3*2-20, 10, width/3-30, height-90);
-		
+		_scroll.setBounds(10, 10, width / 3 * 2 - 20, height - 90);
+
+		_clientList = new JList/* <Client> */();
+		_clientList.setBounds(20 + width / 3 * 2 - 20, 10, width / 3 - 30,
+				height - 90);
+
 		_kickButton = new JButton("Kick");
-		_kickButton.setBounds(20+width/3*2-20, height-70, 100, 20);
+		_kickButton.setBounds(20 + width / 3 * 2 - 20, height - 70, 100, 20);
 		_kickButton.addActionListener(this);
-		
+
 		_nameField = new JTextField();
-		_nameField.setBounds(10, height-70, width/3*2-20, 20);
+		_nameField.setBounds(10, height - 70, width / 3 * 2 - 20, 20);
 		_nameField.addActionListener(this);
-		
-	    panel.add(_scroll);
-	    panel.add(_clientList);
-	    panel.add(_kickButton);
-	    panel.add(_nameField);
-	    
-	    this.setVisible(true);
-	    this.toFront();
-	    
+
+		panel.add(_scroll);
+		panel.add(_clientList);
+		panel.add(_kickButton);
+		panel.add(_nameField);
+
+		this.setVisible(true);
+		this.toFront();
+
 		OutputStream output = new OutputStream()
 		{
 			@Override
@@ -98,36 +100,36 @@ public class ServerGUI extends JFrame implements ActionListener
 			{
 				addMessage(new String(b, off, len));
 			}
-			
+
 			@Override
 			public void write(int b) throws IOException
 			{
 				addMessage(String.valueOf((char) b));
 			}
 		};
-	    
-	    System.setOut(new PrintStream(output, true));
-	    System.setErr(new PrintStream(output, true));
+
+		System.setOut(new PrintStream(output, true));
+		System.setErr(new PrintStream(output, true));
 	}
-	
+
 	@Override
-    public void actionPerformed(ActionEvent e)
-    {
-    	if(e.getActionCommand().equals("Kick"))
-    	{
-    		Client cl = (Client)_clientList.getSelectedValue();
-    		if(_server != null && cl != null)
-    		{
-    		    _server.drop(cl, "You were kicked");
-    		}
-    	}
-    	else
-    	{
-    	    _server.setServerName(e.getActionCommand());
-    	    _nameField.setText("");
-        }
-    }
-	
+	public void actionPerformed(ActionEvent e)
+	{
+		if (e.getActionCommand().equals("Kick"))
+		{
+			Client cl = (Client) _clientList.getSelectedValue();
+			if (_server != null && cl != null)
+			{
+				_server.drop(cl, "You were kicked");
+			}
+		}
+		else
+		{
+			_server.setServerName(e.getActionCommand());
+			_nameField.setText("");
+		}
+	}
+
 	/**
 	 * setzt die Clientliste
 	 * 
@@ -137,7 +139,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	{
 		_clientList.setListData(data);
 	}
-	
+
 	/**
 	 * setzt den Netserver
 	 * 
@@ -145,13 +147,14 @@ public class ServerGUI extends JFrame implements ActionListener
 	 */
 	public void setNetServer(SWServer server)
 	{
-	    _server = server;
+		_server = server;
 	}
-	
-    /**
+
+	/**
 	 * fügt Systemnachrichten ein
 	 * 
-	 * @param str neue Textnachricht
+	 * @param str
+	 *            neue Textnachricht
 	 */
 	private void addMessage(String str)
 	{

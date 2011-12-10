@@ -25,45 +25,45 @@ import sw.shared.net.UDPConnection;
  */
 public class Client
 {
-    private UDPConnection _connection;
-    private String _name;
-    private boolean _isPlaying;
+	private UDPConnection _connection;
+	private String _name;
+	private boolean _isPlaying;
 
-    public Client(UDPConnection connection, String name)
-    {
-    	_connection = connection;
-        _name = name;
-        _isPlaying = false;
-    }
-    
-    public void enterGame()
-    {
-        _isPlaying = true;
-    }
-    
-    public UDPConnection getConnection()
-    {
-        return _connection;
-    }
-    
-    public boolean isPlaying()
-    {
-        return _isPlaying;
-    }
-    
-    public String getName()
-    {
-        return _name;
-    }
-    
-    public void setName(String name)
-    {
-        _name = name;
-    }
-    
-    @Override
-    public String toString()
-    {
-        return _name;
-    }
+	public Client(UDPConnection connection, String name)
+	{
+		_connection = connection;
+		_name = name;
+		_isPlaying = false;
+	}
+
+	public void enterGame()
+	{
+		_isPlaying = true;
+	}
+
+	public UDPConnection getConnection()
+	{
+		return _connection;
+	}
+
+	public String getName()
+	{
+		return _name;
+	}
+
+	public boolean isPlaying()
+	{
+		return _isPlaying;
+	}
+
+	public void setName(String name)
+	{
+		_name = name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return _name;
+	}
 }

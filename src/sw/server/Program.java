@@ -22,60 +22,79 @@ import java.awt.event.WindowListener;
 import java.util.Vector;
 
 import sw.shared.GameConstants;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class Program implements WindowListener
 {
-    private ServerGUI _serverGUI;
-    private SWServer _server;
-    
-    public Program()
-    {
-        _serverGUI = new ServerGUI(800, 400);
-        _server = new SWServer(GameConstants.STANDARD_PORT);
-        _serverGUI.setNetServer(_server);
-        
-        _serverGUI.addWindowListener(this);
-    }
-    
-    public void run()
-    {
-        int lastSize = 0;
-        while (true)
-        {
-            Vector<Client> clientList = _server.clListe();
-            if(clientList.size() != lastSize)
-            {
-            	_serverGUI.setClientList(clientList);
-            	lastSize = clientList.size();
-            }
-            _server.tick();
-        }
-    }
-    
-    @Override
-	public void windowActivated(WindowEvent e) { }
-    @Override
-	public void windowClosed(WindowEvent e) { }
-    @Override
+	public static void main(String[] args)
+	{
+		(new Program()).run();
+	}
+	private ServerGUI _serverGUI;
+
+	private SWServer _server;
+
+	public Program()
+	{
+		_serverGUI = new ServerGUI(800, 400);
+		_server = new SWServer(GameConstants.STANDARD_PORT);
+		_serverGUI.setNetServer(_server);
+
+		_serverGUI.addWindowListener(this);
+	}
+
+	public void run()
+	{
+		int lastSize = 0;
+		while (true)
+		{
+			Vector<Client> clientList = _server.clListe();
+			if (clientList.size() != lastSize)
+			{
+				_serverGUI.setClientList(clientList);
+				lastSize = clientList.size();
+			}
+			_server.tick();
+		}
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e)
+	{
+	}
+
+	@Override
 	public void windowClosing(WindowEvent e)
-    {
-    	// TODO: is this everything?
-    	_server.close();
-    }
-    @Override
-	public void windowDeactivated(WindowEvent e) { }
-    @Override
-	public void windowDeiconified(WindowEvent e) { }
-    @Override
-	public void windowIconified(WindowEvent e) { }
-    @Override
-	public void windowOpened(WindowEvent e) { }
-    
-    public static void main(String[] args)
-    {
-        (new Program()).run();
-    }
+	{
+		// TODO: is this everything?
+		_server.close();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e)
+	{
+	}
 }

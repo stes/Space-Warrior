@@ -18,6 +18,7 @@
 package sw.client;
 
 import sw.shared.data.Packer;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package sw.client;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class Program
 {
-    public static void main(String[] args)
-    {
-        new SWFrame();
-    }
+	public static void main(String[] args)
+	{
+		new SWFrame();
+	}
 }

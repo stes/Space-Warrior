@@ -29,6 +29,7 @@ import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
 import sw.shared.net.UDPHost;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
@@ -37,134 +38,142 @@ public class SWClient implements IClient, NetworkListener
 {
 	private UDPHost _netClient;
 	private UDPConnection _server;
-	
-    private ArrayList<ClientListener> _clientListener;
-    
-    /**
-     * Erzeugt einen neuen NetClient
-     * 
-     * @param ip Die IP Adresse des Servers
-     * @param port Der Port
-     */
-    public SWClient()
-    {
-    	_netClient = new UDPHost(null, 1);
-    	_netClient.addNetworkListener(this);
-        _clientListener = new ArrayList<ClientListener>();
-        _netClient.start();
-    }
-    
-    public void close()
-    {
-    	_netClient.close("quit");
-    }
-    
-    public void connect(String ip, int port)
-    {
-    	_netClient.connect(new InetSocketAddress(ip, port));
-    }
-    
-    public void scan()
-    {
-    	// TODO: improve this
-    	try
-    	{
-    		String local = InetAddress.getLocalHost().getHostName();
-    		for(InetAddress a : InetAddress.getAllByName(local))
-    		{
-    			byte[] addr = a.getAddress();
-    			if(addr.length != 4 || addr[0] != (byte)192 || addr[1] != (byte)168)
-    				continue;
-    			addr[3] = (byte)255;
-    			byte[] buffer = GameConstants.SERVER_INFO_REQUEST;
-    			InetSocketAddress sockAddr = new InetSocketAddress(InetAddress.getByAddress(addr), GameConstants.STANDARD_PORT);
-    			_netClient.sendConnless(sockAddr, buffer, buffer.length);
-    		}
-    	}
-    	catch (Exception e)
-    	{
-    	}
-    }
-    
-    public void addClientListener(ClientListener listener)
-    {
-        _clientListener.add(listener);
-    }
-    
-    @Override
-    public void sendPacket(Packer packet)
-    {
-    	if(_server != null)
-    	{
-	    	byte[] data = packet.toByteArray();
-	    	_server.send(data, data.length);
-    	}
-    }
-    
-    @Override
-    public void connected(UDPConnection connection)
-    {
-    	_server = connection;
-        for (ClientListener l : _clientListener)
-        {
-            l.connected();
-        }
-    }
-    
-    @Override
-    public void disconnected(UDPConnection connection, String reason)
-    {
-    	_server = null;
-        for (ClientListener l : _clientListener)
-        {
-            l.disconnected(reason);
-        }
-    }
-    
-    @Override
-    public void receivedMessage(UDPConnection connection, byte[] data, int len)
-    {
-        Unpacker packet = new Unpacker(data);
-        
-        if(Packettype.SV_CHAT_MESSAGE == packet.getType())
-        {
-            String name = packet.readUTF();
-            String text = packet.readUTF();
-            for (ClientListener l : _clientListener)
-            {
-                l.chatMessage(name, text);
-            }
-        }
-        else if(Packettype.SV_SNAPSHOT == packet.getType())
-        {
-            for (ClientListener l : _clientListener)
-            {
-                l.snapshot(packet);
-            }
-        }
-        else if(Packettype.SV_SHOT == packet.getType())
-        {
-            for (ClientListener l : _clientListener)
-            {
-                l.shot(packet);
-            }
-        }
-    }
-    
-    @Override
-    public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len)
-    {
-    	byte[] header = java.util.Arrays.copyOf(data, GameConstants.SERVER_INFO_RESPONSE.length);
-    	if(java.util.Arrays.equals(header, GameConstants.SERVER_INFO_RESPONSE))
+
+	private ArrayList<ClientListener> _clientListener;
+
+	/**
+	 * Erzeugt einen neuen NetClient
+	 * 
+	 * @param ip
+	 *            Die IP Adresse des Servers
+	 * @param port
+	 *            Der Port
+	 */
+	public SWClient()
+	{
+		_netClient = new UDPHost(null, 1);
+		_netClient.addNetworkListener(this);
+		_clientListener = new ArrayList<ClientListener>();
+		_netClient.start();
+	}
+
+	public void addClientListener(ClientListener listener)
+	{
+		_clientListener.add(listener);
+	}
+
+	public void close()
+	{
+		_netClient.close("quit");
+	}
+
+	public void connect(String ip, int port)
+	{
+		_netClient.connect(new InetSocketAddress(ip, port));
+	}
+
+	@Override
+	public void connected(UDPConnection connection)
+	{
+		_server = connection;
+		for (ClientListener l : _clientListener)
 		{
-			byte[] info = java.util.Arrays.copyOfRange(data, GameConstants.SERVER_INFO_RESPONSE.length, len);
+			l.connected();
+		}
+	}
+
+	@Override
+	public void disconnected(UDPConnection connection, String reason)
+	{
+		_server = null;
+		for (ClientListener l : _clientListener)
+		{
+			l.disconnected(reason);
+		}
+	}
+
+	@Override
+	public void receivedMessage(UDPConnection connection, byte[] data, int len)
+	{
+		Unpacker packet = new Unpacker(data);
+
+		if (Packettype.SV_CHAT_MESSAGE == packet.getType())
+		{
+			String name = packet.readUTF();
+			String text = packet.readUTF();
+			for (ClientListener l : _clientListener)
+			{
+				l.chatMessage(name, text);
+			}
+		}
+		else if (Packettype.SV_SNAPSHOT == packet.getType())
+		{
+			for (ClientListener l : _clientListener)
+			{
+				l.snapshot(packet);
+			}
+		}
+		else if (Packettype.SV_SHOT == packet.getType())
+		{
+			for (ClientListener l : _clientListener)
+			{
+				l.shot(packet);
+			}
+		}
+	}
+
+	@Override
+	public void receivedMessageConnless(InetSocketAddress addr, byte[] data,
+			int len)
+	{
+		byte[] header = java.util.Arrays.copyOf(data,
+				GameConstants.SERVER_INFO_RESPONSE.length);
+		if (java.util.Arrays.equals(header, GameConstants.SERVER_INFO_RESPONSE))
+		{
+			byte[] info = java.util.Arrays.copyOfRange(data,
+					GameConstants.SERVER_INFO_RESPONSE.length, len);
 			ServerInfo serverInfo = ServerInfo.read(new Unpacker(info));
 			serverInfo.setAddress(addr);
-			
+
 			for (ClientListener l : _clientListener)
-            {
-                l.serverInfo(serverInfo);
-            }
+			{
+				l.serverInfo(serverInfo);
+			}
 		}
-    }
+	}
+
+	public void scan()
+	{
+		// TODO: improve this
+		try
+		{
+			String local = InetAddress.getLocalHost().getHostName();
+			for (InetAddress a : InetAddress.getAllByName(local))
+			{
+				byte[] addr = a.getAddress();
+				if (addr.length != 4 || addr[0] != (byte) 192
+						|| addr[1] != (byte) 168)
+					continue;
+				addr[3] = (byte) 255;
+				byte[] buffer = GameConstants.SERVER_INFO_REQUEST;
+				InetSocketAddress sockAddr = new InetSocketAddress(
+						InetAddress.getByAddress(addr),
+						GameConstants.STANDARD_PORT);
+				_netClient.sendConnless(sockAddr, buffer, buffer.length);
+			}
+		}
+		catch (Exception e)
+		{
+		}
+	}
+
+	@Override
+	public void sendPacket(Packer packet)
+	{
+		if (_server != null)
+		{
+			byte[] data = packet.toByteArray();
+			_server.send(data, data.length);
+		}
+	}
 }

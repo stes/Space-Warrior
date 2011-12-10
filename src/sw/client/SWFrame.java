@@ -35,215 +35,239 @@ import sw.shared.data.PlayerDataSet;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
-
 /**
-* @author Redix, stes, Abbadonn
-* @version 25.11.11
-*/
-public class SWFrame extends JFrame implements WindowListener, ClientListener, LoginListener
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
+ */
+public class SWFrame extends JFrame implements WindowListener, ClientListener,
+		LoginListener
 {
-    /**
+	private enum GUIMode
+	{
+		LOGIN, GAME
+	}
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1575599799999464878L;
- 
-    private GameController _controller;
-    private SWClient _client;
+	private GameController _controller;
 
-    private GamePanel _gamePanel;
-    private LoginPanel _loginPanel;
-    private JPanel _activePanel;
-    
-    /**
-     * Creates a new SWFrame
-     */
-    public SWFrame()
-    {
-        super("Space Warrior");
-        
-        _client = new SWClient();
-        _controller = new GameController(_client);
-        _client.addClientListener(this);
-        _client.addClientListener(_controller);
-        
-        this.addWindowListener(this);
-        
-        System.out.println("init");
-        
-        this.setSize(
-        		GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
-        		GameConstants.REFERENCE_Y + GameConstants.PLAYING_FIELD_HEIGHT);
-        
-        _gamePanel = new GamePanel(1400, 900, _controller, _client);
-        _loginPanel = new LoginPanel(1400, 900);
-        
-        _client.addClientListener(_gamePanel);
-        _client.addClientListener(_loginPanel);
-        
-        _loginPanel.addLoginListener(this);
-      
-        this.setGUIMode(GUIMode.LOGIN);
-        this.setVisible(true);
-        this.toFront();
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        try
-        {
+	private SWClient _client;
+	private GamePanel _gamePanel;
+	private LoginPanel _loginPanel;
+
+	private JPanel _activePanel;
+
+	//
+	// public void btnUpdate_Action(ActionEvent e)
+	// {
+	// if (e.getID() == ActionEvent.ACTION_PERFORMED)
+	// {
+	// System.out.println("update server list");
+	// }
+	// }
+
+	/**
+	 * Creates a new SWFrame
+	 */
+	public SWFrame()
+	{
+		super("Space Warrior");
+
+		_client = new SWClient();
+		_controller = new GameController(_client);
+		_client.addClientListener(this);
+		_client.addClientListener(_controller);
+
+		this.addWindowListener(this);
+
+		System.out.println("init");
+
+		this.setSize(GameConstants.REFERENCE_X
+				+ GameConstants.PLAYING_FIELD_WIDTH, GameConstants.REFERENCE_Y
+				+ GameConstants.PLAYING_FIELD_HEIGHT);
+
+		_gamePanel = new GamePanel(1400, 900, _controller, _client);
+		_loginPanel = new LoginPanel(1400, 900);
+
+		_client.addClientListener(_gamePanel);
+		_client.addClientListener(_loginPanel);
+
+		_loginPanel.addLoginListener(this);
+
+		this.setGUIMode(GUIMode.LOGIN);
+		this.setVisible(true);
+		this.toFront();
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		try
+		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
-        catch (Exception e)
-        {
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
-//        this.initEastereggs();
-        this.updateServerList();
-    }
-      
+		// this.initEastereggs();
+		this.updateServerList();
+	}
 
-//	    
-//	    public void btnUpdate_Action(ActionEvent e)
-//	    {
-//	    	if (e.getID() == ActionEvent.ACTION_PERFORMED)
-//	    	{
-//	    		System.out.println("update server list");
-//	    	}
-//	    }
-    
-    @Override
-    public void disconnected(String reason)
-    {
-    	this.setGUIMode(GUIMode.LOGIN);
-    }
-	
-    @Override
-    public void shot(Unpacker packet) {}
-    
-    @Override
-    public void snapshot(Unpacker packet)
-    {
-        if(_controller.getPlayerList().count() == 0)
-            return;
-        PlayerDataSet[] spielerScore = new PlayerDataSet[_controller.getPlayerList().count()];
-        int anzahl = 0;
-        for(int i = 0; i < GameConstants.MAX_PLAYERS; i++)
-        {
-            if(_controller.getPlayerList().dataAt(i) != null)
-            {
-                spielerScore[anzahl] = _controller.getPlayerList().dataAt(i);
-                anzahl++;
-            }
-        }
-        
-        java.util.Arrays.sort(spielerScore);
-        this.repaint();
-        
-        /*for(int i = 0; i < spielerScore.length; i++)
-        {
-            _tblPoints.setValueAt(spielerScore[spielerScore.length-i].name(), i, 0);
-            _tblPoints.setValueAt(spielerScore[spielerScore.length-i].punkte(), i, 1);
-        }
-        for(int i = spielerScore.length; i < _tblPoints.getRowCount(); i++)
-        {
-            _tblPoints.setValueAt("", i, 0);
-            _tblPoints.setValueAt("", i, 1);
-        }*/
-    }
-    
-    public void tick()
-    {
-    }
-    
-    @Override
-    public void windowActivated(WindowEvent e) { }
-    
-    @Override
-    public void windowClosed(WindowEvent e) { }
-    
-    @Override
-    public void windowClosing(WindowEvent e)
-    {
-    	// TODO: is this everything?
-    	_client.close();
-    }
-    
-    @Override
-    public void windowDeactivated(WindowEvent e) { }
-    
-    @Override
-    public void windowDeiconified(WindowEvent e) { }
-    
-    @Override
-    public void windowIconified(WindowEvent e) { }
-    
-    @Override
-    public void windowOpened(WindowEvent e) { }
-    
-     
-//    private void initEastereggs()
-//    {
-//        OutputStream output = new OutputStream()
-//        {
-//            @Override
-//            public void write(byte[] b, int off, int len)
-//            {
-//                _lstChathistory.append(new String(b, off, len));
-//            }
-//            
-//            @Override
-//            public void write(int b) throws IOException
-//            {
-//                _lstChathistory.append(String.valueOf((char) b));
-//            }
-//        };
-//        
-//        InputStream input = new InputStream()
-//        {
-//            @Override
-//            public int read()
-//            {
-//                return 0;
-//            }
-//        };
-//        
-//        //System.setOut(new PrintStream(output, true));
-//        // -.-
-//        System.setIn(input);
-//        
-//        _bfInterpreter = new BfInterpreter();
-//    }
-    
-
-    
-    /**
-     * updates server list
-     */
-    private void updateServerList()
-    {
-    }
-    /**
-     * Connects to a server
-     */
-    private void connect(String ip)
-    {
-        _client.connect(ip, GameConstants.STANDARD_PORT);
-    }
+	@Override
+	public void chatMessage(String name, String text)
+	{
+	}
 
 	@Override
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
-			
+
 		Packer start = new Packer(Packettype.CL_START_INFO);
 		start.writeUTF(_loginPanel.getName());
 		_client.sendPacket(start);
 	}
 
 	@Override
-	public void chatMessage(String name, String text) {}
-	
+	public void disconnected(String reason)
+	{
+		this.setGUIMode(GUIMode.LOGIN);
+	}
+
 	@Override
-	public void serverInfo(ServerInfo info) {}
-	
-	private enum GUIMode {LOGIN, GAME}
+	public void login(LoginEvent e)
+	{
+		this.connect(e.getIPAdress());
+	}
+
+	@Override
+	public void scan()
+	{
+		_client.scan();
+	}
+
+	@Override
+	public void serverInfo(ServerInfo info)
+	{
+	}
+
+	@Override
+	public void shot(Unpacker packet)
+	{
+	}
+
+	@Override
+	public void snapshot(Unpacker packet)
+	{
+		if (_controller.getPlayerList().count() == 0)
+			return;
+		PlayerDataSet[] spielerScore = new PlayerDataSet[_controller
+				.getPlayerList().count()];
+		int anzahl = 0;
+		for (int i = 0; i < GameConstants.MAX_PLAYERS; i++)
+		{
+			if (_controller.getPlayerList().dataAt(i) != null)
+			{
+				spielerScore[anzahl] = _controller.getPlayerList().dataAt(i);
+				anzahl++;
+			}
+		}
+
+		java.util.Arrays.sort(spielerScore);
+		this.repaint();
+
+		/*
+		 * for(int i = 0; i < spielerScore.length; i++) {
+		 * _tblPoints.setValueAt(spielerScore[spielerScore.length-i].name(), i,
+		 * 0);
+		 * _tblPoints.setValueAt(spielerScore[spielerScore.length-i].punkte(),
+		 * i, 1); } for(int i = spielerScore.length; i <
+		 * _tblPoints.getRowCount(); i++) { _tblPoints.setValueAt("", i, 0);
+		 * _tblPoints.setValueAt("", i, 1); }
+		 */
+	}
+
+	public void tick()
+	{
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e)
+	{
+	}
+
+	// private void initEastereggs()
+	// {
+	// OutputStream output = new OutputStream()
+	// {
+	// @Override
+	// public void write(byte[] b, int off, int len)
+	// {
+	// _lstChathistory.append(new String(b, off, len));
+	// }
+	//
+	// @Override
+	// public void write(int b) throws IOException
+	// {
+	// _lstChathistory.append(String.valueOf((char) b));
+	// }
+	// };
+	//
+	// InputStream input = new InputStream()
+	// {
+	// @Override
+	// public int read()
+	// {
+	// return 0;
+	// }
+	// };
+	//
+	// //System.setOut(new PrintStream(output, true));
+	// // -.-
+	// System.setIn(input);
+	//
+	// _bfInterpreter = new BfInterpreter();
+	// }
+
+	@Override
+	public void windowClosed(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e)
+	{
+		// TODO: is this everything?
+		_client.close();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e)
+	{
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e)
+	{
+	}
+
+	/**
+	 * Connects to a server
+	 */
+	private void connect(String ip)
+	{
+		_client.connect(ip, GameConstants.STANDARD_PORT);
+	}
+
 	private void setGUIMode(GUIMode mode)
 	{
 		if (_activePanel != null)
@@ -262,18 +286,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener, L
 		this.repaint();
 	}
 
-
-
-	@Override
-	public void login(LoginEvent e)
+	/**
+	 * updates server list
+	 */
+	private void updateServerList()
 	{
-		this.connect(e.getIPAdress());
-	}
-
-
-	@Override
-	public void scan()
-	{
-		_client.scan();
 	}
 }

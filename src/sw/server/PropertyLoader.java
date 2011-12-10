@@ -24,9 +24,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Loads the server properties from the file <p>
+ * Loads the server properties from the file
+ * <p>
  * specified by {@see sw.ServerConstants#PROPERTIES_PATH}
- *
+ * 
  * @author stes
  * @version 26.11.11
  */
@@ -34,11 +35,11 @@ public class PropertyLoader
 {
 	private Properties _properties;
 	private File _propertiesFile;
-	
+
 	private String _serverName;
 	private int _maxPlayers;
 	private int _port;
-	
+
 	/**
 	 * Creates a new property loader
 	 */
@@ -57,7 +58,7 @@ public class PropertyLoader
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * @return the maximum number of players
 	 */
@@ -65,7 +66,7 @@ public class PropertyLoader
 	{
 		return _maxPlayers;
 	}
-	
+
 	/**
 	 * @return the port
 	 */
@@ -86,30 +87,33 @@ public class PropertyLoader
 	{
 		System.out.println("init");
 		_propertiesFile.createNewFile();
-		
+
 		FileOutputStream out = new FileOutputStream(_propertiesFile);
 		_properties.setProperty("Server_Name", "Server_42");
 		_properties.setProperty("Max_Players", "6");
 		_properties.setProperty("Port", "2489");
-		
+
 		_properties.store(out, "This file contains the server properties.");
 	}
 
 	private void load() throws IOException
 	{
 		System.out.println("load");
-		FileInputStream in = new FileInputStream(ServerConstants.PROPERTIES_PATH);
+		FileInputStream in = new FileInputStream(
+				ServerConstants.PROPERTIES_PATH);
 		_properties.load(in);
-		
+
 		this.setServerName(_properties.getProperty("Server_Name"));
-		this.setMaxPlayers(Integer.parseInt(_properties.getProperty("Max_Players")));
+		this.setMaxPlayers(Integer.parseInt(_properties
+				.getProperty("Max_Players")));
 		this.setPort(Integer.parseInt(_properties.getProperty("Port")));
-		
+
 		in.close();
 	}
 
 	/**
-	 * @param maxPlayers the maximum number of players
+	 * @param maxPlayers
+	 *            the maximum number of players
 	 */
 	private void setMaxPlayers(int maxPlayers)
 	{
@@ -117,7 +121,8 @@ public class PropertyLoader
 	}
 
 	/**
-	 * @param port the port
+	 * @param port
+	 *            the port
 	 */
 	private void setPort(int port)
 	{
@@ -125,7 +130,8 @@ public class PropertyLoader
 	}
 
 	/**
-	 * @param serverName the server name
+	 * @param serverName
+	 *            the server name
 	 */
 	private void setServerName(String serverName)
 	{

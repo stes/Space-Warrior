@@ -18,19 +18,20 @@
 package sw.server;
 
 import sw.shared.GameConstants;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public class ServerConsole
 {
-    public static void main(String[] args)
-    {
-        SWServer _netServer = new SWServer(GameConstants.STANDARD_PORT);
-        
-        while (true)
-        {
-            _netServer.tick();
-        }
-    }
+	public static void main(String[] args)
+	{
+		SWServer _netServer = new SWServer(GameConstants.STANDARD_PORT);
+
+		while (true)
+		{
+			_netServer.tick();
+		}
+	}
 }

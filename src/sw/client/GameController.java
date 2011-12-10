@@ -72,6 +72,41 @@ public class GameController implements ClientListener, IGameStateManager
 		_localPlayer = new CustomAI(this);
 	}
 
+	@Override
+	public void chatMessage(String name, String text)
+	{
+	}
+
+	@Override
+	public void connected()
+	{
+		setIsConnected(true);
+		this.init();
+	}
+
+	@Override
+	public void disconnected(String reason)
+	{
+		setIsConnected(false);
+	}
+
+	public boolean getIsPlayerHuman()
+	{
+		return (_localPlayer instanceof HumanPlayer);
+	}
+
+	@Override
+	public Player getLocalPlayer()
+	{
+		return _localPlayer;
+	}
+
+	@Override
+	public PlayerList getPlayerList()
+	{
+		return _playerList;
+	}
+
 	public void init()
 	{
 		if (_runAI && _aiPlugin.exists())
@@ -98,28 +133,20 @@ public class GameController implements ClientListener, IGameStateManager
 			_gameStateChangedListener.add((AIPlayer) _localPlayer);
 	}
 
-	@Override
-	public void connected()
+	public boolean isConnected()
 	{
-		setIsConnected(true);
-		this.init();
+		return _isConnected;
 	}
 
 	@Override
-	public void disconnected(String reason)
+	public boolean isReady()
 	{
-		setIsConnected(false);
+		return this.isConnected();
 	}
 
 	@Override
-	public void chatMessage(String name, String text)
+	public void serverInfo(ServerInfo info)
 	{
-	}
-
-	@Override
-	public PlayerList getPlayerList()
-	{
-		return _playerList;
 	}
 
 	@Override
@@ -155,31 +182,14 @@ public class GameController implements ClientListener, IGameStateManager
 		_client.sendPacket(p);
 	}
 
-	public boolean getIsPlayerHuman()
+	@SuppressWarnings("unused")
+	private void invokeNewRound(GameStateChangedEvent e)
 	{
-		return (_localPlayer instanceof HumanPlayer);
-	}
-
-	@Override
-	public Player getLocalPlayer()
-	{
-		return _localPlayer;
-	}
-
-	private void setIsConnected(boolean _isConnected)
-	{
-		this._isConnected = _isConnected;
-	}
-
-	public boolean isConnected()
-	{
-		return _isConnected;
-	}
-
-	@Override
-	public boolean isReady()
-	{
-		return this.isConnected();
+		if (_gameStateChangedListener == null
+				|| _gameStateChangedListener.size() == 0)
+			return;
+		for (GameStateChangedListener l : _gameStateChangedListener)
+			l.newRound(e);
 	}
 
 	private void invokeStateChanged(GameStateChangedEvent e)
@@ -191,20 +201,8 @@ public class GameController implements ClientListener, IGameStateManager
 			l.gameStateChanged(e);
 	}
 
-	@SuppressWarnings("unused")
-	private void invokeNewRound(GameStateChangedEvent e)
+	private void setIsConnected(boolean _isConnected)
 	{
-		if (_gameStateChangedListener == null
-				|| _gameStateChangedListener.size() == 0)
-			return;
-		for (GameStateChangedListener l : _gameStateChangedListener)
-			l.newRound(e);
-	}
-
-	@Override
-	public void serverInfo(ServerInfo info)
-	{
-		// TODO Auto-generated method stub
-		
+		this._isConnected = _isConnected;
 	}
 }
