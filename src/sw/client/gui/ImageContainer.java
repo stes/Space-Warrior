@@ -28,7 +28,6 @@ import javax.imageio.ImageIO;
  */
 public class ImageContainer
 {
-    // Bezugsobjekte
     private static ImageContainer _self;
     
     public static ImageContainer getLocalInstance()
@@ -46,19 +45,16 @@ public class ImageContainer
     }
     
     private BufferedImage _localPlayerImg;
-    
-    // Attribute
 
     private BufferedImage _opposingPlayerImg;
 
     private BufferedImage _backgroundImg;
     
-    // Konstruktor
     public ImageContainer()
     {
         try
         {
-        	_backgroundImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Hintergrund.png"));
+        	_backgroundImg = ImageIO.read(getClass().getResourceAsStream("/rsc/background.jpg"));
         	_localPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship3Grey.gif"));
             _opposingPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship2Grey.gif"));
         }
