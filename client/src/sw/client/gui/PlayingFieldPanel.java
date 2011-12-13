@@ -58,15 +58,17 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 	 * @param stateManager
 	 *            a game state manager
 	 */
-	public PlayingFieldPanel(IGameStateManager stateManager)
+	public PlayingFieldPanel(int width, int height,
+			IGameStateManager stateManager)
 	{
 		super();
 		this.addMouseListener(this);
 		this.setLayout(null);
+		this.setSize(width, height);
 		_stateManager = stateManager;
 		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
 		{
-			this.addKeyListener((HumanPlayer)_stateManager.getLocalPlayer());
+			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
 		}
 		_localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
 		_opposingPlayerImg = ImageContainer.getLocalInstance()
@@ -83,11 +85,17 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(_backgroundImg, this.getX(), this.getY(),
-				this.getWidth(), this.getHeight(), null);
+		// Graphics2D g2d = (Graphics2D) g;
+		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
+		
+		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
+				GameConstants.PLAYING_FIELD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		
+		Graphics2D g2d = img.createGraphics();
+		
+		g2d.setColor(new Color(0, 0, 0, 0));
+		ShotPool.paint(g2d);
 
-		ShotPool.paint(g);
 		for (int i = 0; i < _stateManager.getPlayerList().size(); i++)
 		{
 			if (_stateManager.getPlayerList().dataAt(i) == null)
@@ -96,12 +104,12 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 			if (d.local())
 			{
 				this.paintBars(g2d, d);
-				g2d.drawImage(rotateImage(_localPlayerImg, 180 - d.getDirection()),
+				g2d.drawImage(
+						rotateImage(_localPlayerImg, 180 - d.getDirection()),
 						null, (int) d.getPosition().getX()
 								- GameConstants.PLAYER_SIZE / 2, (int) d
 								.getPosition().getY()
-								- GameConstants.PLAYER_SIZE
-								/ 2);
+								- GameConstants.PLAYER_SIZE / 2);
 			}
 			else
 			{
@@ -110,10 +118,15 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 						null, (int) d.getPosition().getX()
 								- GameConstants.PLAYER_SIZE / 2, (int) d
 								.getPosition().getY()
-								- GameConstants.PLAYER_SIZE
-								/ 2);
+								- GameConstants.PLAYER_SIZE / 2);
 			}
 		}
+		
+		//((Graphics2D) g).drawImage(img, AffineTransform.getScaleInstance(600, 600), null);
+		((Graphics2D) g).drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+
+		// ((Graphics2D)g).drawImage(img, this.getX(), this.getY(),
+		// this.getWidth(), this.getHeight(), null);
 	}
 
 	private AffineTransform affineTransform(BufferedImage src, double degrees)

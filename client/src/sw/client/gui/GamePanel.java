@@ -31,7 +31,6 @@ import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
 import sw.shared.data.ServerInfo;
@@ -62,10 +61,10 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
-		this.initComponents();
 		this.setLayout(null);
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
+		this.initComponents();
 	}
 
 	/**
@@ -97,8 +96,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 
     private void initComponents()
     {
-        int chat = 700;
-        
+        int chat = this.getHeight()-200;
+        System.out.println(chat);
         _txtChatmessage = new TransparentTextField();
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
         this.add(_txtChatmessage);
@@ -112,16 +111,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _tblPoints = new JTable(_model);
         
         _scroll = new JScrollPane(_tblPoints);
-		_scroll.setBounds(1100, 100, 200, 150);
+		_scroll.setBounds(this.getWidth()-300, 100, 200, 150);
         
         this.add(_scroll);
         
-        _playingField = new PlayingFieldPanel(_stateManager);
-        _playingField.setBounds(
-        		GameConstants.REFERENCE_X,
-        		GameConstants.REFERENCE_Y,
-        		GameConstants.PLAYING_FIELD_WIDTH,
-        		GameConstants.PLAYING_FIELD_HEIGHT);
+        _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();
         if (localPlayer instanceof HumanPlayer)
         {

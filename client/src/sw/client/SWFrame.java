@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.InetSocketAddress;
@@ -76,9 +77,19 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 		System.out.println("init");
 
-		this.setSize(GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
-				GameConstants.REFERENCE_Y+ GameConstants.PLAYING_FIELD_HEIGHT);
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		
+		//this.setSize(1000, 500);
+		
+		this.setExtendedState(MAXIMIZED_BOTH);
+		System.out.println(this.getSize().toString());
+		//this.setSize(GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
+		//		GameConstants.REFERENCE_Y+ GameConstants.PLAYING_FIELD_HEIGHT);
 
+		this.setResizable(false);
+		
+		
+		
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
 

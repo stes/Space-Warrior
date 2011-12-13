@@ -182,7 +182,7 @@ public class LoginPanel extends JPanel implements ClientListener
 		this.add(_btnConnect);
 
 		_btnUpdate = new JButton("Update");
-		_btnUpdate.setBounds(1100, 620, 100, 25);
+		_btnUpdate.setBounds(this.getWidth()-300, 620, 100, 25);
 		_btnUpdate.addActionListener(new ActionListener()
 		{
 			@Override
@@ -209,7 +209,7 @@ public class LoginPanel extends JPanel implements ClientListener
 					}
 				});
 		_scroll = new JScrollPane(_tblServers);
-		_scroll.setBounds(1100, 300, 200, 300);
+		_scroll.setBounds(this.getWidth()-300, 300, 200, 300);
 		this.add(_scroll);
 
 		_fileChooser = new JFileChooser(System.getProperty("user.dir"));
