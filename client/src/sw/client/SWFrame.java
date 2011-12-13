@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -77,7 +78,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 		System.out.println("init");
 
-		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setSize(d.width / 2, d.height / 2);
 		
 		//this.setSize(1000, 500);
 		
@@ -86,13 +88,14 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		//this.setSize(GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
 		//		GameConstants.REFERENCE_Y+ GameConstants.PLAYING_FIELD_HEIGHT);
 
-		this.setResizable(false);
+		//this.setResizable(false);
 		
+		this.setMinimumSize(new Dimension(800, 600));
 		
 		
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-
+		
 		_client.addClientListener(_gamePanel);
 		_client.addClientListener(_loginPanel);
 

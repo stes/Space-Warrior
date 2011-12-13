@@ -20,6 +20,8 @@ package sw.client.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -82,10 +84,17 @@ public class LoginPanel extends JPanel implements ClientListener
 		_tableModel = new ServerTableModel();
 
 		this.initComponents();
-		_txtName.setText("test");
-		_txtIPAddress.setText("localhost");
-		_txtPort.setText(GameConstants.STANDARD_PORT+"");
-		this.repaint();
+		
+		this.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				_btnUpdate.setBounds(_self.getWidth()-250, _self.getHeight()/2+200, 100, 25);
+				_scroll.setBounds(_self.getWidth()-250, _self.getHeight()/2-150, 200, 300);
+				_self.repaint();
+			}
+		});
 	}
 
 	public void addLoginListener(LoginListener l)
@@ -231,6 +240,11 @@ public class LoginPanel extends JPanel implements ClientListener
 			}
 		});
 		this.add(_btnChooseAI);
+		
+		// TODO move
+		_txtName.setText("test");
+		_txtIPAddress.setText("localhost");
+		_txtPort.setText(GameConstants.STANDARD_PORT+"");
 	}
 
 	@Override

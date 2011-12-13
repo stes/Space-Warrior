@@ -20,6 +20,8 @@ package sw.client.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -46,10 +48,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	private PlayingFieldPanel _playingField;
     private TransparentTextField _txtChatmessage;
     private TransparentTextArea _lstChathistory;
-    private JScrollPane _scroll;
-    private JTable _tblPoints;
+    private JScrollPane _scrollScoreBoard;
+    private JTable _tblScoreBoard;
     
     private PlayerTableModel _model;
+    
+    private GamePanel _self;
 	
     // other references
     private IGameStateManager _stateManager;
@@ -58,6 +62,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
+		_self = this;
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
@@ -65,6 +70,19 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
+		
+		this.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+		        _txtChatmessage.setBounds(50, _self.getHeight()-50, _self.getWidth()/3, 25);
+		        _lstChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
+				_scrollScoreBoard.setBounds(_self.getWidth()*5/6-50, 50, _self.getWidth()/6, 150);
+		        _playingField.setSize(_self.getSize());
+				_self.repaint();
+			}
+		});
 	}
 
 	/**
@@ -108,12 +126,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _lstChathistory.setEditable(false);
         this.add(_lstChathistory);
         
-        _tblPoints = new JTable(_model);
+        _tblScoreBoard = new JTable(_model);
         
-        _scroll = new JScrollPane(_tblPoints);
-		_scroll.setBounds(this.getWidth()-300, 100, 200, 150);
+        _scrollScoreBoard = new JScrollPane(_tblScoreBoard);
+		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);
         
-        this.add(_scroll);
+        this.add(_scrollScoreBoard);
         
         _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();
