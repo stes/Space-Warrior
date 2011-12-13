@@ -30,6 +30,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
+import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
@@ -39,7 +41,7 @@ import sw.shared.data.PlayerDataSet;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldPanel extends JPanel implements MouseListener
+public class PlayingFieldPanel extends JPanel implements MouseListener, GameStateChangedListener
 {
 	/**
 	 * 
@@ -66,10 +68,6 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 		this.setLayout(null);
 		this.setSize(width, height);
 		_stateManager = stateManager;
-		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
-		{
-			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
-		}
 		_localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
 		_opposingPlayerImg = ImageContainer.getLocalInstance()
 				.getOpposingPlayerImg();
@@ -167,19 +165,13 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e)
-	{
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e)
-	{
-	}
+	public void mouseExited(MouseEvent e) { }
 
 	@Override
 	public void mousePressed(MouseEvent e)
@@ -188,7 +180,20 @@ public class PlayingFieldPanel extends JPanel implements MouseListener
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e)
+	public void mouseReleased(MouseEvent e) {}
+
+	@Override
+	public void gameStateChanged(GameStateChangedEvent e){	}
+
+	@Override
+	public void newRound(GameStateChangedEvent e){}
+
+	@Override
+	public void playerInit(GameStateChangedEvent e)
 	{
+		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
+		{
+			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
+		}
 	}
 }

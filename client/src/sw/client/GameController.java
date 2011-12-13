@@ -26,7 +26,6 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.AIPlayerLoader;
 import sw.shared.GameConstants;
 import sw.shared.data.Packer;
@@ -71,6 +70,16 @@ public class GameController implements ClientListener, IGameStateManager
 		_localPlayer = new HumanPlayer(this);
 	}
 
+	public void addGameStateChangedListener(GameStateChangedListener l)
+	{
+		_gameStateChangedListener.add(l);
+	}
+	
+	public void removeGameStateChangedListener(GameStateChangedListener l)
+	{
+		_gameStateChangedListener.remove(l);
+	}
+	
 	@Override
 	public void chatMessage(String name, String text)
 	{
@@ -128,8 +137,7 @@ public class GameController implements ClientListener, IGameStateManager
 			System.out.println("no AI player selected, using default player");
 			_localPlayer = new HumanPlayer(this);
 		}
-		if (_localPlayer instanceof AIPlayer)
-			_gameStateChangedListener.add((AIPlayer) _localPlayer);
+		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 
 	public boolean isConnected()
@@ -198,6 +206,15 @@ public class GameController implements ClientListener, IGameStateManager
 			return;
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.gameStateChanged(e);
+	}
+	
+	private void invokePlayerInit(GameStateChangedEvent e)
+	{
+		if (_gameStateChangedListener == null
+				|| _gameStateChangedListener.size() == 0)
+			return;
+		for (GameStateChangedListener l : _gameStateChangedListener)
+			l.playerInit(e);
 	}
 
 	private void setIsConnected(boolean _isConnected)

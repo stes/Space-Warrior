@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
+import sw.client.GameController;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
@@ -65,8 +66,20 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 	protected abstract void tick();
 	
 	@Override
-	public void gameStateChanged(GameStateChangedEvent e)
+	/**
+	 * Invoked after the game controller initialized the players.
+	 * When overriding, always call super.playerInit(e) first!
+	 */
+	public void playerInit(GameStateChangedEvent e)
 	{
-		
+		if (e.getSource() instanceof GameController)
+			((GameController)e.getSource()).addGameStateChangedListener(this);
 	}
+	
+	@Override
+	/**
+	 * Invoked after the game state has changed
+	 * When overriding, always call super.gameStateChanged(e) first!
+	 */
+	public void gameStateChanged(GameStateChangedEvent e) { }
 }

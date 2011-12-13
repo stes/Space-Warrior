@@ -10,4 +10,6 @@ public interface GameStateChangedListener
 	public void gameStateChanged(GameStateChangedEvent e);
 	
 	public void newRound(GameStateChangedEvent e);
+
+	public void playerInit(GameStateChangedEvent e);
 }
