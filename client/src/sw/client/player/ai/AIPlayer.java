@@ -37,6 +37,7 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 	public AIPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);
+		((GameController)stateManager).addGameStateChangedListener(this);
 		_self = this;
 		_actionThread = new Thread()
 		{
@@ -72,8 +73,6 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 	 */
 	public void playerInit(GameStateChangedEvent e)
 	{
-		if (e.getSource() instanceof GameController)
-			((GameController)e.getSource()).addGameStateChangedListener(this);
 	}
 	
 	@Override
