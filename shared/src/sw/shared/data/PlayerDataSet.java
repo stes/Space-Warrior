@@ -138,7 +138,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	}
 
 	/**
-	 * increases the speed to a constant value
+	 * increases the speed by a constant value
 	 */
 	public void accelerate(double value)
 	{
@@ -410,7 +410,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 	 * @param speed
 	 *            new speed
 	 */
-	protected void setSpeed(double geschwindigkeit)
+	public void setSpeed(double geschwindigkeit)
 	{
 		_speed = geschwindigkeit;
 		if (_speed < 0)
@@ -442,6 +442,11 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		}
 	}
 
+	public boolean isAlive()
+	{
+		return this.getLifepoints() > 0;
+	}
+	
 	/**
 	 * assigns a new value to the position
 	 * 

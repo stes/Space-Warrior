@@ -53,7 +53,7 @@ public class GameController
 	 * A new player joined the game
 	 * 
 	 * @param name
-	 *            Name des Spielers
+	 *            the player's name
 	 */
 	public void bearbeiteNeuenSpieler(String name)
 	{
@@ -92,12 +92,12 @@ public class GameController
 	}
 
 	/**
-	 * Bearbeitet eine Eingabe vom Server
+	 * processes a server input
 	 * 
 	 * @param name
-	 *            Der Name des betreffenden Spielers
+	 *            the name of the affected player
 	 * @param input
-	 *            Die Eingabe des Spielers
+	 *            the player's input
 	 */
 	public void processPlayerInput(String name, PlayerInput input)
 	{
@@ -105,8 +105,7 @@ public class GameController
 	}
 
 	/**
-	 * startet ein neues Spiel und fügt alle verbundenen Spieler zu den aktiven
-	 * Spielern hinzu und gibt dem Client eine Nachricht aus
+	 * starts a new game
 	 */
 	public void startGame()
 	{
@@ -136,15 +135,14 @@ public class GameController
 	}
 
 	/**
-	 * Der getroffen Spieler kriegt schaden und somit Leben abgezogen Wenn ein
-	 * Spieler kein Leben mehr hat kriegt der Angreifer einen Punkt
+	 * adds damage to the players in the range of a shot
 	 * 
 	 * @param attacker
-	 *            Daten des angreifenden Spielers
+	 *            the attacking player
 	 * @param shot
-	 *            abgegebener Schuss
+	 *            the shot
 	 */
-	private void addDamage(PlayerDataSet attacker, Shot shot)
+	private void processShot(PlayerDataSet attacker, Shot shot)
 	{
 		for (int i = 0; i < _activePlayers.size(); i++)
 		{
@@ -153,8 +151,8 @@ public class GameController
 			{
 				if (shot.distanceTo(data.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 				{
-					data.setLifepoints(data.getLifepoints() - shot.getDamage());
-					if (data.getLifepoints() <= 0)
+					this.addDamage(data, shot.getDamage());
+					if (!data.isAlive())
 					{
 						_activePlayers.tryRemove(data.getName());
 						attacker.setScore(attacker.getScore() + 1);
@@ -164,6 +162,15 @@ public class GameController
 		}
 	}
 
+	private void addDamage(PlayerDataSet player, int damage)
+	{
+		player.setLifepoints(player.getLifepoints() - damage);
+		if (!player.isAlive())
+		{
+			_activePlayers.tryRemove(player.getName());
+		}
+	}
+	
 	private void checkTurn()
 	{
 		if ((_activePlayers.count() == 1 && _connectedPlayers.count() > 1)
@@ -202,7 +209,7 @@ public class GameController
 					Shot s = data.shoot(input.shot() == 2);
 					if (s != null)
 					{
-						this.addDamage(data, s);
+						this.processShot(data, s);
 						Packer p = s.write();
 						_server.sendBroadcast(p);
 					}
@@ -213,7 +220,37 @@ public class GameController
 						* Math.signum(input.turnDirection()));
 				data.ladeNach();
 				data.move();
+				// TODO improve
+				//this.checkCollision(data);
 			}
+		}
+	}
+
+	private void checkCollision(PlayerDataSet s2)
+	{
+		for (int i = 0; i < _activePlayers.size(); i++)
+		{
+			PlayerDataSet s1 = _activePlayers.dataAt(i);
+			if (s1 == null || s1.equals(s2))
+				continue;
+			double diff = s1.getPosition().distance(s2.getPosition());
+			double dmg = 0;
+			if (diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE)
+			{
+				dmg = -((double) GameConstants.MAX_COLLISION_DAMAGE)
+						/ ((double) GameConstants.MAX_COLLISION_DAMAGE_RANGE)
+						* diff + GameConstants.MAX_COLLISION_DAMAGE;
+				
+				double speed = s2.getSpeed();
+				s1.setSpeed(s2.getSpeed() * 0.8);
+				s2.setSpeed(speed * 0.8);
+				
+				double direction = s2.getDirection();
+				s1.setDirection(s2.getDirection());
+				s2.setSpeed(direction);
+			}
+			addDamage(s1, (int)dmg);
+			addDamage(s2, (int)dmg);
 		}
 	}
 }

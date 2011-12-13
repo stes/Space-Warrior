@@ -44,6 +44,7 @@ public final class GameConstants
     public final static int MAX_PLAYERS = 6;
     public final static int MAX_DAMAGE = 10;
     public final static int MAX_MASTER_DAMAGE = 25;
+    public final static int MAX_COLLISION_DAMAGE = 5;
     
     // Shooting    
     public final static int AMMO_PER_SHOT = 20;
@@ -56,6 +57,7 @@ public final class GameConstants
     
     // Players
     public final static int PLAYER_SIZE = 64;
+    public final static int MAX_COLLISION_DAMAGE_RANGE = PLAYER_SIZE / 2;
     
     // Playing field
     public final static int PLAYING_FIELD_WIDTH = 1400;
