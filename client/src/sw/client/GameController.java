@@ -67,7 +67,8 @@ public class GameController implements ClientListener, IGameStateManager
 		_playerList = new PlayerList(GameConstants.MAX_PLAYERS);
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
-		_localPlayer = new HumanPlayer(this);
+		_localPlayer = new HumanPlayer();
+		_localPlayer.init(this);
 	}
 
 	public void addGameStateChangedListener(GameStateChangedListener l)
@@ -129,14 +130,15 @@ public class GameController implements ClientListener, IGameStateManager
 				e.printStackTrace();
 				System.out
 						.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new HumanPlayer(this);
+				_localPlayer = new HumanPlayer();
 			}
 		}
 		else
 		{
 			System.out.println("no AI player selected, using default player");
-			_localPlayer = new HumanPlayer(this);
+			_localPlayer = new HumanPlayer();
 		}
+		_localPlayer.init(this);
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 

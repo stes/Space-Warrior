@@ -44,12 +44,16 @@ public abstract class Player
      * An instance that supplies the player with information
      * of the current game state
      */
-    public Player(IGameStateManager gameStateManager)
+    public Player()
     {
-    	_stateManager = gameStateManager;
     	_currentState = new PlayerInput();
     	_oldState = new PlayerInput();
     	_dataSet = new PlayerDataSet();
+    }
+    
+    public void init(IGameStateManager gameStateManager)
+    {
+    	_stateManager = gameStateManager;
     }
     
     protected void sendInput()

@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
-import sw.client.GameController;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
@@ -30,41 +29,18 @@ import sw.client.player.Player;
  * @version 27.11.2011
  */
 public abstract class AIPlayer extends Player implements GameStateChangedListener
-{
-	private AIPlayer _self;
-	private Thread _actionThread;
-	
-	public AIPlayer(IGameStateManager stateManager)
+{	
+	public AIPlayer()
 	{
-		super(stateManager);
-		((GameController)stateManager).addGameStateChangedListener(this);
-		_self = this;
-		_actionThread = new Thread()
-		{
-			@Override
-			public void run()
-			{
-				_self.init();
-				while(true)
-				{
-					_self.tick();
-					Thread.yield();
-				}
-			}
-		};
-		_actionThread.start();
+		super();
 	}
 	
-	/**
-	 * Initializes the player
-	 */
-	protected abstract void init();
-	
-	/**
-	 * Called frequently, used to process data and give new instructions
-	 * to the game controller
-	 */
-	protected abstract void tick();
+	@Override
+	public void init(IGameStateManager stateManager)
+	{
+		super.init(stateManager);
+		stateManager.addGameStateChangedListener(this);
+	}
 	
 	@Override
 	/**

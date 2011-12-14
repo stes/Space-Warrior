@@ -46,14 +46,29 @@ public class AIPlayerLoader
 			e.printStackTrace();
 		}
 		
-		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());		
+		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());	
+		System.out.println("Loaded class: " + _properties.get("class"));
 		Class<?> c = loader.loadClass(_properties.get("class").toString());
 		try
 		{
-			return (AIPlayer)c.getConstructor(IGameStateManager.class).newInstance(stateManager);
+//			Constructor<?> constructor = c.getConstructor();
+//			return (AIPlayer) constructor.newInstance();
+			System.out.println("call constructor");
+//			Constructor<?>[] cs = c.getConstructors();
+//			for (Constructor<?> x : cs)
+//			{
+//				System.out.println(x.getParameterTypes()[0].toString());
+//				System.out.println(((IGameStateManager)stateManager).getClass().toString());
+//				return (AIPlayer) x.newInstance(stateManager);
+//			}
+			Object o = c.getConstructors()[0].newInstance();
+			System.out.println(o instanceof AIPlayer);
+			return (AIPlayer)o;
+//			return (AIPlayer)c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			throw new OperationNotSupportedException("Invalid plugin file");
 		}
 	}

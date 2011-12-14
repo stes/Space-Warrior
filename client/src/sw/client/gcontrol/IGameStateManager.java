@@ -36,4 +36,6 @@ public interface IGameStateManager
 	// between player and controller
 	
 	public void stateUpdated(PlayerInput input);
+
+	public void addGameStateChangedListener(GameStateChangedListener l);
 }
