@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>build_server.xml</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/current_build/build_server.xml</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/ai_api/ai_api.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/AI_API/ai_api.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/SWClient/.classpath"/>
+        <javaElement handleIdentifier="=SWClient/src&lt;sw.client.gcontrol"/>
+        <javaElement handleIdentifier="=SWClient/src&lt;sw.client.player.ai"/>
+        <javaElement handleIdentifier="=SWClient/src&lt;sw.client.player"/>
+        <javaElement handleIdentifier="=SWStructs/src&lt;sw.shared.data.maps"/>
+        <javaElement handleIdentifier="=SWStructs/src&lt;sw.shared"/>
+        <javaElement handleIdentifier="=SWStructs/src&lt;sw.shared.data"/>
+        <javaElement handleIdentifier="=SWClient/src&lt;sw.client"/>
+        <file path="/SWClient/.project"/>
+    </selectedElements>
+</jardesc>
