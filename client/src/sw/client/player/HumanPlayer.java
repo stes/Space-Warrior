@@ -39,9 +39,9 @@ import sw.client.gcontrol.IGameStateManager;
  */
 public class HumanPlayer extends Player implements KeyListener
 {
-	public HumanPlayer()
+	public HumanPlayer(IGameStateManager stateManager)
 	{
-		super();
+		super(stateManager);
         //Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 	}
     

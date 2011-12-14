@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project SWClient with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/client/client.jar">
+            <manifest>
+                <attribute name="Main-Class" value="sw.client.Program"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/client/bin"/>
+            <fileset dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/shared/bin"/>
+        </jar>
+        <delete dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/client/client_lib"/>
+        <mkdir dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/client/client_lib"/>
+    </target>
+</project>

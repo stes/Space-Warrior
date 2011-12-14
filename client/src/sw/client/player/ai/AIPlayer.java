@@ -30,15 +30,9 @@ import sw.client.player.Player;
  */
 public abstract class AIPlayer extends Player implements GameStateChangedListener
 {	
-	public AIPlayer()
+	public AIPlayer(IGameStateManager stateManager)
 	{
-		super();
-	}
-	
-	@Override
-	public void init(IGameStateManager stateManager)
-	{
-		super.init(stateManager);
+		super(stateManager);
 		stateManager.addGameStateChangedListener(this);
 	}
 	

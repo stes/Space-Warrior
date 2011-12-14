@@ -3,6 +3,7 @@ package sw.sampleai;
 import java.util.Random;
 
 import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerDataSet;
@@ -14,9 +15,9 @@ public class SampleAI extends AIPlayer
 		
 	private int _hold;
 	
-	public SampleAI()
+	public SampleAI(IGameStateManager stateManager)
 	{
-		super();
+		super(stateManager);
 		System.out.println("init ai player");
 		this.getCurrentState().setDirection(1);
 	}

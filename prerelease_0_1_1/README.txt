@@ -1,6 +1,6 @@
 ### Space Warrior - README ###
 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-Space Warrior Pre 0.1
+Space Warrior Pre 0.1.1
 
 Description
 ¯¯¯¯¯¯¯¯¯¯¯

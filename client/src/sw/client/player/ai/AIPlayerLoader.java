@@ -61,7 +61,7 @@ public class AIPlayerLoader
 //				System.out.println(((IGameStateManager)stateManager).getClass().toString());
 //				return (AIPlayer) x.newInstance(stateManager);
 //			}
-			Object o = c.getConstructors()[0].newInstance();
+			Object o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 			System.out.println(o instanceof AIPlayer);
 			return (AIPlayer)o;
 //			return (AIPlayer)c.getConstructor(IGameStateManager.class).newInstance(stateManager);
