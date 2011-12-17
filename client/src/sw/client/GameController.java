@@ -29,7 +29,7 @@ import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
 import sw.shared.GameConstants;
 import sw.shared.data.Packer;
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 import sw.shared.data.ServerInfo;
@@ -169,14 +169,14 @@ public class GameController implements ClientListener, IGameStateManager
 		_playerList.update(snapshot);
 		for (int i = 0; i < _playerList.size(); i++)
 		{
-			PlayerDataSet d = _playerList.dataAt(i);
-			if (d != null && d.local())
+			PlayerData d = _playerList.dataAt(i);
+			if (d != null && d.isLocal())
 			{
 				_localPlayer.setDataSet(d);
 			}
 		}
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
-		e.setLocalDataSet(new PlayerDataSet(_localPlayer.getDataSet()));
+		e.setLocalDataSet(_localPlayer.getDataSet());
 		// TODO only pass a copy!
 		e.setPlayerList(_playerList);
 		this.invokeStateChanged(e);
@@ -185,7 +185,7 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
-		Packer p = input.write();
+		Packer p = input.pack();
 		_client.sendPacket(p);
 	}
 

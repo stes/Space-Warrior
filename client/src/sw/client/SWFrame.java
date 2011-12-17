@@ -31,10 +31,8 @@ import sw.client.gui.GamePanel;
 import sw.client.gui.LoginEvent;
 import sw.client.gui.LoginListener;
 import sw.client.gui.LoginPanel;
-import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
-import sw.shared.data.PlayerDataSet;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
@@ -160,32 +158,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	@Override
 	public void snapshot(Unpacker packet)
 	{
-		if (_controller.getPlayerList().count() == 0)
-			return;
-		PlayerDataSet[] spielerScore = new PlayerDataSet[_controller
-				.getPlayerList().count()];
-		int anzahl = 0;
-		for (int i = 0; i < GameConstants.MAX_PLAYERS; i++)
-		{
-			if (_controller.getPlayerList().dataAt(i) != null)
-			{
-				spielerScore[anzahl] = _controller.getPlayerList().dataAt(i);
-				anzahl++;
-			}
-		}
-
-		java.util.Arrays.sort(spielerScore);
 		this.repaint();
-
-		/*
-		 * for(int i = 0; i < spielerScore.length; i++) {
-		 * _tblPoints.setValueAt(spielerScore[spielerScore.length-i].name(), i,
-		 * 0);
-		 * _tblPoints.setValueAt(spielerScore[spielerScore.length-i].punkte(),
-		 * i, 1); } for(int i = spielerScore.length; i <
-		 * _tblPoints.getRowCount(); i++) { _tblPoints.setValueAt("", i, 0);
-		 * _tblPoints.setValueAt("", i, 1); }
-		 */
 	}
 
 	public void tick()

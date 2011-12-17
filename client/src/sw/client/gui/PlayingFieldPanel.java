@@ -35,7 +35,7 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -83,6 +83,7 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 		// Graphics2D g2d = (Graphics2D) g;
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		
+		// TODO: this is too slow!
 		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
 				GameConstants.PLAYING_FIELD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
@@ -93,27 +94,23 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 
 		for (int i = 0; i < _stateManager.getPlayerList().size(); i++)
 		{
-			if (_stateManager.getPlayerList().dataAt(i) == null)
+			if (_stateManager.getPlayerList().dataAt(i) == null || !_stateManager.getPlayerList().dataAt(i).isAlive())
 				continue;
-			PlayerDataSet d = _stateManager.getPlayerList().dataAt(i);
-			if (d.local())
+			PlayerData d = _stateManager.getPlayerList().dataAt(i);
+			if (d.isLocal())
 			{
 				this.paintBars(g2d, d);
 				g2d.drawImage(
-						rotateImage(_localPlayerImg, 180 - d.getDirection()),
-						null, (int) d.getPosition().getX()
-								- GameConstants.PLAYER_SIZE / 2, (int) d
-								.getPosition().getY()
-								- GameConstants.PLAYER_SIZE / 2);
+						rotateImage(_localPlayerImg, 180 - d.getDirection()), null,
+						(int) d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2,
+						(int) d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2);
 			}
 			else
 			{
 				g2d.drawImage(
-						rotateImage(_opposingPlayerImg, 180 - d.getDirection()),
-						null, (int) d.getPosition().getX()
-								- GameConstants.PLAYER_SIZE / 2, (int) d
-								.getPosition().getY()
-								- GameConstants.PLAYER_SIZE / 2);
+						rotateImage(_opposingPlayerImg, 180 - d.getDirection()), null,
+						(int) d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2,
+						(int) d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2);
 			}
 		}
 		
@@ -139,7 +136,7 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 		return rotatedImage;
 	}
 
-	private void paintBars(Graphics2D g2d, PlayerDataSet d)
+	private void paintBars(Graphics2D g2d, PlayerData d)
 	{
 		g2d.setStroke(new BasicStroke(15));
 

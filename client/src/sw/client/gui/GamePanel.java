@@ -197,7 +197,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		@Override
 		public int getRowCount()
 		{
-			return _stateManager.getPlayerList().count();
+			return _stateManager.getPlayerList().count(false);
 		}
 
 		@Override

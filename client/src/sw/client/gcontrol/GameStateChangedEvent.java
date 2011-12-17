@@ -2,7 +2,7 @@ package sw.client.gcontrol;
 
 import java.util.EventObject;
 
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerList;
 
 /**
@@ -14,10 +14,10 @@ public class GameStateChangedEvent extends EventObject
 {
 	private static final long serialVersionUID = -6781713802525662904L;
 
-	private PlayerDataSet _localDataSet;
+	private PlayerData _localDataSet;
 	private PlayerList _playerList;
-	private PlayerDataSet _winner;
-	private PlayerDataSet _loser;
+	private PlayerData _winner;
+	private PlayerData _loser;
 
 	public GameStateChangedEvent(Object source)
 	{
@@ -29,7 +29,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _localDataSet
 	 */
-	public PlayerDataSet getLocalDataSet()
+	public PlayerData getLocalDataSet()
 	{
 		return _localDataSet;
 	}
@@ -37,7 +37,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @param _localDataSet the _localDataSet to set
 	 */
-	public void setLocalDataSet(PlayerDataSet _localDataSet)
+	public void setLocalDataSet(PlayerData _localDataSet)
 	{
 		this._localDataSet = _localDataSet;
 	}
@@ -61,7 +61,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _winner
 	 */
-	public PlayerDataSet getWinner()
+	public PlayerData getWinner()
 	{
 		return _winner;
 	}
@@ -69,7 +69,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @param _winner the _winner to set
 	 */
-	public void setWinner(PlayerDataSet _winner)
+	public void setWinner(PlayerData _winner)
 	{
 		this._winner = _winner;
 	}
@@ -77,7 +77,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _loser
 	 */
-	public PlayerDataSet getLoser()
+	public PlayerData getLoser()
 	{
 		return _loser;
 	}
@@ -85,7 +85,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @param _loser the _loser to set
 	 */
-	public void setLoser(PlayerDataSet _loser)
+	public void setLoser(PlayerData _loser)
 	{
 		this._loser = _loser;
 	}

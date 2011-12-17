@@ -33,7 +33,7 @@ public class ServerInfo
 	
 	private InetSocketAddress _addr;
 
-	public static ServerInfo read(Unpacker p)
+	public static ServerInfo unpack(Unpacker p)
 	{
 		return new ServerInfo(p.readUTF(), p.readShort(), p.readShort());
 	}
@@ -90,7 +90,7 @@ public class ServerInfo
 		_addr = addr;
 	}
 	
-	public Packer write()
+	public Packer pack()
 	{
 		Packer info = new Packer((byte)0);
         info.writeUTF(_serverName);

@@ -124,7 +124,7 @@ public class SWClient implements IClient, NetworkListener
 		{
 			byte[] info = java.util.Arrays.copyOfRange(data,
 					GameConstants.SERVER_INFO_RESPONSE.length, len);
-			ServerInfo serverInfo = ServerInfo.read(new Unpacker(info));
+			ServerInfo serverInfo = ServerInfo.unpack(new Unpacker(info));
 			serverInfo.setAddress(addr);
 
 			for (ClientListener l : _clientListener)

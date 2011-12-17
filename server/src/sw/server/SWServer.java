@@ -98,7 +98,7 @@ public class SWServer implements IServer, NetworkListener
 	public Packer getServerInfos()
 	{
 		_serverInfo.setNumPayers(_clients.size());
-		return _serverInfo.write();
+		return _serverInfo.pack();
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class SWServer implements IServer, NetworkListener
 			{
 				client.setName(name);
 				client.enterGame();
-				_controller.bearbeiteNeuenSpieler(client.getName());
+				_controller.playerConnected(client.getName());
 			}
 			else
 			{
@@ -134,8 +134,7 @@ public class SWServer implements IServer, NetworkListener
 		}
 		else if (Packettype.CL_INPUT == packet.getType() && client.isPlaying())
 		{
-			_controller.processPlayerInput(client.getName(), new PlayerInput(
-					packet));
+			_controller.processPlayerInput(client.getName(), PlayerInput.unpack(packet));
 		}
 	}
 

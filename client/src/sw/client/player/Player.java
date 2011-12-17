@@ -18,7 +18,7 @@
 package sw.client.player;
 
 import sw.client.gcontrol.IGameStateManager;
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 
@@ -34,7 +34,7 @@ public abstract class Player
 {
     private PlayerInput _currentState;
     private PlayerInput _oldState;
-    private PlayerDataSet _dataSet;
+    private PlayerData _dataSet;
     
     private IGameStateManager _stateManager;
     
@@ -49,7 +49,7 @@ public abstract class Player
     	_stateManager = gameStateManager;
     	_currentState = new PlayerInput();
     	_oldState = new PlayerInput();
-    	_dataSet = new PlayerDataSet();
+    	_dataSet = new PlayerData("");
     }
     
     protected void sendInput()
@@ -98,7 +98,7 @@ public abstract class Player
 	/**
 	 * @return the player data set
 	 */
-	public PlayerDataSet getDataSet()
+	public PlayerData getDataSet()
 	{
 		return _dataSet;
 	}
@@ -110,7 +110,7 @@ public abstract class Player
 	/**
 	 * @param data the new player data set
 	 */
-	public void setDataSet(PlayerDataSet data)
+	public void setDataSet(PlayerData data)
 	{
 		this._dataSet = data;
 	}

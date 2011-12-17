@@ -20,7 +20,7 @@ package sw.server;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Packer;
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 import sw.shared.data.Shot;
@@ -32,8 +32,7 @@ import sw.shared.data.Shot;
 
 public class GameController
 {
-	private PlayerList _connectedPlayers;
-	private PlayerList _activePlayers;
+	private PlayerList _players;
 	private IServer _server;
 
 	/**
@@ -44,8 +43,7 @@ public class GameController
 	 */
 	public GameController(IServer server)
 	{
-		_connectedPlayers = new PlayerList(GameConstants.MAX_PLAYERS);
-		_activePlayers = new PlayerList(GameConstants.MAX_PLAYERS);
+		_players = new PlayerList(GameConstants.MAX_PLAYERS);
 		_server = server;
 	}
 
@@ -55,11 +53,10 @@ public class GameController
 	 * @param name
 	 *            the player's name
 	 */
-	public void bearbeiteNeuenSpieler(String name)
+	public void playerConnected(String name)
 	{
-		PlayerDataSet newDataSet = new PlayerDataSet(name, true);
-		newDataSet.init();
-		_connectedPlayers.insert(newDataSet, null);
+		PlayerData newDataSet = new PlayerData(name);
+		_players.insert(newDataSet, null);
 	}
 
 	/**
@@ -67,12 +64,12 @@ public class GameController
 	 */
 	public void broadcastSnapshots()
 	{
-		for (int i = 0; i < _connectedPlayers.size(); i++)
+		for (int i = 0; i < _players.size(); i++)
 		{
-			PlayerDataSet data = _connectedPlayers.dataAt(i);
+			PlayerData data = _players.dataAt(i);
 			if (data != null)
 			{
-				Packer snapshot = _activePlayers.createSnapshot(data.getName());
+				Packer snapshot = _players.createSnapshot(data.getName());
 				_server.sendPacket(data.getName(), snapshot);
 			}
 		}
@@ -86,9 +83,7 @@ public class GameController
 	 */
 	public void playerLeft(String name, String reason)
 	{
-		// PlayerDataSet suchObjekt = new PlayerDataSet(name, true);
-		_connectedPlayers.tryRemove(name);
-		_activePlayers.tryRemove(name);
+		_players.remove(name);
 	}
 
 	/**
@@ -101,7 +96,7 @@ public class GameController
 	 */
 	public void processPlayerInput(String name, PlayerInput input)
 	{
-		_activePlayers.trySetInput(name, input);
+		_players.setInput(name, input);
 	}
 
 	/**
@@ -109,14 +104,12 @@ public class GameController
 	 */
 	public void startGame()
 	{
-		_activePlayers.clear();
-		for (int i = 0; i < _connectedPlayers.size(); i++)
+		for (int i = 0; i < _players.size(); i++)
 		{
-			PlayerDataSet data = _connectedPlayers.dataAt(i);
+			PlayerData data = _players.dataAt(i);
 			if (data != null)
 			{
-				data.init();
-				_activePlayers.insert(data, null);
+				data.respawn();
 			}
 		}
 		Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
@@ -140,51 +133,40 @@ public class GameController
 	 * @param shot
 	 *            the shot
 	 */
-	private void processShot(PlayerDataSet attacker, Shot shot)
+	private void processShot(PlayerData attacker, Shot shot)
 	{
-		for (int i = 0; i < _activePlayers.size(); i++)
+		for (int i = 0; i < _players.size(); i++)
 		{
-			PlayerDataSet data = _activePlayers.dataAt(i);
-			if (data != null && !data.getName().equals(attacker.getName()))
+			PlayerData data = _players.dataAt(i);
+			if (data != null && data.isAlive() && !data.getName().equals(attacker.getName()))
 			{
 				if (shot.distanceTo(data.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 				{
-					this.addDamage(data, shot.getDamage());
+					data.takeDamage(shot.getDamage());
 					if (!data.isAlive())
 					{
-						_activePlayers.tryRemove(data.getName());
 						attacker.setScore(attacker.getScore() + 1);
 					}
 				}
 			}
 		}
 	}
-
-	private void addDamage(PlayerDataSet player, int damage)
-	{
-		player.setLifepoints(player.getLifepoints() - damage);
-		if (!player.isAlive())
-		{
-			_activePlayers.tryRemove(player.getName());
-		}
-	}
 	
 	private void checkTurn()
 	{
-		if ((_activePlayers.count() == 1 && _connectedPlayers.count() > 1)
-				|| (_activePlayers.count() == 0 && _connectedPlayers.count() == 1))
+		if ((_players.count(true) == 1 && _players.count(false) > 1)
+				|| (_players.count(true) == 0 && _players.count(false) == 1))
 		{
-			if (_activePlayers.count() == 1)
+			if (_players.count(true) == 1)
 			{
-				for (int i = 0; i < _activePlayers.size(); i++)
+				for (int i = 0; i < _players.size(); i++)
 				{
-					PlayerDataSet data = _activePlayers.dataAt(i);
+					PlayerData data = _players.dataAt(i);
 					if (data != null)
 					{
 						Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
 						info.writeUTF("Server");
-						info.writeUTF(data.getName()
-								+ " has won the round!");
+						info.writeUTF(data.getName() + " has won the round!");
 						_server.sendBroadcast(info);
 						break;
 					}
@@ -196,11 +178,11 @@ public class GameController
 
 	private void updateData()
 	{
-		for (int i = 0; i < _activePlayers.size(); i++)
+		for (int i = 0; i < _players.size(); i++)
 		{
-			PlayerDataSet data = _activePlayers.dataAt(i);
-			PlayerInput input = _activePlayers.inputAt(i);
-			if (data != null)
+			PlayerData data = _players.dataAt(i);
+			PlayerInput input = _players.inputAt(i);
+			if (data != null && data.isAlive())
 			{
 				if (input.shot() > 0)
 				{
@@ -212,11 +194,9 @@ public class GameController
 						_server.sendBroadcast(p);
 					}
 				}
-				data.accelerate(GameConstants.ACCELERATION
-						* input.moveDirection());
-				data.rotate(GameConstants.ANGEL_OF_ROTATION
-						* Math.signum(input.turnDirection()));
-				data.ladeNach();
+				data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
+				data.rotate(GameConstants.ANGEL_OF_ROTATION * Math.signum(input.turnDirection()));
+				data.reload();
 				data.move();
 				// TODO improve
 				//this.checkCollision(data);
@@ -224,7 +204,8 @@ public class GameController
 		}
 	}
 
-	private void checkCollision(PlayerDataSet s2)
+	// TODO: do this in the PlayerDataSet
+	/*private void checkCollision(PlayerDataSet s2)
 	{
 		for (int i = 0; i < _activePlayers.size(); i++)
 		{
@@ -250,5 +231,5 @@ public class GameController
 			addDamage(s1, (int)dmg);
 			addDamage(s2, (int)dmg);
 		}
-	}
+	}*/
 }

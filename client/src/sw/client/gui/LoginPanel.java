@@ -116,19 +116,6 @@ public class LoginPanel extends JPanel implements ClientListener
 
 	}
 
-	public void foundServer(String serverIp, String serverName, int maxPlayers,
-			int playerCount)
-	{
-		// TODO remove?
-		// _serverListe.(); new line
-		/*
-		 * _tblServers.setValueAt(serverName, _tblServers.getRowCount()-1, 0);
-		 * _tblServers.setValueAt(playerCount + "/" + maxPlayers,
-		 * _tblServers.getRowCount()-1, 1); _tblServers.setValueAt(serverIp,
-		 * _tblServers.getRowCount()-1, 2);
-		 */
-	}
-
 	public String getIP()
 	{
 		return _txtIPAddress.getText();

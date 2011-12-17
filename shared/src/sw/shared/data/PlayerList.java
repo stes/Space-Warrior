@@ -19,8 +19,6 @@ package sw.shared.data;
 
 import java.io.Serializable;
 
-import javax.management.AttributeNotFoundException;
-
 import sw.shared.Packettype;
 
 /**
@@ -31,7 +29,7 @@ public class PlayerList implements Serializable
 {
 	private static final long serialVersionUID = 4378922344210371238L;
 	
-	private PlayerDataSet[] _list;
+	private PlayerData[] _list;
 	private PlayerInput[] _input;
 
 	/**
@@ -44,10 +42,9 @@ public class PlayerList implements Serializable
 	private static PlayerList fromSnapshot(Unpacker p)
 	{
 		PlayerList list = new PlayerList(p.readInt());
-		int n = p.readInt();
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < list.size(); i++)
 		{
-			list.insert(PlayerDataSet.read(p), null);
+			list.insert(PlayerData.fromSnapshot(p), null);
 		}
 		return list;
 	}
@@ -60,7 +57,7 @@ public class PlayerList implements Serializable
 	 */
 	public PlayerList(int size)
 	{
-		_list = new PlayerDataSet[size];
+		_list = new PlayerData[size];
 		_input = new PlayerInput[size];
 	}
 
@@ -75,23 +72,9 @@ public class PlayerList implements Serializable
 	/**
 	 * @return list
 	 */
-	public PlayerDataSet dataAt(int index)
+	public PlayerData dataAt(int index)
 	{
 		return _list[index];
-	}
-
-	/**
-	 * removes the player with the specified name from the list
-	 * 
-	 * @param name
-	 *            playername
-	 * @return the record belongs to the player
-	 */
-	public void remove(String name) throws AttributeNotFoundException
-	{
-		if (tryRemove(name))
-			return;
-		throw new AttributeNotFoundException();
 	}
 
 	/**
@@ -99,17 +82,15 @@ public class PlayerList implements Serializable
 	 * 
 	 * @return the packet
 	 */
-	public Packer createSnapshot(String lokalerName)
+	public Packer createSnapshot(String localName)
 	{
 		Packer p = new Packer(Packettype.SV_SNAPSHOT);
-		p.writeInt(this.size());
-		p.writeInt(this.count());
-		for (PlayerDataSet s : _list)
+		p.writeInt(this.count(false));
+		for (PlayerData s : _list)
 		{
 			if (s != null)
 			{
-				boolean lokal = s.getName().equals(lokalerName);
-				s.write(p, lokal);
+				s.snap(p, localName);
 			}
 		}
 		return p;
@@ -123,7 +104,7 @@ public class PlayerList implements Serializable
 	 * @param input
 	 *            the current player input, null for default
 	 */
-	public void insert(PlayerDataSet spieler, PlayerInput eingabe)
+	public void insert(PlayerData spieler, PlayerInput eingabe)
 	{
 		int index = findEmptyPlace();
 		if (index == -1)
@@ -149,23 +130,8 @@ public class PlayerList implements Serializable
 	 */
 	public void clear()
 	{
-		_list = new PlayerDataSet[_list.length];
+		_list = new PlayerData[_list.length];
 		_input = new PlayerInput[_input.length];
-	}
-
-	/**
-	 * searching for the name of the player in the list
-	 * 
-	 * @param name
-	 *            name of the player
-	 * @return the data record belongs to the player
-	 */
-	public PlayerDataSet find(String name) throws AttributeNotFoundException
-	{
-		PlayerDataSet s = tryFind(name);
-		if (s != null)
-			return s;
-		throw new AttributeNotFoundException();
 	}
 
 	/**
@@ -189,7 +155,7 @@ public class PlayerList implements Serializable
 	 * @return the data record that belongs to the player or null if no player
 	 *         is found
 	 */
-	public boolean tryRemove(String name)
+	public boolean remove(String name)
 	{
 		for (int i = 0; i < _list.length; i++)
 		{
@@ -212,11 +178,11 @@ public class PlayerList implements Serializable
 	 * @return the data record that belongs to the player or null if no player
 	 *         is found
 	 */
-	public boolean trySetInput(String name, PlayerInput eingabe)
+	public boolean setInput(String name, PlayerInput eingabe)
 	{
 		for (int i = 0; i < _list.length; i++)
 		{
-			PlayerDataSet s = _list[i];
+			PlayerData s = _list[i];
 			if (s != null && s.getName().equals(name))
 			{
 				_input[i] = eingabe;
@@ -234,9 +200,9 @@ public class PlayerList implements Serializable
 	 * @return the data record that belongs to the player or null if no player
 	 *         is found
 	 */
-	public PlayerDataSet tryFind(String name)
+	public PlayerData find(String name)
 	{
-		for (PlayerDataSet s : _list)
+		for (PlayerData s : _list)
 		{
 			if (s != null && s.getName().equals(name))
 				return s;
@@ -249,12 +215,12 @@ public class PlayerList implements Serializable
 	 * 
 	 * @return number of occupied elements
 	 */
-	public int count()
+	public int count(boolean alive)
 	{
 		int n = 0;
 		for (int i = 0; i < _list.length; i++)
 		{
-			if (_list[i] != null)
+			if (_list[i] != null && (_list[i].isAlive() || !alive))
 			{
 				n++;
 			}

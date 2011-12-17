@@ -28,6 +28,15 @@ public class PlayerInput
 	private int _moveDirection;
 	private int _turnDirection;
 	private int _isShooting;
+	
+	public static PlayerInput unpack(Unpacker p)
+	{
+		if (p.getType() != Packettype.CL_INPUT)
+		{
+			throw new IllegalArgumentException();
+		}
+		return new PlayerInput(p.readShort(), p.readShort(), p.readShort());
+	}
 
 	/**
 	 * player input instance is created
@@ -52,17 +61,6 @@ public class PlayerInput
 		_moveDirection = moveDirection;
 		_turnDirection = turnDirection;
 		_isShooting = isShooting;
-	}
-
-	/**
-	 * creates a input-instance from a packet
-	 * 
-	 * @param input
-	 *            input-packet
-	 */
-	public PlayerInput(Unpacker input)
-	{
-		this(input.readShort(), input.readShort(), input.readShort());
 	}
 
 	/**
@@ -110,7 +108,7 @@ public class PlayerInput
 	 * 
 	 * @return the packet
 	 */
-	public Packer write()
+	public Packer pack()
 	{
 		Packer packet = new Packer(Packettype.CL_INPUT);
 		packet.writeShort(_moveDirection);
