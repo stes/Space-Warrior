@@ -49,10 +49,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	{
 		LOGIN, GAME
 	}
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1575599799999464878L;
 	private GameController _controller;
 

@@ -17,23 +17,21 @@
  ******************************************************************************/
 package sw.shared;
 /**
- * Eine Sammlung von Konstanten fuer den Netzwerkverkehr
- * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public final class Packettype
 {
-    // Client
+    // client
     public final static byte CL_START_INFO = 0;
     public final static byte CL_CHAT_MESSAGE = 1;
     public final static byte CL_INPUT = 2;
     
-    // Server
+    // server
     public final static byte SV_CHAT_MESSAGE = 1;
     public final static byte SV_SNAPSHOT = 2;
     public final static byte SV_SHOT = 3;
     
-    // Snapshot Typen
+    // snapshot types
     public final static byte SNAP_PLAYERDATA = 4;
 }

@@ -28,10 +28,6 @@ import javax.swing.JTextField;
 
 class TransparentTextField extends JTextField
 {
-    
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 8102951278781089450L;
 
 

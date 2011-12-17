@@ -109,9 +109,7 @@ public class GameController
 	 */
 	public void startGame()
 	{
-		// Liste der aktiven Spieler leeren
 		_activePlayers.clear();
-		// alle verbundenen Spieler in das Spiel einfügen
 		for (int i = 0; i < _connectedPlayers.size(); i++)
 		{
 			PlayerDataSet data = _connectedPlayers.dataAt(i);
@@ -186,7 +184,7 @@ public class GameController
 						Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
 						info.writeUTF("Server");
 						info.writeUTF(data.getName()
-								+ " hat die Runde gewonnen!");
+								+ " has won the round!");
 						_server.sendBroadcast(info);
 						break;
 					}

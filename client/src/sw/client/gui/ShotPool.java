@@ -27,37 +27,20 @@ import sw.shared.data.Shot;
  */
 public class ShotPool
 {
-    // Bezugsobjekte
     private static ArrayList<ShotGraphics> _shots;
     private static PlayingFieldPanel _playingField;
     
-    // Attribute
- 
-    /**
-     * Fügt einen neuen Schuss hinzu
-     * 
-     * @param shot Der Schuss
-     */
     public static void addShot(Shot shot)
     {
         _shots.add(new ShotGraphics(shot));
     }
     
-    /**
-     * Initialisiert den Schusspool
-     * 
-     * @param playingFieldPanel Das Spielfeld, auf dem gezeichnet werden soll
-     */
     public static void init(PlayingFieldPanel playingFieldPanel)
     {
         _shots = new ArrayList<ShotGraphics>(100);
         _playingField = playingFieldPanel;
     }
     
-    // Dienste    
-    /**
-     * Zeigt die Schüsse an
-     */
     public static void paint(Graphics g)
     {
         if (_shots.size() > 0)

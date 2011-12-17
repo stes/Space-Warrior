@@ -40,15 +40,7 @@ public class SWClient implements IClient, NetworkListener
 	private UDPConnection _server;
 
 	private ArrayList<ClientListener> _clientListener;
-
-	/**
-	 * Erzeugt einen neuen NetClient
-	 * 
-	 * @param ip
-	 *            Die IP Adresse des Servers
-	 * @param port
-	 *            Der Port
-	 */
+	
 	public SWClient()
 	{
 		_netClient = new UDPHost(null, 1);

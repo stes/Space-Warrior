@@ -43,9 +43,6 @@ import sw.shared.data.PlayerDataSet;
  */
 public class PlayingFieldPanel extends JPanel implements MouseListener, GameStateChangedListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8647279084154615455L;
 
 	private BufferedImage _localPlayerImg;

@@ -28,10 +28,6 @@ import javax.swing.JTextArea;
 
 class TransparentTextArea extends JTextArea
 {
-    
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 7617582110497995855L;
 
 

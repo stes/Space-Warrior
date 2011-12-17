@@ -28,9 +28,6 @@ import java.awt.Polygon;
  */
 public abstract class Obstacle extends Polygon
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7248733131969739658L;
 	
 	/**

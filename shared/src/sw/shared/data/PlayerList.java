@@ -29,9 +29,6 @@ import sw.shared.Packettype;
  */
 public class PlayerList implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4378922344210371238L;
 	
 	private PlayerDataSet[] _list;

@@ -31,9 +31,6 @@ import sw.shared.data.Shot;
  */
 public class ShotGraphics extends Shot
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 7174363740068442519L;
 	
 	//private static boolean _isReady; TODO remove if no longer used

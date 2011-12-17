@@ -40,9 +40,6 @@ import sw.shared.data.Unpacker;
 
 public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8751902318746091633L;
 	
 	private PlayingFieldPanel _playingField;

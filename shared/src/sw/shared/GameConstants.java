@@ -17,15 +17,12 @@
  ******************************************************************************/
 package sw.shared;
 /**
- * Eine Sammlung von Konstanten, die fuer den Spielverlauf von
- * Bedeutung sind
- * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 public final class GameConstants
 {
-    // Netzwerk
+    // Network
     public final static int STANDARD_PORT = 2489;
     public final static byte[] SERVER_INFO_REQUEST = new byte[]{'i', 'n', 'f', 'o', '?'};
     public final static byte[] SERVER_INFO_RESPONSE = new byte[]{'i', 'n', 'f', 'o', '!'};

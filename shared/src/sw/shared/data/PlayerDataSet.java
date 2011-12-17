@@ -24,8 +24,6 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 
 /**
- * Klasse zur Verwaltung von Spielerdaten
- * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
@@ -237,7 +235,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		}
 		else
 		{
-			throw new IllegalStateException("Spieler ist nicht lokal");
+			throw new IllegalStateException("Player is not local");
 		}
 	}
 
@@ -264,7 +262,7 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		}
 		else
 		{
-			throw new IllegalStateException("Spieler ist nicht lokal");
+			throw new IllegalStateException("Player is not local");
 		}
 	}
 
@@ -437,8 +435,8 @@ public class PlayerDataSet implements Comparable<PlayerDataSet>
 		}
 		else
 		{
-			throw new IllegalArgumentException("Munition zwischen 0 und "
-					+ GameConstants.MAX_AMMO + " waehlen");
+			throw new IllegalArgumentException("choose ammo between 0 and "
+					+ GameConstants.MAX_AMMO);
 		}
 	}
 

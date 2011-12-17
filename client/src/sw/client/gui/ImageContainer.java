@@ -69,7 +69,6 @@ public class ImageContainer
     	return _backgroundImg.getSubimage(0, 0, _backgroundImg.getWidth(), _backgroundImg.getHeight());
     }
     
-    // Dienste
     public BufferedImage getLocalPlayerImg()
     {
         return _localPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());

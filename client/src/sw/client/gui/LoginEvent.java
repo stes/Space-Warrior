@@ -22,9 +22,6 @@ import java.util.EventObject;
 
 public class LoginEvent extends EventObject
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5796463210269739871L;
 	
 	private InetSocketAddress _ipAdress;

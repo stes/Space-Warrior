@@ -12,9 +12,6 @@ import sw.shared.data.PlayerList;
  */
 public class GameStateChangedEvent extends EventObject
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6781713802525662904L;
 
 	private PlayerDataSet _localDataSet;
