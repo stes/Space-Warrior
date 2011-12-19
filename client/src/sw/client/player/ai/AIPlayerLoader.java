@@ -13,10 +13,26 @@ import javax.naming.OperationNotSupportedException;
 
 import sw.client.gcontrol.IGameStateManager;
 
+/**
+ * Used for loading AI players
+ * 
+ * @author Redix, stes, Abbadonn
+ * @version 19.12.11
+ */
 public class AIPlayerLoader
 {
 	static Properties _properties = new Properties();
 	
+	/**
+	 * Loads a player from an external file and returns an instance
+	 * of the AI player implemented in the file
+	 * @param source The source jar
+	 * @param stateManager
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws OperationNotSupportedException
+	 */
 	public static AIPlayer load(
 			File source,
 			IGameStateManager stateManager)
@@ -51,20 +67,9 @@ public class AIPlayerLoader
 		Class<?> c = loader.loadClass(_properties.get("class").toString());
 		try
 		{
-//			Constructor<?> constructor = c.getConstructor();
-//			return (AIPlayer) constructor.newInstance();
-			System.out.println("call constructor");
-//			Constructor<?>[] cs = c.getConstructors();
-//			for (Constructor<?> x : cs)
-//			{
-//				System.out.println(x.getParameterTypes()[0].toString());
-//				System.out.println(((IGameStateManager)stateManager).getClass().toString());
-//				return (AIPlayer) x.newInstance(stateManager);
-//			}
 			Object o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 			System.out.println(o instanceof AIPlayer);
 			return (AIPlayer)o;
-//			return (AIPlayer)c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 		}
 		catch (Exception e)
 		{

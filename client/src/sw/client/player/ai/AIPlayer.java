@@ -23,13 +23,19 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.Player;
 
 /**
- * The basic class for an artificial intelligence player
+ * The basic class for an artificial intelligence player (bot)
  * 
  * @author Redix, stes, Abbadonn
  * @version 27.11.2011
  */
 public abstract class AIPlayer extends Player implements GameStateChangedListener
 {	
+    /**
+     * Creates a new ai player given the controller
+     * @param gameStateManager
+     * An instance that supplies the player with information
+     * of the current game state
+     */
 	public AIPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);

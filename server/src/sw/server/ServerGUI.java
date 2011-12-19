@@ -51,12 +51,6 @@ public class ServerGUI extends JFrame implements ActionListener
 	private JTextField _nameField;
 	private SWServer _server;
 
-	/**
-	 * erstellt eine GUI für die Serverkonsole
-	 * 
-	 * @param width
-	 * @param height
-	 */
 	public ServerGUI(int width, int height)
 	{
 		super("SW Server");
@@ -130,32 +124,16 @@ public class ServerGUI extends JFrame implements ActionListener
 		}
 	}
 
-	/**
-	 * setzt die Clientliste
-	 * 
-	 * @param data
-	 */
 	public void setClientList(Vector<Client> data)
 	{
 		_clientList.setListData(data);
 	}
 
-	/**
-	 * setzt den Netserver
-	 * 
-	 * @param sWServer
-	 */
 	public void setNetServer(SWServer server)
 	{
 		_server = server;
 	}
 
-	/**
-	 * fügt Systemnachrichten ein
-	 * 
-	 * @param str
-	 *            neue Textnachricht
-	 */
 	private void addMessage(String str)
 	{
 		_area.append(str);
