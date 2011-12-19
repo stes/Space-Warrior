@@ -42,6 +42,7 @@ public final class GameConstants
     public final static int MAX_DAMAGE = 10;
     public final static int MAX_MASTER_DAMAGE = 25;
     public final static int MAX_COLLISION_DAMAGE = 5;
+    public final static int MAX_SHOT_INTERVAL = 200;
     
     // Shooting    
     public final static int AMMO_PER_SHOT = 20;

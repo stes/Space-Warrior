@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerList;
 
 
@@ -12,16 +12,16 @@ public class State
 {
 	private static Random _random = new Random(System.currentTimeMillis());
 
-	private PlayerDataSet _localDataSet;
+	private PlayerData _localDataSet;
 	private PlayerList _playerList;
 	private double[] _features;
 	private double[] _weights;
 
 	public ArrayList<Byte> id;
 
-	public State(PlayerDataSet localDataSet, PlayerList list)
+	public State(PlayerData localDataSet, PlayerList list)
 	{
-		_localDataSet = new PlayerDataSet(localDataSet);
+		_localDataSet = new PlayerData(localDataSet);
 		_playerList = new PlayerList(list.size());
 		this.init(list);
 	}
@@ -31,7 +31,7 @@ public class State
 		ArrayList<Byte> buffer = new ArrayList<Byte>();
 		for (int i = 0; i < _playerList.size(); i++)
 		{
-			PlayerDataSet d = _playerList.dataAt(i);
+			PlayerData d = _playerList.dataAt(i);
 			if (d != null)
 			{
 				buffer.add((byte) ((int)d.getDirection()));
@@ -61,12 +61,12 @@ public class State
 				/ AIConstants.ROTATION_STEP);
 		for (int i = 0; i < list.size(); i++)
 		{
-			PlayerDataSet d = list.dataAt(i);
+			PlayerData d = list.dataAt(i);
 			if (d == null)
 				continue;
 			else
 			{
-				PlayerDataSet transformed = new PlayerDataSet(d);
+				PlayerData transformed = new PlayerData(d);
 				transformed.getPosition().setLocation(
 						transform(d.getPosition()));
 				transformed.setDirection((int)d.getDirection()
@@ -113,8 +113,8 @@ public class State
 			return false;
 		for (int i = 0; i < _playerList.size(); i++)
 		{
-			PlayerDataSet d1 = _playerList.dataAt(i);
-			PlayerDataSet d2 = s._playerList.dataAt(i);
+			PlayerData d1 = _playerList.dataAt(i);
+			PlayerData d2 = s._playerList.dataAt(i);
 			if (d1 != null && d2 != null && !d1.equals(d2))
 				return false;
 		}

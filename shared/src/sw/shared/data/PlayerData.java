@@ -39,7 +39,8 @@ public class PlayerData implements Comparable<PlayerData>
 	private double _speed;
 	private int _score;
 	private boolean _alive;
-
+	private long _lastShot;
+	
 	private boolean _local;
 
 	/**
@@ -189,10 +190,10 @@ public class PlayerData implements Comparable<PlayerData>
 	public Shot shoot(boolean master)
 	{
 		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
-		if (_ammo >= neededAmmo)
+		if (_ammo >= neededAmmo && this.isReadyToShoot())
 		{
 			_ammo -= neededAmmo;
-
+			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
 			return new Shot(this.positionAfter(time), _direction, master);
 		}
@@ -313,5 +314,15 @@ public class PlayerData implements Comparable<PlayerData>
 	public int getLifepoints()
 	{
 		return _lifepoints;
+	}
+	
+	public long getLastShot()
+	{
+		return _lastShot;
+	}
+	
+	public boolean isReadyToShoot()
+	{
+		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
 	}
 }

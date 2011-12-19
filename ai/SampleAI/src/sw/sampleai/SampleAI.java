@@ -6,7 +6,7 @@ import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
-import sw.shared.data.PlayerDataSet;
+import sw.shared.data.PlayerData;
 import sw.shared.data.Shot;
 
 public class SampleAI extends AIPlayer
@@ -26,22 +26,22 @@ public class SampleAI extends AIPlayer
 	public void gameStateChanged(GameStateChangedEvent e)
 	{
 		boolean turn = false;
-		if (getDataSet().xPosition() < 150)
+		if (getDataSet().getPosition().x < 150)
 		{
 			turn = true;
 			this.getCurrentState().setRotation((int)Math.signum(90-getDataSet().getDirection()));
 		}
-		if (getDataSet().yPosition() < 150)
+		if (getDataSet().getPosition().y < 150)
 		{
 			turn = true;
 			this.getCurrentState().setRotation(-(int)Math.signum(180-getDataSet().getDirection()));
 		}
-		if (getDataSet().xPosition() > GameConstants.PLAYING_FIELD_WIDTH-150)
+		if (getDataSet().getPosition().x > GameConstants.PLAYING_FIELD_WIDTH-150)
 		{
 			turn = true;
 			this.getCurrentState().setRotation((int)Math.signum(270-getDataSet().getDirection()));
 		}
-		if (getDataSet().yPosition() > GameConstants.PLAYING_FIELD_HEIGHT-150)
+		if (getDataSet().getPosition().y > GameConstants.PLAYING_FIELD_HEIGHT-150)
 		{
 			turn = true;
 			this.getCurrentState().setRotation((int)Math.signum(180-getDataSet().getDirection()));
@@ -65,7 +65,7 @@ public class SampleAI extends AIPlayer
 		Shot mshot = new Shot(this.getDataSet().getPosition(), this.getDataSet().getDirection(), true);
 		for (int i = 0; i < this.getPlayerList().size(); i++)
 		{
-			PlayerDataSet ds = this.getPlayerList().dataAt(i);
+			PlayerData ds = this.getPlayerList().dataAt(i);
 			if (ds == null || ds.equals(this.getDataSet()))
 				continue;
 			if (shot.distanceTo(ds.getPosition()) < GameConstants.PLAYER_SIZE / 2)
