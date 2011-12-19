@@ -1,9 +1,9 @@
 ### Space Warrior - README ###
-Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 Space Warrior Pre 0.1.1
 
 Description
-Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯¯¯¯¯¯¯
 Space Warrior is a free, open source multiplayer shooter which can be played in local networks as well as over the internet. 
 
 Every Player is equipped with a space ship which he can use to move in the environment and fight against the other players in a last man standing gameplay mode. To do so, the player uses a laser gun which can fire two types of shots, a regular shot or a so-called "master shot", whereas the last one has a greater range and causes more damage, but also uses more ammo. 
@@ -15,13 +15,13 @@ After doing so, we will add more functionality, including an API for opponents p
 However, we would be glad if you could check out this site frequently to stay up-to-date and do not miss the coming releases.
 
 Setup
-Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯
 After downloading, you will have to start a server by launching the SW_Server.jar in the folder "server".
 Once it is started, several clients can connect. The client application can be found in the folder "client".
 
 
 Gameplay/Controls
-Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 Move your spaceship using
 "W" - forward
 "A" - turning left
@@ -29,15 +29,15 @@ Move your spaceship using
 "N" - normal shot
 "M" - master shot
 
-The aim is to eliminate your opponents. For each kill, you will get a point.
+The aim is to eliminate you opponents. For each kill, you will get a point.
 
 License
-Â¯Â¯Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯¯¯
 Space Warrior is published under the terms of the GNU GPL v3.0
 Also see the LICENSE.txt
 
 About
-Â¯Â¯Â¯Â¯Â¯
+¯¯¯¯¯
 For further information, also see http://stes.github.com/Space-Warrior/
 Also consider following us on twitter: @Space_Warrior
 
