@@ -47,7 +47,6 @@ public class HumanPlayer extends Player implements KeyListener
 	public HumanPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);
-        //Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 	}
 	
 	private void updateInput()
@@ -79,7 +78,8 @@ public class HumanPlayer extends Player implements KeyListener
             case 's': _backward = true; break;
             case 'a': _left = true; break;
             case 'd': _right = true; break;
-            case 'n': case 'm': this.getCurrentState().setShot(0); break;
+            case 'n': this.getCurrentState().setShot(1); break;
+            case 'm': this.getCurrentState().setShot(2); break;
         }
         
         this.updateInput();
