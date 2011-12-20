@@ -154,8 +154,8 @@ public class Shot extends java.awt.geom.Line2D.Double
 		this.setLine(
 				startPoint(),
 				new Point.Double((startPoint().getX() + range
-						* Math.sin(Math.toRadians(direction))), (startPoint()
-						.getY() + range * Math.cos(Math.toRadians(direction)))));
+						* Math.sin(direction)), (startPoint()
+						.getY() + range * Math.cos(direction))));
 	}
 
 	/**

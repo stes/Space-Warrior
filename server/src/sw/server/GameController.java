@@ -195,8 +195,22 @@ public class GameController
 						_server.sendBroadcast(p);
 					}
 				}
-				data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
-				data.rotate(GameConstants.ANGEL_OF_ROTATION * Math.signum(input.turnDirection()));
+				if (input.moveDirection() == 0)
+					data.accelerate(-GameConstants.ACCELERATION);
+				else
+				{
+					data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
+				}
+				
+				if (input.turnDirection() == 0)
+				{
+					data.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
+				}
+				else
+				{
+					data.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * input.turnDirection());
+				}
+
 				data.reload();
 				data.move();
 				// TODO improve

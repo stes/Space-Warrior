@@ -131,7 +131,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			}
 			
 			g2d.drawImage(
-						rotateImage(ImageContainer.getLocalInstance().getImage(d.getImageID()), 180 - d.getDirection()), null,
+						rotateImage(ImageContainer.getLocalInstance().getImage(d.getImageID()), Math.PI - d.getDirection()), null,
 						(int) ((d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
 						(int) ((d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2)));
 		}
@@ -163,7 +163,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	
 	protected AffineTransform affineTransform(BufferedImage src, double degrees)
 	{
-		return AffineTransform.getRotateInstance(Math.toRadians(degrees),
+		return AffineTransform.getRotateInstance(degrees,
 				src.getWidth() / 2, src.getHeight() / 2);
 	}
 

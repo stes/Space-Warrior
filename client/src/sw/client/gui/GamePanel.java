@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -47,6 +48,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     private TransparentTextArea _lstChathistory;
     private JScrollPane _scrollScoreBoard;
     private JTable _tblScoreBoard;
+    private JButton _btnDisconnect;
     
     private PlayerTableModel _model;
     
@@ -126,9 +128,19 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _tblScoreBoard = new JTable(_model);
         
         _scrollScoreBoard = new JScrollPane(_tblScoreBoard);
-		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);
-        
+		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);		
         this.add(_scrollScoreBoard);
+        
+		_btnDisconnect = new JButton("Disconnect");
+		_btnDisconnect.setBounds(this.getWidth()-300, 450, 100, 50);
+		_btnDisconnect.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				// TODO add disconnect function
+			}
+		});
         
         _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();

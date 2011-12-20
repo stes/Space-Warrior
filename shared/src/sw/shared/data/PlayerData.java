@@ -137,7 +137,7 @@ public class PlayerData implements Comparable<PlayerData>
 		int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
 		_location = new Point.Double(x, y);
 		_speed = 0;
-		_direction = (double) _random.nextInt(360);
+		_direction = _random.nextDouble() * 2 * Math.PI;
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_alive = true;
@@ -181,22 +181,59 @@ public class PlayerData implements Comparable<PlayerData>
 	{
 		if(_alive)
 		{
-			double b = Math.toRadians(getDirection());
-			double x = _speed * Math.sin(b);
-			double y = _speed * Math.cos(b);
+			double x = _speed * Math.sin(getDirection());
+			double y = _speed * Math.cos(getDirection());
 			this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			this.rotate(_turnSpeed);
 		}
 	}
 
+	public void angularAccelerate(double value)
+	{
+		setTurnSpeed(_turnSpeed + value);
+	}
+	
+	public void setTurnSpeed(double value)
+	{
+		_turnSpeed = value;
+		if (_turnSpeed > GameConstants.MAX_ANGULAR_SPEED)
+		{
+			_turnSpeed = GameConstants.MAX_ANGULAR_SPEED;
+		}
+		else if (_turnSpeed < -GameConstants.MAX_ANGULAR_SPEED)
+		{
+			_turnSpeed = -GameConstants.MAX_ANGULAR_SPEED;
+		}
+		
+	}
+	
+	public void angularDecelerate(double value)
+	{
+		double dec = Math.abs(value);
+		if (_turnSpeed < 0 && Math.abs(_turnSpeed) > dec)
+		{
+			setTurnSpeed(_turnSpeed + dec);
+		}
+		else if (_turnSpeed > 0 && Math.abs(_turnSpeed) > dec)
+		{
+			setTurnSpeed(_turnSpeed - dec);
+		}
+		else
+		{
+			setTurnSpeed(0);
+		}
+		
+	}
+	
 	/**
 	 * turns the character indicated by the angel anti-clockwise
 	 * 
-	 * @param angel
+	 * @param angle
 	 *            the rotation angle in degrees
 	 */
 	public void rotate(double angle)
 	{
-		_direction += angle;
+		setDirection(_direction + angle);
 	}
 	
 	/**
@@ -204,9 +241,14 @@ public class PlayerData implements Comparable<PlayerData>
 	 */
 	public void accelerate(double value)
 	{
-		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, _speed+value));
+		this.setSpeed(getSpeed() + value);
 	}
 
+	public void setSpeed(double value)
+	{
+		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, value));
+	}
+	
 	/**
 	 * increases the munition
 	 */
@@ -285,8 +327,8 @@ public class PlayerData implements Comparable<PlayerData>
 	private Point.Double positionAfter(double time)
 	{
 		double way = time * _speed;
-		return new Point.Double(_location.getX() + way * Math.sin(Math.toRadians(_direction)),
-				_location.getY() + way * Math.cos(Math.toRadians(_direction)));
+		return new Point.Double(_location.getX() + way * Math.sin(_direction),
+				_location.getY() + way * Math.cos(_direction));
 	}
 	
 	/**
@@ -295,6 +337,11 @@ public class PlayerData implements Comparable<PlayerData>
 	public boolean isLocal()
 	{
 		return _local;
+	}
+	
+	public void setDirection(double direction)
+	{
+		_direction = direction % (2 * Math.PI);
 	}
 	
 	/**

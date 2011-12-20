@@ -45,6 +45,8 @@ public final class GameConstants
     public final static int MAX_MASTER_DAMAGE = 25;
     public final static int MAX_COLLISION_DAMAGE = 5;
     public final static int MAX_SHOT_INTERVAL = 200;
+    public final static double MAX_ANGULAR_SPEED = Math.PI / 20;
+    public final static double ANGULAR_ACCELERATION = 0.0005 * TICK_INTERVAL;
     
     // Shooting    
     public final static int AMMO_PER_SHOT = 20;
@@ -53,7 +55,7 @@ public final class GameConstants
     // Movements
     public final static double ACCELERATION = 0.01 * TICK_INTERVAL;
     public final static double DECELERATION = -0.01 * TICK_INTERVAL;
-    public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
+    //public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
     
     // Players
     public final static int PLAYER_SIZE = 64;
