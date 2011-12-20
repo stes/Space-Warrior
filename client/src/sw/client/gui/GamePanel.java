@@ -17,7 +17,12 @@
  ******************************************************************************/
 package sw.client.gui;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -26,6 +31,8 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientListener;
@@ -43,9 +50,10 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	private static final long serialVersionUID = -8751902318746091633L;
 	
 	private PlayingFieldPanel _playingField;
-    private TransparentTextField _txtChatmessage;
-    private TransparentTextArea _lstChathistory;
+    private JTextField _txtChatmessage;
+    private JTextArea _lstChathistory;
     private JScrollPane _scrollScoreBoard;
+    private JScrollPane _scrollChathistory;
     private JTable _tblScoreBoard;
     
     private PlayerTableModel _model;
@@ -74,8 +82,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			public void componentResized(ComponentEvent e)
 			{
 		        _txtChatmessage.setBounds(50, _self.getHeight()-50, _self.getWidth()/3, 25);
-		        _lstChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
 				_scrollScoreBoard.setBounds(_self.getWidth()*5/6-50, 50, _self.getWidth()/6, 150);
+				_scrollChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
 		        _playingField.setSize(_self.getSize());
 				_self.repaint();
 			}
@@ -113,22 +121,70 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     {
         int chat = this.getHeight()-200;
         System.out.println(chat);
-        _txtChatmessage = new TransparentTextField();
+        _txtChatmessage = new JTextField() {
+        	@Override
+        	protected void paintComponent(Graphics g)
+            {
+                Graphics2D g2d = (Graphics2D)g;
+                this.setBackground(Color.white);
+                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+                g2d.setComposite(alphaComp);
+                g2d.setColor(getBackground());
+                Rectangle tBounds = g2d.getClip().getBounds();
+                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
+                super.paintComponent(g2d);
+                this.setForeground(Color.black);
+            }  
+		};
         _txtChatmessage.setBounds(100, chat+100, 520, 25);
+        _txtChatmessage.setOpaque(false);
         this.add(_txtChatmessage);
         _txtChatmessage.addActionListener(this);
-    	
-        _lstChathistory = new TransparentTextArea();
-        _lstChathistory.setBounds(100, chat, 645, 90);
-        _lstChathistory.setEditable(false);
-        this.add(_lstChathistory);
         
         _tblScoreBoard = new JTable(_model);
         
-        _scrollScoreBoard = new JScrollPane(_tblScoreBoard);
+        _scrollScoreBoard = new JScrollPane(_tblScoreBoard) {
+        	@Override
+        	protected void paintComponent(Graphics g)
+            {
+                Graphics2D g2d = (Graphics2D)g;
+                this.setBackground(Color.white);
+                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+                g2d.setComposite(alphaComp);
+                g2d.setColor(getBackground());
+                Rectangle tBounds = g2d.getClip().getBounds();
+                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
+                super.paintComponent(g2d);
+                this.setForeground(Color.black);
+            }  
+		};
+		_scrollScoreBoard.setOpaque(false);
 		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);
         
         this.add(_scrollScoreBoard);
+        
+        _lstChathistory = new JTextArea();
+        _lstChathistory.setEditable(false);
+        
+        _scrollChathistory = new JScrollPane(_lstChathistory) {
+        	@Override
+        	protected void paintComponent(Graphics g)
+            {
+                Graphics2D g2d = (Graphics2D)g;
+                this.setBackground(Color.white);
+                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+                g2d.setComposite(alphaComp);
+                g2d.setColor(getBackground());
+                Rectangle tBounds = g2d.getClip().getBounds();
+                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
+                super.paintComponent(g2d);
+                this.setForeground(Color.black);
+            }  
+		};
+		_scrollChathistory.setBounds(100, chat, 645, 90);
+		_scrollChathistory.setOpaque(false);
+		
+		this.add(_scrollChathistory);
         
         _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();
