@@ -3,4 +3,6 @@
 /client/bin
 /server/bin
 /shared/bin
+/current_build
 *.class
+*.jar
