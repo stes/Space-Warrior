@@ -50,7 +50,6 @@ public class ShotPool
                 if (_shots.get(i).getIsOutOfDate())
                 {
                     _shots.remove(i);
-                    _playingField.repaint();
                 }
                 else
                 {
