@@ -94,10 +94,17 @@ public class ImageContainer
 
 	private BufferedImage scale(BufferedImage source)
 	{
+		return scale(source, 1, 1);
+	}
+	
+	private BufferedImage scale(BufferedImage source, double scaleX, double scaleY)
+	{
 		// Create new (blank) image of required (scaled) size
 
+		int width =(int)(GameConstants.PLAYER_SIZE * scaleX);
+		int height = (int)(GameConstants.PLAYER_SIZE * scaleY);
 		BufferedImage scaledImage = new BufferedImage(
-				GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE,
+				width, height,
 				BufferedImage.TYPE_INT_ARGB);
 
 		// Paint scaled version of image to new image
@@ -105,16 +112,26 @@ public class ImageContainer
 		Graphics2D graphics2D = scaledImage.createGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		graphics2D.drawImage(source, 0, 0, GameConstants.PLAYER_SIZE,
-				GameConstants.PLAYER_SIZE, null);
+		graphics2D.drawImage(source, 0, 0, width,
+				height, null);
 
 		// clean up
 
-		//graphics2D.dispose();
+		graphics2D.dispose();
 
 		return scaledImage;
 	}
 
+	public void scaleImages(double scaleX, double scaleY)
+	{
+		HashMap<Integer, BufferedImage> newImg = new HashMap<Integer, BufferedImage>();
+		for (int i : _images.keySet())
+		{
+			newImg.put(i, scale(_images.get(i), scaleX, scaleY));
+		}
+		_images = newImg;
+	}
+	
 	public BufferedImage getImage(GameConstants.Images id)
 	{
 		return _images.get(id.getID());

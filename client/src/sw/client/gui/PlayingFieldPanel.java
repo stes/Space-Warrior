@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -47,6 +49,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
+	private double _lastPaint;
 	
 	private IGameStateManager _stateManager;
 
@@ -76,6 +79,17 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				_self.requestFocusInWindow();
 			}
 		});
+		this.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+//				double scaleX = (double)_self.getWidth() / (double)GameConstants.PLAYING_FIELD_WIDTH;
+//				double scaleY = (double)_self.getHeight() / (double)GameConstants.PLAYING_FIELD_HEIGHT;
+//				ImageContainer.getLocalInstance().scaleImages(scaleX, scaleY);
+				_self.repaint();
+			}
+		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
 		ShotPool.init(this);
@@ -88,17 +102,22 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		// Graphics2D g2d = (Graphics2D) g;
-		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
+
+//		double scaleX = (double)this.getWidth() / (double)GameConstants.PLAYING_FIELD_WIDTH;
+//		double scaleY = (double)this.getHeight() / (double)GameConstants.PLAYING_FIELD_HEIGHT;
 		
-		// TODO: this is too slow!
-		// TODO: for now, it's enough!
+		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
+		g.setColor(Color.WHITE);
+		g.drawString("FPS: " + 1000/ (System.currentTimeMillis() - _lastPaint), this.getWidth()-100, 20);
+		_lastPaint = System.currentTimeMillis();
+		
 		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
 				GameConstants.PLAYING_FIELD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		Graphics2D g2d = img.createGraphics();
 		
 		g2d.setColor(new Color(0, 0, 0, 0));
+		
 		ShotPool.paint(g2d);
 
 		for (int i = 0; i < _stateManager.getPlayerList().size(); i++)
@@ -113,11 +132,11 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			
 			g2d.drawImage(
 						rotateImage(ImageContainer.getLocalInstance().getImage(d.getImageID()), 180 - d.getDirection()), null,
-						(int) d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2,
-						(int) d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2);
+						(int) ((d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
+						(int) ((d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2)));
 		}
 		
-		((Graphics2D) g).drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 
 	private void paintBars(Graphics2D g2d, PlayerData d)

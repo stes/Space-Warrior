@@ -18,7 +18,7 @@ public class World
 		return _stateMap;
 	}
 	
-	public void exploreState(State s)
+	public void exploreState(SimpleState s)
 	{
 		if (!_stateMap.containsKey(s.getHash()))
 		{

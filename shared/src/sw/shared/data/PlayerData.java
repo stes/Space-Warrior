@@ -36,13 +36,12 @@ public class PlayerData implements Comparable<PlayerData>
 	private int _lifepoints;
 	private int _ammo;
 	private double _direction;
+	private double _turnSpeed;
 	private double _speed;
 	private int _score;
 	private boolean _alive;
 	private long _lastShot;
-	
 	private boolean _local;
-
 	private int _imageID;
 
 	/**
@@ -83,6 +82,27 @@ public class PlayerData implements Comparable<PlayerData>
 		this(name, GameConstants.Images.SHIP_3.getID());
 	}
 	
+	public PlayerData(PlayerData dataset)
+	{
+		_name = new String(dataset.getName());
+		_local = dataset.isLocal();
+		_location = new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY());
+		_direction = dataset.getDirection();
+		_score = dataset.getScore();
+
+		if (_local)
+		{
+			_lifepoints = dataset.getLifepoints();
+			_ammo = dataset.getAmmo();
+			_speed = dataset.getSpeed();
+		}
+	}
+	
+	private double getSpeed()
+	{
+		return _speed;
+	}
+
 	/**
 	 * Creates a new Player Data record
 	 */
@@ -121,6 +141,7 @@ public class PlayerData implements Comparable<PlayerData>
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_alive = true;
+		_turnSpeed = 0;
 	}
 	
 	public void die()
@@ -334,6 +355,11 @@ public class PlayerData implements Comparable<PlayerData>
 		return _lastShot;
 	}
 	
+	public double getTurnSpeed()
+	{
+		return _turnSpeed;
+	}
+	
 	public boolean isReadyToShoot()
 	{
 		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
@@ -348,4 +374,5 @@ public class PlayerData implements Comparable<PlayerData>
 	{
 		_imageID = id;
 	}
+	
 }
