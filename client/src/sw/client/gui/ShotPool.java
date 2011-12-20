@@ -28,17 +28,15 @@ import sw.shared.data.Shot;
 public class ShotPool
 {
     private static ArrayList<ShotGraphics> _shots;
-    private static PlayingFieldPanel _playingField;
     
     public static void addShot(Shot shot)
     {
         _shots.add(new ShotGraphics(shot));
     }
     
-    public static void init(PlayingFieldPanel playingFieldPanel)
+    public static void init()
     {
         _shots = new ArrayList<ShotGraphics>(100);
-        _playingField = playingFieldPanel;
     }
     
     public static void paint(Graphics g)

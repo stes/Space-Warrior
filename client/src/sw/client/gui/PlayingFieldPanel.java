@@ -92,7 +92,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
-		ShotPool.init(this);
+		ShotPool.init();
 	}
 	
 	/**

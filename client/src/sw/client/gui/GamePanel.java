@@ -28,7 +28,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,19 +48,18 @@ import sw.shared.data.Unpacker;
 public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
-	
+
 	private PlayingFieldPanel _playingField;
     private JTextField _txtChatmessage;
     private JTextArea _lstChathistory;
     private JScrollPane _scrollScoreBoard;
     private JScrollPane _scrollChathistory;
     private JTable _tblScoreBoard;
-    private JButton _btnDisconnect;
     
     private PlayerTableModel _model;
     
     private GamePanel _self;
-	
+
     // other references
     private IGameStateManager _stateManager;
     private IClient _client;
@@ -77,7 +75,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
-		
+
 		this.addComponentListener(new ComponentAdapter()
 		{
 			@Override
@@ -102,7 +100,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			this.processInput();
 		}
 	}
-	    
+
     public void updatePlayingField()
     {
         if (_playingField != null)
@@ -124,7 +122,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         int chat = this.getHeight()-200;
         System.out.println(chat);
         _txtChatmessage = new JTextField() {
-        	@Override
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2109656328663846511L;
+
+			@Override
         	protected void paintComponent(Graphics g)
             {
                 Graphics2D g2d = (Graphics2D)g;
@@ -145,24 +148,13 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         
         _tblScoreBoard = new JTable(_model);
         
-<<<<<<< HEAD
-        _scrollScoreBoard = new JScrollPane(_tblScoreBoard);
-		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);		
-        this.add(_scrollScoreBoard);
-        
-		_btnDisconnect = new JButton("Disconnect");
-		_btnDisconnect.setBounds(this.getWidth()-300, 450, 100, 50);
-		_btnDisconnect.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				// TODO add disconnect function
-			}
-		});
-=======
         _scrollScoreBoard = new JScrollPane(_tblScoreBoard) {
-        	@Override
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2017756045550747936L;
+
+			@Override
         	protected void paintComponent(Graphics g)
             {
                 Graphics2D g2d = (Graphics2D)g;
@@ -185,7 +177,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         _lstChathistory.setEditable(false);
         
         _scrollChathistory = new JScrollPane(_lstChathistory) {
-        	@Override
+        	/**
+			 * 
+			 */
+			private static final long serialVersionUID = 8703321293181453130L;
+
+			@Override
         	protected void paintComponent(Graphics g)
             {
                 Graphics2D g2d = (Graphics2D)g;
@@ -201,9 +198,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		};
 		_scrollChathistory.setBounds(100, chat, 645, 90);
 		_scrollChathistory.setOpaque(false);
-		
+
 		this.add(_scrollChathistory);
->>>>>>> 7b6a09041091c51bf863d17f8af6c0651c75fdf6
         
         _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();
@@ -234,7 +230,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	{
 		_model.fireTableDataChanged();
 	}
-	
+
 	@Override
 	public void serverInfo(ServerInfo info) {}
 
@@ -243,20 +239,20 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	{
 		this.processInput();
 	}
-	
+
 	private void appendMessage(String message)
 	{
 		_lstChathistory.append(message);
 		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
 	}
-	
+
 	private class PlayerTableModel extends AbstractTableModel
 	{
-		
+
 		private static final long serialVersionUID = 3882143612301180149L;
-		
+
 		private String[] _headers = {"Player", "Score"};
-		
+
 		@Override
 		public String getColumnName(int col)
 		{
@@ -288,7 +284,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 					return null;
 			}
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int row, int col)
 		{
