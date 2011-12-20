@@ -21,6 +21,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.net.InetSocketAddress;
 
 import javax.swing.JFrame;
@@ -99,6 +101,15 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}
 		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		try
+		{
+			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
+		}
+		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
