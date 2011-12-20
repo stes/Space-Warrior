@@ -52,10 +52,11 @@ public class GameController
 	 * 
 	 * @param name
 	 *            the player's name
+	 * @param imageID 
 	 */
-	public void playerConnected(String name)
+	public void playerConnected(String name, int imageID)
 	{
-		PlayerData newDataSet = new PlayerData(name);
+		PlayerData newDataSet = new PlayerData(name, imageID);
 		_players.insert(newDataSet, null);
 	}
 

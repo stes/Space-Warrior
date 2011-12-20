@@ -116,6 +116,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 		Packer start = new Packer(Packettype.CL_START_INFO);
 		start.writeUTF(_loginPanel.getName());
+		start.writeInt(_loginPanel.getImageID());
 		_client.sendPacket(start);
 	}
 

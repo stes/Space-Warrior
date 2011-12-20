@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.client.gui;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -61,29 +63,56 @@ public class ImageContainer
 		{
 			_images.put(
 					GameConstants.Images.BACKGROUND.getID(),
-					ImageIO.read(getClass().getResourceAsStream(
+							ImageIO.read(getClass().getResourceAsStream(
 							"/rsc/background.jpg")));
 			_images.put(
 					GameConstants.Images.SHIP_1.getID(),
-					ImageIO.read(getClass().getResourceAsStream(
-							"/rsc/Ship2Grey.gif")));
+					scale(
+							ImageIO.read(getClass()
+									.getResourceAsStream("/rsc/Ship2Grey.gif"))));
 			_images.put(
 					GameConstants.Images.SHIP_2.getID(),
-					ImageIO.read(getClass().getResourceAsStream(
-							"/rsc/Ship3Grey.gif")));
+					scale(
+							ImageIO.read(getClass()
+									.getResourceAsStream("/rsc/Ship3Grey.gif"))));
 			_images.put(
 					GameConstants.Images.SHIP_3.getID(),
-					ImageIO.read(getClass().getResourceAsStream(
-							"/rsc/DeathFighter1.gif")));
+					scale(
+							ImageIO.read(getClass().getResourceAsStream(
+									"/rsc/DeathFighter1.gif"))));
 			_images.put(
 					GameConstants.Images.SHIP_4.getID(),
-					ImageIO.read(getClass().getResourceAsStream(
-							"/rsc/Ship1Brown.gif")));
+					scale(
+							ImageIO.read(getClass().getResourceAsStream(
+									"/rsc/Ship1Brown.gif"))));
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private BufferedImage scale(BufferedImage source)
+	{
+		// Create new (blank) image of required (scaled) size
+
+		BufferedImage scaledImage = new BufferedImage(
+				GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE,
+				BufferedImage.TYPE_INT_ARGB);
+
+		// Paint scaled version of image to new image
+
+		Graphics2D graphics2D = scaledImage.createGraphics();
+		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		graphics2D.drawImage(source, 0, 0, GameConstants.PLAYER_SIZE,
+				GameConstants.PLAYER_SIZE, null);
+
+		// clean up
+
+		//graphics2D.dispose();
+
+		return scaledImage;
 	}
 
 	public BufferedImage getImage(GameConstants.Images id)

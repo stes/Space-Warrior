@@ -26,7 +26,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 import javax.swing.JPanel;
 

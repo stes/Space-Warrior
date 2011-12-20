@@ -121,6 +121,11 @@ public class LoginPanel extends JPanel implements ClientListener
 			l.login(e);
 
 	}
+	
+	public int getImageID()
+	{
+		return _imageID;
+	}
 
 	public String getIP()
 	{

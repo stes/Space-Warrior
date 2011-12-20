@@ -110,12 +110,13 @@ public class SWServer implements IServer, NetworkListener
 		if (Packettype.CL_START_INFO == packet.getType() && !client.isPlaying())
 		{
 			String name = packet.readUTF();
+			int imageID = packet.readInt();
 			Client cl = this.getClientbyName(name);
 			if (cl == null)
 			{
 				client.setName(name);
 				client.enterGame();
-				_controller.playerConnected(client.getName());
+				_controller.playerConnected(client.getName(), imageID);
 			}
 			else
 			{
