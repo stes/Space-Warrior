@@ -39,102 +39,69 @@ import sw.client.gcontrol.IGameStateManager;
  */
 public class HumanPlayer extends Player implements KeyListener
 {
+	private boolean _forward;
+	private boolean _backward;
+	private boolean _left;
+	private boolean _right;
+	
 	public HumanPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);
         //Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 	}
+	
+	private void updateInput()
+	{
+		int direction = 0;
+        if(_forward && !_backward)
+        	direction = 1;
+        if(!_forward && _backward)
+        	direction = -1;
+        
+        int rotation = 0;
+        if(_left && !_right)
+        	rotation = 1;
+        if(!_left && _right)
+        	rotation = -1;
+        
+        this.getCurrentState().setDirection(direction);
+        this.getCurrentState().setRotation(rotation);
+        
+        this.update();
+	}
     
 	@Override
-	public void keyPressed(KeyEvent arg0)
+	public void keyPressed(KeyEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+        switch (e.getKeyChar())
+        {
+            case 'w': _forward = true; break;
+            case 's': _backward = true; break;
+            case 'a': _left = true; break;
+            case 'd': _right = true; break;
+            case 'n': case 'm': this.getCurrentState().setShot(0); break;
+        }
+        
+        this.updateInput();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		//System.out.println(e.getKeyChar());
-        char eingabe = e.getKeyChar();
-        switch (eingabe)
+		switch (e.getKeyChar())
         {
-            case 'w':
-            {
-                // forwards
-                this.getCurrentState().setDirection(-1);
-                break;
-            }
-            case 's':
-            {
-                // backwards
-                this.getCurrentState().setDirection(0);
-                break;
-            }
-            case 'a':
-            {
-                // left
-                this.getCurrentState().setRotation(0);
-                break;
-            }
-            case 'd':
-            {
-                // right
-                this.getCurrentState().setRotation(0);
-                break;
-            }
-            case 'm': case 'n':
-            {
-                this.getCurrentState().setShot(0);
-                break;
-            }
+            case 'w': _forward = false; break;
+            case 's': _backward = false; break;
+            case 'a': _left = false; break;
+            case 'd': _right = false; break;
+            case 'n': case 'm': this.getCurrentState().setShot(0); break;
         }
-        this.update();
+		
+        this.updateInput();
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
-        char eingabe = e.getKeyChar();
-        switch (eingabe)
-        {
-            case 'w':
-            {
-                // forwards
-                this.getCurrentState().setDirection(1);
-                break;
-            }
-            case 's':
-            {
-                // backwards
-                this.getCurrentState().setDirection(-1);
-                break;
-            }
-            case 'a':
-            {
-                // Left
-                this.getCurrentState().setRotation(1);
-                break;
-            }
-            case 'd':
-            {
-                // right
-                this.getCurrentState().setRotation(-1);
-                break;
-            }
-            case 'n':
-            {
-                // normal shot
-                this.getCurrentState().setShot(1);
-                break;
-            }
-            case 'm':
-            {
-                // master shot
-                this.getCurrentState().setShot(2);
-                break;
-            }
-        }
-        this.update();
 	}
 }
