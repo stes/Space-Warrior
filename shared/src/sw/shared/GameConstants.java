@@ -22,6 +22,8 @@ package sw.shared;
  */
 public final class GameConstants
 {
+	// TODO: use enums!
+	
     // Network
     public final static int STANDARD_PORT = 2489;
     public final static byte[] SERVER_INFO_REQUEST = new byte[]{'i', 'n', 'f', 'o', '?'};
@@ -56,6 +58,54 @@ public final class GameConstants
     // Players
     public final static int PLAYER_SIZE = 64;
     public final static int MAX_COLLISION_DAMAGE_RANGE = PLAYER_SIZE / 2;
+    
+    // Images
+    public static enum Images
+    {
+    	SHIP_1(0x11),
+    	SHIP_2(0x12),
+    	BACKGROUND(0x00),
+    	SHIP_3(0x13),
+    	SHIP_4(0x14);
+    	
+    	private int _id;
+    	private Images(int id)
+    	{
+    		_id = id;
+    	}
+    	public int getID()
+    	{
+    		return _id;
+    	}
+    	public static Images min()
+    	{
+    		int min = Integer.MAX_VALUE;
+    		Images img = null;
+    		for (Images i : Images.values())
+    		{
+    			if (min > i.getID() && i.getID() != BACKGROUND.getID())
+    			{
+    				min = i.getID();
+    				img = i;
+    			}
+    		}
+    		return img;
+    	}
+    	public static Images max()
+    	{
+    		int max = Integer.MIN_VALUE;
+    		Images img = null;
+    		for (Images i : Images.values())
+    		{
+    			if (max < i.getID()&& i.getID() != BACKGROUND.getID())
+    			{
+    				max = i.getID();
+    				img = i;
+    			}
+    		}
+    		return img;
+    	}
+    }
     
     // Playing field
     public final static int PLAYING_FIELD_WIDTH = 1400;

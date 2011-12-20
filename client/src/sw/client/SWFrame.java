@@ -76,14 +76,8 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(d.width / 2, d.height / 2);
 		
-		//this.setSize(1000, 500);
-		
 		this.setExtendedState(MAXIMIZED_BOTH);
 		System.out.println(this.getSize().toString());
-		//this.setSize(GameConstants.REFERENCE_X + GameConstants.PLAYING_FIELD_WIDTH,
-		//		GameConstants.REFERENCE_Y+ GameConstants.PLAYING_FIELD_HEIGHT);
-
-		//this.setResizable(false);
 		
 		this.setMinimumSize(new Dimension(800, 600));
 		
@@ -108,8 +102,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		{
 			e.printStackTrace();
 		}
-		// this.initEastereggs();
-		this.updateServerList();
 	}
 
 	@Override
@@ -166,47 +158,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	}
 
 	@Override
-	public void windowActivated(WindowEvent e)
-	{
-	}
-
-	// private void initEastereggs()
-	// {
-	// OutputStream output = new OutputStream()
-	// {
-	// @Override
-	// public void write(byte[] b, int off, int len)
-	// {
-	// _lstChathistory.append(new String(b, off, len));
-	// }
-	//
-	// @Override
-	// public void write(int b) throws IOException
-	// {
-	// _lstChathistory.append(String.valueOf((char) b));
-	// }
-	// };
-	//
-	// InputStream input = new InputStream()
-	// {
-	// @Override
-	// public int read()
-	// {
-	// return 0;
-	// }
-	// };
-	//
-	// //System.setOut(new PrintStream(output, true));
-	// // -.-
-	// System.setIn(input);
-	//
-	// _bfInterpreter = new BfInterpreter();
-	// }
+	public void windowActivated(WindowEvent e){}
 
 	@Override
-	public void windowClosed(WindowEvent e)
-	{
-	}
+	public void windowClosed(WindowEvent e)	{}
 
 	@Override
 	public void windowClosing(WindowEvent e)
@@ -216,24 +171,16 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	}
 
 	@Override
-	public void windowDeactivated(WindowEvent e)
-	{
-	}
+	public void windowDeactivated(WindowEvent e) {}
 
 	@Override
-	public void windowDeiconified(WindowEvent e)
-	{
-	}
+	public void windowDeiconified(WindowEvent e) {}
 
 	@Override
-	public void windowIconified(WindowEvent e)
-	{
-	}
+	public void windowIconified(WindowEvent e) {}
 
 	@Override
-	public void windowOpened(WindowEvent e)
-	{
-	}
+	public void windowOpened(WindowEvent e) {}
 
 	/**
 	 * Connects to a server
@@ -259,12 +206,5 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		System.out.println("switch mode");
 		this.setVisible(true);
 		this.repaint();
-	}
-
-	/**
-	 * updates server list
-	 */
-	private void updateServerList()
-	{
 	}
 }

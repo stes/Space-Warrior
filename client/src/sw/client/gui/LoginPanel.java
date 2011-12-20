@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -42,6 +43,7 @@ import javax.swing.table.AbstractTableModel;
 import sw.client.ClientListener;
 import sw.client.GameController;
 import sw.shared.GameConstants;
+import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
@@ -62,13 +64,16 @@ public class LoginPanel extends JPanel implements ClientListener
 	private JLabel _lblName;
 	private JScrollPane _scroll;
 	private JTable _tblServers;
-
+	private JButton _btnImage;
+	private JLabel _lblPort;
+	
 	private Vector<ServerInfo> _servers;
 	private ServerTableModel _tableModel;
 
 	private ArrayList<LoginListener> _loginListener;
 
-	private JLabel _lblPort;
+
+	private int _imageID;
 
 	public LoginPanel(int width, int height)
 	{
@@ -83,6 +88,7 @@ public class LoginPanel extends JPanel implements ClientListener
 		_servers = new Vector<ServerInfo>();
 		_tableModel = new ServerTableModel();
 
+		_imageID = Images.min().getID();
 		this.initComponents();
 		
 		this.addComponentListener(new ComponentAdapter()
@@ -132,6 +138,24 @@ public class LoginPanel extends JPanel implements ClientListener
 	 */
 	private void initComponents()
 	{
+		_btnImage = new JButton();
+		_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID)));
+		_btnImage.setBounds(200, 250, 64, 64);
+		_btnImage.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				_imageID ++;
+				if (_imageID > Images.max().getID())
+					_imageID = Images.min().getID();
+				if (_imageID < Images.min().getID())
+					_imageID = Images.max().getID();
+				_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID).getScaledInstance(64, 64, 1)));
+			}
+		});
+		this.add(_btnImage);
+		
 		_txtIPAddress = new JTextField();
 		_txtIPAddress.setBounds(200, 10, 100, 25);
 		this.add(_txtIPAddress);
@@ -171,7 +195,7 @@ public class LoginPanel extends JPanel implements ClientListener
 							new InetSocketAddress(
 									_txtIPAddress.getText(),
 									Integer.parseInt(_txtPort.getText())),
-									_txtName.getText()));
+									_txtName.getText(), _imageID));
 				}
 			}
 		});

@@ -19,8 +19,11 @@ package sw.client.gui;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+
+import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -28,54 +31,68 @@ import javax.imageio.ImageIO;
  */
 public class ImageContainer
 {
-    private static ImageContainer _self;
-    
-    public static ImageContainer getLocalInstance()
-    {
-        if (_self == null)
-        {
-            ImageContainer.init();
-        }
-        return _self;
-    }
-    
-    public static void init()
-    {
-        _self = new ImageContainer();
-    }
-    
-    private BufferedImage _localPlayerImg;
+	private static ImageContainer _self;
 
-    private BufferedImage _opposingPlayerImg;
+	public static ImageContainer getLocalInstance()
+	{
+		if (_self == null)
+		{
+			ImageContainer.init();
+		}
+		return _self;
+	}
 
-    private BufferedImage _backgroundImg;
-    
-    public ImageContainer()
-    {
-        try
-        {
-        	_backgroundImg = ImageIO.read(getClass().getResourceAsStream("/rsc/background.jpg"));
-        	_localPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship3Grey.gif"));
-            _opposingPlayerImg = ImageIO.read(getClass().getResourceAsStream("/rsc/Ship2Grey.gif"));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    
-    public BufferedImage getBackgroundImg()
-    {
-    	return _backgroundImg.getSubimage(0, 0, _backgroundImg.getWidth(), _backgroundImg.getHeight());
-    }
-    
-    public BufferedImage getLocalPlayerImg()
-    {
-        return _localPlayerImg.getSubimage(0, 0, _localPlayerImg.getWidth(), _localPlayerImg.getHeight());
-    }
-    
-    public BufferedImage getOpposingPlayerImg()
-    {
-        return _opposingPlayerImg.getSubimage(0, 0, _opposingPlayerImg.getWidth(), _opposingPlayerImg.getHeight());
-    }
+	public static void init()
+	{
+		_self = new ImageContainer();
+	}
+
+	private HashMap<Integer, BufferedImage> _images;
+
+	public ImageContainer()
+	{
+		_images = new HashMap<Integer, BufferedImage>();
+		this.loadImages();
+	}
+
+	private void loadImages()
+	{
+		try
+		{
+			_images.put(
+					GameConstants.Images.BACKGROUND.getID(),
+					ImageIO.read(getClass().getResourceAsStream(
+							"/rsc/background.jpg")));
+			_images.put(
+					GameConstants.Images.SHIP_1.getID(),
+					ImageIO.read(getClass().getResourceAsStream(
+							"/rsc/Ship2Grey.gif")));
+			_images.put(
+					GameConstants.Images.SHIP_2.getID(),
+					ImageIO.read(getClass().getResourceAsStream(
+							"/rsc/Ship3Grey.gif")));
+			_images.put(
+					GameConstants.Images.SHIP_3.getID(),
+					ImageIO.read(getClass().getResourceAsStream(
+							"/rsc/DeathFighter1.gif")));
+			_images.put(
+					GameConstants.Images.SHIP_4.getID(),
+					ImageIO.read(getClass().getResourceAsStream(
+							"/rsc/Ship1Brown.gif")));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public BufferedImage getImage(GameConstants.Images id)
+	{
+		return _images.get(id.getID());
+	}
+
+	public BufferedImage getImage(int id)
+	{
+		return _images.get(id);
+	}
 }

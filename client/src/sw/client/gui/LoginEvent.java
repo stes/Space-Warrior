@@ -26,12 +26,15 @@ public class LoginEvent extends EventObject
 	
 	private InetSocketAddress _ipAdress;
 	private String _loginName;
+	private int _imageID;
 
-	public LoginEvent(Object source, InetSocketAddress ipAdress, String loginName)
+	public LoginEvent(Object source, InetSocketAddress ipAdress, String loginName, int imageID)
 	{
 		super(source);
 		this.setIPAdress(ipAdress);
 		this.setLoginName(loginName);
+		this.setImageID(imageID);
+		
 	}
 
 	public void setIPAdress(InetSocketAddress ipAdress)
@@ -52,5 +55,15 @@ public class LoginEvent extends EventObject
 	public String getLoginName()
 	{
 		return _loginName;
+	}
+
+	public void setImageID(int imageID)
+	{
+		_imageID = imageID;
+	}
+
+	public int getImageID()
+	{
+		return _imageID;
 	}
 }

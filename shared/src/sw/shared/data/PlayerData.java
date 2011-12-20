@@ -43,6 +43,8 @@ public class PlayerData implements Comparable<PlayerData>
 	
 	private boolean _local;
 
+	private int _imageID;
+
 	/**
 	 * creates a new data record from the given packet
 	 * 
@@ -66,6 +68,7 @@ public class PlayerData implements Comparable<PlayerData>
 		data._alive = p.readBoolean();
 		data.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
 		data._direction = p.readDouble();
+		data.setImageID(p.readInt());
 		data._lifepoints = p.readShort();
 		data._ammo = p.readShort();
 		
@@ -77,12 +80,21 @@ public class PlayerData implements Comparable<PlayerData>
 	 */
 	public PlayerData(String name)
 	{
+		this(name, GameConstants.Images.SHIP_3.getID());
+	}
+	
+	/**
+	 * Creates a new Player Data record
+	 */
+	public PlayerData(String name, int imageID)
+	{
 		_name = name;
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_score = 0;
 		_location = new Point.Double(0, 0);
 		_alive = false;
+		_imageID = imageID;
 	}
 	
 	@Override
@@ -134,6 +146,7 @@ public class PlayerData implements Comparable<PlayerData>
 		p.writeDouble(_location.getX());
 		p.writeDouble(_location.getY());
 		p.writeDouble(_direction);
+		p.writeInt(_imageID);
 
 		int l = local ? 1 : 0;
 		p.writeShort(_lifepoints * l);
@@ -324,5 +337,15 @@ public class PlayerData implements Comparable<PlayerData>
 	public boolean isReadyToShoot()
 	{
 		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
+	}
+
+	public int getImageID()
+	{
+		return _imageID;
+	}
+	
+	public void setImageID(int id)
+	{
+		_imageID = id;
 	}
 }

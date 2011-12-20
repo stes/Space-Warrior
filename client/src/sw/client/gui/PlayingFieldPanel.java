@@ -22,10 +22,11 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
@@ -41,14 +42,13 @@ import sw.shared.data.PlayerData;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldPanel extends JPanel implements MouseListener, GameStateChangedListener
+public class PlayingFieldPanel extends JPanel implements GameStateChangedListener
 {
 	private static final long serialVersionUID = -8647279084154615455L;
 
-	private BufferedImage _localPlayerImg;
-	private BufferedImage _opposingPlayerImg;
+	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
-
+	
 	private IGameStateManager _stateManager;
 
 	/**
@@ -61,18 +61,27 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 			IGameStateManager stateManager)
 	{
 		super();
-		this.addMouseListener(this);
-		this.setLayout(null);
-		this.setSize(width, height);
+		_self = this;
 		_stateManager = stateManager;
-		_localPlayerImg = ImageContainer.getLocalInstance().getLocalPlayerImg();
-		_opposingPlayerImg = ImageContainer.getLocalInstance()
-				.getOpposingPlayerImg();
-		_backgroundImg = ImageContainer.getLocalInstance().getBackgroundImg();
-		ShotPool.init(this);
-		this.setBackground(Color.BLACK);
+		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
+		this.init();
 	}
 
+	private void init()
+	{
+		this.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				_self.requestFocusInWindow();
+			}
+		});
+		this.setLayout(null);
+		this.setBackground(Color.BLACK);
+		ShotPool.init(this);
+	}
+	
 	/**
 	 * Paints the playing field with its contents
 	 */
@@ -84,6 +93,7 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		
 		// TODO: this is too slow!
+		// TODO: for now, it's enough!
 		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
 				GameConstants.PLAYING_FIELD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
@@ -100,40 +110,15 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 			if (d.isLocal())
 			{
 				this.paintBars(g2d, d);
-				g2d.drawImage(
-						rotateImage(_localPlayerImg, 180 - d.getDirection()), null,
+			}
+			
+			g2d.drawImage(
+						rotateImage(ImageContainer.getLocalInstance().getImage(d.getImageID()), 180 - d.getDirection()), null,
 						(int) d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2,
 						(int) d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2);
-			}
-			else
-			{
-				g2d.drawImage(
-						rotateImage(_opposingPlayerImg, 180 - d.getDirection()), null,
-						(int) d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2,
-						(int) d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2);
-			}
 		}
 		
-		//((Graphics2D) g).drawImage(img, AffineTransform.getScaleInstance(600, 600), null);
 		((Graphics2D) g).drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-
-		// ((Graphics2D)g).drawImage(img, this.getX(), this.getY(),
-		// this.getWidth(), this.getHeight(), null);
-	}
-
-	private AffineTransform affineTransform(BufferedImage src, double degrees)
-	{
-		return AffineTransform.getRotateInstance(Math.toRadians(degrees),
-				src.getWidth() / 2, src.getHeight() / 2);
-	}
-
-	private BufferedImage rotateImage(BufferedImage src, double degrees)
-	{
-		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
-				src.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = rotatedImage.createGraphics();
-		g.drawImage(src, affineTransform(src, degrees), null);
-		return rotatedImage;
 	}
 
 	private void paintBars(Graphics2D g2d, PlayerData d)
@@ -157,24 +142,21 @@ public class PlayingFieldPanel extends JPanel implements MouseListener, GameStat
 		g2d.setPaint(pat);
 		g2d.drawLine(start_x, y, end_x, y);
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) { }
-
-	@Override
-	public void mousePressed(MouseEvent e)
+	
+	protected AffineTransform affineTransform(BufferedImage src, double degrees)
 	{
-		this.requestFocusInWindow();
+		return AffineTransform.getRotateInstance(Math.toRadians(degrees),
+				src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	@Override
-	public void mouseReleased(MouseEvent e) {}
+	protected BufferedImage rotateImage(BufferedImage src, double degrees)
+	{
+		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
+				src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = rotatedImage.createGraphics();
+		g.drawImage(src, affineTransform(src, degrees), null);
+		return rotatedImage;
+	}
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e){	}
