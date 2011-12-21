@@ -88,6 +88,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
 		
 		_client.addClientListener(_gamePanel);
+		this.addContainerListener(_gamePanel);
 		_client.addClientListener(_loginPanel);
 
 		_loginPanel.addLoginListener(this);

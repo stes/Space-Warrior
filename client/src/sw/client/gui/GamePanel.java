@@ -27,6 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,7 +47,7 @@ import sw.shared.data.Packer;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
-public class GamePanel extends JPanel implements ClientListener, ActionListener
+public class GamePanel extends JPanel implements ClientListener, ActionListener, ContainerListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
 
@@ -55,6 +57,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     private JScrollPane _scrollScoreBoard;
     private JScrollPane _scrollChathistory;
     private JTable _tblScoreBoard;
+    
+    private Thread _renderingLoop;
     
     private PlayerTableModel _model;
     
@@ -88,6 +92,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 				_self.repaint();
 			}
 		});
+		_renderingLoop = new Thread(_playingField);
 	}
 
 	/**
@@ -290,5 +295,19 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public void componentAdded(ContainerEvent e)
+	{
+		System.out.println("x");
+		if (e.getComponent().equals(this))
+			_renderingLoop.start();
+	}
+
+	@Override
+	public void componentRemoved(ContainerEvent e)
+	{
+		_renderingLoop.interrupt();
 	}
 }
