@@ -21,13 +21,15 @@ import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerData implements Comparable<PlayerData>
+public class PlayerData extends Entity implements Comparable<PlayerData>
 {
 	private static Random _random = new Random();
 
@@ -43,36 +45,8 @@ public class PlayerData implements Comparable<PlayerData>
 	private long _lastShot;
 	private boolean _local;
 	private int _imageID;
-
-	/**
-	 * creates a new data record from the given packet
-	 * 
-	 * @param p
-	 *            the packet
-	 * @return a new player data-Instance
-	 * @throws IllegalArgumentException
-	 *             if packet type is wrong
-	 */
-	public static PlayerData fromSnapshot(Unpacker p)
-	{
-		if (p.readByte() != Packettype.SNAP_PLAYERDATA)
-		{
-			throw new IllegalArgumentException();
-		}
-		
-		PlayerData data = new PlayerData(p.readUTF());
-		
-		data._local = p.readBoolean();
-		data._score = p.readShort();
-		data._alive = p.readBoolean();
-		data.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
-		data._direction = p.readDouble();
-		data.setImageID(p.readInt());
-		data._lifepoints = p.readShort();
-		data._ammo = p.readShort();
-		
-		return data;
-	}
+	
+	private PlayerInput _input;
 
 	/**
 	 * Creates a new Player Data record
@@ -84,23 +58,19 @@ public class PlayerData implements Comparable<PlayerData>
 	
 	public PlayerData(PlayerData dataset)
 	{
+		super(Packettype.SNAP_PLAYERDATA);
 		_name = new String(dataset.getName());
 		_local = dataset.isLocal();
-		_location = new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY());
-		_direction = dataset.getDirection();
 		_score = dataset.getScore();
-
-		if (_local)
-		{
-			_lifepoints = dataset.getLifepoints();
-			_ammo = dataset.getAmmo();
-			_speed = dataset.getSpeed();
-		}
-	}
-	
-	private double getSpeed()
-	{
-		return _speed;
+		_alive = dataset.isAlive();
+		this.setPosition(new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY()));
+		this.setDirection(dataset.getDirection());
+		this.setImageID(dataset.getImageID());
+		_lifepoints = dataset.getLifepoints();
+		_ammo = dataset.getAmmo();
+		this.setSpeed(dataset.getSpeed());
+		this.setTurnSpeed(dataset.getTurnSpeed());
+		_input = dataset._input;
 	}
 
 	/**
@@ -108,13 +78,15 @@ public class PlayerData implements Comparable<PlayerData>
 	 */
 	public PlayerData(String name, int imageID)
 	{
+		super(Packettype.SNAP_PLAYERDATA);
 		_name = name;
+		_score = 0;
+		_alive = false;
+		_location = new Point.Double(0, 0);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
-		_score = 0;
-		_location = new Point.Double(0, 0);
-		_alive = false;
 		_imageID = imageID;
+		_input = new PlayerInput();
 	}
 	
 	@Override
@@ -149,17 +121,11 @@ public class PlayerData implements Comparable<PlayerData>
 		_alive = false;
 	}
 	
-	/**
-	 * Writes the player data into a packet and returns it
-	 * 
-	 * @param lokal
-	 *            true, although local values ??should be taken
-	 * @return the packet
-	 */
+	@Override
 	public void snap(Packer p, String name)
 	{
 		boolean local = this.getName().equals(name);
-		p.writeByte(Packettype.SNAP_PLAYERDATA);
+		p.writeByte(this.getType());
 		p.writeUTF(_name);
 		p.writeBoolean(local);
 		p.writeShort(_score);
@@ -172,6 +138,57 @@ public class PlayerData implements Comparable<PlayerData>
 		int l = local ? 1 : 0;
 		p.writeShort(_lifepoints * l);
 		p.writeShort(_ammo * l);
+	}
+	
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		_name = p.readUTF();
+		_local = p.readBoolean();
+		_score = p.readShort();
+		_alive = p.readBoolean();
+		this.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
+		this.setDirection(p.readDouble());
+		this.setImageID(p.readInt());
+		_lifepoints = p.readShort();
+		_ammo = p.readShort();
+	}
+	
+	@Override
+	public void tick()
+	{
+		if(!this.isAlive())
+			return;
+		
+		if (_input.shot() > 0)
+		{
+			Shot s = this.shoot(_input.shot() == 2);
+			if (s != null)
+			{
+				// TODO
+			}
+		}
+		
+		if (_input.moveDirection() == 0)
+		{
+			this.accelerate(-GameConstants.ACCELERATION);
+		}
+		else
+		{
+			this.accelerate(GameConstants.ACCELERATION * _input.moveDirection());
+		}
+		
+		if (_input.turnDirection() == 0)
+		{
+			this.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
+		}
+		else
+		{
+			this.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * _input.turnDirection());
+		}
+		
+		this.reload();
+		this.move();
 	}
 
 	/**
@@ -222,7 +239,6 @@ public class PlayerData implements Comparable<PlayerData>
 		{
 			setTurnSpeed(0);
 		}
-		
 	}
 	
 	/**
@@ -283,6 +299,11 @@ public class PlayerData implements Comparable<PlayerData>
 		{
 			this.die();
 		}
+	}
+	
+	public void setInput(PlayerInput input)
+	{
+		_input = input;
 	}
 
 	/**
@@ -380,6 +401,11 @@ public class PlayerData implements Comparable<PlayerData>
 	public int getScore()
 	{
 		return _score;
+	}
+	
+	private double getSpeed()
+	{
+		return _speed;
 	}
 
 	/**

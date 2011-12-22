@@ -18,15 +18,18 @@
 package sw.client.gcontrol;
 
 import sw.client.player.Player;
+import sw.shared.data.GameWorld;
+import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.PlayerList;
 
 public interface IGameStateManager
 {
 	/**
 	 * @return a list of all players currently participating in the game
 	 */
-	public PlayerList getPlayerList();
+	public GameWorld getGameWorld();
+	
+	public PlayerData[] getPlayerList();
 	
 	public Player getLocalPlayer();
 	

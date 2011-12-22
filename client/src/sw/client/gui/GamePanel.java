@@ -40,10 +40,10 @@ import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
+import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.data.Packer;
+import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.Unpacker;
 
 public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
@@ -265,7 +265,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		@Override
 		public int getRowCount()
 		{
-			return _stateManager.getPlayerList().count(false);
+			return _stateManager.getPlayerList().length;
 		}
 
 		@Override
@@ -274,9 +274,9 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			switch (col)
 			{
 				case 0:
-					return _stateManager.getPlayerList().dataAt(row).getName();
+					return _stateManager.getPlayerList()[row].getName();
 				case 1:
-					return _stateManager.getPlayerList().dataAt(row).getScore();
+					return _stateManager.getPlayerList()[row].getScore();
 				default:
 					return null;
 			}

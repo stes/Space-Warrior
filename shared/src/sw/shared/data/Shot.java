@@ -20,7 +20,9 @@ package sw.shared.data;
 import java.awt.Point;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.Unpacker;
 /**
  * data structure to represent a shot
  * 

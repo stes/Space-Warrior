@@ -27,14 +27,14 @@ import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
-import sw.shared.GameConstants;
-import sw.shared.data.Packer;
+import sw.shared.Packer;
+import sw.shared.Packettype;
+import sw.shared.Unpacker;
+import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.PlayerList;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Shot;
-import sw.shared.data.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -51,8 +51,9 @@ public class GameController implements ClientListener, IGameStateManager
 		_runAI = true;
 	}
 
-	private PlayerList _playerList;
+	private GameWorld _world;
 	private IClient _client;
+	private PlayerData[] _players;
 	private Player _localPlayer;
 
 	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
@@ -64,9 +65,10 @@ public class GameController implements ClientListener, IGameStateManager
 	 */
 	public GameController(IClient client)
 	{
-		_playerList = new PlayerList(GameConstants.MAX_PLAYERS);
+		_world = new GameWorld();
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
+		_players = new PlayerData[0];
 		_localPlayer = new HumanPlayer(this);
 	}
 
@@ -110,9 +112,15 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public PlayerList getPlayerList()
+	public GameWorld getGameWorld()
 	{
-		return _playerList;
+		return _world;
+	}
+	
+	@Override
+	public PlayerData[] getPlayerList()
+	{
+		return _players;
 	}
 
 	public void init()
@@ -166,19 +174,17 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void snapshot(Unpacker snapshot)
 	{
-		_playerList.update(snapshot);
-		for (int i = 0; i < _playerList.size(); i++)
+		_world.fromSnap(snapshot);
+		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
+		for (PlayerData pl : _players)
 		{
-			PlayerData d = _playerList.dataAt(i);
-			if (d != null && d.isLocal())
-			{
-				_localPlayer.setDataSet(d);
-			}
+			if (pl.isLocal())
+				_localPlayer.setDataSet(pl);
 		}
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
 		e.setLocalDataSet(_localPlayer.getDataSet());
 		// TODO only pass a copy!
-		e.setPlayerList(_playerList);
+		e.setGameWorld(_world);
 		this.invokeStateChanged(e);
 	}
 

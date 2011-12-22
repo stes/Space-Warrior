@@ -3,7 +3,7 @@ package sw.client.gcontrol;
 import java.util.EventObject;
 
 import sw.shared.data.PlayerData;
-import sw.shared.data.PlayerList;
+import sw.shared.data.GameWorld;
 
 /**
  * 
@@ -15,7 +15,7 @@ public class GameStateChangedEvent extends EventObject
 	private static final long serialVersionUID = -6781713802525662904L;
 
 	private PlayerData _localDataSet;
-	private PlayerList _playerList;
+	private GameWorld _world;
 	private PlayerData _winner;
 	private PlayerData _loser;
 
@@ -45,17 +45,17 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _playerList
 	 */
-	public PlayerList getPlayerList()
+	public GameWorld getGameWorld()
 	{
-		return _playerList;
+		return _world;
 	}
 
 	/**
 	 * @param _playerList the _playerList to set
 	 */
-	public void setPlayerList(PlayerList _playerList)
+	public void setGameWorld(GameWorld world)
 	{
-		this._playerList = _playerList;
+		_world = world;
 	}
 
 	/**

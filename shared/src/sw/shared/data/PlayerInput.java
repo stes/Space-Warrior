@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

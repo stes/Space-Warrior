@@ -20,7 +20,7 @@ package sw.client.player;
 import sw.client.gcontrol.IGameStateManager;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.PlayerList;
+import sw.shared.data.GameWorld;
 
 /**
  * An abstract player which manages the local player data and
@@ -103,9 +103,9 @@ public abstract class Player
 		return _dataSet;
 	}
 	
-	protected PlayerList getPlayerList()
+	protected GameWorld getGameWorld()
 	{
-		return _stateManager.getPlayerList();
+		return _stateManager.getGameWorld();
 	}
 	/**
 	 * @param data the new player data set
