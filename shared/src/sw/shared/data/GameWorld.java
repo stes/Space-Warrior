@@ -111,4 +111,9 @@ public class GameWorld
 		}
 		return tmp.toArray(a);
 	}
+	
+	public PlayerData[] getPlayers()
+	{
+		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[]{});
+	}
 }

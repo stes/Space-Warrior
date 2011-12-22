@@ -21,7 +21,7 @@ public class RLAgent extends AIPlayer
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
 	{
-		SimpleState currentState = new SimpleState(this.getDataSet(), this.getPlayerList());
+		SimpleState currentState = new SimpleState(this.getDataSet(), this.getStateManager().getPlayerList());
 		_world.exploreState(currentState);
 		
 		double bestValue = Integer.MIN_VALUE;

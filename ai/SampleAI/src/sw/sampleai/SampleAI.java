@@ -63,16 +63,15 @@ public class SampleAI extends AIPlayer
 		}
 		Shot shot = new Shot(this.getDataSet().getPosition(), this.getDataSet().getDirection(), false);
 		Shot mshot = new Shot(this.getDataSet().getPosition(), this.getDataSet().getDirection(), true);
-		for (int i = 0; i < this.getPlayerList().size(); i++)
+		for (PlayerData d : this.getStateManager().getPlayerList()) 
 		{
-			PlayerData ds = this.getPlayerList().dataAt(i);
-			if (ds == null || ds.equals(this.getDataSet()))
+			if (d.equals(this.getDataSet()))
 				continue;
-			if (shot.distanceTo(ds.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			if (shot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 			{
 				this.getCurrentState().setShot(1);
 			}
-			else if (mshot.distanceTo(ds.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			else if (mshot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 			{
 				this.getCurrentState().setShot(2);
 			}
