@@ -135,7 +135,8 @@ public class SWServer implements IServer, NetworkListener
 		}
 		else if (Packettype.CL_INPUT == packet.getType() && client.isPlaying())
 		{
-			_controller.processPlayerInput(client.getName(), PlayerInput.unpack(packet));
+			_controller.processPlayerInput(client.getName(),
+					PlayerInput.unpack(packet));
 		}
 	}
 

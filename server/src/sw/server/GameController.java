@@ -54,7 +54,7 @@ public class GameController
 	 * 
 	 * @param name
 	 *            the player's name
-	 * @param imageID 
+	 * @param imageID
 	 */
 	public void playerConnected(String name, int imageID)
 	{
@@ -143,24 +143,15 @@ public class GameController
 	 * @param shot
 	 *            the shot
 	 */
-	/*private void processShot(PlayerData attacker, Shot shot)
-	{
-		for (PlayerData pl : _players.values())
-		{
-			if (pl.isAlive() && !pl.getName().equals(attacker.getName()))
-			{
-				if (shot.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
-				{
-					pl.takeDamage(shot.getDamage());
-					if (!pl.isAlive())
-					{
-						attacker.setScore(attacker.getScore() + 1);
-					}
-				}
-			}
-		}
-	}*/
-	
+	/*
+	 * private void processShot(PlayerData attacker, Shot shot) { for
+	 * (PlayerData pl : _players.values()) { if (pl.isAlive() &&
+	 * !pl.getName().equals(attacker.getName())) { if
+	 * (shot.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2) {
+	 * pl.takeDamage(shot.getDamage()); if (!pl.isAlive()) {
+	 * attacker.setScore(attacker.getScore() + 1); } } } } }
+	 */
+
 	private void checkTurn()
 	{
 		int alive = 0;
@@ -170,8 +161,9 @@ public class GameController
 			if (pl.isAlive())
 				alive++;
 		}
-		
-		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() == 1))
+
+		if ((alive == 1 && _players.size() > 1)
+				|| (alive == 0 && _players.size() == 1))
 		{
 			if (alive == 1)
 			{

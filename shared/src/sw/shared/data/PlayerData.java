@@ -48,14 +48,6 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	
 	private PlayerInput _input;
 
-	/**
-	 * Creates a new Player Data record
-	 */
-	public PlayerData(String name)
-	{
-		this(name, GameConstants.Images.SHIP_3.getID());
-	}
-	
 	public PlayerData(PlayerData dataset)
 	{
 		super(Packettype.SNAP_PLAYERDATA);
@@ -71,6 +63,14 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		this.setSpeed(dataset.getSpeed());
 		this.setTurnSpeed(dataset.getTurnSpeed());
 		_input = dataset._input;
+	}
+	
+	/**
+	 * Creates a new Player Data record
+	 */
+	public PlayerData(String name)
+	{
+		this(name, GameConstants.Images.SHIP_3.getID());
 	}
 
 	/**
@@ -89,6 +89,36 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_input = new PlayerInput();
 	}
 	
+	/**
+	 * increases the speed by a constant value
+	 */
+	public void accelerate(double value)
+	{
+		this.setSpeed(getSpeed() + value);
+	}
+	
+	public void angularAccelerate(double value)
+	{
+		setTurnSpeed(_turnSpeed + value);
+	}
+	
+	public void angularDecelerate(double value)
+	{
+		double dec = Math.abs(value);
+		if (_turnSpeed < 0 && Math.abs(_turnSpeed) > dec)
+		{
+			setTurnSpeed(_turnSpeed + dec);
+		}
+		else if (_turnSpeed > 0 && Math.abs(_turnSpeed) > dec)
+		{
+			setTurnSpeed(_turnSpeed - dec);
+		}
+		else
+		{
+			setTurnSpeed(0);
+		}
+	}
+	
 	@Override
 	public int compareTo(PlayerData player)
 	{
@@ -97,6 +127,169 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		if (_score > player.getScore())
 			return 1;
 		return 0;
+	}
+	
+	public void die()
+	{
+		_alive = false;
+	}
+	
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		_name = p.readUTF();
+		_local = p.readBoolean();
+		_score = p.readShort();
+		_alive = p.readBoolean();
+		this.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
+		this.setDirection(p.readDouble());
+		this.setImageID(p.readInt());
+		_lifepoints = p.readShort();
+		_ammo = p.readShort();
+	}
+
+	/**
+	 * returns the current munition
+	 * 
+	 * @return the current munition
+	 */
+	public int getAmmo()
+	{
+		return _ammo;
+	}
+
+	/**
+	 * returns the current direction
+	 * 
+	 * @returns the current direction in degrees
+	 */
+	public double getDirection()
+	{
+		return _direction;
+	}
+	
+	public int getImageID()
+	{
+		return _imageID;
+	}
+	
+	public long getLastShot()
+	{
+		return _lastShot;
+	}
+	
+	public int getLifepoints()
+	{
+		return _lifepoints;
+	}
+	
+	/**
+	 * returns the name of the player
+	 * 
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return _name;
+	}
+	
+	/**
+	 * @return the position of the player
+	 */
+	public Point.Double getPosition()
+	{
+		return _location;
+	}
+
+	/**
+	 * returns the current score
+	 * 
+	 * @return the current score
+	 */
+	public int getScore()
+	{
+		return _score;
+	}
+	
+	public double getTurnSpeed()
+	{
+		return _turnSpeed;
+	}
+	
+	public boolean intersects(PlayerData d)
+	{
+		if (d == null || this.equals(d))
+			return false;
+		double diff = this.getPosition().distance(d.getPosition());
+		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
+	}
+	
+	public boolean isAlive()
+	{
+		return _alive;
+	}
+	
+	/**
+	 * @return true, if the player is local
+	 */
+	public boolean isLocal()
+	{
+		return _local;
+	}
+
+	public boolean isReadyToShoot()
+	{
+		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
+	}
+
+	/**
+	 * moves the character with the actual speed
+	 */
+	public void move()
+	{
+		boolean intersects = false;
+		PlayerData pred = this.predict();
+		//System.out.print(pred.equals(this));
+		for (PlayerData d : getWorld().getPlayers())
+		{
+			if (!this.equals(d) && d.intersects(pred))
+				intersects = true;
+		}
+		if(_alive)
+		{
+			if (!intersects)
+			{
+				double x = _speed * Math.sin(getDirection());
+				double y = _speed * Math.cos(getDirection());
+				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			}
+			else
+			{
+				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / GameConstants.MAX_SPEED));
+			}
+			this.rotate(_turnSpeed);
+		}
+	}
+	
+	public PlayerData predict()
+	{
+		PlayerData d = new PlayerData(this);
+		if(_alive)
+		{
+			double x = d._speed * Math.sin(d.getDirection());
+			double y = d._speed * Math.cos(d.getDirection());
+			d.setPosition(new Point.Double(d._location.getX() + x, d._location.getY() + y));
+			d.rotate(d._turnSpeed);
+		}
+		return d;
+	}
+
+	/**
+	 * increases the munition
+	 */
+	public void reload()
+	{
+		_ammo += (_ammo < GameConstants.MAX_AMMO - 1 ? 1 : 0);
 	}
 	
 	/**
@@ -116,9 +309,74 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_turnSpeed = 0;
 	}
 	
-	public void die()
+	/**
+	 * turns the character indicated by the angel anti-clockwise
+	 * 
+	 * @param angle
+	 *            the rotation angle in degrees
+	 */
+	public void rotate(double angle)
 	{
-		_alive = false;
+		setDirection(_direction + angle);
+	}
+	
+	public void setDirection(double direction)
+	{
+		_direction = direction % (2 * Math.PI);
+	}
+
+	public void setImageID(int id)
+	{
+		_imageID = id;
+	}
+	
+	public void setInput(PlayerInput input)
+	{
+		_input = input;
+	}
+
+	/**
+	 * assigns a new value to the score
+	 * 
+	 * @param value
+	 *            new score
+	 */
+	public void setScore(int value)
+	{
+		_score = value;
+	}
+	
+	public void setSpeed(double value)
+	{
+		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, value));
+	}
+
+	public void setTurnSpeed(double value)
+	{
+		_turnSpeed = value;
+		if (_turnSpeed > GameConstants.MAX_ANGULAR_SPEED)
+		{
+			_turnSpeed = GameConstants.MAX_ANGULAR_SPEED;
+		}
+		else if (_turnSpeed < -GameConstants.MAX_ANGULAR_SPEED)
+		{
+			_turnSpeed = -GameConstants.MAX_ANGULAR_SPEED;
+		}
+		
+	}
+	
+	public void shoot(boolean master)
+	{
+		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
+		if (_ammo >= neededAmmo && this.isReadyToShoot())
+		{
+			_ammo -= neededAmmo;
+			_lastShot = System.currentTimeMillis();
+			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
+			Shot s = new Shot(this.positionAfter(time), _direction, master);
+			this.getWorld().insert(s);
+			s.fire(this);
+		}
 	}
 	
 	@Override
@@ -140,18 +398,13 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		p.writeShort(_ammo * l);
 	}
 	
-	@Override
-	public void fromSnap(Unpacker p)
+	public void takeDamage(int dmg)
 	{
-		_name = p.readUTF();
-		_local = p.readBoolean();
-		_score = p.readShort();
-		_alive = p.readBoolean();
-		this.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
-		this.setDirection(p.readDouble());
-		this.setImageID(p.readInt());
-		_lifepoints = p.readShort();
-		_ammo = p.readShort();
+		_lifepoints -= dmg;
+		if(_lifepoints <= 0)
+		{
+			this.die();
+		}
 	}
 	
 	@Override
@@ -187,158 +440,16 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		this.move();
 	}
 
-	/**
-	 * moves the character with the actual speed
-	 */
-	public void move()
+	private double getSpeed()
 	{
-		boolean intersects = false;
-		PlayerData pred = this.predict();
-		//System.out.print(pred.equals(this));
-		for (PlayerData d : getWorld().getPlayers())
-		{
-			if (!this.equals(d) && d.intersects(pred))
-				intersects = true;
-		}
-		if(_alive)
-		{
-			if (!intersects)
-			{
-				double x = _speed * Math.sin(getDirection());
-				double y = _speed * Math.cos(getDirection());
-				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
-			}
-			else
-			{
-				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / GameConstants.MAX_SPEED));
-			}
-			this.rotate(_turnSpeed);
-		}
-	}
-
-	public PlayerData predict()
-	{
-		PlayerData d = new PlayerData(this);
-		if(_alive)
-		{
-			double x = d._speed * Math.sin(d.getDirection());
-			double y = d._speed * Math.cos(d.getDirection());
-			d.setPosition(new Point.Double(d._location.getX() + x, d._location.getY() + y));
-			d.rotate(d._turnSpeed);
-		}
-		return d;
+		return _speed;
 	}
 	
-	public void angularAccelerate(double value)
+	private Point.Double positionAfter(double time)
 	{
-		setTurnSpeed(_turnSpeed + value);
-	}
-	
-	public void setTurnSpeed(double value)
-	{
-		_turnSpeed = value;
-		if (_turnSpeed > GameConstants.MAX_ANGULAR_SPEED)
-		{
-			_turnSpeed = GameConstants.MAX_ANGULAR_SPEED;
-		}
-		else if (_turnSpeed < -GameConstants.MAX_ANGULAR_SPEED)
-		{
-			_turnSpeed = -GameConstants.MAX_ANGULAR_SPEED;
-		}
-		
-	}
-	
-	public void angularDecelerate(double value)
-	{
-		double dec = Math.abs(value);
-		if (_turnSpeed < 0 && Math.abs(_turnSpeed) > dec)
-		{
-			setTurnSpeed(_turnSpeed + dec);
-		}
-		else if (_turnSpeed > 0 && Math.abs(_turnSpeed) > dec)
-		{
-			setTurnSpeed(_turnSpeed - dec);
-		}
-		else
-		{
-			setTurnSpeed(0);
-		}
-	}
-	
-	/**
-	 * turns the character indicated by the angel anti-clockwise
-	 * 
-	 * @param angle
-	 *            the rotation angle in degrees
-	 */
-	public void rotate(double angle)
-	{
-		setDirection(_direction + angle);
-	}
-	
-	/**
-	 * increases the speed by a constant value
-	 */
-	public void accelerate(double value)
-	{
-		this.setSpeed(getSpeed() + value);
-	}
-
-	public void setSpeed(double value)
-	{
-		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, value));
-	}
-	
-	/**
-	 * increases the munition
-	 */
-	public void reload()
-	{
-		_ammo += (_ammo < GameConstants.MAX_AMMO - 1 ? 1 : 0);
-	}
-	
-	public void shoot(boolean master)
-	{
-		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
-		if (_ammo >= neededAmmo && this.isReadyToShoot())
-		{
-			_ammo -= neededAmmo;
-			_lastShot = System.currentTimeMillis();
-			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			Shot s = new Shot(this.positionAfter(time), _direction, master);
-			this.getWorld().insert(s);
-			s.fire(this);
-		}
-	}
-	
-	public void takeDamage(int dmg)
-	{
-		_lifepoints -= dmg;
-		if(_lifepoints <= 0)
-		{
-			this.die();
-		}
-	}
-	
-	public void setInput(PlayerInput input)
-	{
-		_input = input;
-	}
-
-	/**
-	 * assigns a new value to the score
-	 * 
-	 * @param value
-	 *            new score
-	 */
-	public void setScore(int value)
-	{
-		_score = value;
-	}
-
-	public boolean isAlive()
-	{
-		return _alive;
+		double way = time * _speed;
+		return new Point.Double(_location.getX() + way * Math.sin(_direction),
+				_location.getY() + way * Math.cos(_direction));
 	}
 	
 	/**
@@ -362,116 +473,5 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			y = GameConstants.PLAYER_SIZE / 2;
 
 		_location = new Point.Double(x, y);
-	}
-
-	private Point.Double positionAfter(double time)
-	{
-		double way = time * _speed;
-		return new Point.Double(_location.getX() + way * Math.sin(_direction),
-				_location.getY() + way * Math.cos(_direction));
-	}
-	
-	/**
-	 * @return true, if the player is local
-	 */
-	public boolean isLocal()
-	{
-		return _local;
-	}
-	
-	public void setDirection(double direction)
-	{
-		_direction = direction % (2 * Math.PI);
-	}
-	
-	/**
-	 * returns the name of the player
-	 * 
-	 * @return the name
-	 */
-	public String getName()
-	{
-		return _name;
-	}
-
-	/**
-	 * returns the current munition
-	 * 
-	 * @return the current munition
-	 */
-	public int getAmmo()
-	{
-		return _ammo;
-	}
-	
-	/**
-	 * @return the position of the player
-	 */
-	public Point.Double getPosition()
-	{
-		return _location;
-	}
-
-	/**
-	 * returns the current score
-	 * 
-	 * @return the current score
-	 */
-	public int getScore()
-	{
-		return _score;
-	}
-	
-	private double getSpeed()
-	{
-		return _speed;
-	}
-
-	/**
-	 * returns the current direction
-	 * 
-	 * @returns the current direction in degrees
-	 */
-	public double getDirection()
-	{
-		return _direction;
-	}
-	
-	public int getLifepoints()
-	{
-		return _lifepoints;
-	}
-	
-	public long getLastShot()
-	{
-		return _lastShot;
-	}
-	
-	public double getTurnSpeed()
-	{
-		return _turnSpeed;
-	}
-	
-	public boolean isReadyToShoot()
-	{
-		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
-	}
-
-	public int getImageID()
-	{
-		return _imageID;
-	}
-	
-	public void setImageID(int id)
-	{
-		_imageID = id;
-	}
-	
-	public boolean intersects(PlayerData d)
-	{
-		if (d == null || this.equals(d))
-			return false;
-		double diff = this.getPosition().distance(d.getPosition());
-		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
 	}
 }

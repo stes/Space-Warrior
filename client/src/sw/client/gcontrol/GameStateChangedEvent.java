@@ -2,8 +2,8 @@ package sw.client.gcontrol;
 
 import java.util.EventObject;
 
-import sw.shared.data.PlayerData;
 import sw.shared.data.GameWorld;
+import sw.shared.data.PlayerData;
 
 /**
  * 

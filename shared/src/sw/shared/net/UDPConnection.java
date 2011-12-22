@@ -24,14 +24,6 @@ import java.net.InetSocketAddress;
  */
 public class UDPConnection
 {
-	protected final static byte FLAG_CONTROL = 1;
-	protected final static byte FLAG_CONNLESS = 2;
-	
-	protected final static byte CTRL_KEEPALIVE = 0;
-	protected final static byte CTRL_CONNECT = 1;
-	protected final static byte CTRL_CONNECTACCEPT = 2;
-	protected final static byte CTRL_CLOSE = 3;
-	
 	private enum ConnectionState
 	{
 		OFFLINE,
@@ -39,6 +31,14 @@ public class UDPConnection
 		ONLINE,
 		ERROR
 	}
+	protected final static byte FLAG_CONTROL = 1;
+	
+	protected final static byte FLAG_CONNLESS = 2;
+	protected final static byte CTRL_KEEPALIVE = 0;
+	protected final static byte CTRL_CONNECT = 1;
+	protected final static byte CTRL_CONNECTACCEPT = 2;
+	
+	protected final static byte CTRL_CLOSE = 3;
 	
     private UDPHost _host;
     private InetSocketAddress _addr;
@@ -56,9 +56,52 @@ public class UDPConnection
     	_lastSendTime = System.currentTimeMillis();
     }
     
-    protected boolean error()
+    public void disconnect()
     {
-    	return _state == ConnectionState.ERROR;
+    	this.disconnect("");
+    }
+    
+    public void disconnect(String reason)
+    {
+    	if(_state == ConnectionState.CONNECTING || _state == ConnectionState.ONLINE)
+    	{
+    		if(reason.length() > 0)
+    			System.out.println("disconnected from  " + _addr + " (" + reason + ")");
+    		else
+    			System.out.println("disconnected from  " + _addr);
+	    	byte[] data = reason.getBytes();
+	    	this.sendControl(CTRL_CLOSE, data, data.length);
+	    	_state = ConnectionState.ERROR;
+	    	_host.invokeDisconnected(this, "");
+    	}
+    }
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+    	if(obj instanceof UDPConnection)
+    	{
+    		UDPConnection con = (UDPConnection) obj;
+    		return _addr.equals(con._addr);
+    	}
+    	else if(obj instanceof InetSocketAddress)
+    	{
+    		InetSocketAddress addr = (InetSocketAddress) obj;
+    		return _addr.equals(addr);
+    	}
+    	else
+    	{
+    		return false;
+    	}
+    }
+    
+    public void send(byte[] data, int len)
+    {
+    	if(_state == ConnectionState.ONLINE)
+    	{
+            _host.send(_addr, data, len);
+    		_lastSendTime = System.currentTimeMillis();
+    	}
     }
     
     protected void connect()
@@ -69,6 +112,11 @@ public class UDPConnection
 	    	_state = ConnectionState.CONNECTING;
 			this.sendControl(UDPConnection.CTRL_CONNECT, null, 0);
     	}
+    }
+    
+    protected boolean error()
+    {
+    	return _state == ConnectionState.ERROR;
     }
     
     protected void received(byte flag, byte[] data, int len)
@@ -132,53 +180,5 @@ public class UDPConnection
     {
     	_host.sendControl(_addr, msg, data, len);
     	_lastSendTime = System.currentTimeMillis();
-    }
-    
-    public void send(byte[] data, int len)
-    {
-    	if(_state == ConnectionState.ONLINE)
-    	{
-            _host.send(_addr, data, len);
-    		_lastSendTime = System.currentTimeMillis();
-    	}
-    }
-    
-    public void disconnect(String reason)
-    {
-    	if(_state == ConnectionState.CONNECTING || _state == ConnectionState.ONLINE)
-    	{
-    		if(reason.length() > 0)
-    			System.out.println("disconnected from  " + _addr + " (" + reason + ")");
-    		else
-    			System.out.println("disconnected from  " + _addr);
-	    	byte[] data = reason.getBytes();
-	    	this.sendControl(CTRL_CLOSE, data, data.length);
-	    	_state = ConnectionState.ERROR;
-	    	_host.invokeDisconnected(this, "");
-    	}
-    }
-    
-    public void disconnect()
-    {
-    	this.disconnect("");
-    }
-    
-    @Override
-    public boolean equals(Object obj)
-    {
-    	if(obj instanceof UDPConnection)
-    	{
-    		UDPConnection con = (UDPConnection) obj;
-    		return _addr.equals(con._addr);
-    	}
-    	else if(obj instanceof InetSocketAddress)
-    	{
-    		InetSocketAddress addr = (InetSocketAddress) obj;
-    		return _addr.equals(addr);
-    	}
-    	else
-    	{
-    		return false;
-    	}
     }
 }

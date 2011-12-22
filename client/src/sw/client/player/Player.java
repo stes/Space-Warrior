@@ -18,9 +18,9 @@
 package sw.client.player;
 
 import sw.client.gcontrol.IGameStateManager;
+import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.GameWorld;
 
 /**
  * An abstract player which manages the local player data and

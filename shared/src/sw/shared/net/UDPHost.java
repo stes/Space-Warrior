@@ -30,13 +30,36 @@ import java.util.ArrayList;
  */
 public class UDPHost extends Thread
 {
+	private class ConnectionUpdater extends Thread
+	{
+		@Override
+		public void run()
+		{
+			while (_socket != null && !_socket.isClosed())
+			{
+				for (int i = 0; i < _connections.length; i++)
+				{
+					if (_connections[i] != null && !_connections[i].error())
+					{
+						_connections[i].update();
+					}
+				}
+				try
+				{
+					Thread.sleep(5);
+				}
+				catch (InterruptedException e) {}
+			}
+		}
+	}
 	private final static int MAX_PACKET_LENGTH = 2 * 1024;
+
 	private final static int PACKET_HEADER_LENGTH = 1;
-
 	private DatagramSocket _socket;
-	private UDPConnection[] _connections;
 
+	private UDPConnection[] _connections;
 	private ConnectionUpdater _updater;
+
 	private ArrayList<NetworkListener> _networkListener;
 
 	private boolean _acceptConnections;
@@ -65,41 +88,9 @@ public class UDPHost extends Thread
 		}
 	}
 
-	public void close(String info)
-	{
-		for (UDPConnection con : _connections)
-		{
-			if (con != null)
-			{
-				con.disconnect(info);
-			}
-		}
-		_socket.close();
-	}
-
-	public void close()
-	{
-		this.close("");
-	}
-
-	public void connect(InetSocketAddress addr)
-	{
-		int slot = this.getFreeSlot();
-		if (slot != -1)
-		{
-			_connections[slot] = new UDPConnection(this, addr);
-			_connections[slot].connect();
-		}
-	}
-
 	public void addNetworkListener(NetworkListener listener)
 	{
 		_networkListener.add(listener);
-	}
-
-	public void setAcceptConnections()
-	{
-		_acceptConnections = true;
 	}
 
 	public void broadcast(byte[] data, int len)
@@ -113,6 +104,34 @@ public class UDPHost extends Thread
 		}
 	}
 
+	public void close()
+	{
+		this.close("");
+	}
+
+	public void close(String info)
+	{
+		for (UDPConnection con : _connections)
+		{
+			if (con != null)
+			{
+				con.disconnect(info);
+			}
+		}
+		_socket.close();
+	}
+
+	public void connect(InetSocketAddress addr)
+	{
+		int slot = this.getFreeSlot();
+		if (slot != -1)
+		{
+			_connections[slot] = new UDPConnection(this, addr);
+			_connections[slot].connect();
+		}
+	}
+
+	@Override
 	public void run()
 	{
 		try
@@ -141,45 +160,6 @@ public class UDPHost extends Thread
 		}
 	}
 
-	private int getFreeSlot()
-	{
-		for (int i = 0; i < _connections.length; i++)
-		{
-			if (_connections[i] == null)
-			{
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	private void send(InetSocketAddress addr, byte flag, byte[] data, int len)
-	{
-		int size = PACKET_HEADER_LENGTH + len;
-		if (size > MAX_PACKET_LENGTH) // TODO: exception
-		{
-			System.out.println("error: packet is too big");
-			return;
-		}
-
-		byte[] buf = new byte[size];
-		buf[0] = flag;
-		if (data != null && len > 0)
-		{
-			System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, len);
-		}
-
-		try
-		{
-			DatagramPacket packet = new DatagramPacket(buf, buf.length, addr);
-			_socket.send(packet);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public void sendConnless(InetSocketAddress addr, byte[] data, int len)
 	{
 		byte[] buf = new byte[2 + len];
@@ -189,19 +169,9 @@ public class UDPHost extends Thread
 		this.send(addr, UDPConnection.FLAG_CONNLESS, buf, buf.length);
 	}
 
-	protected void send(InetSocketAddress addr, byte[] data, int len)
+	public void setAcceptConnections()
 	{
-		this.send(addr, (byte) 0, data, len);
-	}
-
-	protected void sendControl(InetSocketAddress addr, byte msg, byte[] data,
-			int len)
-	{
-		byte[] buf = new byte[1 + len];
-		buf[0] = msg;
-		if (len > 0)
-			System.arraycopy(data, 0, buf, 1, len);
-		this.send(addr, UDPConnection.FLAG_CONTROL, buf, buf.length);
+		_acceptConnections = true;
 	}
 
 	protected void invokeConnected(UDPConnection con)
@@ -225,6 +195,33 @@ public class UDPHost extends Thread
 	{
 		for (NetworkListener l : _networkListener)
 			l.receivedMessage(con, data, len);
+	}
+
+	protected void send(InetSocketAddress addr, byte[] data, int len)
+	{
+		this.send(addr, (byte) 0, data, len);
+	}
+
+	protected void sendControl(InetSocketAddress addr, byte msg, byte[] data,
+			int len)
+	{
+		byte[] buf = new byte[1 + len];
+		buf[0] = msg;
+		if (len > 0)
+			System.arraycopy(data, 0, buf, 1, len);
+		this.send(addr, UDPConnection.FLAG_CONTROL, buf, buf.length);
+	}
+
+	private int getFreeSlot()
+	{
+		for (int i = 0; i < _connections.length; i++)
+		{
+			if (_connections[i] == null)
+			{
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	private void messageReceived(InetSocketAddress addr, byte flag,
@@ -266,25 +263,30 @@ public class UDPHost extends Thread
 		}
 	}
 
-	private class ConnectionUpdater extends Thread
+	private void send(InetSocketAddress addr, byte flag, byte[] data, int len)
 	{
-		public void run()
+		int size = PACKET_HEADER_LENGTH + len;
+		if (size > MAX_PACKET_LENGTH) // TODO: exception
 		{
-			while (_socket != null && !_socket.isClosed())
-			{
-				for (int i = 0; i < _connections.length; i++)
-				{
-					if (_connections[i] != null && !_connections[i].error())
-					{
-						_connections[i].update();
-					}
-				}
-				try
-				{
-					Thread.sleep(5);
-				}
-				catch (InterruptedException e) {}
-			}
+			System.out.println("error: packet is too big");
+			return;
+		}
+
+		byte[] buf = new byte[size];
+		buf[0] = flag;
+		if (data != null && len > 0)
+		{
+			System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, len);
+		}
+
+		try
+		{
+			DatagramPacket packet = new DatagramPacket(buf, buf.length, addr);
+			_socket.send(packet);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

@@ -17,11 +17,8 @@
  ******************************************************************************/
 package sw.client.gui;
 
-import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
 import java.util.EventObject;
-
-import sw.client.gui.ConnectionEvent.ActionType;
 
 public class ConnectionEvent extends EventObject
 {

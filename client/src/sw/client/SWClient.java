@@ -40,7 +40,7 @@ public class SWClient implements IClient, NetworkListener
 	private UDPConnection _server;
 
 	private ArrayList<ClientListener> _clientListener;
-	
+
 	public SWClient()
 	{
 		_netClient = new UDPHost(null, 1);
@@ -63,10 +63,10 @@ public class SWClient implements IClient, NetworkListener
 	{
 		_netClient.connect(new InetSocketAddress(ip, port));
 	}
-	
+
 	public void disconnect(String reason)
 	{
-		if(_server != null)
+		if (_server != null)
 		{
 			_server.disconnect(reason);
 		}

@@ -81,14 +81,6 @@ public class Shot extends Entity
 	}
 	
 	/**
-	 * @return the startpoint
-	 */
-	public Point.Double startPoint()
-	{
-		return new Point.Double(_line.getX1(), _line.getY1());
-	}
-
-	/**
 	 * @return the endpoint
 	 */
 	public Point.Double endPoint()
@@ -96,47 +88,6 @@ public class Shot extends Entity
 		return new Point.Double(_line.getX2(), _line.getY2());
 	}
 
-	/**
-	 * @return true, if there is a master shot
-	 */
-	public boolean isMaster()
-	{
-		return _isMaster;
-	}
-
-	/**
-	 * @return the direction in degrees
-	 */
-	public double getDirection()
-	{
-		return _direction;
-	}
-
-	/**
-	 * @return the damage from the shot
-	 */
-	public int getDamage()
-	{
-		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
-	}
-
-	/**
-	 * assigns a new direction to the shot
-	 * 
-	 * @param direction
-	 *            new direction in degrees
-	 */
-	public void setDirection(double direction)
-	{
-		_direction = direction;
-		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-		_line.setLine(
-				startPoint(),
-				new Point.Double(
-						(startPoint().getX() + range * Math.sin(direction)),
-						(startPoint().getY() + range * Math.cos(direction))));
-	}
-	
 	public void fire(PlayerData attacker)
 	{
 		PlayerData[] players = this.getWorld().getPlayers();
@@ -153,6 +104,55 @@ public class Shot extends Entity
 	}
 
 	@Override
+	public void fromSnap(Unpacker p)
+	{
+		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()), new Point.Double(0, 0));
+		_isMaster = p.readBoolean();
+		setDirection(p.readDouble());
+	}
+
+	/**
+	 * @return the damage from the shot
+	 */
+	public int getDamage()
+	{
+		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
+	}
+
+	/**
+	 * @return the direction in degrees
+	 */
+	public double getDirection()
+	{
+		return _direction;
+	}
+
+	/**
+	 * @return true, if there is a master shot
+	 */
+	public boolean isMaster()
+	{
+		return _isMaster;
+	}
+	
+	/**
+	 * assigns a new direction to the shot
+	 * 
+	 * @param direction
+	 *            new direction in degrees
+	 */
+	public void setDirection(double direction)
+	{
+		_direction = direction;
+		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
+		_line.setLine(
+				startPoint(),
+				new Point.Double(
+						(startPoint().getX() + range * Math.sin(direction)),
+						(startPoint().getY() + range * Math.cos(direction))));
+	}
+
+	@Override
 	public void snap(Packer p, String name)
 	{
 		p.writeByte(this.getType());
@@ -162,12 +162,12 @@ public class Shot extends Entity
 		p.writeDouble(this.getDirection());
 	}
 
-	@Override
-	public void fromSnap(Unpacker p)
+	/**
+	 * @return the startpoint
+	 */
+	public Point.Double startPoint()
 	{
-		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()), new Point.Double(0, 0));
-		_isMaster = p.readBoolean();
-		setDirection(p.readDouble());
+		return new Point.Double(_line.getX1(), _line.getY1());
 	}
 
 	@Override

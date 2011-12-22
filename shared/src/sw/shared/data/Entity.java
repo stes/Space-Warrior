@@ -35,16 +35,23 @@ public abstract class Entity
 		_entType = type;
 	}
 	
-	public byte getType()
-	{
-		return _entType;
-	}
-	
 	public void destroy()
 	{
 		_entDestroy = true;
 	}
 	
+	public abstract void fromSnap(Unpacker p);
+	
+	public byte getType()
+	{
+		return _entType;
+	}
+	
+	public GameWorld getWorld()
+	{
+		return _world;
+	}
+
 	public boolean isDestroyed()
 	{
 		return _entDestroy;
@@ -54,15 +61,8 @@ public abstract class Entity
 	{
 		this._world = world;
 	}
-
-	public GameWorld getWorld()
-	{
-		return _world;
-	}
 	
 	public abstract void snap(Packer p, String name);
-	
-	public abstract void fromSnap(Unpacker p);
 	
 	public abstract void tick();
 }

@@ -39,17 +39,9 @@ public class Packer implements DataOutput
 		this.writeByte(type);
 	}
 
-	@Override
-	public void write(int b)
+	public byte[] toByteArray()
 	{
-		try
-		{
-			_data.write(b);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		return _output.toByteArray();
 	}
 
 	@Override
@@ -71,6 +63,19 @@ public class Packer implements DataOutput
 		try
 		{
 			_data.write(b, off, len);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void write(int b)
+	{
+		try
+		{
+			_data.write(b);
 		}
 		catch (IOException e)
 		{
@@ -219,10 +224,5 @@ public class Packer implements DataOutput
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public byte[] toByteArray()
-	{
-		return _output.toByteArray();
 	}
 }

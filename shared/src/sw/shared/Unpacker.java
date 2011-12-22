@@ -41,49 +41,10 @@ public class Unpacker implements DataInput
 
 		_type = this.readByte();
 	}
-	
+
 	public byte getType()
 	{
 		return _type;
-	}
-
-	@Override
-	public void readFully(byte b[])
-	{
-		try
-		{
-			_data.readFully(b);
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
-	public void readFully(byte b[], int off, int len)
-	{
-		try
-		{
-			_data.readFully(b, off, len);
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
-	public int skipBytes(int n)
-	{
-		try
-		{
-			return _data.skipBytes(n);
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
 	}
 
 	@Override
@@ -117,45 +78,6 @@ public class Unpacker implements DataInput
 	}
 
 	@Override
-	public int readUnsignedByte()
-	{
-		try
-		{
-			return _data.readUnsignedByte();
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
-	public short readShort()
-	{
-		try
-		{
-			return _data.readShort();
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
-	public int readUnsignedShort()
-	{
-		try
-		{
-			return _data.readUnsignedShort();
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
 	public char readChar()
 	{
 		try
@@ -169,24 +91,11 @@ public class Unpacker implements DataInput
 	}
 
 	@Override
-	public int readInt()
+	public double readDouble()
 	{
 		try
 		{
-			return _data.readInt();
-		}
-		catch (IOException e)
-		{
-			throw new IllegalStateException(e);
-		}
-	}
-
-	@Override
-	public long readLong()
-	{
-		try
-		{
-			return _data.readLong();
+			return _data.readDouble();
 		}
 		catch (IOException e)
 		{
@@ -208,11 +117,37 @@ public class Unpacker implements DataInput
 	}
 
 	@Override
-	public double readDouble()
+	public void readFully(byte b[])
 	{
 		try
 		{
-			return _data.readDouble();
+			_data.readFully(b);
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public void readFully(byte b[], int off, int len)
+	{
+		try
+		{
+			_data.readFully(b, off, len);
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public int readInt()
+	{
+		try
+		{
+			return _data.readInt();
 		}
 		catch (IOException e)
 		{
@@ -235,11 +170,76 @@ public class Unpacker implements DataInput
 	}
 
 	@Override
+	public long readLong()
+	{
+		try
+		{
+			return _data.readLong();
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public short readShort()
+	{
+		try
+		{
+			return _data.readShort();
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public int readUnsignedByte()
+	{
+		try
+		{
+			return _data.readUnsignedByte();
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public int readUnsignedShort()
+	{
+		try
+		{
+			return _data.readUnsignedShort();
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
 	public String readUTF()
 	{
 		try
 		{
 			return _data.readUTF();
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public int skipBytes(int n)
+	{
+		try
+		{
+			return _data.skipBytes(n);
 		}
 		catch (IOException e)
 		{

@@ -27,10 +27,6 @@ import sw.shared.Unpacker;
  */
 public class PlayerInput
 {
-	private int _moveDirection;
-	private int _turnDirection;
-	private int _isShooting;
-	
 	public static PlayerInput unpack(Unpacker p)
 	{
 		if (p.getType() != Packettype.CL_INPUT)
@@ -39,6 +35,10 @@ public class PlayerInput
 		}
 		return new PlayerInput(p.readShort(), p.readShort(), p.readShort());
 	}
+	private int _moveDirection;
+	private int _turnDirection;
+	
+	private int _isShooting;
 
 	/**
 	 * player input instance is created
@@ -76,22 +76,6 @@ public class PlayerInput
 		this(input.moveDirection(), input.turnDirection(), input.shot());
 	}
 
-	/**
-	 * @return the movement
-	 */
-	public int moveDirection()
-	{
-		return _moveDirection;
-	}
-
-	/**
-	 * @return the rotation
-	 */
-	public int turnDirection()
-	{
-		return _turnDirection;
-	}
-
 	@Override
 	public boolean equals(Object other)
 	{
@@ -106,6 +90,14 @@ public class PlayerInput
 	}
 
 	/**
+	 * @return the movement
+	 */
+	public int moveDirection()
+	{
+		return _moveDirection;
+	}
+
+	/**
 	 * writes the command in a packet and passes it back
 	 * 
 	 * @return the packet
@@ -117,14 +109,6 @@ public class PlayerInput
 		packet.writeShort(_turnDirection);
 		packet.writeShort(_isShooting);
 		return packet;
-	}
-
-	/**
-	 * @return the shot
-	 */
-	public int shot()
-	{
-		return _isShooting;
 	}
 
 	/**
@@ -162,5 +146,21 @@ public class PlayerInput
 	public void setShot(int value)
 	{
 		_isShooting = value;
+	}
+
+	/**
+	 * @return the shot
+	 */
+	public int shot()
+	{
+		return _isShooting;
+	}
+
+	/**
+	 * @return the rotation
+	 */
+	public int turnDirection()
+	{
+		return _turnDirection;
 	}
 }

@@ -38,30 +38,9 @@ public class GameWorld
 		_entities = new Vector<Entity>();
 	}
 	
-	public void insert(Entity e)
-	{
-		e.setWorld(this);
-		_entities.add(e);
-	}
-	
-	public void remove(Entity e)
-	{
-		_entities.remove(e);
-	}
-	
 	public void clear()
 	{
 		_entities.clear();
-	}
-
-	public void snap(Packer p, String name)
-	{
-		p.writeInt(_entities.size());
-		
-		for(Entity ent : _entities)
-		{
-			ent.snap(p, name);
-		}
 	}
 	
 	public void fromSnap(Unpacker p)
@@ -87,25 +66,11 @@ public class GameWorld
 		_entities = tmp;
 	}
 	
-	public void tick()
-	{
-		for (Iterator<Entity> i = _entities.iterator(); i.hasNext(); )
-		{
-			while(i.hasNext() && i.next().isDestroyed())
-				i.remove();
-		}
-		
-		for(int i = 0; i < _entities.size(); i++)
-		{
-			_entities.get(i).tick();
-		}
-	}
-	
 	public Entity[] getAllEntities()
 	{
 		return _entities.toArray(new Entity[0]);
 	}
-	
+
 	public <T> T[] getEntitiesByType(byte type, T[] a)
 	{
 		Vector<Entity> tmp = new Vector<Entity>();
@@ -120,5 +85,40 @@ public class GameWorld
 	public PlayerData[] getPlayers()
 	{
 		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[]{});
+	}
+	
+	public void insert(Entity e)
+	{
+		e.setWorld(this);
+		_entities.add(e);
+	}
+	
+	public void remove(Entity e)
+	{
+		_entities.remove(e);
+	}
+	
+	public void snap(Packer p, String name)
+	{
+		p.writeInt(_entities.size());
+		
+		for(Entity ent : _entities)
+		{
+			ent.snap(p, name);
+		}
+	}
+	
+	public void tick()
+	{
+		for (Iterator<Entity> i = _entities.iterator(); i.hasNext(); )
+		{
+			while(i.hasNext() && i.next().isDestroyed())
+				i.remove();
+		}
+		
+		for(int i = 0; i < _entities.size(); i++)
+		{
+			_entities.get(i).tick();
+		}
 	}
 }

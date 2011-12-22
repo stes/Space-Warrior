@@ -29,16 +29,16 @@ import sw.shared.Unpacker;
  */
 public class ServerInfo
 {
-	private String _serverName;
-	private int _maxPlayers;
-	private int _numPayers;
-	
-	private InetSocketAddress _addr;
-
 	public static ServerInfo unpack(Unpacker p)
 	{
 		return new ServerInfo(p.readUTF(), p.readShort(), p.readShort());
 	}
+	private String _serverName;
+	private int _maxPlayers;
+	
+	private int _numPayers;
+
+	private InetSocketAddress _addr;
 	
 	public ServerInfo()
 	{
@@ -52,14 +52,9 @@ public class ServerInfo
 		_numPayers = num;
 	}
 
-	public String getServerName()
+	public InetSocketAddress getAddress()
 	{
-		return _serverName;
-	}
-
-	public void setServerName(String serverName)
-	{
-		_serverName = serverName;
+		return _addr;
 	}
 
 	public int getMaxPlayers()
@@ -67,31 +62,16 @@ public class ServerInfo
 		return _maxPlayers;
 	}
 
-	public void setMaxPlayers(int maxPlayers)
-	{
-		_maxPlayers = maxPlayers;
-	}
-
 	public int getNumPayers()
 	{
 		return _numPayers;
 	}
 
-	public void setNumPayers(int numPayers)
+	public String getServerName()
 	{
-		_numPayers = numPayers;
-	}
-	
-	public InetSocketAddress getAddress()
-	{
-		return _addr;
+		return _serverName;
 	}
 
-	public void setAddress(InetSocketAddress addr)
-	{
-		_addr = addr;
-	}
-	
 	public Packer pack()
 	{
 		Packer info = new Packer((byte)0);
@@ -99,5 +79,25 @@ public class ServerInfo
         info.writeShort(_maxPlayers);
         info.writeShort(_numPayers);
         return info;
+	}
+
+	public void setAddress(InetSocketAddress addr)
+	{
+		_addr = addr;
+	}
+	
+	public void setMaxPlayers(int maxPlayers)
+	{
+		_maxPlayers = maxPlayers;
+	}
+
+	public void setNumPayers(int numPayers)
+	{
+		_numPayers = numPayers;
+	}
+	
+	public void setServerName(String serverName)
+	{
+		_serverName = serverName;
 	}
 }

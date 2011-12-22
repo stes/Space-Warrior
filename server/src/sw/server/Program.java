@@ -33,6 +33,7 @@ public class Program implements WindowListener
 	{
 		(new Program()).run();
 	}
+
 	private ServerGUI _serverGUI;
 
 	private SWServer _server;

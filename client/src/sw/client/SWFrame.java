@@ -36,9 +36,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import sw.client.gui.GamePanel;
 import sw.client.gui.ConnectionEvent;
 import sw.client.gui.ConnectionListener;
+import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
 import sw.shared.Packer;
 import sw.shared.Packettype;
@@ -80,7 +80,7 @@ public class SWFrame extends JFrame implements ClientListener,
 		super("Space Warrior");
 
 		this.setIgnoreRepaint(true);
-		
+
 		RepaintManager repaintManager = new UnRepaintManager();
 		repaintManager.setDoubleBufferingEnabled(false);
 		RepaintManager.setCurrentManager(repaintManager);
@@ -88,10 +88,10 @@ public class SWFrame extends JFrame implements ClientListener,
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(d.width / 2, d.height / 2);
 		this.setMinimumSize(new Dimension(800, 600));
-        _insets = this.getInsets();
-        int insetWide = _insets.left + _insets.right;
-        int insetTall = _insets.top + _insets.bottom;
-        setSize(getWidth() + insetWide, getHeight() + insetTall);
+		_insets = this.getInsets();
+		int insetWide = _insets.left + _insets.right;
+		int insetTall = _insets.top + _insets.bottom;
+		setSize(getWidth() + insetWide, getHeight() + insetTall);
 
 		((JComponent) getContentPane()).setOpaque(false);
 		this.init();
@@ -101,7 +101,7 @@ public class SWFrame extends JFrame implements ClientListener,
 
 		if (!debugMode)
 			this.initBugLogger();
-		
+
 		_isRunning = true;
 		gameLoop();
 	}
@@ -110,14 +110,15 @@ public class SWFrame extends JFrame implements ClientListener,
 	{
 		try
 		{
-			System.setErr(new PrintStream(System.getProperty("user.dir")+ "/buglog.txt"));
+			System.setErr(new PrintStream(System.getProperty("user.dir")
+					+ "/buglog.txt"));
 		}
 		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void init()
 	{
 		_client = new SWClient();
@@ -152,51 +153,52 @@ public class SWFrame extends JFrame implements ClientListener,
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-    /**
-     * Method containing the game's loop.
-     * Each iteration of the loop updates all animations and sprite locations
-     * and draws the graphics to the screen
-     */
-    public void gameLoop()
-    {
-        long oldTime = System.nanoTime();
-        long nanoseconds = 0;
-        int frames = 0;
-        _fps = 0;
+	/**
+	 * Method containing the game's loop. Each iteration of the loop updates all
+	 * animations and sprite locations and draws the graphics to the screen
+	 */
+	public void gameLoop()
+	{
+		long oldTime = System.nanoTime();
+		long nanoseconds = 0;
+		int frames = 0;
+		_fps = 0;
 
-        _drawing = (BufferedImage) this.createImage(getWidth(),getHeight());
-        
-        while(_isRunning)
-        {
-            // relating to updating animations and calculating FPS
-            long elapsedTime = System.nanoTime() - oldTime;
-            oldTime = oldTime + elapsedTime; //update for the next loop iteration
-            nanoseconds = nanoseconds + elapsedTime;
-            frames = frames + 1;
-            if (nanoseconds >= 1000000000)
-            {
-                _fps = frames;
-                nanoseconds = nanoseconds - 1000000000;
-                frames = 0;
-            }            
-            // related to drawing
-            Graphics2D g = null;
-            try
-            {
-                g = (Graphics2D)_bufferStrategy.getDrawGraphics();
-                draw(g); // enter the method to draw everything                 
-            }
-            finally
-            {
-                g.dispose();
-            }
-            if (!_bufferStrategy.contentsLost())
-            {
-                _bufferStrategy.show();
-            }
-            Toolkit.getDefaultToolkit().sync(); // prevents possible event queue problems in Linux
-            
-            try
+		_drawing = (BufferedImage) this.createImage(getWidth(), getHeight());
+
+		while (_isRunning)
+		{
+			// relating to updating animations and calculating FPS
+			long elapsedTime = System.nanoTime() - oldTime;
+			oldTime = oldTime + elapsedTime; // update for the next loop
+												// iteration
+			nanoseconds = nanoseconds + elapsedTime;
+			frames = frames + 1;
+			if (nanoseconds >= 1000000000)
+			{
+				_fps = frames;
+				nanoseconds = nanoseconds - 1000000000;
+				frames = 0;
+			}
+			// related to drawing
+			Graphics2D g = null;
+			try
+			{
+				g = (Graphics2D) _bufferStrategy.getDrawGraphics();
+				draw(g); // enter the method to draw everything
+			}
+			finally
+			{
+				g.dispose();
+			}
+			if (!_bufferStrategy.contentsLost())
+			{
+				_bufferStrategy.show();
+			}
+			Toolkit.getDefaultToolkit().sync(); // prevents possible event queue
+												// problems in Linux
+
+			try
 			{
 				Thread.sleep(10);
 			}
@@ -204,46 +206,47 @@ public class SWFrame extends JFrame implements ClientListener,
 			{
 				e.printStackTrace();
 			}
-        }
-    }
+		}
+	}
 
 	private void draw(Graphics2D g)
 	{
-        Graphics2D g2d = _drawing.createGraphics();
-        g2d.setColor(Color.LIGHT_GRAY);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                                      RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                      RenderingHints.VALUE_ANTIALIAS_ON);
-        // draw over it to create a blank background again, (or you could draw
-        // a background image if you had one
-        g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
-        
-        // now draw everything to drawingBoard, location 0,0 will be top left corner
-        // within the borders of the window
-        if (_activePanel.equals(_gamePanel))
-        {
-        	_gamePanel.render(g2d);
-        }
-        
-        
-        g2d.setColor(Color.WHITE);
-        g2d.drawString("FPS: " + _fps, 0, g2d.getFont().getSize());
-        // NOTE: this will now cap the FPS (frames per second), of the program to
-        // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
-        // of rest per update = 100 updates max).
-    
-         getLayeredPane().paintComponents(g2d); // paint our Swing components
-        // NOTE: make sure you do paint your own graphics first
-        
-         // show fps
-         g2d.setColor(Color.WHITE);
-         //drawingBoard.drawString("FPS: " + _fps, 100, 100);
-         
-        // now draw the drawing board to correct area of the JFrame's buffer
-        g.drawImage(_drawing, _insets.left, 30, null);
-        
-        g2d.dispose();
+		Graphics2D g2d = _drawing.createGraphics();
+		g2d.setColor(Color.LIGHT_GRAY);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		// draw over it to create a blank background again, (or you could draw
+		// a background image if you had one
+		g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
+
+		// now draw everything to drawingBoard, location 0,0 will be top left
+		// corner
+		// within the borders of the window
+		if (_activePanel.equals(_gamePanel))
+		{
+			_gamePanel.render(g2d);
+		}
+
+		g2d.setColor(Color.WHITE);
+		g2d.drawString("FPS: " + _fps, 0, g2d.getFont().getSize());
+		// NOTE: this will now cap the FPS (frames per second), of the program
+		// to
+		// a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
+		// of rest per update = 100 updates max).
+
+		getLayeredPane().paintComponents(g2d); // paint our Swing components
+		// NOTE: make sure you do paint your own graphics first
+
+		// show fps
+		g2d.setColor(Color.WHITE);
+		// drawingBoard.drawString("FPS: " + _fps, 100, 100);
+
+		// now draw the drawing board to correct area of the JFrame's buffer
+		g.drawImage(_drawing, _insets.left, 30, null);
+
+		g2d.dispose();
 	}
 
 	@Override
@@ -323,18 +326,22 @@ public class SWFrame extends JFrame implements ClientListener,
 
 	class UnRepaintManager extends RepaintManager
 	{
+		@Override
 		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
 		{
 		}
 
+		@Override
 		public void addInvalidComponent(JComponent invalidComponent)
 		{
 		}
 
+		@Override
 		public void markCompletelyDirty(JComponent aComponent)
 		{
 		}
 
+		@Override
 		public void paintDirtyRegions()
 		{
 		}
@@ -343,6 +350,6 @@ public class SWFrame extends JFrame implements ClientListener,
 	@Override
 	public void logout(ConnectionEvent e)
 	{
-		// TODO close the current connection
+		_client.disconnect("user logout");
 	}
 }

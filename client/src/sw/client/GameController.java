@@ -70,16 +70,17 @@ public class GameController implements ClientListener, IGameStateManager
 		_localPlayer = new HumanPlayer(this);
 	}
 
+	@Override
 	public void addGameStateChangedListener(GameStateChangedListener l)
 	{
 		_gameStateChangedListener.add(l);
 	}
-	
+
 	public void removeGameStateChangedListener(GameStateChangedListener l)
 	{
 		_gameStateChangedListener.remove(l);
 	}
-	
+
 	@Override
 	public void chatMessage(String name, String text)
 	{
@@ -114,7 +115,7 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		return _world;
 	}
-	
+
 	@Override
 	public PlayerData[] getPlayerList()
 	{
@@ -166,7 +167,8 @@ public class GameController implements ClientListener, IGameStateManager
 	public void snapshot(Unpacker snapshot)
 	{
 		_world.fromSnap(snapshot);
-		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
+		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA,
+				_players);
 		for (PlayerData pl : _players)
 		{
 			if (pl.isLocal())
@@ -204,7 +206,7 @@ public class GameController implements ClientListener, IGameStateManager
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.gameStateChanged(e);
 	}
-	
+
 	private void invokePlayerInit(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null

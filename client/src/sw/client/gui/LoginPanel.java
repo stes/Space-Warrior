@@ -44,8 +44,8 @@ import sw.client.ClientListener;
 import sw.client.GameController;
 import sw.client.gui.ConnectionEvent.ActionType;
 import sw.shared.GameConstants;
-import sw.shared.Unpacker;
 import sw.shared.GameConstants.Images;
+import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
 
 public class LoginPanel extends JPanel implements ClientListener
