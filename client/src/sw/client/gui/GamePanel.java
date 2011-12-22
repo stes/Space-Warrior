@@ -27,7 +27,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -38,6 +40,7 @@ import javax.swing.table.AbstractTableModel;
 import sw.client.ClientListener;
 import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
+import sw.client.gui.ConnectionEvent.ActionType;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.Packer;
@@ -55,6 +58,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     private JScrollPane _scrollScoreBoard;
     private JScrollPane _scrollChathistory;
     private JTable _tblScoreBoard;
+    private JButton _btnDisconnect;
     
     private PlayerTableModel _model;
     
@@ -64,10 +68,13 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
     private IGameStateManager _stateManager;
     private IClient _client;
     
+	private ArrayList<ConnectionListener> _connectionListener;
+    
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
 		_self = this;
+		_connectionListener = new ArrayList<ConnectionListener>();
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
@@ -116,6 +123,20 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 
     private void initComponents()
     {
+    	_btnDisconnect = new JButton("Disconnect");
+    	_btnDisconnect.setBounds(this.getWidth()-150, 30, 100, 20);
+    	this.add(_btnDisconnect);
+    	_btnDisconnect.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGOUT);
+				_self.invokeDisconnect(e);
+			}
+		});
+    	
         int chat = this.getHeight()-200;
         System.out.println(chat);
         _txtChatmessage = new JTextField() {
@@ -207,6 +228,15 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
         this.add(_playingField);
     }
 
+	protected void invokeDisconnect(ConnectionEvent e)
+	{
+		if (_connectionListener.size() == 0)
+			return;
+		for (ConnectionListener l : _connectionListener)
+			l.logout(e);
+
+	}
+
 	@Override
 	public void connected() {}
 
@@ -241,6 +271,16 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	{
 		_lstChathistory.append(message);
 		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
+	}
+	
+	public void addConnectionListener(ConnectionListener l)
+	{
+		_connectionListener.add(l);
+	}
+
+	public void removeConnecionListener(ConnectionListener l)
+	{
+		_connectionListener.remove(l);
 	}
 
 	private class PlayerTableModel extends AbstractTableModel

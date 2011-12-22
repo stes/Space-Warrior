@@ -42,6 +42,7 @@ import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientListener;
 import sw.client.GameController;
+import sw.client.gui.ConnectionEvent.ActionType;
 import sw.shared.GameConstants;
 import sw.shared.Unpacker;
 import sw.shared.GameConstants.Images;
@@ -70,7 +71,7 @@ public class LoginPanel extends JPanel implements ClientListener
 	private Vector<ServerInfo> _servers;
 	private ServerTableModel _tableModel;
 
-	private ArrayList<LoginListener> _loginListener;
+	private ArrayList<ConnectionListener> _connectionListener;
 
 
 	private int _imageID;
@@ -83,7 +84,7 @@ public class LoginPanel extends JPanel implements ClientListener
 		this.setSize(width, height);
 		this.setBackground(Color.WHITE);
 
-		_loginListener = new ArrayList<LoginListener>();
+		_connectionListener = new ArrayList<ConnectionListener>();
 
 		_servers = new Vector<ServerInfo>();
 		_tableModel = new ServerTableModel();
@@ -103,21 +104,21 @@ public class LoginPanel extends JPanel implements ClientListener
 		});
 	}
 
-	public void addLoginListener(LoginListener l)
+	public void addConnectionListener(ConnectionListener l)
 	{
-		_loginListener.add(l);
+		_connectionListener.add(l);
 	}
 
-	public void removeLoginListener(LoginListener l)
+	public void removeConnecionListener(ConnectionListener l)
 	{
-		_loginListener.remove(l);
+		_connectionListener.remove(l);
 	}
 
-	protected void invokeLogin(LoginEvent e)
+	protected void invokeLogin(ConnectionEvent e)
 	{
-		if (_loginListener.size() == 0)
+		if (_connectionListener.size() == 0)
 			return;
-		for (LoginListener l : _loginListener)
+		for (ConnectionListener l : _connectionListener)
 			l.login(e);
 
 	}
@@ -196,11 +197,13 @@ public class LoginPanel extends JPanel implements ClientListener
 				if (!_txtName.getText().isEmpty())
 				{
 					System.out.println("connect");
-					_self.invokeLogin(new LoginEvent(this,
-							new InetSocketAddress(
-									_txtIPAddress.getText(),
-									Integer.parseInt(_txtPort.getText())),
-									_txtName.getText(), _imageID));
+					ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGIN);
+					e.setIPAdress(new InetSocketAddress(
+							_txtIPAddress.getText(),
+							Integer.parseInt(_txtPort.getText())));
+					e.setLoginName(_txtName.getText());
+					e.setImageID(_imageID);
+					_self.invokeLogin(e);
 				}
 			}
 		});
@@ -214,7 +217,7 @@ public class LoginPanel extends JPanel implements ClientListener
 			public void actionPerformed(ActionEvent arg0)
 			{
 				_servers.clear();
-				for (LoginListener l : _loginListener)
+				for (ConnectionListener l : _connectionListener)
 					l.scan();
 			}
 		});

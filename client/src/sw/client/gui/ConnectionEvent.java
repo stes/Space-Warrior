@@ -17,24 +17,31 @@
  ******************************************************************************/
 package sw.client.gui;
 
+import java.awt.event.ActionListener;
 import java.net.InetSocketAddress;
 import java.util.EventObject;
 
-public class LoginEvent extends EventObject
+import sw.client.gui.ConnectionEvent.ActionType;
+
+public class ConnectionEvent extends EventObject
 {
+	public enum ActionType
+	{
+		LOGIN, LOGOUT
+	}
+
 	private static final long serialVersionUID = -5796463210269739871L;
-	
+
 	private InetSocketAddress _ipAdress;
 	private String _loginName;
 	private int _imageID;
 
-	public LoginEvent(Object source, InetSocketAddress ipAdress, String loginName, int imageID)
+	private ActionType _actionType;
+
+	public ConnectionEvent(Object source, ActionType actionType)
 	{
 		super(source);
-		this.setIPAdress(ipAdress);
-		this.setLoginName(loginName);
-		this.setImageID(imageID);
-		
+		this.setActionType(actionType);
 	}
 
 	public void setIPAdress(InetSocketAddress ipAdress)
@@ -65,5 +72,15 @@ public class LoginEvent extends EventObject
 	public int getImageID()
 	{
 		return _imageID;
+	}
+
+	public void setActionType(ActionType _actionType)
+	{
+		this._actionType = _actionType;
+	}
+
+	public ActionType getActionType()
+	{
+		return _actionType;
 	}
 }

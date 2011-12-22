@@ -17,9 +17,11 @@
  ******************************************************************************/
 package sw.client.gui;
 
-public interface LoginListener
+public interface ConnectionListener
 {
-	public void login(LoginEvent e);
+	public void login(ConnectionEvent e);
+	
+	public void logout(ConnectionEvent e);
 	
 	public void scan(); // TODO: move somewhere else
 }

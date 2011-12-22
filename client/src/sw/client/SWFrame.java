@@ -37,8 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
 import sw.client.gui.GamePanel;
-import sw.client.gui.LoginEvent;
-import sw.client.gui.LoginListener;
+import sw.client.gui.ConnectionEvent;
+import sw.client.gui.ConnectionListener;
 import sw.client.gui.LoginPanel;
 import sw.shared.Packer;
 import sw.shared.Packettype;
@@ -50,7 +50,7 @@ import sw.shared.data.ServerInfo;
  * @version 25.11.11
  */
 public class SWFrame extends JFrame implements ClientListener,
-		LoginListener
+		ConnectionListener
 {
 	private enum GUIMode
 	{
@@ -143,7 +143,8 @@ public class SWFrame extends JFrame implements ClientListener,
 		_client.addClientListener(_gamePanel);
 		_client.addClientListener(_loginPanel);
 
-		_loginPanel.addLoginListener(this);
+		_loginPanel.addConnectionListener(this);
+		_gamePanel.addConnectionListener(this);
 
 		this.setGUIMode(GUIMode.LOGIN);
 		this.setVisible(true);
@@ -268,7 +269,7 @@ public class SWFrame extends JFrame implements ClientListener,
 	}
 
 	@Override
-	public void login(LoginEvent e)
+	public void login(ConnectionEvent e)
 	{
 		this.connect(e.getIPAdress());
 	}
@@ -342,5 +343,11 @@ public class SWFrame extends JFrame implements ClientListener,
 		public void paintDirtyRegions()
 		{
 		}
+	}
+
+	@Override
+	public void logout(ConnectionEvent e)
+	{
+		// TODO close the current connection
 	}
 }
