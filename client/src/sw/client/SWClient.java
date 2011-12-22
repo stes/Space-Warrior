@@ -63,6 +63,14 @@ public class SWClient implements IClient, NetworkListener
 	{
 		_netClient.connect(new InetSocketAddress(ip, port));
 	}
+	
+	public void disconnect(String reason)
+	{
+		if(_server != null)
+		{
+			_server.disconnect(reason);
+		}
+	}
 
 	@Override
 	public void connected(UDPConnection connection)
