@@ -187,46 +187,55 @@ public class SWFrame extends JFrame implements ClientListener,
                 _bufferStrategy.show();
             }
             Toolkit.getDefaultToolkit().sync(); // prevents possible event queue problems in Linux
+            
+            try
+			{
+				Thread.sleep(10);
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
         }
     }
 
 	private void draw(Graphics2D g)
 	{
-        Graphics2D drawingBoard = _drawing.createGraphics();
-        drawingBoard.setColor(Color.LIGHT_GRAY);
-        drawingBoard.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+        Graphics2D g2d = _drawing.createGraphics();
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                                       RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        drawingBoard.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                       RenderingHints.VALUE_ANTIALIAS_ON);
         // draw over it to create a blank background again, (or you could draw
         // a background image if you had one
-        drawingBoard.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
+        g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
         
         // now draw everything to drawingBoard, location 0,0 will be top left corner
         // within the borders of the window
         if (_activePanel.equals(_gamePanel))
         {
-        	_gamePanel.render(drawingBoard);
+        	_gamePanel.render(g2d);
         }
         
         
-        drawingBoard.setColor(Color.WHITE);
-        drawingBoard.drawString("FPS: " + _fps, 0, drawingBoard.getFont().getSize());
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("FPS: " + _fps, 0, g2d.getFont().getSize());
         // NOTE: this will now cap the FPS (frames per second), of the program to
         // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
         // of rest per update = 100 updates max).
     
-         getLayeredPane().paintComponents(drawingBoard); // paint our Swing components
+         getLayeredPane().paintComponents(g2d); // paint our Swing components
         // NOTE: make sure you do paint your own graphics first
         
          // show fps
-         drawingBoard.setColor(Color.WHITE);
+         g2d.setColor(Color.WHITE);
          //drawingBoard.drawString("FPS: " + _fps, 100, 100);
          
         // now draw the drawing board to correct area of the JFrame's buffer
         g.drawImage(_drawing, _insets.left, 30, null);
         
-        drawingBoard.dispose();
+        g2d.dispose();
 	}
 
 	@Override

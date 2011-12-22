@@ -59,7 +59,7 @@ public final class GameConstants
     
     // Players
     public final static int PLAYER_SIZE = 64;
-    public final static int MAX_COLLISION_DAMAGE_RANGE = PLAYER_SIZE / 2;
+    public final static int MAX_COLLISION_DAMAGE_RANGE = PLAYER_SIZE;
     
     // Images
     public static enum Images
