@@ -88,7 +88,6 @@ public class SWServer implements IServer, NetworkListener
 		this.drop(client, "");
 	}
 
-	// TODO: remove
 	public void drop(Client client, String reason)
 	{
 		client.getConnection().disconnect(reason);

@@ -35,9 +35,6 @@ public interface IGameStateManager
 
 	public boolean isReady();
 
-	// TODO further methods that can be generalized for easy connection
-	// between player and controller
-
 	public void stateUpdated(PlayerInput input);
 
 	public void addGameStateChangedListener(GameStateChangedListener l);

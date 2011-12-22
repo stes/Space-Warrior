@@ -165,14 +165,17 @@ public class LoginPanel extends JPanel implements ClientListener
 
 		_txtIPAddress = new JTextField();
 		_txtIPAddress.setBounds(200, 10, 100, 25);
+		_txtIPAddress.setText("localhost");
 		this.add(_txtIPAddress);
 
 		_txtPort = new JTextField();
 		_txtPort.setBounds(400, 10, 50, 25);
+		_txtPort.setText(GameConstants.STANDARD_PORT + "");
 		this.add(_txtPort);
 
 		_txtName = new JTextField();
 		_txtName.setBounds(200, 50, 400, 25);
+		_txtName.setText("test");
 		this.add(_txtName);
 
 		_lblIPAdress = new JLabel("IP-Address");
@@ -258,11 +261,6 @@ public class LoginPanel extends JPanel implements ClientListener
 			}
 		});
 		this.add(_btnChooseAI);
-
-		// TODO move
-		_txtName.setText("test");
-		_txtIPAddress.setText("localhost");
-		_txtPort.setText(GameConstants.STANDARD_PORT + "");
 	}
 
 	@Override

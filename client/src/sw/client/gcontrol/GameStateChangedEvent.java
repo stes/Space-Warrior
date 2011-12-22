@@ -23,7 +23,6 @@ public class GameStateChangedEvent extends EventObject
 		super(source);
 	}
 
-	// TODO format getters and setters
 	/**
 	 * @return the _localDataSet
 	 */
@@ -36,9 +35,9 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _localDataSet
 	 *            the _localDataSet to set
 	 */
-	public void setLocalDataSet(PlayerData _localDataSet)
+	public void setLocalDataSet(PlayerData localDataSet)
 	{
-		this._localDataSet = _localDataSet;
+		this._localDataSet = localDataSet;
 	}
 
 	/**
@@ -70,9 +69,9 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _winner
 	 *            the _winner to set
 	 */
-	public void setWinner(PlayerData _winner)
+	public void setWinner(PlayerData winner)
 	{
-		this._winner = _winner;
+		_winner = winner;
 	}
 
 	/**
@@ -87,8 +86,8 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _loser
 	 *            the _loser to set
 	 */
-	public void setLoser(PlayerData _loser)
+	public void setLoser(PlayerData loser)
 	{
-		this._loser = _loser;
+		_loser = loser;
 	}
 }
