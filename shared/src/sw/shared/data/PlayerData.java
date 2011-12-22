@@ -193,9 +193,11 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	public void move()
 	{
 		boolean intersects = false;
+		PlayerData pred = this.predict();
+		//System.out.print(pred.equals(this));
 		for (PlayerData d : getWorld().getPlayers())
 		{
-			if (d.intersects(this))
+			if (!this.equals(d) && d.intersects(pred))
 				intersects = true;
 		}
 		if(_alive)
@@ -206,10 +208,27 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 				double y = _speed * Math.cos(getDirection());
 				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
 			}
+			else
+			{
+				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / GameConstants.MAX_SPEED));
+			}
 			this.rotate(_turnSpeed);
 		}
 	}
 
+	public PlayerData predict()
+	{
+		PlayerData d = new PlayerData(this);
+		if(_alive)
+		{
+			double x = d._speed * Math.sin(d.getDirection());
+			double y = d._speed * Math.cos(d.getDirection());
+			d.setPosition(new Point.Double(d._location.getX() + x, d._location.getY() + y));
+			d.rotate(d._turnSpeed);
+		}
+		return d;
+	}
+	
 	public void angularAccelerate(double value)
 	{
 		setTurnSpeed(_turnSpeed + value);
@@ -452,31 +471,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		if (d == null || this.equals(d))
 			return false;
-		
 		double diff = this.getPosition().distance(d.getPosition());
-		double dmg = 0;
-		
 		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
-		
-		// TODO add effects on speed, direction and health
-//		if (diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE)
-//		{
-//			dmg = -((double) GameConstants.MAX_COLLISION_DAMAGE)
-//					/ ((double) GameConstants.MAX_COLLISION_DAMAGE_RANGE)
-//					* diff + GameConstants.MAX_COLLISION_DAMAGE;
-//			
-//			double speed = s2.getSpeed();
-//			s1.setSpeed(s2.getSpeed() * 0.8);
-//			s2.setSpeed(speed * 0.8);
-//			
-//			double direction = s2.getDirection();
-//			s1.setDirection(s2.getDirection());
-//			s2.setSpeed(direction);
-//		}
-//		addDamage(s1, (int)dmg);
-//		addDamage(s2, (int)dmg);
 	}
-
-
-	
 }
