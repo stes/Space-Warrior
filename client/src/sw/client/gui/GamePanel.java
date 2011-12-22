@@ -27,8 +27,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,7 +45,7 @@ import sw.shared.data.Packer;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Unpacker;
 
-public class GamePanel extends JPanel implements ClientListener, ActionListener, ContainerListener
+public class GamePanel extends JPanel implements ClientListener, ActionListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
 
@@ -57,8 +55,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
     private JScrollPane _scrollScoreBoard;
     private JScrollPane _scrollChathistory;
     private JTable _tblScoreBoard;
-    
-    private Thread _renderingLoop;
     
     private PlayerTableModel _model;
     
@@ -79,6 +75,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
+		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
 		{
@@ -89,12 +86,15 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 				_scrollScoreBoard.setBounds(_self.getWidth()*5/6-50, 50, _self.getWidth()/6, 150);
 				_scrollChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
 		        _playingField.setSize(_self.getSize());
-				_self.repaint();
 			}
 		});
-		_renderingLoop = new Thread(_playingField);
 	}
 
+	public void render(Graphics2D g)
+	{
+		_playingField.render(g);
+	}
+	
 	/**
     * invoked after chat button is pressed
     */
@@ -105,14 +105,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 			this.processInput();
 		}
 	}
-
-    public void updatePlayingField()
-    {
-        if (_playingField != null)
-        {
-            _playingField.repaint();
-        }
-    }
     
     private void processInput()
     {
@@ -297,17 +289,4 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		}
 	}
 
-	@Override
-	public void componentAdded(ContainerEvent e)
-	{
-		System.out.println("x");
-		if (e.getComponent().equals(this))
-			_renderingLoop.start();
-	}
-
-	@Override
-	public void componentRemoved(ContainerEvent e)
-	{
-		_renderingLoop.interrupt();
-	}
 }

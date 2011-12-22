@@ -43,7 +43,7 @@ import sw.shared.data.PlayerData;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldPanel extends JPanel implements GameStateChangedListener, Runnable
+public class PlayingFieldPanel extends JPanel implements GameStateChangedListener
 {
 	private static final long serialVersionUID = -8647279084154615455L;
 
@@ -102,14 +102,31 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		long l = System.currentTimeMillis();
-		super.paintComponent(g);
-		
+		//super.paintComponents(g);
+		//this.render(g);
+		//long l = System.currentTimeMillis();
+		//super.paintComponent(g);
+		//drawContent(g);
 
-		g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+	}
+	
+	/**
+	 * Paints the playing field with its contents
+	 */
+	@Override
+	public void paintComponents(Graphics g)
+	{
+		//super.paintComponents(g);
+		//this.render(g);
+		//long l = System.currentTimeMillis();
+		//super.paintComponent(g);
+		//drawContent(g);
+
+		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
 	}
 
-	private void drawContent(Graphics g)
+	public void render(Graphics g)
 	{
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		g.setColor(Color.WHITE);
@@ -195,15 +212,5 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		{
 			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
 		}
-	}
-
-	@Override
-	public void run()
-	{
-		Graphics g = this.getGraphics();
-		
-		this.drawContent(g);
-		Thread.yield();
-		System.out.println("x");
 	}
 }
