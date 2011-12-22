@@ -40,10 +40,10 @@ import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
+import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.data.Packer;
+import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.Unpacker;
 
 public class GamePanel extends JPanel implements ClientListener, ActionListener
 {

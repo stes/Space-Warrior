@@ -28,13 +28,13 @@ import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
 import sw.shared.GameConstants;
-import sw.shared.data.Packer;
+import sw.shared.Packer;
+import sw.shared.Unpacker;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.Shot;
-import sw.shared.data.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

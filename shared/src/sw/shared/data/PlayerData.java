@@ -21,7 +21,9 @@ import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -43,6 +45,8 @@ public class PlayerData implements Comparable<PlayerData>
 	private long _lastShot;
 	private boolean _local;
 	private int _imageID;
+	
+	private PlayerInput _input;
 
 	/**
 	 * creates a new data record from the given packet
@@ -66,7 +70,7 @@ public class PlayerData implements Comparable<PlayerData>
 		data._score = p.readShort();
 		data._alive = p.readBoolean();
 		data.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
-		data._direction = p.readDouble();
+		data.setDirection(p.readDouble());
 		data.setImageID(p.readInt());
 		data._lifepoints = p.readShort();
 		data._ammo = p.readShort();
@@ -86,21 +90,16 @@ public class PlayerData implements Comparable<PlayerData>
 	{
 		_name = new String(dataset.getName());
 		_local = dataset.isLocal();
-		_location = new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY());
-		_direction = dataset.getDirection();
 		_score = dataset.getScore();
-
-		if (_local)
-		{
-			_lifepoints = dataset.getLifepoints();
-			_ammo = dataset.getAmmo();
-			_speed = dataset.getSpeed();
-		}
-	}
-	
-	private double getSpeed()
-	{
-		return _speed;
+		_alive = dataset.isAlive();
+		this.setPosition(new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY()));
+		this.setDirection(dataset.getDirection());
+		this.setImageID(dataset.getImageID());
+		_lifepoints = dataset.getLifepoints();
+		_ammo = dataset.getAmmo();
+		this.setSpeed(dataset.getSpeed());
+		this.setTurnSpeed(dataset.getTurnSpeed());
+		_input = dataset._input;
 	}
 
 	/**
@@ -109,12 +108,13 @@ public class PlayerData implements Comparable<PlayerData>
 	public PlayerData(String name, int imageID)
 	{
 		_name = name;
+		_score = 0;
+		_alive = false;
+		_location = new Point.Double(0, 0);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
-		_score = 0;
-		_location = new Point.Double(0, 0);
-		_alive = false;
 		_imageID = imageID;
+		_input = new PlayerInput();
 	}
 	
 	@Override
@@ -173,6 +173,42 @@ public class PlayerData implements Comparable<PlayerData>
 		p.writeShort(_lifepoints * l);
 		p.writeShort(_ammo * l);
 	}
+	
+	public void tick()
+	{
+		if(!this.isAlive())
+			return;
+		
+		if (_input.shot() > 0)
+		{
+			Shot s = this.shoot(_input.shot() == 2);
+			if (s != null)
+			{
+				// TODO
+			}
+		}
+		
+		if (_input.moveDirection() == 0)
+		{
+			this.accelerate(-GameConstants.ACCELERATION);
+		}
+		else
+		{
+			this.accelerate(GameConstants.ACCELERATION * _input.moveDirection());
+		}
+		
+		if (_input.turnDirection() == 0)
+		{
+			this.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
+		}
+		else
+		{
+			this.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * _input.turnDirection());
+		}
+		
+		this.reload();
+		this.move();
+	}
 
 	/**
 	 * moves the character with the actual speed
@@ -222,7 +258,6 @@ public class PlayerData implements Comparable<PlayerData>
 		{
 			setTurnSpeed(0);
 		}
-		
 	}
 	
 	/**
@@ -283,6 +318,11 @@ public class PlayerData implements Comparable<PlayerData>
 		{
 			this.die();
 		}
+	}
+	
+	public void setInput(PlayerInput input)
+	{
+		_input = input;
 	}
 
 	/**
@@ -380,6 +420,11 @@ public class PlayerData implements Comparable<PlayerData>
 	public int getScore()
 	{
 		return _score;
+	}
+	
+	private double getSpeed()
+	{
+		return _speed;
 	}
 
 	/**

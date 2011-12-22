@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data;
+package sw.shared;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;

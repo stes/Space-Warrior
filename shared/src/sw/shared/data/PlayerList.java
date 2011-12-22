@@ -19,7 +19,9 @@ package sw.shared.data;
 
 import java.io.Serializable;
 
+import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -30,7 +32,6 @@ public class PlayerList implements Serializable
 	private static final long serialVersionUID = 4378922344210371238L;
 	
 	private PlayerData[] _list;
-	private PlayerInput[] _input;
 
 	/**
 	 * Creates a new Playerlist out of a paket
@@ -44,7 +45,7 @@ public class PlayerList implements Serializable
 		PlayerList list = new PlayerList(p.readInt());
 		for (int i = 0; i < list.size(); i++)
 		{
-			list.insert(PlayerData.fromSnapshot(p), null);
+			list.insert(PlayerData.fromSnapshot(p));
 		}
 		return list;
 	}
@@ -58,15 +59,6 @@ public class PlayerList implements Serializable
 	public PlayerList(int size)
 	{
 		_list = new PlayerData[size];
-		_input = new PlayerInput[size];
-	}
-
-	/**
-	 * @return input
-	 */
-	public PlayerInput inputAt(int index)
-	{
-		return _input[index];
 	}
 
 	/**
@@ -104,15 +96,14 @@ public class PlayerList implements Serializable
 	 * @param input
 	 *            the current player input, null for default
 	 */
-	public void insert(PlayerData spieler, PlayerInput eingabe)
+	public void insert(PlayerData player)
 	{
 		int index = findEmptyPlace();
 		if (index == -1)
 		{
-			throw new ArrayIndexOutOfBoundsException("Kein Platz in der Liste");
+			throw new ArrayIndexOutOfBoundsException("no free slot in the list");
 		}
-		_list[index] = spieler;
-		_input[index] = (eingabe == null ? new PlayerInput() : eingabe);
+		_list[index] = player;
 	}
 
 	/**
@@ -131,7 +122,6 @@ public class PlayerList implements Serializable
 	public void clear()
 	{
 		_list = new PlayerData[_list.length];
-		_input = new PlayerInput[_input.length];
 	}
 
 	/**
@@ -144,7 +134,6 @@ public class PlayerList implements Serializable
 	{
 		PlayerList liste = PlayerList.fromSnapshot(p);
 		_list = liste._list;
-		_input = liste._input;
 	}
 
 	/**
@@ -178,14 +167,14 @@ public class PlayerList implements Serializable
 	 * @return the data record that belongs to the player or null if no player
 	 *         is found
 	 */
-	public boolean setInput(String name, PlayerInput eingabe)
+	public boolean setInput(String name, PlayerInput input)
 	{
 		for (int i = 0; i < _list.length; i++)
 		{
 			PlayerData s = _list[i];
 			if (s != null && s.getName().equals(name))
 			{
-				_input[i] = eingabe;
+				s.setInput(input);
 				return true;
 			}
 		}

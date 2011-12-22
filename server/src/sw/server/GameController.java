@@ -18,8 +18,8 @@
 package sw.server;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.data.Packer;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.PlayerList;
@@ -56,8 +56,7 @@ public class GameController
 	 */
 	public void playerConnected(String name, int imageID)
 	{
-		PlayerData newDataSet = new PlayerData(name, imageID);
-		_players.insert(newDataSet, null);
+		_players.insert(new PlayerData(name, imageID));
 	}
 
 	/**
@@ -123,7 +122,15 @@ public class GameController
 	public void tick()
 	{
 		this.checkTurn();
-		this.updateData();
+		
+		for (int i = 0; i < _players.size(); i++)
+		{
+			PlayerData data = _players.dataAt(i);
+			if(data != null)
+			{
+				data.tick();
+			}
+		}
 	}
 
 	/**
@@ -174,48 +181,6 @@ public class GameController
 				}
 			}
 			this.startGame();
-		}
-	}
-
-	private void updateData()
-	{
-		for (int i = 0; i < _players.size(); i++)
-		{
-			PlayerData data = _players.dataAt(i);
-			PlayerInput input = _players.inputAt(i);
-			if (data != null && data.isAlive())
-			{
-				if (input.shot() > 0)
-				{
-					Shot s = data.shoot(input.shot() == 2);
-					if (s != null)
-					{
-						this.processShot(data, s);
-						Packer p = s.write();
-						_server.sendBroadcast(p);
-					}
-				}
-				if (input.moveDirection() == 0)
-					data.accelerate(-GameConstants.ACCELERATION);
-				else
-				{
-					data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
-				}
-				
-				if (input.turnDirection() == 0)
-				{
-					data.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
-				}
-				else
-				{
-					data.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * input.turnDirection());
-				}
-
-				data.reload();
-				data.move();
-				// TODO improve
-				//this.checkCollision(data);
-			}
 		}
 	}
 

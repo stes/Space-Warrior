@@ -43,9 +43,9 @@ import javax.swing.table.AbstractTableModel;
 import sw.client.ClientListener;
 import sw.client.GameController;
 import sw.shared.GameConstants;
+import sw.shared.Unpacker;
 import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.Unpacker;
 
 public class LoginPanel extends JPanel implements ClientListener
 {

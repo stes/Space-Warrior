@@ -20,6 +20,8 @@ package sw.shared.data;
 import java.net.InetSocketAddress;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
+import sw.shared.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

@@ -22,10 +22,10 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
 import sw.shared.GameConstants;
+import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.data.Packer;
+import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.Unpacker;
 import sw.shared.net.NetworkListener;
 import sw.shared.net.UDPConnection;
 import sw.shared.net.UDPHost;
