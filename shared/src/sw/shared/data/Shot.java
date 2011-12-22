@@ -129,8 +129,7 @@ public class Shot extends Entity
 	public void setDirection(double direction)
 	{
 		_direction = direction;
-		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE
-				: GameConstants.MAX_RANGE;
+		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
 		_line.setLine(
 				startPoint(),
 				new Point.Double(
@@ -159,16 +158,16 @@ public class Shot extends Entity
 		p.writeByte(this.getType());
 		p.writeDouble(startPoint().getX());
 		p.writeDouble(startPoint().getY());
-		p.writeDouble(this.getDirection());
 		p.writeBoolean(this.isMaster());
+		p.writeDouble(this.getDirection());
 	}
 
 	@Override
 	public void fromSnap(Unpacker p)
 	{
 		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()), new Point.Double(0, 0));
-		setDirection(p.readDouble());
 		_isMaster = p.readBoolean();
+		setDirection(p.readDouble());
 	}
 
 	@Override
