@@ -66,6 +66,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		_self = this;
 		_stateManager = stateManager;
 		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
+		this.setIgnoreRepaint(true);
 		this.init();
 	}
 
@@ -101,11 +102,32 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		super.paintComponent(g);
+		//super.paintComponents(g);
+		//this.render(g);
+		//long l = System.currentTimeMillis();
+		//super.paintComponent(g);
+		//drawContent(g);
 
-//		double scaleX = (double)this.getWidth() / (double)GameConstants.PLAYING_FIELD_WIDTH;
-//		double scaleY = (double)this.getHeight() / (double)GameConstants.PLAYING_FIELD_HEIGHT;
-		
+		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+	}
+	
+	/**
+	 * Paints the playing field with its contents
+	 */
+	@Override
+	public void paintComponents(Graphics g)
+	{
+		//super.paintComponents(g);
+		//this.render(g);
+		//long l = System.currentTimeMillis();
+		//super.paintComponent(g);
+		//drawContent(g);
+
+		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+	}
+
+	public void render(Graphics g)
+	{
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		g.setColor(Color.WHITE);
 		g.drawString("FPS: " + 1000/ (System.currentTimeMillis() - _lastPaint), this.getWidth()-100, 20);
@@ -137,8 +159,9 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		}
 		
 		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+		g.setColor(Color.WHITE);
 	}
-
+	
 	private void paintBars(Graphics2D g2d, PlayerData d)
 	{
 		g2d.setStroke(new BasicStroke(15));

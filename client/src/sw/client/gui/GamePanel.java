@@ -75,6 +75,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
+		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
 		{
@@ -85,11 +86,15 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 				_scrollScoreBoard.setBounds(_self.getWidth()*5/6-50, 50, _self.getWidth()/6, 150);
 				_scrollChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
 		        _playingField.setSize(_self.getSize());
-				_self.repaint();
 			}
 		});
 	}
 
+	public void render(Graphics2D g)
+	{
+		_playingField.render(g);
+	}
+	
 	/**
     * invoked after chat button is pressed
     */
@@ -100,14 +105,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			this.processInput();
 		}
 	}
-
-    public void updatePlayingField()
-    {
-        if (_playingField != null)
-        {
-            _playingField.repaint();
-        }
-    }
     
     private void processInput()
     {
@@ -291,4 +288,5 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			return false;
 		}
 	}
+
 }
