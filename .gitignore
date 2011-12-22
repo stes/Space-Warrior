@@ -4,5 +4,6 @@
 /server/bin
 /shared/bin
 /current_build
+/client/buglog.txt
 *.class
 *.jar
