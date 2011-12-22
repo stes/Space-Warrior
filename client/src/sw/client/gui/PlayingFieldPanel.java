@@ -165,7 +165,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				Shot s = (Shot) ent;
 				g2d.setColor(Color.BLUE);
 		        g2d.setStroke(new BasicStroke(3));
-		        g.drawLine((int)s.startPoint().getX(), (int)s.startPoint().getY(), (int)s.endPoint().getX(), (int)s.endPoint().getY());
+		        g2d.drawLine((int)s.startPoint().getX(), (int)s.startPoint().getY(), (int)s.endPoint().getX(), (int)s.endPoint().getY());
 			}
 		}
 		

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import java.awt.Point;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -72,8 +73,11 @@ public class GameWorld
 		{
 			Entity newEnt;
 			// move this somewhere else?
-			if(p.readByte() == Packettype.SNAP_PLAYERDATA)
+			byte type = p.readByte();
+			if(type == Packettype.SNAP_PLAYERDATA)
 				newEnt = new PlayerData("");
+			else if(type == Packettype.SNAP_SHOT)
+				newEnt = new Shot(new Point.Double(0, 0), 0);
 			else
 				return;
 			newEnt.fromSnap(p);
@@ -91,9 +95,9 @@ public class GameWorld
 				i.remove();
 		}
 		
-		for(Entity ent : _entities)
+		for(int i = 0; i < _entities.size(); i++)
 		{
-			ent.tick();
+			_entities.get(i).tick();
 		}
 	}
 	

@@ -156,6 +156,7 @@ public class Shot extends Entity
 	@Override
 	public void snap(Packer p, String name)
 	{
+		p.writeByte(this.getType());
 		p.writeDouble(startPoint().getX());
 		p.writeDouble(startPoint().getY());
 		p.writeDouble(this.getDirection());

@@ -306,8 +306,8 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
 			Shot s = new Shot(this.positionAfter(time), _direction, master);
-			s.fire(this);
 			this.getWorld().insert(s);
+			s.fire(this);
 		}
 	}
 	
