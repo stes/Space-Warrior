@@ -18,6 +18,7 @@
 package sw.shared.data;
 
 import java.awt.Point;
+import java.awt.geom.Line2D;
 
 import sw.shared.GameConstants;
 import sw.shared.Packer;
@@ -29,29 +30,12 @@ import sw.shared.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class Shot extends java.awt.geom.Line2D.Double
+public class Shot extends Entity
 {
-	private static final long serialVersionUID = 7824231109006024749L;
-
+	private Line2D.Double _line;
 	private boolean _isMaster;
 	private double _direction;
-
-	/**
-	 * Creates a new record from the given parcel
-	 * 
-	 * @Param p The packet
-	 * @Return a new instance of shot-
-	 * @Throws IllegalArgumentException if packet type is incorrect
-	 */
-	public static Shot read(Unpacker p)
-	{
-		if (p.getType() != Packettype.SV_SHOT)
-		{
-			throw new IllegalArgumentException();
-		}
-		return new Shot(new Point.Double(p.readDouble(), p.readDouble()),
-				p.readDouble(), p.readBoolean());
-	}
+	private int _lifetime;
 
 	/**
 	 * creates a new shot
@@ -61,9 +45,9 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 * @param direction
 	 *            direction of the shot
 	 */
-	public Shot(Point.Double startPunkt, double direction)
+	public Shot(Point.Double startPoint, double direction)
 	{
-		this(startPunkt, direction, false);
+		this(startPoint, direction, false);
 	}
 
 	/**
@@ -76,11 +60,13 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 * @param master
 	 *            true, if a mastershot is given
 	 */
-	public Shot(Point.Double startPunkt, double direction, boolean master)
+	public Shot(Point.Double startPoint, double direction, boolean master)
 	{
-		super(startPunkt, new Point.Double(0, 0));
+		super(Packettype.SNAP_SHOT);
+		_line = new Line2D.Double(startPoint, new Point.Double(0, 0));
 		_isMaster = master;
 		setDirection(direction);
+		_lifetime = GameConstants.SHOT_TTL; // not nice but enough for now
 	}
 
 	/**
@@ -91,7 +77,15 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 */
 	public double distanceTo(Point.Double p)
 	{
-		return this.ptLineDist(p.getX(), p.getY());
+		return _line.ptLineDist(p.getX(), p.getY());
+	}
+	
+	/**
+	 * @return the startpoint
+	 */
+	public Point.Double startPoint()
+	{
+		return new Point.Double(_line.getX1(), _line.getY1());
 	}
 
 	/**
@@ -99,7 +93,7 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 */
 	public Point.Double endPoint()
 	{
-		return new Point.Double(this.getX2(), this.getY2());
+		return new Point.Double(_line.getX2(), _line.getY2());
 	}
 
 	/**
@@ -108,21 +102,6 @@ public class Shot extends java.awt.geom.Line2D.Double
 	public boolean isMaster()
 	{
 		return _isMaster;
-	}
-
-	/**
-	 * writes the shot into a packet and passes it back
-	 * 
-	 * @return the packet
-	 */
-	public Packer write()
-	{
-		Packer p = new Packer(Packettype.SV_SHOT);
-		p.writeDouble(startPoint().getX());
-		p.writeDouble(startPoint().getY());
-		p.writeDouble(this.getDirection());
-		p.writeBoolean(this.isMaster());
-		return p;
 	}
 
 	/**
@@ -138,8 +117,7 @@ public class Shot extends java.awt.geom.Line2D.Double
 	 */
 	public int getDamage()
 	{
-		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE
-				: GameConstants.MAX_DAMAGE;
+		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
 	}
 
 	/**
@@ -153,18 +131,51 @@ public class Shot extends java.awt.geom.Line2D.Double
 		_direction = direction;
 		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE
 				: GameConstants.MAX_RANGE;
-		this.setLine(
+		_line.setLine(
 				startPoint(),
-				new Point.Double((startPoint().getX() + range
-						* Math.sin(direction)), (startPoint()
-						.getY() + range * Math.cos(direction))));
+				new Point.Double(
+						(startPoint().getX() + range * Math.sin(direction)),
+						(startPoint().getY() + range * Math.cos(direction))));
+	}
+	
+	public void fire(PlayerData attacker)
+	{
+		PlayerData[] players = this.getWorld().getPlayers();
+		for(PlayerData pl : players)
+		{
+			if (pl.isAlive() && !pl.getName().equals(attacker.getName()) &&
+				this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			{
+				pl.takeDamage(this.getDamage());
+				if (!pl.isAlive())
+					attacker.setScore(attacker.getScore() + 1);
+			}
+		}
 	}
 
-	/**
-	 * @return the startpoint
-	 */
-	public Point.Double startPoint()
+	@Override
+	public void snap(Packer p, String name)
 	{
-		return new Point.Double(this.getX1(), this.getY1());
+		p.writeByte(this.getType());
+		p.writeDouble(startPoint().getX());
+		p.writeDouble(startPoint().getY());
+		p.writeDouble(this.getDirection());
+		p.writeBoolean(this.isMaster());
+	}
+
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()), new Point.Double(0, 0));
+		setDirection(p.readDouble());
+		_isMaster = p.readBoolean();
+	}
+
+	@Override
+	public void tick()
+	{
+		_lifetime--;
+		if(_lifetime <= 0)
+			this.destroy();
 	}
 }

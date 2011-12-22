@@ -105,13 +105,6 @@ public class SWClient implements IClient, NetworkListener
 				l.snapshot(packet);
 			}
 		}
-		else if (Packettype.SV_SHOT == packet.getType())
-		{
-			for (ClientListener l : _clientListener)
-			{
-				l.shot(packet);
-			}
-		}
 	}
 
 	@Override

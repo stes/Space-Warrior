@@ -116,5 +116,5 @@ public final class GameConstants
     public final static int REFERENCE_Y = 0;
     
 	// Shots
-    public final static int SHOT_TTL = 400;
+    public final static int SHOT_TTL = 20; // ticks
 }

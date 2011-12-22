@@ -289,11 +289,6 @@ public class LoginPanel extends JPanel implements ClientListener
 	}
 
 	@Override
-	public void shot(Unpacker packet)
-	{
-	}
-
-	@Override
 	public void snapshot(Unpacker packet)
 	{
 	}

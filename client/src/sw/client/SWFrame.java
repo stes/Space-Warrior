@@ -286,11 +286,6 @@ public class SWFrame extends JFrame implements ClientListener,
 	}
 
 	@Override
-	public void shot(Unpacker packet)
-	{
-	}
-
-	@Override
 	public void snapshot(Unpacker packet)
 	{
 		// this.repaint();

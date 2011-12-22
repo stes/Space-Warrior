@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
-import sw.client.gui.ShotPool;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
@@ -34,7 +33,6 @@ import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -162,13 +160,6 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void serverInfo(ServerInfo info)
 	{
-	}
-
-	@Override
-	public void shot(Unpacker packet)
-	{
-		Shot s = Shot.read(packet);
-		ShotPool.addShot(s);
 	}
 
 	@Override

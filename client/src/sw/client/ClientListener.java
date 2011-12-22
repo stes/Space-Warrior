@@ -56,14 +56,6 @@ public interface ClientListener
 	public void serverInfo(ServerInfo info);
 
 	/**
-	 * Invoked when a shot was received
-	 * 
-	 * @param packet
-	 *            the shot
-	 */
-	public void shot(Unpacker packet);
-
-	/**
 	 * Invoked when a snapshot was received
 	 * 
 	 * @param packet

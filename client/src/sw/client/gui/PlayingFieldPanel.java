@@ -40,6 +40,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Entity;
 import sw.shared.data.PlayerData;
+import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -95,7 +96,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
-		ShotPool.init();
 	}
 	
 	/**
@@ -141,8 +141,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		Graphics2D g2d = img.createGraphics();
 		
 		g2d.setColor(new Color(0, 0, 0, 0));
-		
-		ShotPool.paint(g2d);
 
 		for (Entity ent : _stateManager.getGameWorld().getAllEntities())
 		{
@@ -161,6 +159,13 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 							rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), Math.PI - pl.getDirection()), null,
 							(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
 							(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
+			}
+			else if(ent.getType() == Packettype.SNAP_SHOT)
+			{
+				Shot s = (Shot) ent;
+				g2d.setColor(Color.BLUE);
+		        g2d.setStroke(new BasicStroke(3));
+		        g2d.drawLine((int)s.startPoint().getX(), (int)s.startPoint().getY(), (int)s.endPoint().getX(), (int)s.endPoint().getY());
 			}
 		}
 		
