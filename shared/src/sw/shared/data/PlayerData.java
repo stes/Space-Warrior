@@ -29,7 +29,7 @@ import sw.shared.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerData implements Comparable<PlayerData>
+public class PlayerData extends Entity implements Comparable<PlayerData>
 {
 	private static Random _random = new Random();
 
@@ -49,36 +49,6 @@ public class PlayerData implements Comparable<PlayerData>
 	private PlayerInput _input;
 
 	/**
-	 * creates a new data record from the given packet
-	 * 
-	 * @param p
-	 *            the packet
-	 * @return a new player data-Instance
-	 * @throws IllegalArgumentException
-	 *             if packet type is wrong
-	 */
-	public static PlayerData fromSnapshot(Unpacker p)
-	{
-		if (p.readByte() != Packettype.SNAP_PLAYERDATA)
-		{
-			throw new IllegalArgumentException();
-		}
-		
-		PlayerData data = new PlayerData(p.readUTF());
-		
-		data._local = p.readBoolean();
-		data._score = p.readShort();
-		data._alive = p.readBoolean();
-		data.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
-		data.setDirection(p.readDouble());
-		data.setImageID(p.readInt());
-		data._lifepoints = p.readShort();
-		data._ammo = p.readShort();
-		
-		return data;
-	}
-
-	/**
 	 * Creates a new Player Data record
 	 */
 	public PlayerData(String name)
@@ -88,6 +58,7 @@ public class PlayerData implements Comparable<PlayerData>
 	
 	public PlayerData(PlayerData dataset)
 	{
+		super(Packettype.SNAP_PLAYERDATA);
 		_name = new String(dataset.getName());
 		_local = dataset.isLocal();
 		_score = dataset.getScore();
@@ -107,6 +78,7 @@ public class PlayerData implements Comparable<PlayerData>
 	 */
 	public PlayerData(String name, int imageID)
 	{
+		super(Packettype.SNAP_PLAYERDATA);
 		_name = name;
 		_score = 0;
 		_alive = false;
@@ -149,17 +121,11 @@ public class PlayerData implements Comparable<PlayerData>
 		_alive = false;
 	}
 	
-	/**
-	 * Writes the player data into a packet and returns it
-	 * 
-	 * @param lokal
-	 *            true, although local values ??should be taken
-	 * @return the packet
-	 */
+	@Override
 	public void snap(Packer p, String name)
 	{
 		boolean local = this.getName().equals(name);
-		p.writeByte(Packettype.SNAP_PLAYERDATA);
+		p.writeByte(this.getType());
 		p.writeUTF(_name);
 		p.writeBoolean(local);
 		p.writeShort(_score);
@@ -174,6 +140,21 @@ public class PlayerData implements Comparable<PlayerData>
 		p.writeShort(_ammo * l);
 	}
 	
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		_name = p.readUTF();
+		_local = p.readBoolean();
+		_score = p.readShort();
+		_alive = p.readBoolean();
+		this.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
+		this.setDirection(p.readDouble());
+		this.setImageID(p.readInt());
+		_lifepoints = p.readShort();
+		_ammo = p.readShort();
+	}
+	
+	@Override
 	public void tick()
 	{
 		if(!this.isAlive())

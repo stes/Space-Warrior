@@ -17,13 +17,13 @@
  ******************************************************************************/
 package sw.server;
 
-import sw.shared.GameConstants;
+import java.util.HashMap;
+
 import sw.shared.Packer;
 import sw.shared.Packettype;
+import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.PlayerList;
-import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -32,7 +32,8 @@ import sw.shared.data.Shot;
 
 public class GameController
 {
-	private PlayerList _players;
+	private GameWorld _world;
+	private HashMap<String, PlayerData> _players;
 	private IServer _server;
 
 	/**
@@ -43,7 +44,8 @@ public class GameController
 	 */
 	public GameController(IServer server)
 	{
-		_players = new PlayerList(GameConstants.MAX_PLAYERS);
+		_world = new GameWorld();
+		_players = new HashMap<String, PlayerData>();
 		_server = server;
 	}
 
@@ -56,7 +58,9 @@ public class GameController
 	 */
 	public void playerConnected(String name, int imageID)
 	{
-		_players.insert(new PlayerData(name, imageID));
+		PlayerData newPl = new PlayerData(name, imageID);
+		_players.put(name, newPl);
+		_world.insert(newPl);
 	}
 
 	/**
@@ -64,14 +68,11 @@ public class GameController
 	 */
 	public void broadcastSnapshots()
 	{
-		for (int i = 0; i < _players.size(); i++)
+		for (PlayerData pl : _players.values())
 		{
-			PlayerData data = _players.dataAt(i);
-			if (data != null)
-			{
-				Packer snapshot = _players.createSnapshot(data.getName());
-				_server.sendPacket(data.getName(), snapshot);
-			}
+			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
+			_world.snap(snapshot, pl.getName());
+			_server.sendPacket(pl.getName(), snapshot);
 		}
 	}
 
@@ -83,6 +84,7 @@ public class GameController
 	 */
 	public void playerLeft(String name, String reason)
 	{
+		_players.get(name).destroy();
 		_players.remove(name);
 	}
 
@@ -96,7 +98,7 @@ public class GameController
 	 */
 	public void processPlayerInput(String name, PlayerInput input)
 	{
-		_players.setInput(name, input);
+		_players.get(name).setInput(input);
 	}
 
 	/**
@@ -104,13 +106,9 @@ public class GameController
 	 */
 	public void startGame()
 	{
-		for (int i = 0; i < _players.size(); i++)
+		for (PlayerData pl : _players.values())
 		{
-			PlayerData data = _players.dataAt(i);
-			if (data != null)
-			{
-				data.respawn();
-			}
+			pl.respawn();
 		}
 		Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
 		info.writeUTF("Server");
@@ -123,14 +121,7 @@ public class GameController
 	{
 		this.checkTurn();
 		
-		for (int i = 0; i < _players.size(); i++)
-		{
-			PlayerData data = _players.dataAt(i);
-			if(data != null)
-			{
-				data.tick();
-			}
-		}
+		_world.tick();
 	}
 
 	/**
@@ -141,43 +132,44 @@ public class GameController
 	 * @param shot
 	 *            the shot
 	 */
-	private void processShot(PlayerData attacker, Shot shot)
+	/*private void processShot(PlayerData attacker, Shot shot)
 	{
-		for (int i = 0; i < _players.size(); i++)
+		for (PlayerData pl : _players.values())
 		{
-			PlayerData data = _players.dataAt(i);
-			if (data != null && data.isAlive() && !data.getName().equals(attacker.getName()))
+			if (pl.isAlive() && !pl.getName().equals(attacker.getName()))
 			{
-				if (shot.distanceTo(data.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+				if (shot.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 				{
-					data.takeDamage(shot.getDamage());
-					if (!data.isAlive())
+					pl.takeDamage(shot.getDamage());
+					if (!pl.isAlive())
 					{
 						attacker.setScore(attacker.getScore() + 1);
 					}
 				}
 			}
 		}
-	}
+	}*/
 	
 	private void checkTurn()
 	{
-		if ((_players.count(true) == 1 && _players.count(false) > 1)
-				|| (_players.count(true) == 0 && _players.count(false) == 1))
+		int alive = 0;
+		for (PlayerData pl : _players.values())
 		{
-			if (_players.count(true) == 1)
+			if (pl.isAlive())
+				alive++;
+		}
+		
+		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() == 1))
+		{
+			if (alive == 1)
 			{
-				for (int i = 0; i < _players.size(); i++)
+				for (PlayerData pl : _players.values())
 				{
-					PlayerData data = _players.dataAt(i);
-					if (data != null)
-					{
-						Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
-						info.writeUTF("Server");
-						info.writeUTF(data.getName() + " has won the round!");
-						_server.sendBroadcast(info);
-						break;
-					}
+					Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
+					info.writeUTF("Server");
+					info.writeUTF(pl.getName() + " has won the round!");
+					_server.sendBroadcast(info);
+					break;
 				}
 			}
 			this.startGame();

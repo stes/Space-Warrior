@@ -37,6 +37,8 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
+import sw.shared.Packettype;
+import sw.shared.data.Entity;
 import sw.shared.data.PlayerData;
 
 /**
@@ -142,20 +144,24 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		
 		ShotPool.paint(g2d);
 
-		for (int i = 0; i < _stateManager.getPlayerList().size(); i++)
+		for (Entity ent : _stateManager.getGameWorld().getAllEntities())
 		{
-			if (_stateManager.getPlayerList().dataAt(i) == null || !_stateManager.getPlayerList().dataAt(i).isAlive())
-				continue;
-			PlayerData d = _stateManager.getPlayerList().dataAt(i);
-			if (d.isLocal())
+			if(ent.getType() == Packettype.SNAP_PLAYERDATA)
 			{
-				this.paintBars(g2d, d);
+				PlayerData pl = (PlayerData) ent;
+				if (!pl.isAlive())
+					continue;
+				
+				if (pl.isLocal())
+				{
+					this.paintBars(g2d, pl);
+				}
+				
+				g2d.drawImage(
+							rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), Math.PI - pl.getDirection()), null,
+							(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
+							(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
 			}
-			
-			g2d.drawImage(
-						rotateImage(ImageContainer.getLocalInstance().getImage(d.getImageID()), Math.PI - d.getDirection()), null,
-						(int) ((d.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
-						(int) ((d.getPosition().getY() - GameConstants.PLAYER_SIZE / 2)));
 		}
 		
 		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
