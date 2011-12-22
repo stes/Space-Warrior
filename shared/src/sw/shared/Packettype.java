@@ -30,8 +30,8 @@ public final class Packettype
     // server
     public final static byte SV_CHAT_MESSAGE = 1;
     public final static byte SV_SNAPSHOT = 2;
-    public final static byte SV_SHOT = 3;
     
     // snapshot types
-    public final static byte SNAP_PLAYERDATA = 4;
+    public final static byte SNAP_PLAYERDATA = 0;
+    public final static byte SNAP_SHOT = 1;
 }

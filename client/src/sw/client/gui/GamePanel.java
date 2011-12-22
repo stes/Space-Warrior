@@ -220,9 +220,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	}
 
 	@Override
-	public void shot(Unpacker packet) {}
-
-	@Override
 	public void snapshot(Unpacker packet)
 	{
 		_model.fireTableDataChanged();

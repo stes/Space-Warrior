@@ -95,7 +95,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
-		ShotPool.init();
 	}
 	
 	/**
@@ -141,8 +140,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		Graphics2D g2d = img.createGraphics();
 		
 		g2d.setColor(new Color(0, 0, 0, 0));
-		
-		ShotPool.paint(g2d);
 
 		for (Entity ent : _stateManager.getGameWorld().getAllEntities())
 		{
