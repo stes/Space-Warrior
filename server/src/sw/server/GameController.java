@@ -135,23 +135,6 @@ public class GameController
 		}
 	}
 
-	/**
-	 * adds damage to the players in the range of a shot
-	 * 
-	 * @param attacker
-	 *            the attacking player
-	 * @param shot
-	 *            the shot
-	 */
-	/*
-	 * private void processShot(PlayerData attacker, Shot shot) { for
-	 * (PlayerData pl : _players.values()) { if (pl.isAlive() &&
-	 * !pl.getName().equals(attacker.getName())) { if
-	 * (shot.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2) {
-	 * pl.takeDamage(shot.getDamage()); if (!pl.isAlive()) {
-	 * attacker.setScore(attacker.getScore() + 1); } } } } }
-	 */
-
 	private void checkTurn()
 	{
 		int alive = 0;
