@@ -253,7 +253,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		// System.out.print(pred.equals(this));
 		for (PlayerData d : getWorld().getPlayers())
 		{
-			if (!this.equals(d) && d.intersects(pred))
+			if (!this.equals(d) && d.intersects(pred) && d.isAlive())
 				intersects = true;
 		}
 		if (_alive)
@@ -267,6 +267,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			else
 			{
 				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / GameConstants.MAX_SPEED));
+				this.setSpeed(this.getSpeed()/2);
 			}
 			this.rotate(_turnSpeed);
 		}

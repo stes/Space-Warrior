@@ -123,24 +123,11 @@ public class GameController
 		_world.tick();
 	}
 
-	private void checkCollisions(PlayerData d)
-	{
-		for (PlayerData pl : _players.values())
-		{
-			if (pl.intersects(d))
-			{
-				pl.setSpeed(0);
-				d.setSpeed(0);
-			}
-		}
-	}
-
 	private void checkTurn()
 	{
 		int alive = 0;
 		for (PlayerData pl : _players.values())
 		{
-			this.checkCollisions(pl);
 			if (pl.isAlive())
 				alive++;
 		}
