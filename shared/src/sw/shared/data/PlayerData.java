@@ -45,7 +45,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	private long _lastShot;
 	private boolean _local;
 	private int _imageID;
-	
+
 	private PlayerInput _input;
 
 	public PlayerData(PlayerData dataset)
@@ -55,7 +55,8 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_local = dataset.isLocal();
 		_score = dataset.getScore();
 		_alive = dataset.isAlive();
-		this.setPosition(new Point.Double(dataset.getPosition().getX(), dataset.getPosition().getY()));
+		this.setPosition(new Point.Double(dataset.getPosition().getX(),
+				dataset.getPosition().getY()));
 		this.setDirection(dataset.getDirection());
 		this.setImageID(dataset.getImageID());
 		_lifepoints = dataset.getLifepoints();
@@ -64,7 +65,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		this.setTurnSpeed(dataset.getTurnSpeed());
 		_input = dataset._input;
 	}
-	
+
 	/**
 	 * Creates a new Player Data record
 	 */
@@ -88,7 +89,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_imageID = imageID;
 		_input = new PlayerInput();
 	}
-	
+
 	/**
 	 * increases the speed by a constant value
 	 */
@@ -96,12 +97,12 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		this.setSpeed(getSpeed() + value);
 	}
-	
+
 	public void angularAccelerate(double value)
 	{
 		setTurnSpeed(_turnSpeed + value);
 	}
-	
+
 	public void angularDecelerate(double value)
 	{
 		double dec = Math.abs(value);
@@ -118,7 +119,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			setTurnSpeed(0);
 		}
 	}
-	
+
 	@Override
 	public int compareTo(PlayerData player)
 	{
@@ -128,12 +129,12 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			return 1;
 		return 0;
 	}
-	
+
 	public void die()
 	{
 		_alive = false;
 	}
-	
+
 	@Override
 	public void fromSnap(Unpacker p)
 	{
@@ -167,22 +168,22 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		return _direction;
 	}
-	
+
 	public int getImageID()
 	{
 		return _imageID;
 	}
-	
+
 	public long getLastShot()
 	{
 		return _lastShot;
 	}
-	
+
 	public int getLifepoints()
 	{
 		return _lifepoints;
 	}
-	
+
 	/**
 	 * returns the name of the player
 	 * 
@@ -192,7 +193,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		return _name;
 	}
-	
+
 	/**
 	 * @return the position of the player
 	 */
@@ -210,12 +211,12 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		return _score;
 	}
-	
+
 	public double getTurnSpeed()
 	{
 		return _turnSpeed;
 	}
-	
+
 	public boolean intersects(PlayerData d)
 	{
 		if (d == null || this.equals(d))
@@ -223,12 +224,12 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		double diff = this.getPosition().distance(d.getPosition());
 		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
 	}
-	
+
 	public boolean isAlive()
 	{
 		return _alive;
 	}
-	
+
 	/**
 	 * @return true, if the player is local
 	 */
@@ -239,7 +240,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 
 	public boolean isReadyToShoot()
 	{
-		return Math.abs(_lastShot-System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
+		return Math.abs(_lastShot - System.currentTimeMillis()) >= GameConstants.MAX_SHOT_INTERVAL;
 	}
 
 	/**
@@ -249,13 +250,13 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		boolean intersects = false;
 		PlayerData pred = this.predict();
-		//System.out.print(pred.equals(this));
+		// System.out.print(pred.equals(this));
 		for (PlayerData d : getWorld().getPlayers())
 		{
 			if (!this.equals(d) && d.intersects(pred))
 				intersects = true;
 		}
-		if(_alive)
+		if (_alive)
 		{
 			if (!intersects)
 			{
@@ -270,11 +271,11 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			this.rotate(_turnSpeed);
 		}
 	}
-	
+
 	public PlayerData predict()
 	{
 		PlayerData d = new PlayerData(this);
-		if(_alive)
+		if (_alive)
 		{
 			double x = d._speed * Math.sin(d.getDirection());
 			double y = d._speed * Math.cos(d.getDirection());
@@ -291,7 +292,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		_ammo += (_ammo < GameConstants.MAX_AMMO - 1 ? 1 : 0);
 	}
-	
+
 	/**
 	 * initializes the player data with standard values
 	 */
@@ -308,7 +309,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_alive = true;
 		_turnSpeed = 0;
 	}
-	
+
 	/**
 	 * turns the character indicated by the angel anti-clockwise
 	 * 
@@ -319,7 +320,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		setDirection(_direction + angle);
 	}
-	
+
 	public void setDirection(double direction)
 	{
 		_direction = direction % (2 * Math.PI);
@@ -329,7 +330,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		_imageID = id;
 	}
-	
+
 	public void setInput(PlayerInput input)
 	{
 		_input = input;
@@ -345,7 +346,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		_score = value;
 	}
-	
+
 	public void setSpeed(double value)
 	{
 		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, value));
@@ -362,9 +363,9 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		{
 			_turnSpeed = -GameConstants.MAX_ANGULAR_SPEED;
 		}
-		
+
 	}
-	
+
 	public void shoot(boolean master)
 	{
 		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
@@ -378,7 +379,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			s.fire(this);
 		}
 	}
-	
+
 	@Override
 	public void snap(Packer p, String name)
 	{
@@ -397,27 +398,27 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		p.writeShort(_lifepoints * l);
 		p.writeShort(_ammo * l);
 	}
-	
+
 	public void takeDamage(int dmg)
 	{
 		_lifepoints -= dmg;
-		if(_lifepoints <= 0)
+		if (_lifepoints <= 0)
 		{
 			this.die();
 		}
 	}
-	
+
 	@Override
 	public void tick()
 	{
-		if(!this.isAlive())
+		if (!this.isAlive())
 			return;
-		
+
 		if (_input.shot() > 0)
 		{
 			this.shoot(_input.shot() == 2);
 		}
-		
+
 		if (_input.moveDirection() == 0)
 		{
 			this.accelerate(-GameConstants.ACCELERATION);
@@ -426,7 +427,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		{
 			this.accelerate(GameConstants.ACCELERATION * _input.moveDirection());
 		}
-		
+
 		if (_input.turnDirection() == 0)
 		{
 			this.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
@@ -435,7 +436,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		{
 			this.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * _input.turnDirection());
 		}
-		
+
 		this.reload();
 		this.move();
 	}
@@ -444,14 +445,14 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		return _speed;
 	}
-	
+
 	private Point.Double positionAfter(double time)
 	{
 		double way = time * _speed;
-		return new Point.Double(_location.getX() + way * Math.sin(_direction),
-				_location.getY() + way * Math.cos(_direction));
+		return new Point.Double(_location.getX() + way * Math.sin(_direction), _location.getY()
+				+ way * Math.cos(_direction));
 	}
-	
+
 	/**
 	 * assigns a new value to the position
 	 * 

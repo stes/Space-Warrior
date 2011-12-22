@@ -61,30 +61,16 @@ public class ImageContainer
 	{
 		try
 		{
-			_images.put(
-					GameConstants.Images.BACKGROUND.getID(),
-							ImageIO.read(getClass().getResourceAsStream(
-							"/rsc/background.jpg")));
-			_images.put(
-					GameConstants.Images.SHIP_1.getID(),
-					scale(
-							ImageIO.read(getClass()
-									.getResourceAsStream("/rsc/Ship2Grey.gif"))));
-			_images.put(
-					GameConstants.Images.SHIP_2.getID(),
-					scale(
-							ImageIO.read(getClass()
-									.getResourceAsStream("/rsc/Ship3Grey.gif"))));
-			_images.put(
-					GameConstants.Images.SHIP_3.getID(),
-					scale(
-							ImageIO.read(getClass().getResourceAsStream(
-									"/rsc/DeathFighter1.gif"))));
-			_images.put(
-					GameConstants.Images.SHIP_4.getID(),
-					scale(
-							ImageIO.read(getClass().getResourceAsStream(
-									"/rsc/Ship1Brown.gif"))));
+			_images.put(GameConstants.Images.BACKGROUND.getID(),
+					ImageIO.read(getClass().getResourceAsStream("/rsc/background.jpg")));
+			_images.put(GameConstants.Images.SHIP_1.getID(),
+					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship2Grey.gif"))));
+			_images.put(GameConstants.Images.SHIP_2.getID(),
+					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship3Grey.gif"))));
+			_images.put(GameConstants.Images.SHIP_3.getID(),
+					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/DeathFighter1.gif"))));
+			_images.put(GameConstants.Images.SHIP_4.getID(),
+					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
 		}
 		catch (IOException e)
 		{
@@ -96,24 +82,21 @@ public class ImageContainer
 	{
 		return scale(source, 1, 1);
 	}
-	
+
 	private BufferedImage scale(BufferedImage source, double scaleX, double scaleY)
 	{
 		// Create new (blank) image of required (scaled) size
 
-		int width =(int)(GameConstants.PLAYER_SIZE * scaleX);
-		int height = (int)(GameConstants.PLAYER_SIZE * scaleY);
-		BufferedImage scaledImage = new BufferedImage(
-				width, height,
-				BufferedImage.TYPE_INT_ARGB);
+		int width = (int) (GameConstants.PLAYER_SIZE * scaleX);
+		int height = (int) (GameConstants.PLAYER_SIZE * scaleY);
+		BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		// Paint scaled version of image to new image
 
 		Graphics2D graphics2D = scaledImage.createGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		graphics2D.drawImage(source, 0, 0, width,
-				height, null);
+		graphics2D.drawImage(source, 0, 0, width, height, null);
 
 		// clean up
 
@@ -131,7 +114,7 @@ public class ImageContainer
 		}
 		_images = newImg;
 	}
-	
+
 	public BufferedImage getImage(GameConstants.Images id)
 	{
 		return _images.get(id.getID());

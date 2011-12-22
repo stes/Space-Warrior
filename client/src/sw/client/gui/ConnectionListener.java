@@ -20,8 +20,8 @@ package sw.client.gui;
 public interface ConnectionListener
 {
 	public void login(ConnectionEvent e);
-	
+
 	public void logout(ConnectionEvent e);
-	
+
 	public void scan(); // TODO: move somewhere else
 }

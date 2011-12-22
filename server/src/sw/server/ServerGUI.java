@@ -68,8 +68,7 @@ public class ServerGUI extends JFrame implements ActionListener
 		_scroll.setBounds(10, 10, width / 3 * 2 - 20, height - 90);
 
 		_clientList = new JList/* <Client> */();
-		_clientList.setBounds(20 + width / 3 * 2 - 20, 10, width / 3 - 30,
-				height - 90);
+		_clientList.setBounds(20 + width / 3 * 2 - 20, 10, width / 3 - 30, height - 90);
 
 		_kickButton = new JButton("Kick");
 		_kickButton.setBounds(20 + width / 3 * 2 - 20, height - 70, 100, 20);

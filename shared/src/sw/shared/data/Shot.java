@@ -24,6 +24,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
+
 /**
  * data structure to represent a shot
  * 
@@ -79,7 +80,7 @@ public class Shot extends Entity
 	{
 		return _line.ptLineDist(p.getX(), p.getY());
 	}
-	
+
 	/**
 	 * @return the endpoint
 	 */
@@ -91,10 +92,10 @@ public class Shot extends Entity
 	public void fire(PlayerData attacker)
 	{
 		PlayerData[] players = this.getWorld().getPlayers();
-		for(PlayerData pl : players)
+		for (PlayerData pl : players)
 		{
-			if (pl.isAlive() && !pl.getName().equals(attacker.getName()) &&
-				this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
+					&& this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 			{
 				pl.takeDamage(this.getDamage());
 				if (!pl.isAlive())
@@ -106,7 +107,8 @@ public class Shot extends Entity
 	@Override
 	public void fromSnap(Unpacker p)
 	{
-		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()), new Point.Double(0, 0));
+		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()),
+				new Point.Double(0, 0));
 		_isMaster = p.readBoolean();
 		setDirection(p.readDouble());
 	}
@@ -134,7 +136,7 @@ public class Shot extends Entity
 	{
 		return _isMaster;
 	}
-	
+
 	/**
 	 * assigns a new direction to the shot
 	 * 
@@ -145,10 +147,8 @@ public class Shot extends Entity
 	{
 		_direction = direction;
 		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-		_line.setLine(
-				startPoint(),
-				new Point.Double(
-						(startPoint().getX() + range * Math.sin(direction)),
+		_line.setLine(startPoint(),
+				new Point.Double((startPoint().getX() + range * Math.sin(direction)),
 						(startPoint().getY() + range * Math.cos(direction))));
 	}
 
@@ -174,7 +174,7 @@ public class Shot extends Entity
 	public void tick()
 	{
 		_lifetime--;
-		if(_lifetime <= 0)
+		if (_lifetime <= 0)
 			this.destroy();
 	}
 }

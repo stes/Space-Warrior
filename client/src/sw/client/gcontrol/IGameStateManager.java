@@ -28,16 +28,16 @@ public interface IGameStateManager
 	 * @return a list of all players currently participating in the game
 	 */
 	public GameWorld getGameWorld();
-	
+
 	public PlayerData[] getPlayerList();
-	
+
 	public Player getLocalPlayer();
-	
+
 	public boolean isReady();
-	
-	//TODO further methods that can be generalized for easy connection
+
+	// TODO further methods that can be generalized for easy connection
 	// between player and controller
-	
+
 	public void stateUpdated(PlayerInput input);
 
 	public void addGameStateChangedListener(GameStateChangedListener l);

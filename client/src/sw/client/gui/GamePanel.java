@@ -53,23 +53,23 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	private static final long serialVersionUID = -8751902318746091633L;
 
 	private PlayingFieldPanel _playingField;
-    private JTextField _txtChatmessage;
-    private JTextArea _lstChathistory;
-    private JScrollPane _scrollScoreBoard;
-    private JScrollPane _scrollChathistory;
-    private JTable _tblScoreBoard;
-    private JButton _btnDisconnect;
-    
-    private PlayerTableModel _model;
-    
-    private GamePanel _self;
+	private JTextField _txtChatmessage;
+	private JTextArea _lstChathistory;
+	private JScrollPane _scrollScoreBoard;
+	private JScrollPane _scrollChathistory;
+	private JTable _tblScoreBoard;
+	private JButton _btnDisconnect;
 
-    // other references
-    private IGameStateManager _stateManager;
-    private IClient _client;
-    
+	private PlayerTableModel _model;
+
+	private GamePanel _self;
+
+	// other references
+	private IGameStateManager _stateManager;
+	private IClient _client;
+
 	private ArrayList<ConnectionListener> _connectionListener;
-    
+
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
@@ -89,10 +89,13 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-		        _txtChatmessage.setBounds(50, _self.getHeight()-50, _self.getWidth()/3, 25);
-				_scrollScoreBoard.setBounds(_self.getWidth()*5/6-50, 50, _self.getWidth()/6, 150);
-				_scrollChathistory.setBounds(50, _self.getHeight()-150, _self.getWidth()/3, 90);
-		        _playingField.setSize(_self.getSize());
+				_txtChatmessage.setBounds(50, _self.getHeight() - 50, _self.getWidth() / 3, 25);
+				_scrollScoreBoard.setBounds(_self.getWidth() * 5 / 6 - 50,
+						50,
+						_self.getWidth() / 6,
+						150);
+				_scrollChathistory.setBounds(50, _self.getHeight() - 150, _self.getWidth() / 3, 90);
+				_playingField.setSize(_self.getSize());
 			}
 		});
 	}
@@ -101,10 +104,10 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	{
 		_playingField.render(g);
 	}
-	
+
 	/**
-    * invoked after chat button is pressed
-    */
+	 * invoked after chat button is pressed
+	 */
 	public void btnChat_Action(ActionEvent e)
 	{
 		if (e.getID() == ActionEvent.ACTION_PERFORMED)
@@ -112,23 +115,23 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 			this.processInput();
 		}
 	}
-    
-    private void processInput()
-    {
+
+	private void processInput()
+	{
 		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
 		p.writeUTF(_txtChatmessage.getText());
 		_client.sendPacket(p);
 		_txtChatmessage.setText("");
-    }
+	}
 
-    private void initComponents()
-    {
-    	_btnDisconnect = new JButton("Disconnect");
-    	_btnDisconnect.setBounds(this.getWidth()-150, 30, 100, 20);
-    	this.add(_btnDisconnect);
-    	_btnDisconnect.addActionListener(new ActionListener()
+	private void initComponents()
+	{
+		_btnDisconnect = new JButton("Disconnect");
+		_btnDisconnect.setBounds(this.getWidth() - 150, 30, 100, 20);
+		this.add(_btnDisconnect);
+		_btnDisconnect.addActionListener(new ActionListener()
 		{
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -136,97 +139,109 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 				_self.invokeDisconnect(e);
 			}
 		});
-    	
-        int chat = this.getHeight()-200;
-        System.out.println(chat);
-        _txtChatmessage = new JTextField() {
-        	/**
+
+		int chat = this.getHeight() - 200;
+		System.out.println(chat);
+		_txtChatmessage = new JTextField()
+		{
+			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 2109656328663846511L;
 
 			@Override
-        	protected void paintComponent(Graphics g)
-            {
-                Graphics2D g2d = (Graphics2D)g;
-                this.setBackground(Color.white);
-                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
-                g2d.setComposite(alphaComp);
-                g2d.setColor(getBackground());
-                Rectangle tBounds = g2d.getClip().getBounds();
-                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
-                super.paintComponent(g2d);
-                this.setForeground(Color.black);
-            }  
+			protected void paintComponent(Graphics g)
+			{
+				Graphics2D g2d = (Graphics2D) g;
+				this.setBackground(Color.white);
+				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+				g2d.setComposite(alphaComp);
+				g2d.setColor(getBackground());
+				Rectangle tBounds = g2d.getClip().getBounds();
+				g2d.fillRect((int) tBounds.getX(),
+						(int) tBounds.getY(),
+						(int) tBounds.getWidth(),
+						(int) tBounds.getHeight());
+				super.paintComponent(g2d);
+				this.setForeground(Color.black);
+			}
 		};
-        _txtChatmessage.setBounds(100, chat+100, 520, 25);
-        _txtChatmessage.setOpaque(false);
-        this.add(_txtChatmessage);
-        _txtChatmessage.addActionListener(this);
-        
-        _tblScoreBoard = new JTable(_model);
-        
-        _scrollScoreBoard = new JScrollPane(_tblScoreBoard) {
-        	/**
+		_txtChatmessage.setBounds(100, chat + 100, 520, 25);
+		_txtChatmessage.setOpaque(false);
+		this.add(_txtChatmessage);
+		_txtChatmessage.addActionListener(this);
+
+		_tblScoreBoard = new JTable(_model);
+
+		_scrollScoreBoard = new JScrollPane(_tblScoreBoard)
+		{
+			/**
 			 * 
 			 */
 			private static final long serialVersionUID = -2017756045550747936L;
 
 			@Override
-        	protected void paintComponent(Graphics g)
-            {
-                Graphics2D g2d = (Graphics2D)g;
-                this.setBackground(Color.white);
-                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
-                g2d.setComposite(alphaComp);
-                g2d.setColor(getBackground());
-                Rectangle tBounds = g2d.getClip().getBounds();
-                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
-                super.paintComponent(g2d);
-                this.setForeground(Color.black);
-            }  
+			protected void paintComponent(Graphics g)
+			{
+				Graphics2D g2d = (Graphics2D) g;
+				this.setBackground(Color.white);
+				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+				g2d.setComposite(alphaComp);
+				g2d.setColor(getBackground());
+				Rectangle tBounds = g2d.getClip().getBounds();
+				g2d.fillRect((int) tBounds.getX(),
+						(int) tBounds.getY(),
+						(int) tBounds.getWidth(),
+						(int) tBounds.getHeight());
+				super.paintComponent(g2d);
+				this.setForeground(Color.black);
+			}
 		};
 		_scrollScoreBoard.setOpaque(false);
-		_scrollScoreBoard.setBounds(this.getWidth()-300, 100, 200, 150);
-        
-        this.add(_scrollScoreBoard);
-        
-        _lstChathistory = new JTextArea();
-        _lstChathistory.setEditable(false);
-        
-        _scrollChathistory = new JScrollPane(_lstChathistory) {
-        	/**
+		_scrollScoreBoard.setBounds(this.getWidth() - 300, 100, 200, 150);
+
+		this.add(_scrollScoreBoard);
+
+		_lstChathistory = new JTextArea();
+		_lstChathistory.setEditable(false);
+
+		_scrollChathistory = new JScrollPane(_lstChathistory)
+		{
+			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 8703321293181453130L;
 
 			@Override
-        	protected void paintComponent(Graphics g)
-            {
-                Graphics2D g2d = (Graphics2D)g;
-                this.setBackground(Color.white);
-                Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
-                g2d.setComposite(alphaComp);
-                g2d.setColor(getBackground());
-                Rectangle tBounds = g2d.getClip().getBounds();
-                g2d.fillRect((int) tBounds.getX(),(int)tBounds.getY(),(int)tBounds.getWidth(),(int)tBounds.getHeight());
-                super.paintComponent(g2d);
-                this.setForeground(Color.black);
-            }  
+			protected void paintComponent(Graphics g)
+			{
+				Graphics2D g2d = (Graphics2D) g;
+				this.setBackground(Color.white);
+				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
+				g2d.setComposite(alphaComp);
+				g2d.setColor(getBackground());
+				Rectangle tBounds = g2d.getClip().getBounds();
+				g2d.fillRect((int) tBounds.getX(),
+						(int) tBounds.getY(),
+						(int) tBounds.getWidth(),
+						(int) tBounds.getHeight());
+				super.paintComponent(g2d);
+				this.setForeground(Color.black);
+			}
 		};
 		_scrollChathistory.setBounds(100, chat, 645, 90);
 		_scrollChathistory.setOpaque(false);
 
 		this.add(_scrollChathistory);
-        
-        _playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
+
+		_playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		Player localPlayer = _stateManager.getLocalPlayer();
-        if (localPlayer instanceof HumanPlayer)
-        {
-        	_playingField.addKeyListener((HumanPlayer)localPlayer);
-        }
-        this.add(_playingField);
-    }
+		if (localPlayer instanceof HumanPlayer)
+		{
+			_playingField.addKeyListener((HumanPlayer) localPlayer);
+		}
+		this.add(_playingField);
+	}
 
 	protected void invokeDisconnect(ConnectionEvent e)
 	{
@@ -238,10 +253,14 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	}
 
 	@Override
-	public void connected() {}
+	public void connected()
+	{
+	}
 
 	@Override
-	public void disconnected(String reason) {} // TODO: show reason
+	public void disconnected(String reason)
+	{
+	} // TODO: show reason
 
 	@Override
 	public void chatMessage(String name, String text)
@@ -256,7 +275,9 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 	}
 
 	@Override
-	public void serverInfo(ServerInfo info) {}
+	public void serverInfo(ServerInfo info)
+	{
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -269,7 +290,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		_lstChathistory.append(message);
 		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
 	}
-	
+
 	public void addConnectionListener(ConnectionListener l)
 	{
 		_connectionListener.add(l);
@@ -285,12 +306,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 
 		private static final long serialVersionUID = 3882143612301180149L;
 
-		private String[] _headers = {"Player", "Score"};
+		private String[] _headers = { "Player", "Score" };
 
 		@Override
 		public String getColumnName(int col)
 		{
-			return _headers[col]; 
+			return _headers[col];
 		}
 
 		@Override

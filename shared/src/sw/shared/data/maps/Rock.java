@@ -35,16 +35,19 @@ public class Rock extends Obstacle
 
 	/**
 	 * creates a new rock out of the specified points
+	 * 
 	 * @param cornerLocations
 	 */
 	public Rock(Point[] cornerLocations)
 	{
 		super(cornerLocations);
 	}
-	
+
 	/**
 	 * creates a new rock out of the specified polygon
-	 * @param polygon the polygon
+	 * 
+	 * @param polygon
+	 *            the polygon
 	 */
 	public Rock(Polygon polygon)
 	{

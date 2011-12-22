@@ -49,8 +49,7 @@ import sw.shared.data.ServerInfo;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWFrame extends JFrame implements ClientListener,
-		ConnectionListener
+public class SWFrame extends JFrame implements ClientListener, ConnectionListener
 {
 	private enum GUIMode
 	{
@@ -110,8 +109,7 @@ public class SWFrame extends JFrame implements ClientListener,
 	{
 		try
 		{
-			System.setErr(new PrintStream(System.getProperty("user.dir")
-					+ "/buglog.txt"));
+			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
 		}
 		catch (FileNotFoundException e)
 		{
@@ -136,8 +134,7 @@ public class SWFrame extends JFrame implements ClientListener,
 		});
 		System.out.println("init");
 		this.setExtendedState(MAXIMIZED_BOTH);
-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(),
-				_controller, _client);
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
 		_loginPanel.setLocation(0, 30);
 
@@ -215,8 +212,7 @@ public class SWFrame extends JFrame implements ClientListener,
 		g2d.setColor(Color.LIGHT_GRAY);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		// draw over it to create a blank background again, (or you could draw
 		// a background image if you had one
 		g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());

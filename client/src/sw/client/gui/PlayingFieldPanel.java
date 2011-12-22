@@ -53,7 +53,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
 	private double _lastPaint;
-	
+
 	private IGameStateManager _stateManager;
 
 	/**
@@ -62,8 +62,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	 * @param stateManager
 	 *            a game state manager
 	 */
-	public PlayingFieldPanel(int width, int height,
-			IGameStateManager stateManager)
+	public PlayingFieldPanel(int width, int height, IGameStateManager stateManager)
 	{
 		super();
 		_self = this;
@@ -88,91 +87,103 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-//				double scaleX = (double)_self.getWidth() / (double)GameConstants.PLAYING_FIELD_WIDTH;
-//				double scaleY = (double)_self.getHeight() / (double)GameConstants.PLAYING_FIELD_HEIGHT;
-//				ImageContainer.getLocalInstance().scaleImages(scaleX, scaleY);
+				// double scaleX = (double)_self.getWidth() /
+				// (double)GameConstants.PLAYING_FIELD_WIDTH;
+				// double scaleY = (double)_self.getHeight() /
+				// (double)GameConstants.PLAYING_FIELD_HEIGHT;
+				// ImageContainer.getLocalInstance().scaleImages(scaleX,
+				// scaleY);
 				_self.repaint();
 			}
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
 	}
-	
+
 	/**
 	 * Paints the playing field with its contents
 	 */
 	@Override
 	public void paintComponent(Graphics g)
 	{
-		//super.paintComponents(g);
-		//this.render(g);
-		//long l = System.currentTimeMillis();
-		//super.paintComponent(g);
-		//drawContent(g);
+		// super.paintComponents(g);
+		// this.render(g);
+		// long l = System.currentTimeMillis();
+		// super.paintComponent(g);
+		// drawContent(g);
 
-		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+		// g.drawString(""+(System.currentTimeMillis() - l),
+		// this.getWidth()-100, 50);
 	}
-	
+
 	/**
 	 * Paints the playing field with its contents
 	 */
 	@Override
 	public void paintComponents(Graphics g)
 	{
-		//super.paintComponents(g);
-		//this.render(g);
-		//long l = System.currentTimeMillis();
-		//super.paintComponent(g);
-		//drawContent(g);
+		// super.paintComponents(g);
+		// this.render(g);
+		// long l = System.currentTimeMillis();
+		// super.paintComponent(g);
+		// drawContent(g);
 
-		//g.drawString(""+(System.currentTimeMillis() - l), this.getWidth()-100, 50);
+		// g.drawString(""+(System.currentTimeMillis() - l),
+		// this.getWidth()-100, 50);
 	}
 
 	public void render(Graphics g)
 	{
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		g.setColor(Color.WHITE);
-		g.drawString("FPS: " + 1000/ (System.currentTimeMillis() - _lastPaint), this.getWidth()-100, 20);
+		g.drawString("FPS: " + 1000 / (System.currentTimeMillis() - _lastPaint),
+				this.getWidth() - 100,
+				20);
 		_lastPaint = System.currentTimeMillis();
-		
+
 		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
-				GameConstants.PLAYING_FIELD_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		
+				GameConstants.PLAYING_FIELD_HEIGHT,
+				BufferedImage.TYPE_INT_ARGB);
+
 		Graphics2D g2d = img.createGraphics();
-		
+
 		g2d.setColor(new Color(0, 0, 0, 0));
 
 		for (Entity ent : _stateManager.getGameWorld().getAllEntities())
 		{
-			if(ent.getType() == Packettype.SNAP_PLAYERDATA)
+			if (ent.getType() == Packettype.SNAP_PLAYERDATA)
 			{
 				PlayerData pl = (PlayerData) ent;
 				if (!pl.isAlive())
 					continue;
-				
+
 				if (pl.isLocal())
 				{
 					this.paintBars(g2d, pl);
 				}
-				
-				g2d.drawImage(
-							rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), Math.PI - pl.getDirection()), null,
-							(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
-							(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
+
+				g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
+						Math.PI - pl.getDirection()),
+						null,
+						(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
+						(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
 			}
-			else if(ent.getType() == Packettype.SNAP_SHOT)
+			else if (ent.getType() == Packettype.SNAP_SHOT)
 			{
 				Shot s = (Shot) ent;
 				g2d.setColor(Color.BLUE);
-		        g2d.setStroke(new BasicStroke(3));
-		        g2d.drawLine((int)s.startPoint().getX(), (int)s.startPoint().getY(), (int)s.endPoint().getX(), (int)s.endPoint().getY());
+				g2d.setStroke(new BasicStroke(3));
+				g2d.drawLine((int) s.startPoint().getX(),
+						(int) s.startPoint().getY(),
+						(int) s.endPoint().getX(),
+						(int) s.endPoint().getY());
 			}
 		}
-		
+
 		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
 		g.setColor(Color.WHITE);
 	}
-	
+
 	private void paintBars(Graphics2D g2d, PlayerData d)
 	{
 		g2d.setStroke(new BasicStroke(15));
@@ -181,40 +192,44 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		int end_x = start_x + d.getLifepoints() * ClientConstants.BAR_LENGTH
 				/ GameConstants.MAX_LIVES;
 		int y = 10;
-		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x,
-				60, new Color(255, 0, 0, 100));
+		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x, 60, new Color(255,
+				0,
+				0,
+				100));
 		g2d.setPaint(pat);
 		g2d.drawLine(start_x, y, end_x, y);
 
-		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH
-				/ GameConstants.MAX_AMMO;
+		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
 		y = 30;
-		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(
-				100, 100, 100, 100));
+		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(100, 100, 100, 100));
 		g2d.setPaint(pat);
 		g2d.drawLine(start_x, y, end_x, y);
 	}
-	
+
 	protected AffineTransform affineTransform(BufferedImage src, double degrees)
 	{
-		return AffineTransform.getRotateInstance(degrees,
-				src.getWidth() / 2, src.getHeight() / 2);
+		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
 	protected BufferedImage rotateImage(BufferedImage src, double degrees)
 	{
 		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
-				src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				src.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = rotatedImage.createGraphics();
 		g.drawImage(src, affineTransform(src, degrees), null);
 		return rotatedImage;
 	}
 
 	@Override
-	public void gameStateChanged(GameStateChangedEvent e){	}
+	public void gameStateChanged(GameStateChangedEvent e)
+	{
+	}
 
 	@Override
-	public void newRound(GameStateChangedEvent e){}
+	public void newRound(GameStateChangedEvent e)
+	{
+	}
 
 	@Override
 	public void playerInit(GameStateChangedEvent e)

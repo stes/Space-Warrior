@@ -72,13 +72,12 @@ public final class GameConstants
 			return _id;
 		}
 	}
+
 	// Network
 	public final static int STANDARD_PORT = 2489;
-	public final static byte[] SERVER_INFO_REQUEST = new byte[] { 'i', 'n',
-			'f', 'o', '?' };
+	public final static byte[] SERVER_INFO_REQUEST = new byte[] { 'i', 'n', 'f', 'o', '?' };
 
-	public final static byte[] SERVER_INFO_RESPONSE = new byte[] { 'i', 'n',
-			'f', 'o', '!' };
+	public final static byte[] SERVER_INFO_RESPONSE = new byte[] { 'i', 'n', 'f', 'o', '!' };
 	// Gameplay
 	public final static int TICKS_PER_SECOND = 40;
 

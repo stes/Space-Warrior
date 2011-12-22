@@ -37,35 +37,35 @@ public class GameWorld
 	{
 		_entities = new Vector<Entity>();
 	}
-	
+
 	public void clear()
 	{
 		_entities.clear();
 	}
-	
+
 	public void fromSnap(Unpacker p)
 	{
 		Vector<Entity> tmp = new Vector<Entity>();
-		
+
 		int size = p.readInt();
-		for(int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++)
 		{
 			Entity newEnt;
 			// move this somewhere else?
 			byte type = p.readByte();
-			if(type == Packettype.SNAP_PLAYERDATA)
+			if (type == Packettype.SNAP_PLAYERDATA)
 				newEnt = new PlayerData("");
-			else if(type == Packettype.SNAP_SHOT)
+			else if (type == Packettype.SNAP_SHOT)
 				newEnt = new Shot(new Point.Double(0, 0), 0);
 			else
 				return;
 			newEnt.fromSnap(p);
 			tmp.add(newEnt);
 		}
-		
+
 		_entities = tmp;
 	}
-	
+
 	public Entity[] getAllEntities()
 	{
 		return _entities.toArray(new Entity[0]);
@@ -74,49 +74,49 @@ public class GameWorld
 	public <T> T[] getEntitiesByType(byte type, T[] a)
 	{
 		Vector<Entity> tmp = new Vector<Entity>();
-		for(Entity ent : _entities)
+		for (Entity ent : _entities)
 		{
-			if(ent.getType() == type)
+			if (ent.getType() == type)
 				tmp.add(ent);
 		}
 		return tmp.toArray(a);
 	}
-	
+
 	public PlayerData[] getPlayers()
 	{
-		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[]{});
+		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[] {});
 	}
-	
+
 	public void insert(Entity e)
 	{
 		e.setWorld(this);
 		_entities.add(e);
 	}
-	
+
 	public void remove(Entity e)
 	{
 		_entities.remove(e);
 	}
-	
+
 	public void snap(Packer p, String name)
 	{
 		p.writeInt(_entities.size());
-		
-		for(Entity ent : _entities)
+
+		for (Entity ent : _entities)
 		{
 			ent.snap(p, name);
 		}
 	}
-	
+
 	public void tick()
 	{
-		for (Iterator<Entity> i = _entities.iterator(); i.hasNext(); )
+		for (Iterator<Entity> i = _entities.iterator(); i.hasNext();)
 		{
-			while(i.hasNext() && i.next().isDestroyed())
+			while (i.hasNext() && i.next().isDestroyed())
 				i.remove();
 		}
-		
-		for(int i = 0; i < _entities.size(); i++)
+
+		for (int i = 0; i < _entities.size(); i++)
 		{
 			_entities.get(i).tick();
 		}

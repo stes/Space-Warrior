@@ -26,12 +26,12 @@ package sw.shared.data.maps;
 public class Map
 {
 	private int _ID;
-	
+
 	public Map(int id)
 	{
 		_ID = id;
 	}
-	
+
 	/**
 	 * @return the map ID
 	 */

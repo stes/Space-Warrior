@@ -29,19 +29,20 @@ import sw.client.player.Player;
  * @version 27.11.2011
  */
 public abstract class AIPlayer extends Player implements GameStateChangedListener
-{	
-    /**
-     * Creates a new ai player given the controller
-     * @param gameStateManager
-     * An instance that supplies the player with information
-     * of the current game state
-     */
+{
+	/**
+	 * Creates a new ai player given the controller
+	 * 
+	 * @param gameStateManager
+	 *            An instance that supplies the player with information of the
+	 *            current game state
+	 */
 	public AIPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);
 		stateManager.addGameStateChangedListener(this);
 	}
-	
+
 	@Override
 	/**
 	 * Invoked after the game controller initialized the players.
@@ -50,11 +51,13 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 	public void playerInit(GameStateChangedEvent e)
 	{
 	}
-	
+
 	@Override
 	/**
 	 * Invoked after the game state has changed
 	 * When overriding, always call super.gameStateChanged(e) first!
 	 */
-	public void gameStateChanged(GameStateChangedEvent e) { }
+	public void gameStateChanged(GameStateChangedEvent e)
+	{
+	}
 }

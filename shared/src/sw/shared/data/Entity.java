@@ -29,24 +29,24 @@ public abstract class Entity
 	private boolean _entDestroy;
 	private byte _entType;
 	private GameWorld _world;
-	
+
 	public Entity(byte type)
 	{
 		_entType = type;
 	}
-	
+
 	public void destroy()
 	{
 		_entDestroy = true;
 	}
-	
+
 	public abstract void fromSnap(Unpacker p);
-	
+
 	public byte getType()
 	{
 		return _entType;
 	}
-	
+
 	public GameWorld getWorld()
 	{
 		return _world;
@@ -56,13 +56,13 @@ public abstract class Entity
 	{
 		return _entDestroy;
 	}
-	
+
 	public void setWorld(GameWorld world)
 	{
 		this._world = world;
 	}
-	
+
 	public abstract void snap(Packer p, String name);
-	
+
 	public abstract void tick();
 }

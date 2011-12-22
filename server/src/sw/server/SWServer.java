@@ -51,15 +51,14 @@ public class SWServer implements IServer, NetworkListener
 	{
 		_propertyLoader = new PropertyLoader();
 		_controller = new GameController(this);
-		_netServer = new UDPHost(new InetSocketAddress(
-				_propertyLoader.getPort()), _propertyLoader.getMaxPlayers());
+		_netServer = new UDPHost(new InetSocketAddress(_propertyLoader.getPort()),
+				_propertyLoader.getMaxPlayers());
 		_netServer.setAcceptConnections();
 		_netServer.addNetworkListener(this);
 		_netServer.start();
 		_clients = new Vector<Client>();
 		_lastUpdate = System.currentTimeMillis();
-		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(),
-				0);
+		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
 	}
 
 	public void close()
@@ -120,12 +119,10 @@ public class SWServer implements IServer, NetworkListener
 			}
 			else
 			{
-				connection.disconnect("The name '" + name
-						+ "' is already in use");
+				connection.disconnect("The name '" + name + "' is already in use");
 			}
 		}
-		else if (Packettype.CL_CHAT_MESSAGE == packet.getType()
-				&& client.isPlaying())
+		else if (Packettype.CL_CHAT_MESSAGE == packet.getType() && client.isPlaying())
 		{
 			String text = packet.readUTF();
 			Packer chat = new Packer(Packettype.SV_CHAT_MESSAGE);
@@ -135,24 +132,23 @@ public class SWServer implements IServer, NetworkListener
 		}
 		else if (Packettype.CL_INPUT == packet.getType() && client.isPlaying())
 		{
-			_controller.processPlayerInput(client.getName(),
-					PlayerInput.unpack(packet));
+			_controller.processPlayerInput(client.getName(), PlayerInput.unpack(packet));
 		}
 	}
 
 	@Override
-	public void receivedMessageConnless(InetSocketAddress addr, byte[] data,
-			int len)
+	public void receivedMessageConnless(InetSocketAddress addr, byte[] data, int len)
 	{
 		if (java.util.Arrays.equals(data, GameConstants.SERVER_INFO_REQUEST))
 		{
 			byte[] info = this.getServerInfos().toByteArray();
-			byte[] buf = new byte[GameConstants.SERVER_INFO_RESPONSE.length
-					+ info.length];
-			System.arraycopy(GameConstants.SERVER_INFO_RESPONSE, 0, buf, 0,
+			byte[] buf = new byte[GameConstants.SERVER_INFO_RESPONSE.length + info.length];
+			System.arraycopy(GameConstants.SERVER_INFO_RESPONSE,
+					0,
+					buf,
+					0,
 					GameConstants.SERVER_INFO_RESPONSE.length);
-			System.arraycopy(info, 0, buf,
-					GameConstants.SERVER_INFO_RESPONSE.length, info.length);
+			System.arraycopy(info, 0, buf, GameConstants.SERVER_INFO_RESPONSE.length, info.length);
 			_netServer.sendConnless(addr, buf, buf.length);
 		}
 	}

@@ -22,21 +22,23 @@ import sw.client.gcontrol.IGameStateManager;
 public class AIPlayerLoader
 {
 	static Properties _properties = new Properties();
-	
+
 	/**
-	 * Loads a player from an external file and returns an instance
-	 * of the AI player implemented in the file
-	 * @param source The source jar
+	 * Loads a player from an external file and returns an instance of the AI
+	 * player implemented in the file
+	 * 
+	 * @param source
+	 *            The source jar
 	 * @param stateManager
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws OperationNotSupportedException
 	 */
-	public static AIPlayer load(
-			File source,
-			IGameStateManager stateManager)
-	throws	FileNotFoundException, ClassNotFoundException, OperationNotSupportedException
+	public static AIPlayer load(File source, IGameStateManager stateManager)
+			throws FileNotFoundException,
+			ClassNotFoundException,
+			OperationNotSupportedException
 	{
 		URL p;
 		try
@@ -47,8 +49,8 @@ public class AIPlayerLoader
 		{
 			throw new FileNotFoundException("Invalid plugin file or path");
 		}
-		
-		File configFile = new File(source.getParent()+"/config.ini");
+
+		File configFile = new File(source.getParent() + "/config.ini");
 		if (!configFile.exists())
 		{
 			throw new FileNotFoundException("No config file in the specified directory");
@@ -61,15 +63,16 @@ public class AIPlayerLoader
 		{
 			e.printStackTrace();
 		}
-		
-		URLClassLoader loader = new URLClassLoader(new URL[]{p}, ClassLoader.getSystemClassLoader());	
+
+		URLClassLoader loader = new URLClassLoader(new URL[] { p },
+				ClassLoader.getSystemClassLoader());
 		System.out.println("Loaded class: " + _properties.get("class"));
 		Class<?> c = loader.loadClass(_properties.get("class").toString());
 		try
 		{
 			Object o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);
 			System.out.println(o instanceof AIPlayer);
-			return (AIPlayer)o;
+			return (AIPlayer) o;
 		}
 		catch (Exception e)
 		{

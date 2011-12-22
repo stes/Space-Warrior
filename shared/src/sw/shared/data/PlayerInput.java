@@ -35,9 +35,10 @@ public class PlayerInput
 		}
 		return new PlayerInput(p.readShort(), p.readShort(), p.readShort());
 	}
+
 	private int _moveDirection;
 	private int _turnDirection;
-	
+
 	private int _isShooting;
 
 	/**
@@ -82,8 +83,7 @@ public class PlayerInput
 		if (!(other instanceof PlayerInput))
 			return false;
 		PlayerInput e = (PlayerInput) other;
-		if (e.moveDirection() == this.moveDirection()
-				&& e.turnDirection() == this.turnDirection()
+		if (e.moveDirection() == this.moveDirection() && e.turnDirection() == this.turnDirection()
 				&& e.shot() == this.shot())
 			return true;
 		return false;

@@ -29,10 +29,12 @@ import java.awt.Polygon;
 public abstract class Obstacle extends Polygon
 {
 	private static final long serialVersionUID = -7248733131969739658L;
-	
+
 	/**
 	 * creates a new obstacle out of the specified points
-	 * @param cornerLocations the corners
+	 * 
+	 * @param cornerLocations
+	 *            the corners
 	 */
 	public Obstacle(Point[] cornerLocations)
 	{
@@ -40,10 +42,12 @@ public abstract class Obstacle extends Polygon
 		for (Point p : cornerLocations)
 			this.addPoint(p.x, p.y);
 	}
-	
+
 	/**
 	 * creates a new obstacle out of the specified polygon
-	 * @param polygon the polygon
+	 * 
+	 * @param polygon
+	 *            the polygon
 	 */
 	public Obstacle(Polygon polygon)
 	{

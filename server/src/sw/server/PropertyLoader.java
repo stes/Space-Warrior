@@ -99,13 +99,11 @@ public class PropertyLoader
 	private void load() throws IOException
 	{
 		System.out.println("load");
-		FileInputStream in = new FileInputStream(
-				ServerConstants.PROPERTIES_PATH);
+		FileInputStream in = new FileInputStream(ServerConstants.PROPERTIES_PATH);
 		_properties.load(in);
 
 		this.setServerName(_properties.getProperty("Server_Name"));
-		this.setMaxPlayers(Integer.parseInt(_properties
-				.getProperty("Max_Players")));
+		this.setMaxPlayers(Integer.parseInt(_properties.getProperty("Max_Players")));
 		this.setPort(Integer.parseInt(_properties.getProperty("Port")));
 
 		in.close();

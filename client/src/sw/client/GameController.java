@@ -134,8 +134,7 @@ public class GameController implements ClientListener, IGameStateManager
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				System.out
-						.println("Unable to load AI Player. Loading default player instead");
+				System.out.println("Unable to load AI Player. Loading default player instead");
 				_localPlayer = new HumanPlayer(this);
 			}
 		}
@@ -167,8 +166,7 @@ public class GameController implements ClientListener, IGameStateManager
 	public void snapshot(Unpacker snapshot)
 	{
 		_world.fromSnap(snapshot);
-		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA,
-				_players);
+		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
 		for (PlayerData pl : _players)
 		{
 			if (pl.isLocal())
@@ -191,8 +189,7 @@ public class GameController implements ClientListener, IGameStateManager
 	@SuppressWarnings("unused")
 	private void invokeNewRound(GameStateChangedEvent e)
 	{
-		if (_gameStateChangedListener == null
-				|| _gameStateChangedListener.size() == 0)
+		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
 			return;
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.newRound(e);
@@ -200,8 +197,7 @@ public class GameController implements ClientListener, IGameStateManager
 
 	private void invokeStateChanged(GameStateChangedEvent e)
 	{
-		if (_gameStateChangedListener == null
-				|| _gameStateChangedListener.size() == 0)
+		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
 			return;
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.gameStateChanged(e);
@@ -209,8 +205,7 @@ public class GameController implements ClientListener, IGameStateManager
 
 	private void invokePlayerInit(GameStateChangedEvent e)
 	{
-		if (_gameStateChangedListener == null
-				|| _gameStateChangedListener.size() == 0)
+		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
 			return;
 		for (GameStateChangedListener l : _gameStateChangedListener)
 			l.playerInit(e);

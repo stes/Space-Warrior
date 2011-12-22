@@ -6,7 +6,6 @@ import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerData;
 
 /**
- * 
  * @author Redix stes Abbadonn
  * @version 02.12.2011
  */
@@ -24,7 +23,6 @@ public class GameStateChangedEvent extends EventObject
 		super(source);
 	}
 
-	
 	// TODO format getters and setters
 	/**
 	 * @return the _localDataSet
@@ -35,7 +33,8 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @param _localDataSet the _localDataSet to set
+	 * @param _localDataSet
+	 *            the _localDataSet to set
 	 */
 	public void setLocalDataSet(PlayerData _localDataSet)
 	{
@@ -51,7 +50,8 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @param _playerList the _playerList to set
+	 * @param _playerList
+	 *            the _playerList to set
 	 */
 	public void setGameWorld(GameWorld world)
 	{
@@ -67,7 +67,8 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @param _winner the _winner to set
+	 * @param _winner
+	 *            the _winner to set
 	 */
 	public void setWinner(PlayerData _winner)
 	{
@@ -83,7 +84,8 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @param _loser the _loser to set
+	 * @param _loser
+	 *            the _loser to set
 	 */
 	public void setLoser(PlayerData _loser)
 	{

@@ -33,18 +33,19 @@ public class ServerInfo
 	{
 		return new ServerInfo(p.readUTF(), p.readShort(), p.readShort());
 	}
+
 	private String _serverName;
 	private int _maxPlayers;
-	
+
 	private int _numPayers;
 
 	private InetSocketAddress _addr;
-	
+
 	public ServerInfo()
 	{
 		this("Server", GameConstants.MAX_PLAYERS, 0);
 	}
-	
+
 	public ServerInfo(String name, int max, int num)
 	{
 		_serverName = name;
@@ -74,18 +75,18 @@ public class ServerInfo
 
 	public Packer pack()
 	{
-		Packer info = new Packer((byte)0);
-        info.writeUTF(_serverName);
-        info.writeShort(_maxPlayers);
-        info.writeShort(_numPayers);
-        return info;
+		Packer info = new Packer((byte) 0);
+		info.writeUTF(_serverName);
+		info.writeShort(_maxPlayers);
+		info.writeShort(_numPayers);
+		return info;
 	}
 
 	public void setAddress(InetSocketAddress addr)
 	{
 		_addr = addr;
 	}
-	
+
 	public void setMaxPlayers(int maxPlayers)
 	{
 		_maxPlayers = maxPlayers;
@@ -95,7 +96,7 @@ public class ServerInfo
 	{
 		_numPayers = numPayers;
 	}
-	
+
 	public void setServerName(String serverName)
 	{
 		_serverName = serverName;

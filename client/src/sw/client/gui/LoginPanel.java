@@ -67,12 +67,11 @@ public class LoginPanel extends JPanel implements ClientListener
 	private JTable _tblServers;
 	private JButton _btnImage;
 	private JLabel _lblPort;
-	
+
 	private Vector<ServerInfo> _servers;
 	private ServerTableModel _tableModel;
 
 	private ArrayList<ConnectionListener> _connectionListener;
-
 
 	private int _imageID;
 
@@ -91,14 +90,14 @@ public class LoginPanel extends JPanel implements ClientListener
 
 		_imageID = Images.min().getID();
 		this.initComponents();
-		
+
 		this.addComponentListener(new ComponentAdapter()
 		{
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-				_btnUpdate.setBounds(_self.getWidth()-250, _self.getHeight()/2+200, 100, 25);
-				_scroll.setBounds(_self.getWidth()-250, _self.getHeight()/2-150, 200, 300);
+				_btnUpdate.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 + 200, 100, 25);
+				_scroll.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 - 150, 200, 300);
 				_self.repaint();
 			}
 		});
@@ -122,7 +121,7 @@ public class LoginPanel extends JPanel implements ClientListener
 			l.login(e);
 
 	}
-	
+
 	public int getImageID()
 	{
 		return _imageID;
@@ -152,16 +151,18 @@ public class LoginPanel extends JPanel implements ClientListener
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				_imageID ++;
+				_imageID++;
 				if (_imageID > Images.max().getID())
 					_imageID = Images.min().getID();
 				if (_imageID < Images.min().getID())
 					_imageID = Images.max().getID();
-				_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID).getScaledInstance(64, 64, 1)));
+				_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID).getScaledInstance(64,
+						64,
+						1)));
 			}
 		});
 		this.add(_btnImage);
-		
+
 		_txtIPAddress = new JTextField();
 		_txtIPAddress.setBounds(200, 10, 100, 25);
 		this.add(_txtIPAddress);
@@ -198,8 +199,7 @@ public class LoginPanel extends JPanel implements ClientListener
 				{
 					System.out.println("connect");
 					ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGIN);
-					e.setIPAdress(new InetSocketAddress(
-							_txtIPAddress.getText(),
+					e.setIPAdress(new InetSocketAddress(_txtIPAddress.getText(),
 							Integer.parseInt(_txtPort.getText())));
 					e.setLoginName(_txtName.getText());
 					e.setImageID(_imageID);
@@ -210,7 +210,7 @@ public class LoginPanel extends JPanel implements ClientListener
 		this.add(_btnConnect);
 
 		_btnUpdate = new JButton("Update");
-		_btnUpdate.setBounds(this.getWidth()-300, 620, 100, 25);
+		_btnUpdate.setBounds(this.getWidth() - 300, 620, 100, 25);
 		_btnUpdate.addActionListener(new ActionListener()
 		{
 			@Override
@@ -225,19 +225,18 @@ public class LoginPanel extends JPanel implements ClientListener
 
 		_tblServers = new JTable(_tableModel);
 		_tblServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		_tblServers.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener()
-				{
-					@Override
-					public void valueChanged(ListSelectionEvent e)
-					{
-						int index = _tblServers.getSelectedRow();
-						_txtIPAddress.setText(_servers.get(index).getAddress().getAddress().getHostAddress());
-						_txtPort.setText(_servers.get(index).getAddress().getPort()+"");
-					}
-				});
+		_tblServers.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			@Override
+			public void valueChanged(ListSelectionEvent e)
+			{
+				int index = _tblServers.getSelectedRow();
+				_txtIPAddress.setText(_servers.get(index).getAddress().getAddress().getHostAddress());
+				_txtPort.setText(_servers.get(index).getAddress().getPort() + "");
+			}
+		});
 		_scroll = new JScrollPane(_tblServers);
-		_scroll.setBounds(this.getWidth()-300, 300, 200, 300);
+		_scroll.setBounds(this.getWidth() - 300, 300, 200, 300);
 		this.add(_scroll);
 
 		_fileChooser = new JFileChooser(System.getProperty("user.dir"));
@@ -259,11 +258,11 @@ public class LoginPanel extends JPanel implements ClientListener
 			}
 		});
 		this.add(_btnChooseAI);
-		
+
 		// TODO move
 		_txtName.setText("test");
 		_txtIPAddress.setText("localhost");
-		_txtPort.setText(GameConstants.STANDARD_PORT+"");
+		_txtPort.setText(GameConstants.STANDARD_PORT + "");
 	}
 
 	@Override

@@ -48,10 +48,13 @@ public class UDPHost extends Thread
 				{
 					Thread.sleep(5);
 				}
-				catch (InterruptedException e) {}
+				catch (InterruptedException e)
+				{
+				}
 			}
 		}
 	}
+
 	private final static int MAX_PACKET_LENGTH = 2 * 1024;
 
 	private final static int PACKET_HEADER_LENGTH = 1;
@@ -144,10 +147,12 @@ public class UDPHost extends Thread
 				_socket.receive(packet);
 				byte flag = buffer[0];
 				byte[] data = java.util.Arrays.copyOfRange(buffer,
-						PACKET_HEADER_LENGTH, packet.getLength());
-				this.messageReceived(
-						(InetSocketAddress) packet.getSocketAddress(), flag,
-						data, data.length);
+						PACKET_HEADER_LENGTH,
+						packet.getLength());
+				this.messageReceived((InetSocketAddress) packet.getSocketAddress(),
+						flag,
+						data,
+						data.length);
 			}
 		}
 		catch (SocketException e)
@@ -202,8 +207,7 @@ public class UDPHost extends Thread
 		this.send(addr, (byte) 0, data, len);
 	}
 
-	protected void sendControl(InetSocketAddress addr, byte msg, byte[] data,
-			int len)
+	protected void sendControl(InetSocketAddress addr, byte msg, byte[] data, int len)
 	{
 		byte[] buf = new byte[1 + len];
 		buf[0] = msg;
@@ -224,11 +228,10 @@ public class UDPHost extends Thread
 		return -1;
 	}
 
-	private void messageReceived(InetSocketAddress addr, byte flag,
-			byte[] data, int len)
+	private void messageReceived(InetSocketAddress addr, byte flag, byte[] data, int len)
 	{
-		if ((flag & UDPConnection.FLAG_CONNLESS) > 0 && data.length >= 2
-				&& data[0] == 's' && data[1] == 'w')
+		if ((flag & UDPConnection.FLAG_CONNLESS) > 0 && data.length >= 2 && data[0] == 's'
+				&& data[1] == 'w')
 		{
 			byte[] buf = java.util.Arrays.copyOfRange(data, 2, len);
 			for (NetworkListener l : _networkListener)
@@ -245,8 +248,7 @@ public class UDPHost extends Thread
 			}
 		}
 
-		if (data.length > 0 && data[0] == UDPConnection.CTRL_CONNECT
-				&& _acceptConnections)
+		if (data.length > 0 && data[0] == UDPConnection.CTRL_CONNECT && _acceptConnections)
 		{
 			int slot = this.getFreeSlot();
 			if (slot != -1)
@@ -257,8 +259,7 @@ public class UDPHost extends Thread
 			else
 			{
 				byte[] info = "The server is full".getBytes();
-				this.sendControl(addr, UDPConnection.CTRL_CLOSE, info,
-						info.length);
+				this.sendControl(addr, UDPConnection.CTRL_CLOSE, info, info.length);
 			}
 		}
 	}
