@@ -216,8 +216,12 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
          getLayeredPane().paintComponents(drawingBoard); // paint our Swing components
         // NOTE: make sure you do paint your own graphics first
         
+         // show fps
+         drawingBoard.setColor(Color.WHITE);
+         drawingBoard.drawString("FPS: " + fps, 100, 100);
+         
         // now draw the drawing board to correct area of the JFrame's buffer
-        g.drawImage(drawing, insets.left, insets.top, null);
+        g.drawImage(drawing, insets.left, 30, null);
         
         drawingBoard.dispose();
 	}
