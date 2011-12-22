@@ -162,11 +162,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		
 		if (_input.shot() > 0)
 		{
-			Shot s = this.shoot(_input.shot() == 2);
-			if (s != null)
-			{
-				// TODO
-			}
+			this.shoot(_input.shot() == 2);
 		}
 		
 		if (_input.moveDirection() == 0)
@@ -281,14 +277,8 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		_ammo += (_ammo < GameConstants.MAX_AMMO - 1 ? 1 : 0);
 	}
-
-	/**
-	 * decreases the munition and returns a new object shot
-	 * 
-	 * @param master
-	 *            true, if a master shot will be given
-	 */
-	public Shot shoot(boolean master)
+	
+	public void shoot(boolean master)
 	{
 		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
 		if (_ammo >= neededAmmo && this.isReadyToShoot())
@@ -296,9 +286,10 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			_ammo -= neededAmmo;
 			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			return new Shot(this.positionAfter(time), _direction, master);
+			Shot s = new Shot(this.positionAfter(time), _direction, master);
+			s.fire(this);
+			this.getWorld().insert(s);
 		}
-		return null;
 	}
 	
 	public void takeDamage(int dmg)

@@ -66,7 +66,7 @@ public class Shot extends Entity
 		_line = new Line2D.Double(startPoint, new Point.Double(0, 0));
 		_isMaster = master;
 		setDirection(direction);
-		_lifetime = 20; // not nice but enough for now
+		_lifetime = GameConstants.SHOT_TTL; // not nice but enough for now
 	}
 
 	/**
@@ -136,6 +136,21 @@ public class Shot extends Entity
 				new Point.Double(
 						(startPoint().getX() + range * Math.sin(direction)),
 						(startPoint().getY() + range * Math.cos(direction))));
+	}
+	
+	public void fire(PlayerData attacker)
+	{
+		PlayerData[] players = this.getWorld().getPlayers();
+		for(PlayerData pl : players)
+		{
+			if (pl.isAlive() && !pl.getName().equals(attacker.getName()) &&
+				this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			{
+				pl.takeDamage(this.getDamage());
+				if (!pl.isAlive())
+					attacker.setScore(attacker.getScore() + 1);
+			}
+		}
 	}
 
 	@Override

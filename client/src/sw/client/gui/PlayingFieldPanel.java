@@ -40,6 +40,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Entity;
 import sw.shared.data.PlayerData;
+import sw.shared.data.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -158,6 +159,13 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 							rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), Math.PI - pl.getDirection()), null,
 							(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
 							(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
+			}
+			else if(ent.getType() == Packettype.SNAP_SHOT)
+			{
+				Shot s = (Shot) ent;
+				g2d.setColor(Color.BLUE);
+		        g2d.setStroke(new BasicStroke(3));
+		        g.drawLine((int)s.startPoint().getX(), (int)s.startPoint().getY(), (int)s.endPoint().getX(), (int)s.endPoint().getY());
 			}
 		}
 		
