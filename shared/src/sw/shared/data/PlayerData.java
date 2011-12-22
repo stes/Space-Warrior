@@ -196,11 +196,20 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	 */
 	public void move()
 	{
+		boolean intersects = false;
+		for (PlayerData d : getWorld().getPlayers())
+		{
+			if (d.intersects(this))
+				intersects = true;
+		}
 		if(_alive)
 		{
-			double x = _speed * Math.sin(getDirection());
-			double y = _speed * Math.cos(getDirection());
-			this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			if (!intersects)
+			{
+				double x = _speed * Math.sin(getDirection());
+				double y = _speed * Math.cos(getDirection());
+				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			}
 			this.rotate(_turnSpeed);
 		}
 	}
@@ -476,5 +485,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 //		addDamage(s1, (int)dmg);
 //		addDamage(s2, (int)dmg);
 	}
+
+
 	
 }

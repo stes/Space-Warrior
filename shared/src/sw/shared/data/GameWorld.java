@@ -39,6 +39,7 @@ public class GameWorld
 	
 	public void insert(Entity e)
 	{
+		e.setWorld(this);
 		_entities.add(e);
 	}
 	
