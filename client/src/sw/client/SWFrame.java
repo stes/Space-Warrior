@@ -23,8 +23,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.net.InetSocketAddress;
@@ -47,7 +47,7 @@ import sw.shared.data.ServerInfo;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWFrame extends JFrame implements WindowListener, ClientListener,
+public class SWFrame extends JFrame implements ClientListener,
 		LoginListener
 {
 	private enum GUIMode
@@ -66,9 +66,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
-	private int fps;
-	private BufferedImage drawing;
-	private Insets insets;
+	private int _fps;
+	private BufferedImage _drawing;
+	private Insets _insets;
 
 	/**
 	 * Creates a new SWFrame
@@ -86,9 +86,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(d.width / 2, d.height / 2);
 		this.setMinimumSize(new Dimension(800, 600));
-        insets = this.getInsets();
-        int insetWide = insets.left + insets.right;
-        int insetTall = insets.top + insets.bottom;
+        _insets = this.getInsets();
+        int insetWide = _insets.left + _insets.right;
+        int insetTall = _insets.top + _insets.bottom;
         setSize(getWidth() + insetWide, getHeight() + insetTall);
 
 		((JComponent) getContentPane()).setOpaque(false);
@@ -108,12 +108,16 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 		_client.addClientListener(this);
 		_client.addClientListener(_controller);
 		//
-		this.addWindowListener(this);
-		//
+		this.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				_client.close();
+			}
+		});
 		System.out.println("init");
-		//
 		this.setExtendedState(MAXIMIZED_BOTH);
-		//
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(),
 				_controller, _client);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
@@ -150,10 +154,9 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
         long oldTime = System.nanoTime();
         long nanoseconds = 0;
         int frames = 0;
-        fps = 0;
-        
-        // create a image to draw to to match 0,0 up correctly.
-        drawing = (BufferedImage) this.createImage(getWidth(),getHeight());
+        _fps = 0;
+
+        _drawing = (BufferedImage) this.createImage(getWidth(),getHeight());
         
         while(_isRunning)
         {
@@ -164,7 +167,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
             frames = frames + 1;
             if (nanoseconds >= 1000000000)
             {
-                fps = frames;
+                _fps = frames;
                 nanoseconds = nanoseconds - 1000000000;
                 frames = 0;
             }            
@@ -189,7 +192,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 
 	private void draw(Graphics2D g)
 	{
-        Graphics2D drawingBoard = drawing.createGraphics();
+        Graphics2D drawingBoard = _drawing.createGraphics();
         drawingBoard.setColor(Color.LIGHT_GRAY);
         drawingBoard.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                                       RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -197,7 +200,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
                                       RenderingHints.VALUE_ANTIALIAS_ON);
         // draw over it to create a blank background again, (or you could draw
         // a background image if you had one
-        drawingBoard.fillRect(0, 0, drawing.getWidth(), drawing.getHeight());
+        drawingBoard.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
         
         // now draw everything to drawingBoard, location 0,0 will be top left corner
         // within the borders of the window
@@ -208,7 +211,7 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
         
         
         drawingBoard.setColor(Color.WHITE);
-        drawingBoard.drawString("FPS: " + fps, 0, drawingBoard.getFont().getSize());
+        drawingBoard.drawString("FPS: " + _fps, 0, drawingBoard.getFont().getSize());
         // NOTE: this will now cap the FPS (frames per second), of the program to
         // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
         // of rest per update = 100 updates max).
@@ -218,10 +221,10 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
         
          // show fps
          drawingBoard.setColor(Color.WHITE);
-         drawingBoard.drawString("FPS: " + fps, 100, 100);
+         //drawingBoard.drawString("FPS: " + _fps, 100, 100);
          
         // now draw the drawing board to correct area of the JFrame's buffer
-        g.drawImage(drawing, insets.left, 30, null);
+        g.drawImage(_drawing, _insets.left, 30, null);
         
         drawingBoard.dispose();
 	}
@@ -272,43 +275,6 @@ public class SWFrame extends JFrame implements WindowListener, ClientListener,
 	}
 
 	public void tick()
-	{
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e)
-	{
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e)
-	{
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e)
-	{
-		// TODO: is this everything?
-		_client.close();
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e)
-	{
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e)
-	{
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e)
-	{
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e)
 	{
 	}
 

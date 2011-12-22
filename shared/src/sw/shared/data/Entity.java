@@ -28,6 +28,7 @@ public abstract class Entity
 {
 	private boolean _entDestroy;
 	private byte _entType;
+	private GameWorld _world;
 	
 	public Entity(byte type)
 	{
@@ -47,6 +48,16 @@ public abstract class Entity
 	public boolean isDestroyed()
 	{
 		return _entDestroy;
+	}
+	
+	public void setWorld(GameWorld world)
+	{
+		this._world = world;
+	}
+
+	public GameWorld getWorld()
+	{
+		return _world;
 	}
 	
 	public abstract void snap(Packer p, String name);

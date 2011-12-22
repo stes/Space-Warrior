@@ -120,8 +120,19 @@ public class GameController
 	public void tick()
 	{
 		this.checkTurn();
-		
 		_world.tick();
+	}
+
+	private void checkCollisions(PlayerData d)
+	{
+		for (PlayerData pl : _players.values())
+		{
+			if (pl.intersects(d))
+			{
+				pl.setSpeed(0);
+				d.setSpeed(0);
+			}
+		}
 	}
 
 	/**
@@ -155,6 +166,7 @@ public class GameController
 		int alive = 0;
 		for (PlayerData pl : _players.values())
 		{
+			this.checkCollisions(pl);
 			if (pl.isAlive())
 				alive++;
 		}
@@ -175,33 +187,4 @@ public class GameController
 			this.startGame();
 		}
 	}
-
-	// TODO: do this in the PlayerDataSet
-	/*private void checkCollision(PlayerDataSet s2)
-	{
-		for (int i = 0; i < _activePlayers.size(); i++)
-		{
-			PlayerDataSet s1 = _activePlayers.dataAt(i);
-			if (s1 == null || s1.equals(s2))
-				continue;
-			double diff = s1.getPosition().distance(s2.getPosition());
-			double dmg = 0;
-			if (diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE)
-			{
-				dmg = -((double) GameConstants.MAX_COLLISION_DAMAGE)
-						/ ((double) GameConstants.MAX_COLLISION_DAMAGE_RANGE)
-						* diff + GameConstants.MAX_COLLISION_DAMAGE;
-				
-				double speed = s2.getSpeed();
-				s1.setSpeed(s2.getSpeed() * 0.8);
-				s2.setSpeed(speed * 0.8);
-				
-				double direction = s2.getDirection();
-				s1.setDirection(s2.getDirection());
-				s2.setSpeed(direction);
-			}
-			addDamage(s1, (int)dmg);
-			addDamage(s2, (int)dmg);
-		}
-	}*/
 }

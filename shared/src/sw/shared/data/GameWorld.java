@@ -39,6 +39,7 @@ public class GameWorld
 	
 	public void insert(Entity e)
 	{
+		e.setWorld(this);
 		_entities.add(e);
 	}
 	
@@ -110,5 +111,10 @@ public class GameWorld
 				tmp.add(ent);
 		}
 		return tmp.toArray(a);
+	}
+	
+	public PlayerData[] getPlayers()
+	{
+		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[]{});
 	}
 }

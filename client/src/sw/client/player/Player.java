@@ -107,6 +107,12 @@ public abstract class Player
 	{
 		return _stateManager.getGameWorld();
 	}
+	
+	public IGameStateManager getStateManager()
+	{
+		return _stateManager;
+	}
+	
 	/**
 	 * @param data the new player data set
 	 */

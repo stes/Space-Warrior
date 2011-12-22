@@ -196,11 +196,20 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	 */
 	public void move()
 	{
+		boolean intersects = false;
+		for (PlayerData d : getWorld().getPlayers())
+		{
+			if (d.intersects(this))
+				intersects = true;
+		}
 		if(_alive)
 		{
-			double x = _speed * Math.sin(getDirection());
-			double y = _speed * Math.cos(getDirection());
-			this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			if (!intersects)
+			{
+				double x = _speed * Math.sin(getDirection());
+				double y = _speed * Math.cos(getDirection());
+				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+			}
 			this.rotate(_turnSpeed);
 		}
 	}
@@ -447,5 +456,36 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	{
 		_imageID = id;
 	}
+	
+	public boolean intersects(PlayerData d)
+	{
+		if (d == null || this.equals(d))
+			return false;
+		
+		double diff = this.getPosition().distance(d.getPosition());
+		double dmg = 0;
+		
+		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
+		
+		// TODO add effects on speed, direction and health
+//		if (diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE)
+//		{
+//			dmg = -((double) GameConstants.MAX_COLLISION_DAMAGE)
+//					/ ((double) GameConstants.MAX_COLLISION_DAMAGE_RANGE)
+//					* diff + GameConstants.MAX_COLLISION_DAMAGE;
+//			
+//			double speed = s2.getSpeed();
+//			s1.setSpeed(s2.getSpeed() * 0.8);
+//			s2.setSpeed(speed * 0.8);
+//			
+//			double direction = s2.getDirection();
+//			s1.setDirection(s2.getDirection());
+//			s2.setSpeed(direction);
+//		}
+//		addDamage(s1, (int)dmg);
+//		addDamage(s2, (int)dmg);
+	}
+
+
 	
 }

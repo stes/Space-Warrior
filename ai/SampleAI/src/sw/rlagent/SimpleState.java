@@ -6,38 +6,33 @@ import java.util.Random;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.PlayerList;
 
 public class SimpleState
 {
 	private static Random _random = new Random(System.currentTimeMillis());
 
 	private PlayerData _localDataSet;
-	private PlayerList _playerList;
+	private PlayerData[] _playerList;
 	private double[] _features;
 	private double[] _weights;
 
 	public ArrayList<Byte> id;
 
-	public SimpleState(PlayerData localDataSet, PlayerList list)
+	public SimpleState(PlayerData localDataSet, PlayerData[] list)
 	{
 		_localDataSet = localDataSet;
-		_playerList = new PlayerList(list.size());
-		this.init(list);
+		_playerList = list.clone();
+		this.init();
 	}
 
 	public int getHash()
 	{
 		ArrayList<Byte> buffer = new ArrayList<Byte>();
-		for (int i = 0; i < _playerList.size(); i++)
+		for (PlayerData d : _playerList)
 		{
-			PlayerData d = _playerList.dataAt(i);
-			if (d != null)
-			{
-				buffer.add((byte) ((int)d.getDirection()));
-				buffer.add((byte) ((int)d.getPosition().x));
-				buffer.add((byte) ((int)d.getPosition().y));
-			}
+			buffer.add((byte) ((int)d.getDirection()));
+			buffer.add((byte) ((int)d.getPosition().x));
+			buffer.add((byte) ((int)d.getPosition().y));
 		}
 
 		id = buffer;
@@ -53,7 +48,7 @@ public class SimpleState
 		return h;
 	}
 
-	private void init(PlayerList list)
+	private void init()
 	{
 		this.initFeatures();
 	}
@@ -61,9 +56,9 @@ public class SimpleState
 	private void initFeatures()
 	{
 		double minDist = Double.MAX_VALUE;
-		for (int i = 0; i < _playerList.size(); i++)
+		for (int i = 0; i < _playerList.length; i++)
 		{
-			PlayerData d = _playerList.dataAt(i);
+			PlayerData d = _playerList[i];
 			if (d != null && !d.equals(_localDataSet))
 			{
 				double dist = _localDataSet.getPosition().distance(d.getPosition());
@@ -93,12 +88,12 @@ public class SimpleState
 		if (!(object instanceof SimpleState))
 			return false;
 		SimpleState s = (SimpleState) object;
-		if (_playerList.size() != s._playerList.size())
+		if (_playerList.length != s._playerList.length)
 			return false;
-		for (int i = 0; i < _playerList.size(); i++)
+		for (int i = 0; i < _playerList.length; i++)
 		{
-			PlayerData d1 = _playerList.dataAt(i);
-			PlayerData d2 = s._playerList.dataAt(i);
+			PlayerData d1 = _playerList[i];
+			PlayerData d2 = s._playerList[i];
 			if (d1 != null && d2 != null && !d1.equals(d2))
 				return false;
 		}
@@ -112,7 +107,6 @@ public class SimpleState
 		if (data != null && data.isAlive())
 		{
 			data.accelerate(GameConstants.ACCELERATION * input.moveDirection());
-			data.rotate(GameConstants.ANGEL_OF_ROTATION * Math.signum(input.turnDirection()));
 			data.reload();
 			data.move();
 		}
