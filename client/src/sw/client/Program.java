@@ -25,6 +25,8 @@ public class Program
 {
 	public static void main(String[] args)
 	{
-		new SWFrame();
+		boolean debugMode = (args.length > 0 && args[0].toLowerCase().contains("debug"));
+		System.out.println(debugMode);
+		new SWFrame(debugMode);
 	}
 }

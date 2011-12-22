@@ -27,6 +27,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.net.InetSocketAddress;
 
 import javax.swing.JComponent;
@@ -73,7 +75,7 @@ public class SWFrame extends JFrame implements ClientListener,
 	/**
 	 * Creates a new SWFrame
 	 */
-	public SWFrame()
+	public SWFrame(boolean debugMode)
 	{
 		super("Space Warrior");
 
@@ -97,10 +99,25 @@ public class SWFrame extends JFrame implements ClientListener,
 		createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
 
+		if (!debugMode)
+			this.initBugLogger();
+		
 		_isRunning = true;
 		gameLoop();
 	}
 
+	private void initBugLogger()
+	{
+		try
+		{
+			System.setErr(new PrintStream(System.getProperty("user.dir")+ "/buglog.txt"));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	private void init()
 	{
 		_client = new SWClient();
@@ -132,16 +149,6 @@ public class SWFrame extends JFrame implements ClientListener,
 		this.setVisible(true);
 		this.toFront();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-//		try
-//		{
-//			System.setErr(new PrintStream(System.getProperty("user.dir")
-//					+ "/buglog.txt"));
-//		}
-//		catch (FileNotFoundException e)
-//		{
-//			e.printStackTrace();
-//		}
 	}
 
     /**
@@ -331,5 +338,4 @@ public class SWFrame extends JFrame implements ClientListener,
 		{
 		}
 	}
-
 }

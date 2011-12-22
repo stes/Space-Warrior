@@ -1,9 +1,1 @@
-Exception in thread "Thread-2" java.lang.NullPointerException
-	at sw.client.gui.GamePanel.startRendering(GamePanel.java:297)
-	at sw.client.SWFrame.setGUIMode(SWFrame.java:304)
-	at sw.client.SWFrame.connected(SWFrame.java:202)
-	at sw.client.SWClient.connected(SWClient.java:73)
-	at sw.shared.net.UDPHost.invokeConnected(UDPHost.java:210)
-	at sw.shared.net.UDPConnection.received(UDPConnection.java:92)
-	at sw.shared.net.UDPHost.messageReceived(UDPHost.java:246)
-	at sw.shared.net.UDPHost.run(UDPHost.java:129)
+test
