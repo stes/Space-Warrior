@@ -47,8 +47,8 @@ import sw.client.GameController;
 import sw.client.gui.ConnectionEvent.ActionType;
 import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
-import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
+import sw.shared.net.Unpacker;
 
 public class LoginPanel extends JPanel implements ClientListener
 {

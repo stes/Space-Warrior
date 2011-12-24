@@ -88,9 +88,9 @@ public abstract class MoveableEntity extends StaticEntity
 		return _turnSpeed;
 	}
 	
-	public void setAcceleration(double horizontalAcceleration)
+	public void setAcceleration(double acceleration)
 	{
-		this._acceleration = horizontalAcceleration;
+		this._acceleration = Math.min(acceleration, MoveableEntity.ACCELERATION);
 	}
 
 	public double getAcceleration()
@@ -100,7 +100,7 @@ public abstract class MoveableEntity extends StaticEntity
 
 	public void setAngularAcceleration(double angularAcceleration)
 	{
-		this._adirection = angularAcceleration;
+		this._adirection = Math.min(angularAcceleration, MoveableEntity.ANGULAR_ACCELERATION);
 	}
 
 	public double getAngularAcceleration()

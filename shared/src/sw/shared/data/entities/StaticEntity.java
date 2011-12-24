@@ -3,9 +3,8 @@ package sw.shared.data.entities;
 import java.awt.Point;
 
 import sw.shared.GameConstants;
-import sw.shared.Packer;
-import sw.shared.Unpacker;
-import sw.shared.data.Entity;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * Represents an entity with a position and a direction
@@ -66,9 +65,6 @@ public abstract class StaticEntity extends Entity
 		return new Point.Double(getX(), getY());
 	}
 
-	/* (non-Javadoc)
-	 * @see sw.shared.data.Entity#fromSnap(sw.shared.Unpacker)
-	 */
 	@Override
 	public void fromSnap(Unpacker p)
 	{
@@ -77,9 +73,6 @@ public abstract class StaticEntity extends Entity
 		this.setDirection(p.readDouble());
 	}
 
-	/* (non-Javadoc)
-	 * @see sw.shared.data.Entity#snap(sw.shared.Packer, java.lang.String)
-	 */
 	@Override
 	public void snap(Packer p, String name)
 	{

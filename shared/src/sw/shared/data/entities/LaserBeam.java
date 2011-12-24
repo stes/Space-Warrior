@@ -21,9 +21,9 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 
 import sw.shared.GameConstants;
-import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.Unpacker;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * data structure to represent a shot
@@ -44,12 +44,11 @@ public class LaserBeam extends StaticEntity
 	public LaserBeam(double x, double y, double direction, boolean master)
 	{
 		super(Packettype.SNAP_SHOT);
-		// _line = new Line2D.Double(startPoint, new Point.Double(0, 0));
 		_isMaster = master;
 		setDirection(direction);
 		setX(x);
 		setY(y);
-		_lifetime = GameConstants.SHOT_TTL; // not nice but enough for now
+		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
 	}
 
 	public Line2D.Double getLine()

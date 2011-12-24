@@ -26,13 +26,13 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayerLoader;
-import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.Unpacker;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.ServerInfo;
 import sw.shared.data.entities.SpaceShip;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

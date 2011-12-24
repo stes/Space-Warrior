@@ -41,7 +41,7 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
-import sw.shared.data.Entity;
+import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.SpaceShip;
 import sw.shared.data.entities.LaserBeam;
 

@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data;
+package sw.shared.data.entities;
 
-import sw.shared.Packer;
-import sw.shared.Unpacker;
+import sw.shared.data.GameWorld;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

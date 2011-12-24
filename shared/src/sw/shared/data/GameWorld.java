@@ -20,11 +20,12 @@ package sw.shared.data;
 import java.util.Iterator;
 import java.util.Vector;
 
-import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.Unpacker;
+import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.LaserBeam;
 import sw.shared.data.entities.SpaceShip;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

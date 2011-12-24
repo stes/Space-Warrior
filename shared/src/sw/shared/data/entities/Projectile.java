@@ -1,10 +1,10 @@
 package sw.shared.data.entities;
 
 import sw.shared.GameConstants;
-import sw.shared.Packer;
-import sw.shared.Unpacker;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
-public class Projectile extends MoveableEntity
+public abstract class Projectile extends MoveableEntity
 {
 	private double _damage;
 	
@@ -12,6 +12,7 @@ public class Projectile extends MoveableEntity
 	{
 		super(type);
 		
+		// TODO improve
 		this.setAcceleration(GameConstants.ACCELERATION);
 		this.setAngularAcceleration(0);
 		this.setMaximumSpeed(GameConstants.MAX_SPEED * 2);
@@ -40,5 +41,12 @@ public class Projectile extends MoveableEntity
 	public double getDamage()
 	{
 		return _damage;
+	}
+
+	@Override
+	public void tick()
+	{
+		this.setAcceleration(MoveableEntity.ACCELERATION);
+		super.tick();
 	}
 }

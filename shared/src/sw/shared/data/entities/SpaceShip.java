@@ -21,10 +21,10 @@ import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
-import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.Unpacker;
 import sw.shared.data.PlayerInput;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -374,24 +374,21 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 
 		if (_input.moveDirection() == 0)
 		{
-			this.accelerate(-this.getAcceleration());
+			this.setAcceleration(-MoveableEntity.ACCELERATION);
 		}
 		else
 		{
-			this.accelerate(this.getAcceleration() * _input.moveDirection());
+			this.setAcceleration(MoveableEntity.ACCELERATION * _input.moveDirection());
 		}
 
+		this.setAngularAcceleration(MoveableEntity.ANGULAR_ACCELERATION * _input.turnDirection());
 		if (_input.turnDirection() == 0)
 		{
-			this.angularDecelerate(this.getAngularAcceleration());
-		}
-		else
-		{
-			this.angularAccelerate(this.getAngularAcceleration() * _input.turnDirection());
+			this.angularDecelerate(MoveableEntity.ANGULAR_ACCELERATION );
 		}
 
 		this.reload();
-		this.move();
+		super.tick();
 	}
 
 	private Point.Double positionAfter(double time)

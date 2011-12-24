@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

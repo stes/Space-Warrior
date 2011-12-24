@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
-import sw.shared.Packer;
+import sw.shared.net.Packer;
 
 /**
  * @author Redix, stes, Abbadonn

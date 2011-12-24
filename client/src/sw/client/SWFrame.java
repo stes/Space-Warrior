@@ -39,10 +39,10 @@ import sw.client.gui.ConnectionEvent;
 import sw.client.gui.ConnectionListener;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
-import sw.shared.Packer;
 import sw.shared.Packettype;
-import sw.shared.Unpacker;
 import sw.shared.data.ServerInfo;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn

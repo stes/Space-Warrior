@@ -19,11 +19,11 @@ package sw.server;
 
 import java.util.HashMap;
 
-import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.SpaceShip;
+import sw.shared.net.Packer;
 
 /**
  * @author Redix, stes, Abbadonn
