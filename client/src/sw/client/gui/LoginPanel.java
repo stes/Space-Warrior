@@ -18,10 +18,12 @@
 package sw.client.gui;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -103,6 +105,13 @@ public class LoginPanel extends JPanel implements ClientListener
 		});
 	}
 
+	public void render(Graphics g)
+	{
+		BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		super.paintComponents(img.getGraphics());
+		g.drawImage(img, 5, 30, null);
+	}
+	
 	public void addConnectionListener(ConnectionListener l)
 	{
 		_connectionListener.add(l);

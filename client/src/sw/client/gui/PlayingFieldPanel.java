@@ -19,9 +19,11 @@ package sw.client.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -29,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
@@ -52,7 +55,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
-	private double _lastPaint;
+	private Insets _insets;
 
 	private IGameStateManager _stateManager;
 
@@ -70,6 +73,16 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
 		this.setIgnoreRepaint(true);
 		this.init();
+	}
+
+	private JFrame getParentFrame(Component c)
+	{
+		if (c.getParent() == null)
+			return null;
+		if (c.getParent() instanceof JFrame)
+			return (JFrame) c.getParent();
+		else
+			return getParentFrame(c.getParent());
 	}
 
 	private void init()
@@ -94,54 +107,46 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		this.setBackground(Color.BLACK);
 	}
 
-	/**
-	 * Paints the playing field with its contents
-	 */
-	@Override
 	public void paintComponent(Graphics g)
 	{
 	}
 
-	/**
-	 * Paints the playing field with its contents
-	 */
-	@Override
 	public void paintComponents(Graphics g)
 	{
 	}
 
 	public void render(Graphics g)
 	{
-		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
-		g.setColor(Color.WHITE);
-		g.drawString("FPS: " + 1000 / (System.currentTimeMillis() - _lastPaint),
-				this.getWidth() - 100,
-				20);
-		_lastPaint = System.currentTimeMillis();
+		// get parent frame's insets
+		if (_insets == null)
+			_insets = getParentFrame(this).getInsets();
 
-		BufferedImage img = new BufferedImage(GameConstants.PLAYING_FIELD_WIDTH,
-				GameConstants.PLAYING_FIELD_HEIGHT,
-				BufferedImage.TYPE_INT_ARGB);
+		// determine scale factors
+		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
+		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
 
-		Graphics2D g2d = img.createGraphics();
+		// TODO use insets
+		g.drawImage(_backgroundImg,
+				_insets.left,
+				_insets.top,
+				this.getWidth(),
+				this.getHeight(),
+				null);
 
-		g2d.setColor(new Color(0, 0, 0, 0));
+		Graphics2D g2d = (Graphics2D) g;// img.createGraphics();
 
-		// TODO improve
-		for (Entity ent : _stateManager.getGameWorld().getEntitiesByType(Packettype.SNAP_SHOT, new Entity[]{}))
+		for (Entity ent : _stateManager.getGameWorld().getEntitiesByType(Packettype.SNAP_SHOT,
+				new Entity[] {}))
 		{
-			this.drawEntity(g2d, ent);
+			this.drawEntity(g2d, ent, scaleX, scaleY);
 		}
 		for (Entity ent : _stateManager.getGameWorld().getPlayers())
 		{
-			this.drawEntity(g2d, ent);
+			this.drawEntity(g2d, ent, scaleX, scaleY);
 		}
-
-		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-		g.setColor(Color.WHITE);
 	}
 
-	private void drawEntity(Graphics2D g2d, Entity ent)
+	private void drawEntity(Graphics2D g2d, Entity ent, double scaleX, double scaleY)
 	{
 		if (ent.getType() == Packettype.SNAP_PLAYERDATA)
 		{
@@ -156,22 +161,26 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
 					Math.PI - pl.getDirection()),
-					null,
-					(int) (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2),
-					(int) (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2));
+					_insets.left
+							+ (int) (scaleX * (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
+					_insets.top
+							+ (int) (scaleY * (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2)),
+					(int) (GameConstants.PLAYER_SIZE * scaleX),
+					(int) (GameConstants.PLAYER_SIZE * scaleY),
+					null);
 		}
 		else if (ent.getType() == Packettype.SNAP_SHOT)
 		{
 			Shot s = (Shot) ent;
 			g2d.setColor(Color.BLUE);
 			g2d.setStroke(new BasicStroke(3));
-			g2d.drawLine((int) s.startPoint().getX(),
-					(int) s.startPoint().getY(),
-					(int) s.endPoint().getX(),
-					(int) s.endPoint().getY());
+			g2d.drawLine(_insets.left + (int) (s.startPoint().getX() * scaleX),
+					_insets.top+(int) (s.startPoint().getY() * scaleY),
+					(int) (s.endPoint().getX() * scaleX),
+					(int) (s.endPoint().getY() * scaleY));
 		}
 	}
-	
+
 	private void paintBars(Graphics2D g2d, PlayerData d)
 	{
 		g2d.setStroke(new BasicStroke(15));
@@ -180,18 +189,20 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		int end_x = start_x + d.getLifepoints() * ClientConstants.BAR_LENGTH
 				/ GameConstants.MAX_LIVES;
 		int y = 10;
-		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x, 60, new Color(255,
-				0,
-				0,
-				100));
+		GradientPaint pat = new GradientPaint(start_x,
+				10,
+				Color.RED,
+				end_x,
+				60,
+				new Color(255, 0, 0, 100));
 		g2d.setPaint(pat);
-		g2d.drawLine(start_x, y, end_x, y);
+		g2d.drawLine(_insets.left + start_x, _insets.top + y, _insets.left + end_x, _insets.top +y);
 
 		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
 		y = 30;
 		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(100, 100, 100, 100));
 		g2d.setPaint(pat);
-		g2d.drawLine(start_x, y, end_x, y);
+		g2d.drawLine(_insets.left + start_x, _insets.top+y, _insets.left + end_x, _insets.top +y);
 	}
 
 	protected AffineTransform affineTransform(BufferedImage src, double degrees)

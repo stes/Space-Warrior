@@ -87,20 +87,18 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(d.width / 2, d.height / 2);
 		this.setMinimumSize(new Dimension(800, 600));
-		_insets = this.getInsets();
-		int insetWide = _insets.left + _insets.right;
-		int insetTall = _insets.top + _insets.bottom;
-		setSize(getWidth() + insetWide, getHeight() + insetTall);
 
 		((JComponent) getContentPane()).setOpaque(false);
+		
 		this.init();
-
+		
 		createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
 
 		if (!debugMode)
 			this.initBugLogger();
 
+		
 		_isRunning = true;
 		gameLoop();
 	}
@@ -119,6 +117,15 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 
 	private void init()
 	{
+		this.setVisible(true);
+		this.toFront();
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		_insets = this.getInsets();
+		System.out.println(_insets);
+		int insetWide = _insets.left + _insets.right;
+		int insetTall = _insets.top + _insets.bottom;
+		setSize(getWidth() + insetWide, getHeight() + insetTall);
+		
 		_client = new SWClient();
 		_controller = new GameController(_client);
 		_client.addClientListener(this);
@@ -135,8 +142,10 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		System.out.println("init");
 		this.setExtendedState(MAXIMIZED_BOTH);
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+		_gamePanel.setLocation(_insets.left, _insets.top + 100);
+		
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-		_loginPanel.setLocation(0, 30);
+		_loginPanel.setLocation(_insets.left, _insets.top);
 
 		_client.addClientListener(_gamePanel);
 		_client.addClientListener(_loginPanel);
@@ -145,9 +154,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		_gamePanel.addConnectionListener(this);
 
 		this.setGUIMode(GUIMode.LOGIN);
-		this.setVisible(true);
-		this.toFront();
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 	}
 
 	/**
@@ -194,7 +201,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			}
 			Toolkit.getDefaultToolkit().sync(); // prevents possible event queue
 												// problems in Linux
-
 			try
 			{
 				Thread.sleep(10);
@@ -206,10 +212,10 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		}
 	}
 
-	private void draw(Graphics2D g)
+	private void draw(Graphics2D g2d)
 	{
-		Graphics2D g2d = _drawing.createGraphics();
-		g2d.setColor(Color.LIGHT_GRAY);
+		//Graphics2D g2d = _drawing.createGraphics();
+		g2d.setColor(Color.WHITE);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -217,32 +223,28 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		// a background image if you had one
 		g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
 
-		// now draw everything to drawingBoard, location 0,0 will be top left
-		// corner
-		// within the borders of the window
 		if (_activePanel.equals(_gamePanel))
 		{
 			_gamePanel.render(g2d);
 		}
-
+		else if (_activePanel.equals(_loginPanel))
+		{
+			_loginPanel.render(g2d);
+		}
+		
 		g2d.setColor(Color.WHITE);
-		g2d.drawString("FPS: " + _fps, 0, g2d.getFont().getSize());
-		// NOTE: this will now cap the FPS (frames per second), of the program
-		// to
-		// a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
-		// of rest per update = 100 updates max).
-
-		getLayeredPane().paintComponents(g2d); // paint our Swing components
+		g2d.drawString("FPS: " + _fps, 0, 100+g2d.getFont().getSize());
+		//getLayeredPane().paintComponents(g2d); // paint our Swing components
 		// NOTE: make sure you do paint your own graphics first
 
 		// show fps
-		g2d.setColor(Color.WHITE);
+		//g2d.setColor(Color.WHITE);
 		// drawingBoard.drawString("FPS: " + _fps, 100, 100);
 
 		// now draw the drawing board to correct area of the JFrame's buffer
-		g.drawImage(_drawing, _insets.left, 30, null);
+		//g.drawImage(_drawing, _insets.left, 30, null);
 
-		g2d.dispose();
+		//g2d.dispose();
 	}
 
 	@Override

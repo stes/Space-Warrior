@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -82,6 +83,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
+		
 		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
@@ -100,10 +102,23 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		});
 	}
 
+	int counter;
+	BufferedImage img;
+	
 	public void render(Graphics2D g)
 	{
 		_playingField.render(g);
+
+		// TODO depending on fps
+		if ((counter++) % 25 == 0)
+		{
+			img = null;
+			img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			super.paintComponents(img.getGraphics());
+		}
+		g.drawImage(img, 5, 30, null);
 	}
+
 
 	/**
 	 * invoked after chat button is pressed
