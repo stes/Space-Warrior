@@ -43,7 +43,7 @@ import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Entity;
 import sw.shared.data.PlayerData;
-import sw.shared.data.Shot;
+import sw.shared.data.entities.Shot;
 
 /**
  * @author Redix, stes, Abbadonn

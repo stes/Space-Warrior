@@ -24,6 +24,7 @@ import java.util.Vector;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
+import sw.shared.data.entities.Shot;
 
 /**
  * @author Redix, stes, Abbadonn

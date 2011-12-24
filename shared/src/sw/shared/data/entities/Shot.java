@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data;
+package sw.shared.data.entities;
 
 import java.awt.Point;
 import java.awt.geom.Line2D;
@@ -24,6 +24,8 @@ import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
+import sw.shared.data.Entity;
+import sw.shared.data.PlayerData;
 
 /**
  * data structure to represent a shot

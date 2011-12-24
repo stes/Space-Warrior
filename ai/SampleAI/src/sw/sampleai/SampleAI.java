@@ -7,7 +7,7 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerData;
-import sw.shared.data.Shot;
+import sw.shared.data.entities.Shot;
 
 public class SampleAI extends AIPlayer
 {

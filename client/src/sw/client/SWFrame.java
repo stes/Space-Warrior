@@ -26,7 +26,6 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
@@ -52,7 +51,7 @@ import sw.shared.data.ServerInfo;
 public class SWFrame extends JFrame implements ClientListener, ConnectionListener
 {
 	// change to limit fps in order to minimize cpu usage
-	public final int SLEEP_TIME = 5;
+	public final int SLEEP_TIME = 1;
 	
 	private enum GUIMode
 	{

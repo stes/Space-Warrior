@@ -24,22 +24,20 @@ import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
+import sw.shared.data.entities.MoveableEntity;
+import sw.shared.data.entities.Shot;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerData extends Entity implements Comparable<PlayerData>
+public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 {
 	private static Random _random = new Random();
 
 	private String _name;
-	private Point.Double _location;
 	private int _lifepoints;
 	private int _ammo;
-	private double _direction;
-	private double _turnSpeed;
-	private double _speed;
 	private int _score;
 	private boolean _alive;
 	private long _lastShot;
@@ -47,16 +45,25 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	private int _imageID;
 
 	private PlayerInput _input;
-
+	
+	private PlayerData(byte type)
+	{
+		super(type);
+		// TODO improve?
+		this.setAcceleration(GameConstants.ACCELERATION);
+		this.setAngularAcceleration(GameConstants.ANGULAR_ACCELERATION);
+		this.setMaximumSpeed(GameConstants.MAX_SPEED);
+	}
+	
 	public PlayerData(PlayerData dataset)
 	{
-		super(Packettype.SNAP_PLAYERDATA);
+		this(Packettype.SNAP_PLAYERDATA);
 		_name = new String(dataset.getName());
 		_local = dataset.isLocal();
 		_score = dataset.getScore();
 		_alive = dataset.isAlive();
-		this.setPosition(new Point.Double(dataset.getPosition().getX(),
-				dataset.getPosition().getY()));
+		this.setX(dataset.getX());
+		this.setY(dataset.getY());
 		this.setDirection(dataset.getDirection());
 		this.setImageID(dataset.getImageID());
 		_lifepoints = dataset.getLifepoints();
@@ -79,11 +86,12 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	 */
 	public PlayerData(String name, int imageID)
 	{
-		super(Packettype.SNAP_PLAYERDATA);
+		this(Packettype.SNAP_PLAYERDATA);
 		_name = name;
 		_score = 0;
 		_alive = false;
-		_location = new Point.Double(0, 0);
+		this.setX(0);
+		this.setY(0);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_imageID = imageID;
@@ -98,21 +106,21 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		this.setSpeed(getSpeed() + value);
 	}
 
-	public void angularAccelerate(double value)
-	{
-		setTurnSpeed(_turnSpeed + value);
-	}
+//	public void angularAccelerate(double value)
+//	{
+//		setTurnSpeed(_turnSpeed + value);
+//	}
 
 	public void angularDecelerate(double value)
 	{
 		double dec = Math.abs(value);
-		if (_turnSpeed < 0 && Math.abs(_turnSpeed) > dec)
+		if (getTurnSpeed() < 0 && Math.abs(getTurnSpeed()) > dec)
 		{
-			setTurnSpeed(_turnSpeed + dec);
+			setTurnSpeed(getTurnSpeed() + dec);
 		}
-		else if (_turnSpeed > 0 && Math.abs(_turnSpeed) > dec)
+		else if (getTurnSpeed() > 0 && Math.abs(getTurnSpeed()) > dec)
 		{
-			setTurnSpeed(_turnSpeed - dec);
+			setTurnSpeed(getTurnSpeed() - dec);
 		}
 		else
 		{
@@ -142,7 +150,8 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_local = p.readBoolean();
 		_score = p.readShort();
 		_alive = p.readBoolean();
-		this.setPosition(new Point.Double(p.readDouble(), p.readDouble()));
+		this.setX(p.readDouble());
+		this.setY(p.readDouble());
 		this.setDirection(p.readDouble());
 		this.setImageID(p.readInt());
 		_lifepoints = p.readShort();
@@ -157,16 +166,6 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	public int getAmmo()
 	{
 		return _ammo;
-	}
-
-	/**
-	 * returns the current direction
-	 * 
-	 * @returns the current direction in degrees
-	 */
-	public double getDirection()
-	{
-		return _direction;
 	}
 
 	public int getImageID()
@@ -195,14 +194,6 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	}
 
 	/**
-	 * @return the position of the player
-	 */
-	public Point.Double getPosition()
-	{
-		return _location;
-	}
-
-	/**
 	 * returns the current score
 	 * 
 	 * @return the current score
@@ -210,11 +201,6 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	public int getScore()
 	{
 		return _score;
-	}
-
-	public double getTurnSpeed()
-	{
-		return _turnSpeed;
 	}
 
 	public boolean intersects(PlayerData d)
@@ -246,11 +232,11 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	/**
 	 * moves the character with the actual speed
 	 */
+	@Override
 	public void move()
 	{
 		boolean intersects = false;
 		PlayerData pred = this.predict();
-		// System.out.print(pred.equals(this));
 		for (PlayerData d : getWorld().getPlayers())
 		{
 			if (!this.equals(d) && d.intersects(pred) && d.isAlive())
@@ -260,16 +246,14 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		{
 			if (!intersects)
 			{
-				double x = _speed * Math.sin(getDirection());
-				double y = _speed * Math.cos(getDirection());
-				this.setPosition(new Point.Double(_location.getX() + x, _location.getY() + y));
+				super.move();
 			}
 			else
 			{
-				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / GameConstants.MAX_SPEED));
+				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / this.getMaximumSpeed()));
 				this.setSpeed(this.getSpeed()/2);
+				this.rotate(getTurnSpeed());
 			}
-			this.rotate(_turnSpeed);
 		}
 	}
 
@@ -278,10 +262,11 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		PlayerData d = new PlayerData(this);
 		if (_alive)
 		{
-			double x = d._speed * Math.sin(d.getDirection());
-			double y = d._speed * Math.cos(d.getDirection());
-			d.setPosition(new Point.Double(d._location.getX() + x, d._location.getY() + y));
-			d.rotate(d._turnSpeed);
+			double x = d.getSpeed() * Math.sin(d.getDirection());
+			double y = d.getSpeed() * Math.cos(d.getDirection());
+			d.setX(d.getX() + x);
+			d.setY(d.getY() + y);
+			d.rotate(getTurnSpeed());
 		}
 		return d;
 	}
@@ -300,15 +285,16 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	public void respawn()
 	{
 		int rand = GameConstants.PLAYER_SIZE / 2 + 1;
-		int x = rand + _random.nextInt(GameConstants.PLAYING_FIELD_WIDTH - rand);
-		int y = rand + _random.nextInt(GameConstants.PLAYING_FIELD_HEIGHT - rand);
-		_location = new Point.Double(x, y);
-		_speed = 0;
-		_direction = _random.nextDouble() * 2 * Math.PI;
+		int x = rand + _random.nextInt((int)MoveableEntity.MAX_X - rand);
+		int y = rand + _random.nextInt((int)MoveableEntity.MAX_Y - rand);
+		setX(x);
+		setY(y);
+		setSpeed(0);
+		setDirection(_random.nextDouble() * 2 * Math.PI);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_alive = true;
-		_turnSpeed = 0;
+		setTurnSpeed(0);
 	}
 
 	/**
@@ -319,12 +305,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 	 */
 	public void rotate(double angle)
 	{
-		setDirection(_direction + angle);
-	}
-
-	public void setDirection(double direction)
-	{
-		_direction = direction % (2 * Math.PI);
+		setDirection(getDirection() + angle);
 	}
 
 	public void setImageID(int id)
@@ -348,25 +329,6 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		_score = value;
 	}
 
-	public void setSpeed(double value)
-	{
-		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, value));
-	}
-
-	public void setTurnSpeed(double value)
-	{
-		_turnSpeed = value;
-		if (_turnSpeed > GameConstants.MAX_ANGULAR_SPEED)
-		{
-			_turnSpeed = GameConstants.MAX_ANGULAR_SPEED;
-		}
-		else if (_turnSpeed < -GameConstants.MAX_ANGULAR_SPEED)
-		{
-			_turnSpeed = -GameConstants.MAX_ANGULAR_SPEED;
-		}
-
-	}
-
 	public void shoot(boolean master)
 	{
 		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
@@ -375,7 +337,7 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 			_ammo -= neededAmmo;
 			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			Shot s = new Shot(this.positionAfter(time), _direction, master);
+			Shot s = new Shot(this.positionAfter(time), getDirection(), master);
 			this.getWorld().insert(s);
 			s.fire(this);
 		}
@@ -390,9 +352,9 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 		p.writeBoolean(local);
 		p.writeShort(_score);
 		p.writeBoolean(_alive);
-		p.writeDouble(_location.getX());
-		p.writeDouble(_location.getY());
-		p.writeDouble(_direction);
+		p.writeDouble(getX());
+		p.writeDouble(getY());
+		p.writeDouble(getDirection());
 		p.writeInt(_imageID);
 
 		int l = local ? 1 : 0;
@@ -422,58 +384,58 @@ public class PlayerData extends Entity implements Comparable<PlayerData>
 
 		if (_input.moveDirection() == 0)
 		{
-			this.accelerate(-GameConstants.ACCELERATION);
+			this.accelerate(-this.getAcceleration());
 		}
 		else
 		{
-			this.accelerate(GameConstants.ACCELERATION * _input.moveDirection());
+			this.accelerate(this.getAcceleration() * _input.moveDirection());
 		}
 
 		if (_input.turnDirection() == 0)
 		{
-			this.angularDecelerate(GameConstants.ANGULAR_ACCELERATION);
+			this.angularDecelerate(this.getAngularAcceleration());
 		}
 		else
 		{
-			this.angularAccelerate(GameConstants.ANGULAR_ACCELERATION * _input.turnDirection());
+			this.angularAccelerate(this.getAngularAcceleration() * _input.turnDirection());
 		}
 
 		this.reload();
 		this.move();
 	}
 
-	private double getSpeed()
-	{
-		return _speed;
-	}
-
 	private Point.Double positionAfter(double time)
 	{
-		double way = time * _speed;
-		return new Point.Double(_location.getX() + way * Math.sin(_direction), _location.getY()
-				+ way * Math.cos(_direction));
+		double way = time * getSpeed();
+		return new Point.Double(getX() + way * Math.sin(getDirection()), getY()
+				+ way * Math.cos(getDirection()));
 	}
 
-	/**
-	 * assigns a new value to the position
-	 * 
-	 * @param value
-	 *            new position
-	 */
-	private void setPosition(Point.Double value)
+//	/**
+//	 * assigns a new value to the position
+//	 * 
+//	 * @param value
+//	 *            new position
+//	 */
+//	private void setPosition(Point.Double value)
+//	{
+//		double x = value.getX();
+//		double y = value.getY();
+//
+//		if (x + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_WIDTH)
+//			x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE / 2;
+//		else if (x - GameConstants.PLAYER_SIZE / 2 < 0)
+//			x = GameConstants.PLAYER_SIZE / 2;
+//		if (y + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_HEIGHT)
+//			y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE / 2;
+//		else if (y - GameConstants.PLAYER_SIZE / 2 < 0)
+//			y = GameConstants.PLAYER_SIZE / 2;
+//
+//		_location = new Point.Double(x, y);
+//	}
+
+	public void angularAccelerate(double value)
 	{
-		double x = value.getX();
-		double y = value.getY();
-
-		if (x + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_WIDTH)
-			x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE / 2;
-		else if (x - GameConstants.PLAYER_SIZE / 2 < 0)
-			x = GameConstants.PLAYER_SIZE / 2;
-		if (y + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_HEIGHT)
-			y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE / 2;
-		else if (y - GameConstants.PLAYER_SIZE / 2 < 0)
-			y = GameConstants.PLAYER_SIZE / 2;
-
-		_location = new Point.Double(x, y);
+		setTurnSpeed(getTurnSpeed() + value);
 	}
 }
