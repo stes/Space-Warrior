@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data;
+package sw.shared.data.entities;
 
 import java.awt.Point;
 import java.util.Random;
@@ -24,14 +24,13 @@ import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
-import sw.shared.data.entities.MoveableEntity;
-import sw.shared.data.entities.Shot;
+import sw.shared.data.PlayerInput;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
+public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 {
 	private static Random _random = new Random();
 
@@ -46,7 +45,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 
 	private PlayerInput _input;
 	
-	private PlayerData(byte type)
+	private SpaceShip(byte type)
 	{
 		super(type);
 		// TODO improve?
@@ -55,7 +54,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		this.setMaximumSpeed(GameConstants.MAX_SPEED);
 	}
 	
-	public PlayerData(PlayerData dataset)
+	public SpaceShip(SpaceShip dataset)
 	{
 		this(Packettype.SNAP_PLAYERDATA);
 		_name = new String(dataset.getName());
@@ -76,7 +75,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 	/**
 	 * Creates a new Player Data record
 	 */
-	public PlayerData(String name)
+	public SpaceShip(String name)
 	{
 		this(name, GameConstants.Images.SHIP_3.getID());
 	}
@@ -84,7 +83,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 	/**
 	 * Creates a new Player Data record
 	 */
-	public PlayerData(String name, int imageID)
+	public SpaceShip(String name, int imageID)
 	{
 		this(Packettype.SNAP_PLAYERDATA);
 		_name = name;
@@ -106,11 +105,6 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		this.setSpeed(getSpeed() + value);
 	}
 
-//	public void angularAccelerate(double value)
-//	{
-//		setTurnSpeed(_turnSpeed + value);
-//	}
-
 	public void angularDecelerate(double value)
 	{
 		double dec = Math.abs(value);
@@ -129,7 +123,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 	}
 
 	@Override
-	public int compareTo(PlayerData player)
+	public int compareTo(SpaceShip player)
 	{
 		if (_score < player.getScore())
 			return -1;
@@ -148,11 +142,9 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 	{
 		_name = p.readUTF();
 		_local = p.readBoolean();
+		super.fromSnap(p);
 		_score = p.readShort();
 		_alive = p.readBoolean();
-		this.setX(p.readDouble());
-		this.setY(p.readDouble());
-		this.setDirection(p.readDouble());
 		this.setImageID(p.readInt());
 		_lifepoints = p.readShort();
 		_ammo = p.readShort();
@@ -203,7 +195,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		return _score;
 	}
 
-	public boolean intersects(PlayerData d)
+	public boolean intersects(SpaceShip d)
 	{
 		if (d == null || this.equals(d))
 			return false;
@@ -236,8 +228,8 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 	public void move()
 	{
 		boolean intersects = false;
-		PlayerData pred = this.predict();
-		for (PlayerData d : getWorld().getPlayers())
+		SpaceShip pred = this.predict();
+		for (SpaceShip d : getWorld().getPlayers())
 		{
 			if (!this.equals(d) && d.intersects(pred) && d.isAlive())
 				intersects = true;
@@ -257,9 +249,9 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		}
 	}
 
-	public PlayerData predict()
+	public SpaceShip predict()
 	{
-		PlayerData d = new PlayerData(this);
+		SpaceShip d = new SpaceShip(this);
 		if (_alive)
 		{
 			double x = d.getSpeed() * Math.sin(d.getDirection());
@@ -337,7 +329,7 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 			_ammo -= neededAmmo;
 			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			Shot s = new Shot(this.positionAfter(time), getDirection(), master);
+			LaserBeam s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), master);
 			this.getWorld().insert(s);
 			s.fire(this);
 		}
@@ -350,11 +342,9 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		p.writeByte(this.getType());
 		p.writeUTF(_name);
 		p.writeBoolean(local);
+		super.snap(p, name);
 		p.writeShort(_score);
 		p.writeBoolean(_alive);
-		p.writeDouble(getX());
-		p.writeDouble(getY());
-		p.writeDouble(getDirection());
 		p.writeInt(_imageID);
 
 		int l = local ? 1 : 0;
@@ -410,29 +400,6 @@ public class PlayerData extends MoveableEntity implements Comparable<PlayerData>
 		return new Point.Double(getX() + way * Math.sin(getDirection()), getY()
 				+ way * Math.cos(getDirection()));
 	}
-
-//	/**
-//	 * assigns a new value to the position
-//	 * 
-//	 * @param value
-//	 *            new position
-//	 */
-//	private void setPosition(Point.Double value)
-//	{
-//		double x = value.getX();
-//		double y = value.getY();
-//
-//		if (x + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_WIDTH)
-//			x = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE / 2;
-//		else if (x - GameConstants.PLAYER_SIZE / 2 < 0)
-//			x = GameConstants.PLAYER_SIZE / 2;
-//		if (y + GameConstants.PLAYER_SIZE / 2 > GameConstants.PLAYING_FIELD_HEIGHT)
-//			y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE / 2;
-//		else if (y - GameConstants.PLAYER_SIZE / 2 < 0)
-//			y = GameConstants.PLAYER_SIZE / 2;
-//
-//		_location = new Point.Double(x, y);
-//	}
 
 	public void angularAccelerate(double value)
 	{

@@ -42,8 +42,8 @@ import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.Entity;
-import sw.shared.data.PlayerData;
-import sw.shared.data.entities.Shot;
+import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.LaserBeam;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -146,7 +146,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	{
 		if (ent.getType() == Packettype.SNAP_PLAYERDATA)
 		{
-			PlayerData pl = (PlayerData) ent;
+			SpaceShip pl = (SpaceShip) ent;
 			if (!pl.isAlive())
 				return;
 
@@ -167,17 +167,17 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		}
 		else if (ent.getType() == Packettype.SNAP_SHOT)
 		{
-			Shot s = (Shot) ent;
+			LaserBeam s = (LaserBeam) ent;
 			g2d.setColor(Color.BLUE);
 			g2d.setStroke(new BasicStroke(3));
-			g2d.drawLine(_insets.left + (int) (s.startPoint().getX() * scaleX),
-					_insets.top+(int) (s.startPoint().getY() * scaleY),
-					(int) (s.endPoint().getX() * scaleX),
-					(int) (s.endPoint().getY() * scaleY));
+			g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
+					_insets.top+(int) (s.getY() * scaleY),
+					_insets.left +(int) (s.endPoint().getX() * scaleX),
+					_insets.top+(int) (s.endPoint().getY() * scaleY));
 		}
 	}
 
-	private void paintBars(Graphics2D g2d, PlayerData d)
+	private void paintBars(Graphics2D g2d, SpaceShip d)
 	{
 		g2d.setStroke(new BasicStroke(15));
 

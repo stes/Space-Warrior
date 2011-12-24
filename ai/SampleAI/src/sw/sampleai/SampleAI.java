@@ -6,8 +6,8 @@ import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
-import sw.shared.data.PlayerData;
-import sw.shared.data.entities.Shot;
+import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.LaserBeam;
 
 public class SampleAI extends AIPlayer
 {
@@ -61,13 +61,13 @@ public class SampleAI extends AIPlayer
 		{
 			_hold--;
 		}
-		Shot shot = new Shot(this.getDataSet().getPosition(), this.getDataSet().getDirection(), false);
-		Shot mshot = new Shot(this.getDataSet().getPosition(), this.getDataSet().getDirection(), true);
-		for (PlayerData d : this.getStateManager().getPlayerList()) 
+		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getPosition(), this.getDataSet().getDirection(), false);
+		LaserBeam mshot = new LaserBeam(this.getDataSet().getPosition(), this.getDataSet().getDirection(), true);
+		for (SpaceShip d : this.getStateManager().getPlayerList()) 
 		{
 			if (d.equals(this.getDataSet()))
 				continue;
-			if (shot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+			if (laserBeam.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
 			{
 				this.getCurrentState().setShot(1);
 			}

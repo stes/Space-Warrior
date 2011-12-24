@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import sw.shared.GameConstants;
-import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.SpaceShip;
 
 public class SimpleState
 {
 	private static Random _random = new Random(System.currentTimeMillis());
 
-	private PlayerData _localDataSet;
-	private PlayerData[] _playerList;
+	private SpaceShip _localDataSet;
+	private SpaceShip[] _playerList;
 	private double[] _features;
 	private double[] _weights;
 
 	public ArrayList<Byte> id;
 
-	public SimpleState(PlayerData localDataSet, PlayerData[] list)
+	public SimpleState(SpaceShip localDataSet, SpaceShip[] list)
 	{
 		_localDataSet = localDataSet;
 		_playerList = list.clone();
@@ -28,7 +28,7 @@ public class SimpleState
 	public int getHash()
 	{
 		ArrayList<Byte> buffer = new ArrayList<Byte>();
-		for (PlayerData d : _playerList)
+		for (SpaceShip d : _playerList)
 		{
 			buffer.add((byte) ((int)d.getDirection()));
 			buffer.add((byte) ((int)d.getPosition().x));
@@ -58,7 +58,7 @@ public class SimpleState
 		double minDist = Double.MAX_VALUE;
 		for (int i = 0; i < _playerList.length; i++)
 		{
-			PlayerData d = _playerList[i];
+			SpaceShip d = _playerList[i];
 			if (d != null && !d.equals(_localDataSet))
 			{
 				double dist = _localDataSet.getPosition().distance(d.getPosition());
@@ -92,8 +92,8 @@ public class SimpleState
 			return false;
 		for (int i = 0; i < _playerList.length; i++)
 		{
-			PlayerData d1 = _playerList[i];
-			PlayerData d2 = s._playerList[i];
+			SpaceShip d1 = _playerList[i];
+			SpaceShip d2 = s._playerList[i];
 			if (d1 != null && d2 != null && !d1.equals(d2))
 				return false;
 		}
@@ -102,7 +102,7 @@ public class SimpleState
 
 	public SimpleState successor(Actions a)
 	{		
-		PlayerData data = new PlayerData(_localDataSet);
+		SpaceShip data = new SpaceShip(_localDataSet);
 		PlayerInput input = RLAgent._self.applyAction(a);
 		if (data != null && data.isAlive())
 		{

@@ -24,7 +24,8 @@ import java.util.Vector;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
-import sw.shared.data.entities.Shot;
+import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.LaserBeam;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -55,9 +56,9 @@ public class GameWorld
 			// move this somewhere else?
 			byte type = p.readByte();
 			if (type == Packettype.SNAP_PLAYERDATA)
-				newEnt = new PlayerData("");
+				newEnt = new SpaceShip("");
 			else if (type == Packettype.SNAP_SHOT)
-				newEnt = new Shot(new Point.Double(0, 0), 0);
+				newEnt = new LaserBeam(0, 0, 0);
 			else
 				return;
 			newEnt.fromSnap(p);
@@ -83,9 +84,9 @@ public class GameWorld
 		return tmp.toArray(a);
 	}
 
-	public PlayerData[] getPlayers()
+	public SpaceShip[] getPlayers()
 	{
-		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new PlayerData[] {});
+		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new SpaceShip[] {});
 	}
 
 	public void insert(Entity e)

@@ -1,36 +1,44 @@
 package sw.shared.data.entities;
 
+import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Unpacker;
-import sw.shared.data.Entity;
 
-public class Projectile extends Entity
+public class Projectile extends MoveableEntity
 {
-
+	private double _damage;
+	
 	public Projectile(byte type)
 	{
 		super(type);
+		
+		this.setAcceleration(GameConstants.ACCELERATION);
+		this.setAngularAcceleration(0);
+		this.setMaximumSpeed(GameConstants.MAX_SPEED * 2);
 	}
 
 	@Override
 	public void fromSnap(Unpacker p)
 	{
-		// TODO Auto-generated method stub
-		
+		super.fromSnap(p);
+		this.setDamage(p.readDouble());
 	}
 
 	@Override
 	public void snap(Packer p, String name)
 	{
-		// TODO Auto-generated method stub
+		super.snap(p, name);
+		p.writeDouble(getDamage());
 		
 	}
 
-	@Override
-	public void tick()
+	public void setDamage(double damage)
 	{
-		// TODO Auto-generated method stub
-		
+		this._damage = damage;
 	}
 
+	public double getDamage()
+	{
+		return _damage;
+	}
 }

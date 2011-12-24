@@ -30,9 +30,9 @@ import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.ServerInfo;
+import sw.shared.data.entities.SpaceShip;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -51,7 +51,7 @@ public class GameController implements ClientListener, IGameStateManager
 
 	private GameWorld _world;
 	private IClient _client;
-	private PlayerData[] _players;
+	private SpaceShip[] _players;
 	private Player _localPlayer;
 
 	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
@@ -66,7 +66,7 @@ public class GameController implements ClientListener, IGameStateManager
 		_world = new GameWorld();
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
-		_players = new PlayerData[0];
+		_players = new SpaceShip[0];
 		_localPlayer = new HumanPlayer(this);
 	}
 
@@ -117,7 +117,7 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public PlayerData[] getPlayerList()
+	public SpaceShip[] getPlayerList()
 	{
 		return _players;
 	}
@@ -167,7 +167,7 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		_world.fromSnap(snapshot);
 		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
-		for (PlayerData pl : _players)
+		for (SpaceShip pl : _players)
 		{
 			if (pl.isLocal())
 				_localPlayer.setDataSet(pl);

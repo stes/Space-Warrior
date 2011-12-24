@@ -19,8 +19,8 @@ package sw.client.gcontrol;
 
 import sw.client.player.Player;
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.SpaceShip;
 
 public interface IGameStateManager
 {
@@ -29,7 +29,7 @@ public interface IGameStateManager
 	 */
 	public GameWorld getGameWorld();
 
-	public PlayerData[] getPlayerList();
+	public SpaceShip[] getPlayerList();
 
 	public Player getLocalPlayer();
 

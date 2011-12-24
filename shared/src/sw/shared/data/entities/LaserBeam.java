@@ -24,8 +24,6 @@ import sw.shared.GameConstants;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
-import sw.shared.data.Entity;
-import sw.shared.data.PlayerData;
 
 /**
  * data structure to represent a shot
@@ -33,43 +31,34 @@ import sw.shared.data.PlayerData;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class Shot extends Entity
+public class LaserBeam extends StaticEntity
 {
-	private Line2D.Double _line;
 	private boolean _isMaster;
-	private double _direction;
 	private int _lifetime;
 
-	/**
-	 * creates a new shot
-	 * 
-	 * @param startpoint
-	 *            startpoint of the shot
-	 * @param direction
-	 *            direction of the shot
-	 */
-	public Shot(Point.Double startPoint, double direction)
+	public LaserBeam(double x, double y, double direction)
 	{
-		this(startPoint, direction, false);
+		this(x, y, direction, false);
 	}
 
-	/**
-	 * creates a new shot
-	 * 
-	 * @param startpoint
-	 *            startpoint of the shot
-	 * @param direction
-	 *            direction of the shot
-	 * @param master
-	 *            true, if a mastershot is given
-	 */
-	public Shot(Point.Double startPoint, double direction, boolean master)
+	public LaserBeam(double x, double y, double direction, boolean master)
 	{
 		super(Packettype.SNAP_SHOT);
-		_line = new Line2D.Double(startPoint, new Point.Double(0, 0));
+		// _line = new Line2D.Double(startPoint, new Point.Double(0, 0));
 		_isMaster = master;
 		setDirection(direction);
+		setX(x);
+		setY(y);
 		_lifetime = GameConstants.SHOT_TTL; // not nice but enough for now
+	}
+
+	public Line2D.Double getLine()
+	{
+		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
+		return new Line2D.Double(getX(),
+				getY(),
+				getX() + range * Math.sin(getDirection()),
+				(getY() + range * Math.cos(getDirection())));
 	}
 
 	/**
@@ -80,7 +69,7 @@ public class Shot extends Entity
 	 */
 	public double distanceTo(Point.Double p)
 	{
-		return _line.ptLineDist(p.getX(), p.getY());
+		return getLine().ptLineDist(p.getX(), p.getY());
 	}
 
 	/**
@@ -88,13 +77,14 @@ public class Shot extends Entity
 	 */
 	public Point.Double endPoint()
 	{
-		return new Point.Double(_line.getX2(), _line.getY2());
+		Line2D l = getLine();
+		return new Point.Double(l.getX2(), l.getY2());
 	}
 
-	public void fire(PlayerData attacker)
+	public void fire(SpaceShip attacker)
 	{
-		PlayerData[] players = this.getWorld().getPlayers();
-		for (PlayerData pl : players)
+		SpaceShip[] players = this.getWorld().getPlayers();
+		for (SpaceShip pl : players)
 		{
 			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
 					&& this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
@@ -109,10 +99,8 @@ public class Shot extends Entity
 	@Override
 	public void fromSnap(Unpacker p)
 	{
-		_line = new Line2D.Double(new Point.Double(p.readDouble(), p.readDouble()),
-				new Point.Double(0, 0));
+		super.fromSnap(p);
 		_isMaster = p.readBoolean();
-		setDirection(p.readDouble());
 	}
 
 	/**
@@ -124,14 +112,6 @@ public class Shot extends Entity
 	}
 
 	/**
-	 * @return the direction in degrees
-	 */
-	public double getDirection()
-	{
-		return _direction;
-	}
-
-	/**
 	 * @return true, if there is a master shot
 	 */
 	public boolean isMaster()
@@ -139,37 +119,12 @@ public class Shot extends Entity
 		return _isMaster;
 	}
 
-	/**
-	 * assigns a new direction to the shot
-	 * 
-	 * @param direction
-	 *            new direction in degrees
-	 */
-	public void setDirection(double direction)
-	{
-		_direction = direction;
-		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-		_line.setLine(startPoint(),
-				new Point.Double((startPoint().getX() + range * Math.sin(direction)),
-						(startPoint().getY() + range * Math.cos(direction))));
-	}
-
 	@Override
 	public void snap(Packer p, String name)
 	{
 		p.writeByte(this.getType());
-		p.writeDouble(startPoint().getX());
-		p.writeDouble(startPoint().getY());
+		super.snap(p, name);
 		p.writeBoolean(this.isMaster());
-		p.writeDouble(this.getDirection());
-	}
-
-	/**
-	 * @return the startpoint
-	 */
-	public Point.Double startPoint()
-	{
-		return new Point.Double(_line.getX1(), _line.getY1());
 	}
 
 	@Override

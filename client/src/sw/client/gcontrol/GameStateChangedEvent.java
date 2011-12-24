@@ -3,7 +3,7 @@ package sw.client.gcontrol;
 import java.util.EventObject;
 
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerData;
+import sw.shared.data.entities.SpaceShip;
 
 /**
  * @author Redix stes Abbadonn
@@ -13,10 +13,10 @@ public class GameStateChangedEvent extends EventObject
 {
 	private static final long serialVersionUID = -6781713802525662904L;
 
-	private PlayerData _localDataSet;
+	private SpaceShip _localDataSet;
 	private GameWorld _world;
-	private PlayerData _winner;
-	private PlayerData _loser;
+	private SpaceShip _winner;
+	private SpaceShip _loser;
 
 	public GameStateChangedEvent(Object source)
 	{
@@ -26,7 +26,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _localDataSet
 	 */
-	public PlayerData getLocalDataSet()
+	public SpaceShip getLocalDataSet()
 	{
 		return _localDataSet;
 	}
@@ -35,7 +35,7 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _localDataSet
 	 *            the _localDataSet to set
 	 */
-	public void setLocalDataSet(PlayerData localDataSet)
+	public void setLocalDataSet(SpaceShip localDataSet)
 	{
 		this._localDataSet = localDataSet;
 	}
@@ -60,7 +60,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _winner
 	 */
-	public PlayerData getWinner()
+	public SpaceShip getWinner()
 	{
 		return _winner;
 	}
@@ -69,7 +69,7 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _winner
 	 *            the _winner to set
 	 */
-	public void setWinner(PlayerData winner)
+	public void setWinner(SpaceShip winner)
 	{
 		_winner = winner;
 	}
@@ -77,7 +77,7 @@ public class GameStateChangedEvent extends EventObject
 	/**
 	 * @return the _loser
 	 */
-	public PlayerData getLoser()
+	public SpaceShip getLoser()
 	{
 		return _loser;
 	}
@@ -86,7 +86,7 @@ public class GameStateChangedEvent extends EventObject
 	 * @param _loser
 	 *            the _loser to set
 	 */
-	public void setLoser(PlayerData loser)
+	public void setLoser(SpaceShip loser)
 	{
 		_loser = loser;
 	}

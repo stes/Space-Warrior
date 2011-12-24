@@ -20,27 +20,19 @@ package sw.shared.data.entities;
 import java.awt.Point;
 
 import sw.shared.GameConstants;
-import sw.shared.data.Entity;
 
-public abstract class MoveableEntity extends Entity
-{
-	public static final double MIN_X = GameConstants.PLAYER_SIZE / 2;
-	public static final double MIN_Y = GameConstants.PLAYER_SIZE / 2;
-	
-	
-	public static final double MAX_X = GameConstants.PLAYING_FIELD_WIDTH - GameConstants.PLAYER_SIZE / 2;
-	public static final double MAX_Y = GameConstants.PLAYING_FIELD_HEIGHT - GameConstants.PLAYER_SIZE / 2;
-	
+/**
+ * A moveable entity
+ * @author Redix stes Abbadonn
+ * @version 24.12.11
+ */
+public abstract class MoveableEntity extends StaticEntity
+{	
 	public static final double MAX_SPEED = GameConstants.MAX_SPEED;
 	public static final double MAX_TURN_SPEED = GameConstants.MAX_ANGULAR_SPEED;
 	
 	public static final double ACCELERATION = GameConstants.ACCELERATION;
 	public static final double ANGULAR_ACCELERATION = GameConstants.ANGULAR_ACCELERATION;
-	
-	// state variables
-	private double _x;
-	private double _y;
-	private double _direction;
 	
 	// movements
 	private double _speed;
@@ -57,36 +49,6 @@ public abstract class MoveableEntity extends Entity
 	{
 		super(type);
 	}	
-	
-	public double getX()
-	{
-		return _x;
-	}
-	
-	public void setX(double x)
-	{
-		_x = Math.max(Math.min(x, MoveableEntity.MAX_X), MoveableEntity.MIN_X);
-	}
-	
-	public double getY()
-	{
-		return _y;
-	}
-	
-	public void setY(double y)
-	{
-		_y = Math.max(Math.min(y, MoveableEntity.MAX_Y), MoveableEntity.MIN_Y);
-	}
-	
-	public void setDirection(double direction)
-	{
-		_direction = direction % (2 * Math.PI);
-	}
-
-	public double getDirection()
-	{
-		return _direction;
-	}
 	
 	public void setSpeed(double speed)
 	{
@@ -165,9 +127,9 @@ public abstract class MoveableEntity extends Entity
 	{
 		double x = _speed * Math.sin(getDirection());
 		double y = _speed * Math.cos(getDirection());
-		this.setX(_x + x);
-		this.setY(_y + y);
-		this.setDirection(_direction + _turnSpeed);
+		this.setX(getX() + x);
+		this.setY(getY() + y);
+		this.setDirection(getDirection() + _turnSpeed);
 	}
 	
 	/**

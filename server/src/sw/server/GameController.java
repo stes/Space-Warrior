@@ -22,8 +22,8 @@ import java.util.HashMap;
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.SpaceShip;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -33,7 +33,7 @@ import sw.shared.data.PlayerInput;
 public class GameController
 {
 	private GameWorld _world;
-	private HashMap<String, PlayerData> _players;
+	private HashMap<String, SpaceShip> _players;
 	private IServer _server;
 
 	/**
@@ -45,7 +45,7 @@ public class GameController
 	public GameController(IServer server)
 	{
 		_world = new GameWorld();
-		_players = new HashMap<String, PlayerData>();
+		_players = new HashMap<String, SpaceShip>();
 		_server = server;
 	}
 
@@ -58,7 +58,7 @@ public class GameController
 	 */
 	public void playerConnected(String name, int imageID)
 	{
-		PlayerData newPl = new PlayerData(name, imageID);
+		SpaceShip newPl = new SpaceShip(name, imageID);
 		_players.put(name, newPl);
 		_world.insert(newPl);
 	}
@@ -68,7 +68,7 @@ public class GameController
 	 */
 	public void broadcastSnapshots()
 	{
-		for (PlayerData pl : _players.values())
+		for (SpaceShip pl : _players.values())
 		{
 			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
 			_world.snap(snapshot, pl.getName());
@@ -106,7 +106,7 @@ public class GameController
 	 */
 	public void startGame()
 	{
-		for (PlayerData pl : _players.values())
+		for (SpaceShip pl : _players.values())
 		{
 			pl.respawn();
 		}
@@ -126,7 +126,7 @@ public class GameController
 	private void checkTurn()
 	{
 		int alive = 0;
-		for (PlayerData pl : _players.values())
+		for (SpaceShip pl : _players.values())
 		{
 			if (pl.isAlive())
 				alive++;
@@ -136,7 +136,7 @@ public class GameController
 		{
 			if (alive == 1)
 			{
-				for (PlayerData pl : _players.values())
+				for (SpaceShip pl : _players.values())
 				{
 					Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
 					info.writeUTF("Server");

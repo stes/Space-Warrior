@@ -19,8 +19,8 @@ package sw.client.player;
 
 import sw.client.gcontrol.IGameStateManager;
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerData;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.SpaceShip;
 
 /**
  * An abstract player which manages the local player data and supplies the
@@ -33,7 +33,7 @@ public abstract class Player
 {
 	private PlayerInput _currentState;
 	private PlayerInput _oldState;
-	private PlayerData _dataSet;
+	private SpaceShip _dataSet;
 
 	private IGameStateManager _stateManager;
 
@@ -49,7 +49,7 @@ public abstract class Player
 		_stateManager = gameStateManager;
 		_currentState = new PlayerInput();
 		_oldState = new PlayerInput();
-		_dataSet = new PlayerData("");
+		_dataSet = new SpaceShip("");
 	}
 
 	protected void sendInput()
@@ -102,7 +102,7 @@ public abstract class Player
 	/**
 	 * @return the player data set
 	 */
-	public PlayerData getDataSet()
+	public SpaceShip getDataSet()
 	{
 		return _dataSet;
 	}
@@ -121,7 +121,7 @@ public abstract class Player
 	 * @param data
 	 *            the new player data set
 	 */
-	public void setDataSet(PlayerData data)
+	public void setDataSet(SpaceShip data)
 	{
 		this._dataSet = data;
 	}
