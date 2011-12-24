@@ -107,13 +107,9 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		this.setBackground(Color.BLACK);
 	}
 
-	public void paintComponent(Graphics g)
-	{
-	}
+	public void paintComponent(Graphics g){}
 
-	public void paintComponents(Graphics g)
-	{
-	}
+	public void paintComponents(Graphics g){}
 
 	public void render(Graphics g)
 	{

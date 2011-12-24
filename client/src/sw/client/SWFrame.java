@@ -51,6 +51,9 @@ import sw.shared.data.ServerInfo;
  */
 public class SWFrame extends JFrame implements ClientListener, ConnectionListener
 {
+	// change to limit fps in order to minimize cpu usage
+	public final int SLEEP_TIME = 5;
+	
 	private enum GUIMode
 	{
 		LOGIN, GAME
@@ -68,7 +71,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
 	private int _fps;
-	private BufferedImage _drawing;
 	private Insets _insets;
 
 	/**
@@ -168,14 +170,11 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		int frames = 0;
 		_fps = 0;
 
-		_drawing = (BufferedImage) this.createImage(getWidth(), getHeight());
-
 		while (_isRunning)
 		{
-			// relating to updating animations and calculating FPS
+			// fps
 			long elapsedTime = System.nanoTime() - oldTime;
-			oldTime = oldTime + elapsedTime; // update for the next loop
-												// iteration
+			oldTime = oldTime + elapsedTime;
 			nanoseconds = nanoseconds + elapsedTime;
 			frames = frames + 1;
 			if (nanoseconds >= 1000000000)
@@ -189,7 +188,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			try
 			{
 				g = (Graphics2D) _bufferStrategy.getDrawGraphics();
-				draw(g); // enter the method to draw everything
+				render(g);
 			}
 			finally
 			{
@@ -199,29 +198,26 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			{
 				_bufferStrategy.show();
 			}
-			Toolkit.getDefaultToolkit().sync(); // prevents possible event queue
-												// problems in Linux
-			try
+			Toolkit.getDefaultToolkit().sync();
+			if (this.SLEEP_TIME > 0)
 			{
-				Thread.sleep(10);
-			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
+				try
+				{
+					Thread.sleep(this.SLEEP_TIME);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
-	private void draw(Graphics2D g2d)
+	private void render(Graphics2D g2d)
 	{
-		//Graphics2D g2d = _drawing.createGraphics();
-		g2d.setColor(Color.WHITE);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		// draw over it to create a blank background again, (or you could draw
-		// a background image if you had one
-		g2d.fillRect(0, 0, _drawing.getWidth(), _drawing.getHeight());
 
 		if (_activePanel.equals(_gamePanel))
 		{
@@ -231,20 +227,8 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		{
 			_loginPanel.render(g2d);
 		}
-		
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("FPS: " + _fps, 0, 100+g2d.getFont().getSize());
-		//getLayeredPane().paintComponents(g2d); // paint our Swing components
-		// NOTE: make sure you do paint your own graphics first
-
-		// show fps
-		//g2d.setColor(Color.WHITE);
-		// drawingBoard.drawString("FPS: " + _fps, 100, 100);
-
-		// now draw the drawing board to correct area of the JFrame's buffer
-		//g.drawImage(_drawing, _insets.left, 30, null);
-
-		//g2d.dispose();
 	}
 
 	@Override
@@ -256,7 +240,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
-
 		Packer start = new Packer(Packettype.CL_START_INFO);
 		start.writeUTF(_loginPanel.getName());
 		start.writeInt(_loginPanel.getImageID());
@@ -288,11 +271,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 
 	@Override
 	public void snapshot(Unpacker packet)
-	{
-		// this.repaint();
-	}
-
-	public void tick()
 	{
 	}
 
