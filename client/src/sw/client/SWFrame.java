@@ -217,13 +217,15 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+		
 		if (_activePanel.equals(_gamePanel))
 		{
 			_gamePanel.render(g2d);
 		}
 		else if (_activePanel.equals(_loginPanel))
 		{
+			g2d.setColor(Color.WHITE);
+			g2d.fillRect(0, 0, getWidth(), getHeight());
 			_loginPanel.render(g2d);
 		}
 		g2d.setColor(Color.WHITE);
@@ -284,7 +286,9 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	private void setGUIMode(GUIMode mode)
 	{
 		if (_activePanel != null)
+		{
 			this.remove(_activePanel);
+		}
 		if (mode == GUIMode.LOGIN)
 		{
 			_activePanel = _loginPanel;
@@ -296,7 +300,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.add(_activePanel);
 		System.out.println("switch mode");
 		this.setVisible(true);
-		this.repaint();
 	}
 
 	class UnRepaintManager extends RepaintManager

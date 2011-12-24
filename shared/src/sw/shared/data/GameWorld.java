@@ -17,15 +17,14 @@
  ******************************************************************************/
 package sw.shared.data;
 
-import java.awt.Point;
 import java.util.Iterator;
 import java.util.Vector;
 
 import sw.shared.Packer;
 import sw.shared.Packettype;
 import sw.shared.Unpacker;
-import sw.shared.data.entities.SpaceShip;
 import sw.shared.data.entities.LaserBeam;
+import sw.shared.data.entities.SpaceShip;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -53,7 +52,7 @@ public class GameWorld
 		for (int i = 0; i < size; i++)
 		{
 			Entity newEnt;
-			// move this somewhere else?
+			// TODO move this somewhere else?
 			byte type = p.readByte();
 			if (type == Packettype.SNAP_PLAYERDATA)
 				newEnt = new SpaceShip("");
