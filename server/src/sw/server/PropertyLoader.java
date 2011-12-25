@@ -50,7 +50,9 @@ public class PropertyLoader
 		try
 		{
 			if (!_propertiesFile.exists())
+			{
 				this.init();
+			}
 			this.load();
 		}
 		catch (IOException e)

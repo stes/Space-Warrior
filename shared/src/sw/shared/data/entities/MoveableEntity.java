@@ -23,41 +23,67 @@ import sw.shared.GameConstants;
 
 /**
  * A moveable entity
+ * 
  * @author Redix stes Abbadonn
  * @version 24.12.11
  */
 public abstract class MoveableEntity extends StaticEntity
-{	
-	//public static final double MAX_SPEED = GameConstants.MAX_SPEED;
+{
+	// public static final double MAX_SPEED = GameConstants.MAX_SPEED;
 	public static final double MAX_TURN_SPEED = GameConstants.MAX_ANGULAR_SPEED;
-	
+
 	public static final double ACCELERATION = GameConstants.ACCELERATION;
 	public static final double ANGULAR_ACCELERATION = GameConstants.ANGULAR_ACCELERATION;
-	
+
 	// movements
 	private double _speed;
 	private double _turnSpeed;
-	
+
 	// acceleration variables
 	private double _acceleration;
 	private double _adirection;
-	
+
 	// maximums
 	private double _maxSpeed;
-	
+
 	public MoveableEntity(byte type)
 	{
 		this(type, 0, 0, 0);
-	}	
-	
+	}
+
 	public MoveableEntity(byte i, double x, double y, double direction)
 	{
 		super(i, x, y, direction);
 	}
 
-	public void setSpeed(double speed)
+	/**
+	 * accelerates the entity based on the accelerate values
+	 */
+	public void accelerate()
 	{
-		_speed = Math.max(0, Math.min(this.getMaximumSpeed(), speed));
+		this.setSpeed(_speed + _acceleration);
+		this.setTurnSpeed(_turnSpeed + _adirection);
+	}
+
+	public double getAcceleration()
+	{
+		return _acceleration;
+	}
+
+	public double getAngularAcceleration()
+	{
+		return _adirection;
+	}
+
+	public double getMaximumSpeed()
+	{
+		return _maxSpeed;
+	}
+
+	@Override
+	public Point.Double getPosition()
+	{
+		return new Point.Double(this.getX(), this.getY());
 	}
 
 	public double getSpeed()
@@ -65,16 +91,43 @@ public abstract class MoveableEntity extends StaticEntity
 		return _speed;
 	}
 
+	public double getTurnSpeed()
+	{
+		return _turnSpeed;
+	}
+
+	/**
+	 * moves the entity based on the speed values
+	 */
+	public void move()
+	{
+		double x = _speed * Math.sin(this.getDirection());
+		double y = _speed * Math.cos(this.getDirection());
+		this.setX(this.getX() + x);
+		this.setY(this.getY() + y);
+		this.setDirection(this.getDirection() + _turnSpeed);
+	}
+
+	public void setAcceleration(double acceleration)
+	{
+		this._acceleration = Math.min(acceleration, MoveableEntity.ACCELERATION);
+	}
+
+	public void setAngularAcceleration(double angularAcceleration)
+	{
+		this._adirection = Math.min(angularAcceleration, MoveableEntity.ANGULAR_ACCELERATION);
+	}
+
 	public void setMaximumSpeed(double speed)
 	{
 		_maxSpeed = speed;
 	}
-	
-	public double getMaximumSpeed()
+
+	public void setSpeed(double speed)
 	{
-		return _maxSpeed;
+		_speed = Math.max(0, Math.min(this.getMaximumSpeed(), speed));
 	}
-	
+
 	public void setTurnSpeed(double turnSpeed)
 	{
 		_turnSpeed = turnSpeed;
@@ -88,61 +141,10 @@ public abstract class MoveableEntity extends StaticEntity
 		}
 	}
 
-	public double getTurnSpeed()
-	{
-		return _turnSpeed;
-	}
-	
-	public void setAcceleration(double acceleration)
-	{
-		this._acceleration = Math.min(acceleration, MoveableEntity.ACCELERATION);
-	}
-
-	public double getAcceleration()
-	{
-		return _acceleration;
-	}
-
-	public void setAngularAcceleration(double angularAcceleration)
-	{
-		this._adirection = Math.min(angularAcceleration, MoveableEntity.ANGULAR_ACCELERATION);
-	}
-
-	public double getAngularAcceleration()
-	{
-		return _adirection;
-	}
-	
-	public Point.Double getPosition()
-	{
-		return new Point.Double(getX(), getY());
-	}
-	
 	@Override
 	public void tick()
 	{
 		this.accelerate();
 		this.move();
-	}
-
-	/**
-	 * moves the entity based on the speed values
-	 */
-	public void move()
-	{
-		double x = _speed * Math.sin(getDirection());
-		double y = _speed * Math.cos(getDirection());
-		this.setX(getX() + x);
-		this.setY(getY() + y);
-		this.setDirection(getDirection() + _turnSpeed);
-	}
-	
-	/**
-	 * accelerates the entity based on the accelerate values
-	 */
-	public void accelerate()
-	{
-		this.setSpeed(_speed + _acceleration);
-		this.setTurnSpeed(_turnSpeed + _adirection);
 	}
 }

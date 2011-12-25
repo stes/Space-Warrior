@@ -20,7 +20,7 @@ package sw.client.gcontrol;
 import java.util.EventObject;
 
 import sw.shared.data.GameWorld;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 
 /**
  * @author Redix stes Abbadonn

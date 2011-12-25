@@ -22,7 +22,7 @@ import java.util.HashMap;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 
 /**
@@ -50,6 +50,19 @@ public class GameController
 	}
 
 	/**
+	 * Sends a snapshot to every player
+	 */
+	public void broadcastSnapshots()
+	{
+		for (SpaceShip pl : _players.values())
+		{
+			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
+			_world.snap(snapshot, pl.getName());
+			_server.sendPacket(pl.getName(), snapshot);
+		}
+	}
+
+	/**
 	 * A new player joined the game
 	 * 
 	 * @param name
@@ -61,19 +74,6 @@ public class GameController
 		SpaceShip newPl = new SpaceShip(name, imageID);
 		_players.put(name, newPl);
 		_world.insert(newPl);
-	}
-
-	/**
-	 * Sends a snapshot to every player
-	 */
-	public void broadcastSnapshots()
-	{
-		for (SpaceShip pl : _players.values())
-		{
-			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
-			_world.snap(snapshot, pl.getName());
-			_server.sendPacket(pl.getName(), snapshot);
-		}
 	}
 
 	/**
@@ -129,7 +129,9 @@ public class GameController
 		for (SpaceShip pl : _players.values())
 		{
 			if (pl.isAlive())
+			{
 				alive++;
+			}
 		}
 
 		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() == 1))

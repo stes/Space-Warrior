@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.shots;
 
 import java.awt.Point;
 import java.awt.geom.Line2D;
 
 import sw.shared.GameConstants;
+import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -38,24 +40,15 @@ public class LaserBeam extends ShotEntity
 
 	public LaserBeam(double x, double y, double direction, SpaceShip owner)
 	{
-		this(x, y, direction,owner, false);
+		this(x, y, direction, owner, false);
 	}
 
 	public LaserBeam(double x, double y, double direction, SpaceShip owner, boolean master)
 	{
-		super(x, y, direction, owner, master ? ShotEntity.MASTER_LASER : ShotEntity.LASER);
+		super(x, y, direction, owner, master ? IShot.MASTER_LASER : IShot.LASER);
 		_isMaster = master;
 		_owner = owner;
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
-	}
-
-	public Line2D.Double getLine()
-	{
-		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-		return new Line2D.Double(getX(),
-				getY(),
-				getX() + range * Math.sin(getDirection()),
-				(getY() + range * Math.cos(getDirection())));
 	}
 
 	/**
@@ -67,13 +60,13 @@ public class LaserBeam extends ShotEntity
 	@Override
 	public double distanceTo(Point.Double p)
 	{
-		return getLine().ptLineDist(p.getX(), p.getY());
+		return this.getLine().ptLineDist(p.getX(), p.getY());
 	}
-	
+
 	@Override
 	public double distanceTo(StaticEntity entity)
 	{
-		return distanceTo(entity.getPosition());
+		return this.distanceTo(entity.getPosition());
 	}
 
 	/**
@@ -81,7 +74,7 @@ public class LaserBeam extends ShotEntity
 	 */
 	public Point.Double endPoint()
 	{
-		Line2D l = getLine();
+		Line2D l = this.getLine();
 		return new Point.Double(l.getX2(), l.getY2());
 	}
 
@@ -95,9 +88,24 @@ public class LaserBeam extends ShotEntity
 	/**
 	 * @return the damage from the shot
 	 */
+	@Override
 	public double getDamage()
 	{
 		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
+	}
+
+	public Line2D.Double getLine()
+	{
+		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
+		return new Line2D.Double(this.getX(), this.getY(), this.getX() + range
+				* Math.sin(this.getDirection()), (this.getY() + range
+				* Math.cos(this.getDirection())));
+	}
+
+	@Override
+	public SpaceShip getOwner()
+	{
+		return _owner;
 	}
 
 	/**
@@ -120,12 +128,8 @@ public class LaserBeam extends ShotEntity
 	{
 		_lifetime--;
 		if (_lifetime <= 0)
+		{
 			this.destroy();
-	}
-
-	@Override
-	public SpaceShip getOwner()
-	{
-		return _owner;
+		}
 	}
 }

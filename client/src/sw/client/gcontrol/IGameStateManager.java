@@ -20,7 +20,7 @@ package sw.client.gcontrol;
 import sw.client.player.Player;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 
 public interface IGameStateManager
 {

@@ -28,8 +28,7 @@ public final class GameConstants
 	// Images
 	public static enum Images
 	{
-		SHIP_1(0x11), SHIP_2(0x12), BACKGROUND(0x00), SHIP_3(0x13), SHIP_4(0x14),
-		SHOT_ROCKET(0x21);
+		SHIP_1(0x11), SHIP_2(0x12), BACKGROUND(0x00), SHIP_3(0x13), SHIP_4(0x14), SHOT_ROCKET(0x21);
 
 		public static Images max()
 		{
@@ -82,12 +81,16 @@ public final class GameConstants
 	// Gameplay
 	public final static int TICKS_PER_SECOND = 40;
 
-	public final static int TICK_INTERVAL = 1000 / TICKS_PER_SECOND;
+	// Players
+	public final static int PLAYER_SIZE = 64;
+	public final static int ROCKET_SIZE = 40;
+
+	public final static int TICK_INTERVAL = 1000 / GameConstants.TICKS_PER_SECOND;
 	// Maximum values
 	public final static int MAX_LIVES = 100;
 	public final static int MAX_AMMO = 200;
 	public final static int MAX_SPEED = 16;
-	public final static int MAX_MOVEMENT = MAX_SPEED * TICK_INTERVAL;
+	public final static int MAX_MOVEMENT = GameConstants.MAX_SPEED * GameConstants.TICK_INTERVAL;
 	public final static int MAX_RANGE = 200;
 	public final static int MAX_MASTER_RANGE = 500;
 	public final static int MAX_PLAYERS = 6;
@@ -96,21 +99,20 @@ public final class GameConstants
 	public final static int MAX_COLLISION_DAMAGE = 5;
 	public final static int MAX_SHOT_INTERVAL = 200;
 	public final static double MAX_ANGULAR_SPEED = Math.PI / 20;
+	public final static int MAX_HITRANGE = GameConstants.PLAYER_SIZE / 2;
 
-	public final static double ANGULAR_ACCELERATION = 0.0005 * TICK_INTERVAL;
+	public final static double ANGULAR_ACCELERATION = 0.0005 * GameConstants.TICK_INTERVAL;
 	// Shooting
 	public final static int AMMO_PER_SHOT = 20;
 
 	public final static int AMMO_PER_MASTER_SHOT = 100;
 	// Movements
-	public final static double ACCELERATION = 0.01 * TICK_INTERVAL;
+	public final static double ACCELERATION = 0.01 * GameConstants.TICK_INTERVAL;
 
-	public final static double DECELERATION = -0.01 * TICK_INTERVAL;
+	public final static double DECELERATION = -0.01 * GameConstants.TICK_INTERVAL;
 	// public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
-	// Players
-	public final static int PLAYER_SIZE = 64;
 
-	public final static int MAX_COLLISION_DAMAGE_RANGE = PLAYER_SIZE;
+	public final static int MAX_COLLISION_DAMAGE_RANGE = GameConstants.PLAYER_SIZE;
 
 	// Playing field
 	public final static int PLAYING_FIELD_WIDTH = 1400;

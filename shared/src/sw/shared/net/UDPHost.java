@@ -139,7 +139,7 @@ public class UDPHost extends Thread
 	{
 		try
 		{
-			byte[] buffer = new byte[MAX_PACKET_LENGTH];
+			byte[] buffer = new byte[UDPHost.MAX_PACKET_LENGTH];
 			DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
 			while (true)
@@ -147,7 +147,7 @@ public class UDPHost extends Thread
 				_socket.receive(packet);
 				byte flag = buffer[0];
 				byte[] data = java.util.Arrays.copyOfRange(buffer,
-						PACKET_HEADER_LENGTH,
+						UDPHost.PACKET_HEADER_LENGTH,
 						packet.getLength());
 				this.messageReceived((InetSocketAddress) packet.getSocketAddress(),
 						flag,
@@ -182,24 +182,32 @@ public class UDPHost extends Thread
 	protected void invokeConnected(UDPConnection con)
 	{
 		for (NetworkListener l : _networkListener)
+		{
 			l.connected(con);
+		}
 	}
 
 	protected void invokeDisconnected(UDPConnection con, String reason)
 	{
 		for (NetworkListener l : _networkListener)
+		{
 			l.disconnected(con, reason);
+		}
 		for (int i = 0; i < _connections.length; i++)
 		{
 			if (_connections[i] != null && _connections[i].equals(con))
+			{
 				_connections[i] = null;
+			}
 		}
 	}
 
 	protected void invokeReceivedMessage(UDPConnection con, byte[] data, int len)
 	{
 		for (NetworkListener l : _networkListener)
+		{
 			l.receivedMessage(con, data, len);
+		}
 	}
 
 	protected void send(InetSocketAddress addr, byte[] data, int len)
@@ -212,7 +220,9 @@ public class UDPHost extends Thread
 		byte[] buf = new byte[1 + len];
 		buf[0] = msg;
 		if (len > 0)
+		{
 			System.arraycopy(data, 0, buf, 1, len);
+		}
 		this.send(addr, UDPConnection.FLAG_CONTROL, buf, buf.length);
 	}
 
@@ -235,7 +245,9 @@ public class UDPHost extends Thread
 		{
 			byte[] buf = java.util.Arrays.copyOfRange(data, 2, len);
 			for (NetworkListener l : _networkListener)
+			{
 				l.receivedMessageConnless(addr, buf, buf.length);
+			}
 			return;
 		}
 
@@ -266,8 +278,8 @@ public class UDPHost extends Thread
 
 	private void send(InetSocketAddress addr, byte flag, byte[] data, int len)
 	{
-		int size = PACKET_HEADER_LENGTH + len;
-		if (size > MAX_PACKET_LENGTH) // TODO: exception
+		int size = UDPHost.PACKET_HEADER_LENGTH + len;
+		if (size > UDPHost.MAX_PACKET_LENGTH) // TODO: exception
 		{
 			System.out.println("error: packet is too big");
 			return;
@@ -277,7 +289,7 @@ public class UDPHost extends Thread
 		buf[0] = flag;
 		if (data != null && len > 0)
 		{
-			System.arraycopy(data, 0, buf, PACKET_HEADER_LENGTH, len);
+			System.arraycopy(data, 0, buf, UDPHost.PACKET_HEADER_LENGTH, len);
 		}
 
 		try

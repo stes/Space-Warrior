@@ -65,11 +65,15 @@ public class UDPConnection
 		if (_state == ConnectionState.CONNECTING || _state == ConnectionState.ONLINE)
 		{
 			if (reason.length() > 0)
+			{
 				System.out.println("disconnected from  " + _addr + " (" + reason + ")");
+			}
 			else
+			{
 				System.out.println("disconnected from  " + _addr);
+			}
 			byte[] data = reason.getBytes();
-			this.sendControl(CTRL_CLOSE, data, data.length);
+			this.sendControl(UDPConnection.CTRL_CLOSE, data, data.length);
 			_state = ConnectionState.ERROR;
 			_host.invokeDisconnected(this, "");
 		}
@@ -125,7 +129,7 @@ public class UDPConnection
 
 		if ((flag & UDPConnection.FLAG_CONTROL) > 0)
 		{
-			if (_state == ConnectionState.OFFLINE && control == CTRL_CONNECT)
+			if (_state == ConnectionState.OFFLINE && control == UDPConnection.CTRL_CONNECT)
 			{
 				System.out.println("accepted connection from " + _addr);
 				_state = ConnectionState.ONLINE;
@@ -143,9 +147,13 @@ public class UDPConnection
 			{
 				String reason = (len > 1) ? new String(data, 1, len - 1) : "";
 				if (reason.length() > 0)
+				{
 					System.out.println("disconnected (" + reason + ")");
+				}
 				else
+				{
 					System.out.println("disconnected");
+				}
 				_host.invokeDisconnected(this, reason);
 			}
 		}
@@ -171,7 +179,7 @@ public class UDPConnection
 			if (now - _lastSendTime > 1000 && _state == ConnectionState.ONLINE)
 			{
 				// System.out.println("send keepalive to " + _addr);
-				this.sendControl(CTRL_KEEPALIVE, null, 0);
+				this.sendControl(UDPConnection.CTRL_KEEPALIVE, null, 0);
 			}
 		}
 	}

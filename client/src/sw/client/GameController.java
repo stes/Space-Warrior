@@ -30,7 +30,7 @@ import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.ServerInfo;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -45,8 +45,8 @@ public class GameController implements ClientListener, IGameStateManager
 
 	public static void setAIPlugin(File source)
 	{
-		_aiPlugin = source;
-		_runAI = true;
+		GameController._aiPlugin = source;
+		GameController._runAI = true;
 	}
 
 	private GameWorld _world;
@@ -76,11 +76,6 @@ public class GameController implements ClientListener, IGameStateManager
 		_gameStateChangedListener.add(l);
 	}
 
-	public void removeGameStateChangedListener(GameStateChangedListener l)
-	{
-		_gameStateChangedListener.remove(l);
-	}
-
 	@Override
 	public void chatMessage(String name, String text)
 	{
@@ -89,14 +84,20 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void connected()
 	{
-		setIsConnected(true);
+		this.setIsConnected(true);
 		this.init();
 	}
 
 	@Override
 	public void disconnected(String reason)
 	{
-		setIsConnected(false);
+		this.setIsConnected(false);
+	}
+
+	@Override
+	public GameWorld getGameWorld()
+	{
+		return _world;
 	}
 
 	public boolean getIsPlayerHuman()
@@ -111,12 +112,6 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public GameWorld getGameWorld()
-	{
-		return _world;
-	}
-
-	@Override
 	public SpaceShip[] getPlayerList()
 	{
 		return _players;
@@ -124,12 +119,12 @@ public class GameController implements ClientListener, IGameStateManager
 
 	public void init()
 	{
-		if (_runAI && _aiPlugin.exists())
+		if (GameController._runAI && GameController._aiPlugin.exists())
 		{
 			try
 			{
 				System.out.println("Successfully loaded AI Player.");
-				_localPlayer = AIPlayerLoader.load(_aiPlugin, this);
+				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
 			}
 			catch (Exception e)
 			{
@@ -157,6 +152,11 @@ public class GameController implements ClientListener, IGameStateManager
 		return this.isConnected();
 	}
 
+	public void removeGameStateChangedListener(GameStateChangedListener l)
+	{
+		_gameStateChangedListener.remove(l);
+	}
+
 	@Override
 	public void serverInfo(ServerInfo info)
 	{
@@ -170,7 +170,9 @@ public class GameController implements ClientListener, IGameStateManager
 		for (SpaceShip pl : _players)
 		{
 			if (pl.isLocal())
+			{
 				_localPlayer.setDataSet(pl);
+			}
 		}
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
 		e.setLocalDataSet(_localPlayer.getDataSet());
@@ -190,25 +192,37 @@ public class GameController implements ClientListener, IGameStateManager
 	private void invokeNewRound(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
+		{
 			return;
+		}
 		for (GameStateChangedListener l : _gameStateChangedListener)
+		{
 			l.newRound(e);
-	}
-
-	private void invokeStateChanged(GameStateChangedEvent e)
-	{
-		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
-			return;
-		for (GameStateChangedListener l : _gameStateChangedListener)
-			l.gameStateChanged(e);
+		}
 	}
 
 	private void invokePlayerInit(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
+		{
 			return;
+		}
 		for (GameStateChangedListener l : _gameStateChangedListener)
+		{
 			l.playerInit(e);
+		}
+	}
+
+	private void invokeStateChanged(GameStateChangedEvent e)
+	{
+		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
+		{
+			return;
+		}
+		for (GameStateChangedListener l : _gameStateChangedListener)
+		{
+			l.gameStateChanged(e);
+		}
 	}
 
 	private void setIsConnected(boolean _isConnected)

@@ -81,11 +81,15 @@ public class PlayerInput
 	public boolean equals(Object other)
 	{
 		if (!(other instanceof PlayerInput))
+		{
 			return false;
+		}
 		PlayerInput e = (PlayerInput) other;
 		if (e.moveDirection() == this.moveDirection() && e.turnDirection() == this.turnDirection()
 				&& e.shot() == this.shot())
+		{
 			return true;
+		}
 		return false;
 	}
 
@@ -120,7 +124,9 @@ public class PlayerInput
 	public void setDirection(int value)
 	{
 		if (Math.abs(value) > 1)
+		{
 			throw new IllegalArgumentException();
+		}
 		_moveDirection = value;
 	}
 
@@ -133,7 +139,9 @@ public class PlayerInput
 	public void setRotation(int value)
 	{
 		if (Math.abs(value) > 1)
+		{
 			throw new IllegalArgumentException();
+		}
 		_turnDirection = value;
 	}
 

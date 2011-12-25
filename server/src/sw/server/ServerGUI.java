@@ -91,13 +91,13 @@ public class ServerGUI extends JFrame implements ActionListener
 			@Override
 			public void write(byte[] b, int off, int len)
 			{
-				addMessage(new String(b, off, len));
+				ServerGUI.this.addMessage(new String(b, off, len));
 			}
 
 			@Override
 			public void write(int b) throws IOException
 			{
-				addMessage(String.valueOf((char) b));
+				ServerGUI.this.addMessage(String.valueOf((char) b));
 			}
 		};
 

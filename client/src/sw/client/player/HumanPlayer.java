@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import sw.client.gcontrol.IGameStateManager;
+import sw.shared.data.entities.shots.IShot;
 
 /**
  * A player controlled by a human using the keyboard
@@ -100,13 +101,13 @@ public class HumanPlayer extends Player implements KeyListener
 				_right = true;
 				break;
 			case 'n':
-				this.getCurrentState().setShot(1);
+				this.getCurrentState().setShot(IShot.LASER);
 				break;
 			case 'm':
-				this.getCurrentState().setShot(2);
+				this.getCurrentState().setShot(IShot.MASTER_LASER);
 				break;
 			case 'b':
-				this.getCurrentState().setShot(3);
+				this.getCurrentState().setShot(IShot.ROCKET);
 				break;
 		}
 

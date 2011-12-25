@@ -22,11 +22,11 @@ import java.util.Vector;
 
 import sw.shared.Packettype;
 import sw.shared.data.entities.IEntity;
-import sw.shared.data.entities.LaserBeam;
-import sw.shared.data.entities.MGProjectile;
-import sw.shared.data.entities.Rocket;
-import sw.shared.data.entities.ShotEntity;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.data.entities.shots.IShot;
+import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.MGProjectile;
+import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -73,29 +73,34 @@ public class GameWorld
 			// TODO move this somewhere else?
 			byte type = p.readByte();
 			if ((type & 0x0F) == Packettype.SNAP_PLAYERDATA)
+			{
 				newEnt = new SpaceShip("");
+			}
 			else if ((type & 0x0F) == Packettype.SNAP_SHOT)
+			{
 				switch (type & 0xF0)
 				{
-					case ShotEntity.LASER:
+					case IShot.LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case ShotEntity.MASTER_LASER:
+					case IShot.MASTER_LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case ShotEntity.ROCKET:
+					case IShot.ROCKET:
 						newEnt = new Rocket(0, 0, 0, null);
 						break;
-					case ShotEntity.MG:
+					case IShot.MG:
 						newEnt = new MGProjectile(0, 0, 0, null);
 						break;
 					default:
 						return;
 				}
+			}
 			else
+			{
 				return;
+			}
 			newEnt.fromSnap(p);
-			System.out.println(newEnt);
 			tmp.add(newEnt);
 		}
 
@@ -130,7 +135,9 @@ public class GameWorld
 		for (IEntity ent : _entities)
 		{
 			if (ent.getMainType() == type)
+			{
 				tmp.add(ent);
+			}
 		}
 		return tmp.toArray(a);
 	}
@@ -194,7 +201,9 @@ public class GameWorld
 		for (Iterator<IEntity> i = _entities.iterator(); i.hasNext();)
 		{
 			while (i.hasNext() && i.next().isDestroyed())
+			{
 				i.remove();
+			}
 		}
 
 		for (int i = 0; i < _entities.size(); i++)

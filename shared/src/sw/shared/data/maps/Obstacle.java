@@ -40,7 +40,9 @@ public abstract class Obstacle extends Polygon
 	{
 		super();
 		for (Point p : cornerLocations)
+		{
 			this.addPoint(p.x, p.y);
+		}
 	}
 
 	/**

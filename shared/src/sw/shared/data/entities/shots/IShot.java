@@ -15,35 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.shots;
 
-import sw.shared.data.GameWorld;
-import sw.shared.net.Packer;
-import sw.shared.net.Unpacker;
+import sw.shared.data.entities.IEntity;
+import sw.shared.data.entities.players.IAttacker;
 
 /**
+ * Represents any kind of shots who damages a player
+ * 
  * @author Redix, stes, Abbadonn
- * @version 25.11.11
+ * @version 25.12.11
  */
-public interface IEntity
+public interface IShot extends IEntity
 {
-	public void destroy();
+	public final static byte LASER = 0x10;
+	public final static byte MASTER_LASER = 0x20;
+	public final static byte ROCKET = 0x30;
+	public final static byte MG = 0x40;
 
-	public void fromSnap(Unpacker p);
+	/**
+	 * Fires this shot and causes damages
+	 */
+	void fire();
 
-	public byte getMainType();
+	/**
+	 * @return the damage this shot causes when hitting a player
+	 */
+	double getDamage();
 
-	public byte getSubType();
+	/**
+	 * @return the player who has fired this shot
+	 */
+	IAttacker getOwner();
 
-	public byte getType();
-
-	public GameWorld getWorld();
-
-	public boolean isDestroyed();
-
-	public void setWorld(GameWorld world);
-
-	public abstract void snap(Packer p, String name);
-
-	public abstract void tick();
 }

@@ -47,6 +47,7 @@ public abstract class Entity implements IEntity
 	/**
 	 * destroys the entity object
 	 */
+	@Override
 	public void destroy()
 	{
 		_entDestroy = true;
@@ -58,32 +59,37 @@ public abstract class Entity implements IEntity
 	 * @param p
 	 *            The Unpacker
 	 */
+	@Override
 	public abstract void fromSnap(Unpacker p);
 
 	/**
 	 * @return the entity's type ID
 	 */
-	public byte getType()
+	@Override
+	public byte getMainType()
 	{
-		return _entType;
+		return (byte) (this.getType() & 0x0F);
 	}
-	
+
+	@Override
+	public byte getSubType()
+	{
+		return (byte) (this.getType() & 0xF0);
+	}
+
 	/**
 	 * @return the entity's type ID
 	 */
-	public byte getMainType()
+	@Override
+	public byte getType()
 	{
-		return (byte) (getType() & 0x0F);
-	}
-	
-	public byte getSubType()
-	{
-		return (byte) (getType() & 0xF0);
+		return _entType;
 	}
 
 	/**
 	 * @return the GameWorld containing this entity
 	 */
+	@Override
 	public GameWorld getWorld()
 	{
 		return _world;
@@ -92,6 +98,7 @@ public abstract class Entity implements IEntity
 	/**
 	 * @return true, if this entity is destroyed
 	 */
+	@Override
 	public boolean isDestroyed()
 	{
 		return _entDestroy;
@@ -103,6 +110,7 @@ public abstract class Entity implements IEntity
 	 * @param world
 	 *            The GameWorld
 	 */
+	@Override
 	public void setWorld(GameWorld world)
 	{
 		this._world = world;
@@ -110,9 +118,13 @@ public abstract class Entity implements IEntity
 
 	/**
 	 * Packs the entity into a Packer object
-	 * @param p The Packer object
-	 * @param name The entity's name
+	 * 
+	 * @param p
+	 *            The Packer object
+	 * @param name
+	 *            The entity's name
 	 */
+	@Override
 	public void snap(Packer p, String name)
 	{
 		p.writeByte(this.getType());
@@ -121,5 +133,6 @@ public abstract class Entity implements IEntity
 	/**
 	 * Processes an update step
 	 */
+	@Override
 	public abstract void tick();
 }

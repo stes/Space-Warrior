@@ -43,10 +43,10 @@ import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.entities.Entity;
-import sw.shared.data.entities.Rocket;
-import sw.shared.data.entities.ShotEntity;
-import sw.shared.data.entities.SpaceShip;
-import sw.shared.data.entities.LaserBeam;
+import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.Rocket;
+import sw.shared.data.entities.shots.ShotEntity;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -174,7 +174,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		}
 		else if (ent.getMainType() == Packettype.SNAP_SHOT)
 		{
-			System.out.println(ent.getMainType());
 			switch (ent.getSubType())
 			{
 				case ShotEntity.LASER:
@@ -191,15 +190,15 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				}
 				case ShotEntity.ROCKET:
 				{
-					// TODO use image
 					Rocket r = (Rocket) ent;
 					g2d.setColor(Color.GREEN);
+					double size = GameConstants.ROCKET_SIZE;
 					g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
 							Math.PI - r.getDirection()),
-							_insets.left + (int) (scaleX * (r.getX() - 20)),
-							_insets.top + (int) (scaleY * (r.getY() - 20)),
-							(int) (40 * scaleX),
-							(int) (40 * scaleY),
+							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
+							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
+							(int) (size * scaleX),
+							(int) (size * scaleY),
 							null);
 				}
 			}
@@ -233,6 +232,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
+	// TODO improve this
 	protected BufferedImage rotateImage(BufferedImage src, double degrees)
 	{
 		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),

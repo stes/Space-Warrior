@@ -15,18 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.players;
 
-/**
- * Represents the various kinds of shots a player can fire
- * @author Redix stes Abbadonn
- * @version 25.12.11
- */
-public final class ShotType
+import sw.shared.data.entities.IEntity;
+
+public interface IAttacker extends IEntity
 {
-	public final static int LASER = 1;
-	public final static int MASTER_LASER = 2;
-	public final static int ROCKET = 3;
-	public final static int MG = 4;
-	
+	String getName();
+
+	int getScore();
+
+	void setScore(int i);
 }

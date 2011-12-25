@@ -64,14 +64,6 @@ public class SWClient implements IClient, NetworkListener
 		_netClient.connect(new InetSocketAddress(ip, port));
 	}
 
-	public void disconnect(String reason)
-	{
-		if (_server != null)
-		{
-			_server.disconnect(reason);
-		}
-	}
-
 	@Override
 	public void connected(UDPConnection connection)
 	{
@@ -79,6 +71,14 @@ public class SWClient implements IClient, NetworkListener
 		for (ClientListener l : _clientListener)
 		{
 			l.connected();
+		}
+	}
+
+	public void disconnect(String reason)
+	{
+		if (_server != null)
+		{
+			_server.disconnect(reason);
 		}
 	}
 
@@ -144,7 +144,9 @@ public class SWClient implements IClient, NetworkListener
 			{
 				byte[] addr = a.getAddress();
 				if (addr.length != 4 || addr[0] != (byte) 192 || addr[1] != (byte) 168)
+				{
 					continue;
+				}
 				addr[3] = (byte) 255;
 				byte[] buffer = GameConstants.SERVER_INFO_REQUEST;
 				InetSocketAddress sockAddr = new InetSocketAddress(InetAddress.getByAddress(addr),

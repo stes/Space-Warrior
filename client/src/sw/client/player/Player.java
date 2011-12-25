@@ -20,7 +20,7 @@ package sw.client.player;
 import sw.client.gcontrol.IGameStateManager;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 
 /**
  * An abstract player which manages the local player data and supplies the

@@ -15,26 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.players;
+
+import sw.shared.data.entities.IEntity;
 
 /**
- * Represents any kind of shots who damages a player
+ * Interface for an entity which can be damaged by other entities
+ * 
  * @author Redix, stes, Abbadonn
  * @version 25.12.11
  */
-public interface IShot extends IEntity
+public interface IDamageable extends IEntity
 {
-	/**
-	 * @return the damage this shot causes when hitting a player
-	 */
-	double getDamage();
-	/**
-	 * @return the player who has fired this shot
-	 */
-	SpaceShip getOwner();
-	/**
-	 * Fires this shot and causes damages
-	 */
-	void fire();
+
+	boolean isAlive();
+
+	void takeDamage(double damage);
 
 }

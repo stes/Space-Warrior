@@ -5,7 +5,7 @@ import java.util.Random;
 
 import sw.shared.GameConstants;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.SpaceShip;
+import sw.shared.data.entities.players.SpaceShip;
 
 public class SimpleState
 {

@@ -19,6 +19,7 @@ package sw.client;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
@@ -50,26 +51,49 @@ import sw.shared.net.Unpacker;
  */
 public class SWFrame extends JFrame implements ClientListener, ConnectionListener
 {
-	// change to limit fps in order to minimize cpu usage
-	public final int SLEEP_TIME = 1;
-	
 	private enum GUIMode
 	{
 		LOGIN, GAME
 	}
 
-	private static final long serialVersionUID = 1575599799999464878L;
-	private GameController _controller;
+	class UnRepaintManager extends RepaintManager
+	{
+		@Override
+		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
+		{
+		}
 
+		@Override
+		public void addInvalidComponent(JComponent invalidComponent)
+		{
+		}
+
+		@Override
+		public void markCompletelyDirty(JComponent aComponent)
+		{
+		}
+
+		@Override
+		public void paintDirtyRegions()
+		{
+		}
+	}
+
+	// change to limit fps in order to minimize cpu usage
+	public final int SLEEP_TIME = 1;
+	private static final long serialVersionUID = 1575599799999464878L;
+
+	private GameController _controller;
 	private SWClient _client;
 	private GamePanel _gamePanel;
+
 	private LoginPanel _loginPanel;
 
 	private JPanel _activePanel;
-
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
 	private int _fps;
+
 	private Insets _insets;
 
 	/**
@@ -89,73 +113,41 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.setSize(d.width / 2, d.height / 2);
 		this.setMinimumSize(new Dimension(800, 600));
 
-		((JComponent) getContentPane()).setOpaque(false);
-		
+		((JComponent) this.getContentPane()).setOpaque(false);
+
 		this.init();
-		
-		createBufferStrategy(2);
+
+		this.createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
 
 		if (!debugMode)
+		{
 			this.initBugLogger();
+		}
 
-		
 		_isRunning = true;
-		gameLoop();
+		this.gameLoop();
 	}
 
-	private void initBugLogger()
+	@Override
+	public void chatMessage(String name, String text)
 	{
-		try
-		{
-			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
-	private void init()
+	@Override
+	public void connected()
 	{
-		this.setVisible(true);
-		this.toFront();
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		_insets = this.getInsets();
-		System.out.println(_insets);
-		int insetWide = _insets.left + _insets.right;
-		int insetTall = _insets.top + _insets.bottom;
-		setSize(getWidth() + insetWide, getHeight() + insetTall);
-		
-		_client = new SWClient();
-		_controller = new GameController(_client);
-		_client.addClientListener(this);
-		_client.addClientListener(_controller);
-		//
-		this.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				_client.close();
-			}
-		});
-		System.out.println("init");
-		this.setExtendedState(MAXIMIZED_BOTH);
-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
-		_gamePanel.setLocation(_insets.left, _insets.top + 100);
-		
-		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-		_loginPanel.setLocation(_insets.left, _insets.top);
+		this.setGUIMode(GUIMode.GAME);
+		Packer start = new Packer(Packettype.CL_START_INFO);
+		start.writeUTF(_loginPanel.getName());
+		start.writeInt(_loginPanel.getImageID());
+		_client.sendPacket(start);
+	}
 
-		_client.addClientListener(_gamePanel);
-		_client.addClientListener(_loginPanel);
-
-		_loginPanel.addConnectionListener(this);
-		_gamePanel.addConnectionListener(this);
-
+	@Override
+	public void disconnected(String reason)
+	{
 		this.setGUIMode(GUIMode.LOGIN);
-
 	}
 
 	/**
@@ -187,7 +179,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			try
 			{
 				g = (Graphics2D) _bufferStrategy.getDrawGraphics();
-				render(g);
+				this.render(g);
 			}
 			finally
 			{
@@ -212,51 +204,16 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		}
 	}
 
-	private void render(Graphics2D g2d)
-	{
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		if (_activePanel.equals(_gamePanel))
-		{
-			_gamePanel.render(g2d);
-		}
-		else if (_activePanel.equals(_loginPanel))
-		{
-			g2d.setColor(Color.WHITE);
-			g2d.fillRect(0, 0, getWidth(), getHeight());
-			_loginPanel.render(g2d);
-		}
-		g2d.setColor(Color.WHITE);
-		g2d.drawString("FPS: " + _fps, 0, 100+g2d.getFont().getSize());
-	}
-
-	@Override
-	public void chatMessage(String name, String text)
-	{
-	}
-
-	@Override
-	public void connected()
-	{
-		this.setGUIMode(GUIMode.GAME);
-		Packer start = new Packer(Packettype.CL_START_INFO);
-		start.writeUTF(_loginPanel.getName());
-		start.writeInt(_loginPanel.getImageID());
-		_client.sendPacket(start);
-	}
-
-	@Override
-	public void disconnected(String reason)
-	{
-		this.setGUIMode(GUIMode.LOGIN);
-	}
-
 	@Override
 	public void login(ConnectionEvent e)
 	{
 		this.connect(e.getIPAdress());
+	}
+
+	@Override
+	public void logout(ConnectionEvent e)
+	{
+		_client.disconnect("user logout");
 	}
 
 	@Override
@@ -283,6 +240,80 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		_client.connect(ip.getAddress().getHostAddress(), ip.getPort());
 	}
 
+	private void init()
+	{
+		this.setVisible(true);
+		this.toFront();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_insets = this.getInsets();
+		System.out.println(_insets);
+		int insetWide = _insets.left + _insets.right;
+		int insetTall = _insets.top + _insets.bottom;
+		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
+
+		_client = new SWClient();
+		_controller = new GameController(_client);
+		_client.addClientListener(this);
+		_client.addClientListener(_controller);
+		//
+		this.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				_client.close();
+			}
+		});
+		System.out.println("init");
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+		_gamePanel.setLocation(_insets.left, _insets.top + 100);
+
+		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
+		_loginPanel.setLocation(_insets.left, _insets.top);
+
+		_client.addClientListener(_gamePanel);
+		_client.addClientListener(_loginPanel);
+
+		_loginPanel.addConnectionListener(this);
+		_gamePanel.addConnectionListener(this);
+
+		this.setGUIMode(GUIMode.LOGIN);
+
+	}
+
+	private void initBugLogger()
+	{
+		try
+		{
+			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void render(Graphics2D g2d)
+	{
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		if (_activePanel.equals(_gamePanel))
+		{
+			_gamePanel.render(g2d);
+		}
+		else if (_activePanel.equals(_loginPanel))
+		{
+			g2d.setColor(Color.WHITE);
+			g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
+			_loginPanel.render(g2d);
+		}
+		g2d.setColor(Color.WHITE);
+		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
+	}
+
 	private void setGUIMode(GUIMode mode)
 	{
 		if (_activePanel != null)
@@ -300,34 +331,5 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.add(_activePanel);
 		System.out.println("switch mode");
 		this.setVisible(true);
-	}
-
-	class UnRepaintManager extends RepaintManager
-	{
-		@Override
-		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
-		{
-		}
-
-		@Override
-		public void addInvalidComponent(JComponent invalidComponent)
-		{
-		}
-
-		@Override
-		public void markCompletelyDirty(JComponent aComponent)
-		{
-		}
-
-		@Override
-		public void paintDirtyRegions()
-		{
-		}
-	}
-
-	@Override
-	public void logout(ConnectionEvent e)
-	{
-		_client.disconnect("user logout");
 	}
 }

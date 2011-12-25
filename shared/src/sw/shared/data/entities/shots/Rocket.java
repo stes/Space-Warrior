@@ -15,20 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.shots;
 
-public class MGProjectile extends Projectile
+import sw.shared.data.entities.players.SpaceShip;
+
+public class Rocket extends Projectile
 {
-	public MGProjectile(double x, double y, double direction, SpaceShip owner)
+	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
-		super(x, y, direction, owner, ShotEntity.MG);
-		// TODO Auto-generated constructor stub
+		super(x, y, direction, owner, IShot.ROCKET);
 	}
 
 	@Override
 	public double getDamage()
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 100;
 	}
 }

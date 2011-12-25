@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.players;
 
 import java.awt.Point;
 import java.util.Random;
@@ -23,6 +23,11 @@ import java.util.Random;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.MoveableEntity;
+import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.shots.IShot;
+import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -30,7 +35,8 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
+public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, IDamageable,
+		IAttacker
 {
 	private static Random _random = new Random();
 
@@ -44,16 +50,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	private int _imageID;
 
 	private PlayerInput _input;
-	
-	private SpaceShip(byte type)
-	{
-		super(type);
-		// TODO improve?
-		this.setAcceleration(GameConstants.ACCELERATION);
-		this.setAngularAcceleration(GameConstants.ANGULAR_ACCELERATION);
-		this.setMaximumSpeed(GameConstants.MAX_SPEED);
-	}
-	
+
 	public SpaceShip(SpaceShip dataset)
 	{
 		this(Packettype.SNAP_PLAYERDATA);
@@ -97,28 +94,42 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 		_input = new PlayerInput();
 	}
 
+	private SpaceShip(byte type)
+	{
+		super(type);
+		// TODO improve?
+		this.setAcceleration(GameConstants.ACCELERATION);
+		this.setAngularAcceleration(GameConstants.ANGULAR_ACCELERATION);
+		this.setMaximumSpeed(GameConstants.MAX_SPEED);
+	}
+
 	/**
 	 * increases the speed by a constant value
 	 */
 	public void accelerate(double value)
 	{
-		this.setSpeed(getSpeed() + value);
+		this.setSpeed(this.getSpeed() + value);
+	}
+
+	public void angularAccelerate(double value)
+	{
+		this.setTurnSpeed(this.getTurnSpeed() + value);
 	}
 
 	public void angularDecelerate(double value)
 	{
 		double dec = Math.abs(value);
-		if (getTurnSpeed() < 0 && Math.abs(getTurnSpeed()) > dec)
+		if (this.getTurnSpeed() < 0 && Math.abs(this.getTurnSpeed()) > dec)
 		{
-			setTurnSpeed(getTurnSpeed() + dec);
+			this.setTurnSpeed(this.getTurnSpeed() + dec);
 		}
-		else if (getTurnSpeed() > 0 && Math.abs(getTurnSpeed()) > dec)
+		else if (this.getTurnSpeed() > 0 && Math.abs(this.getTurnSpeed()) > dec)
 		{
-			setTurnSpeed(getTurnSpeed() - dec);
+			this.setTurnSpeed(this.getTurnSpeed() - dec);
 		}
 		else
 		{
-			setTurnSpeed(0);
+			this.setTurnSpeed(0);
 		}
 	}
 
@@ -126,9 +137,13 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	public int compareTo(SpaceShip player)
 	{
 		if (_score < player.getScore())
+		{
 			return -1;
+		}
 		if (_score > player.getScore())
+		{
 			return 1;
+		}
 		return 0;
 	}
 
@@ -180,6 +195,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	 * 
 	 * @return the name
 	 */
+	@Override
 	public String getName()
 	{
 		return _name;
@@ -190,6 +206,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	 * 
 	 * @return the current score
 	 */
+	@Override
 	public int getScore()
 	{
 		return _score;
@@ -198,11 +215,14 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	public boolean intersects(SpaceShip d)
 	{
 		if (d == null || this.equals(d))
+		{
 			return false;
+		}
 		double diff = this.getPosition().distance(d.getPosition());
 		return diff < GameConstants.MAX_COLLISION_DAMAGE_RANGE;
 	}
 
+	@Override
 	public boolean isAlive()
 	{
 		return _alive;
@@ -229,10 +249,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	{
 		boolean intersects = false;
 		SpaceShip pred = this.predict();
-		for (SpaceShip d : getWorld().getPlayers())
+		for (SpaceShip d : this.getWorld().getPlayers())
 		{
 			if (!this.equals(d) && d.intersects(pred) && d.isAlive())
+			{
 				intersects = true;
+			}
 		}
 		if (_alive)
 		{
@@ -243,8 +265,8 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 			else
 			{
 				this.takeDamage((int) (GameConstants.MAX_COLLISION_DAMAGE * this.getSpeed() / this.getMaximumSpeed()));
-				this.setSpeed(this.getSpeed()/2);
-				this.rotate(getTurnSpeed());
+				this.setSpeed(this.getSpeed() / 2);
+				this.rotate(this.getTurnSpeed());
 			}
 		}
 	}
@@ -258,7 +280,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 			double y = d.getSpeed() * Math.cos(d.getDirection());
 			d.setX(d.getX() + x);
 			d.setY(d.getY() + y);
-			d.rotate(getTurnSpeed());
+			d.rotate(this.getTurnSpeed());
 		}
 		return d;
 	}
@@ -277,16 +299,16 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	public void respawn()
 	{
 		int rand = GameConstants.PLAYER_SIZE / 2 + 1;
-		int x = rand + _random.nextInt((int)MoveableEntity.MAX_X - rand);
-		int y = rand + _random.nextInt((int)MoveableEntity.MAX_Y - rand);
-		setX(x);
-		setY(y);
-		setSpeed(0);
-		setDirection(_random.nextDouble() * 2 * Math.PI);
+		int x = rand + SpaceShip._random.nextInt((int) StaticEntity.MAX_X - rand);
+		int y = rand + SpaceShip._random.nextInt((int) StaticEntity.MAX_Y - rand);
+		this.setX(x);
+		this.setY(y);
+		this.setSpeed(0);
+		this.setDirection(SpaceShip._random.nextDouble() * 2 * Math.PI);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_alive = true;
-		setTurnSpeed(0);
+		this.setTurnSpeed(0);
 	}
 
 	/**
@@ -297,7 +319,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	 */
 	public void rotate(double angle)
 	{
-		setDirection(getDirection() + angle);
+		this.setDirection(this.getDirection() + angle);
 	}
 
 	public void setImageID(int id)
@@ -316,6 +338,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	 * @param value
 	 *            new score
 	 */
+	@Override
 	public void setScore(int value)
 	{
 		_score = value;
@@ -324,7 +347,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	public void shoot(int id)
 	{
 		int neededAmmo = GameConstants.AMMO_PER_SHOT;
-		
+
 		IShot s = null;
 		if (_ammo >= neededAmmo && this.isReadyToShoot())
 		{
@@ -333,23 +356,34 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
 			switch (id)
 			{
-				case ShotType.LASER:
-					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this);
+				case IShot.LASER:
+					s = new LaserBeam(this.positionAfter(time).x,
+							this.positionAfter(time).y,
+							this.getDirection(),
+							this);
 					break;
-				case ShotType.MASTER_LASER:
-					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this, true);
+				case IShot.MASTER_LASER:
+					s = new LaserBeam(this.positionAfter(time).x,
+							this.positionAfter(time).y,
+							this.getDirection(),
+							this,
+							true);
 					break;
-				case ShotType.ROCKET:
-					s = new Rocket(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this);
-					((Rocket)s).setSpeed(this.getSpeed());
+				case IShot.ROCKET:
+					s = new Rocket(this.positionAfter(time).x,
+							this.positionAfter(time).y,
+							this.getDirection(),
+							this);
+					((Rocket) s).setSpeed(this.getSpeed());
 					break;
-				case ShotType.MG:
+				case IShot.MG:
 					throw new UnsupportedOperationException("Not implemented yet.");
-					//break;
+					// break;
+				default:
+					return;
 			}
 			this.getWorld().insert(s);
 			s.fire();
-			
 		}
 	}
 
@@ -369,6 +403,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 		p.writeShort(_ammo * l);
 	}
 
+	@Override
 	public void takeDamage(double d)
 	{
 		_lifepoints -= d;
@@ -382,7 +417,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	public void tick()
 	{
 		if (!this.isAlive())
+		{
 			return;
+		}
 
 		if (_input.shot() > 0)
 		{
@@ -401,7 +438,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 		this.setAngularAcceleration(MoveableEntity.ANGULAR_ACCELERATION * _input.turnDirection());
 		if (_input.turnDirection() == 0)
 		{
-			this.angularDecelerate(MoveableEntity.ANGULAR_ACCELERATION );
+			this.angularDecelerate(MoveableEntity.ANGULAR_ACCELERATION);
 		}
 
 		this.reload();
@@ -410,13 +447,8 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 
 	private Point.Double positionAfter(double time)
 	{
-		double way = time * getSpeed();
-		return new Point.Double(getX() + way * Math.sin(getDirection()), getY()
-				+ way * Math.cos(getDirection()));
-	}
-
-	public void angularAccelerate(double value)
-	{
-		setTurnSpeed(getTurnSpeed() + value);
+		double way = time * this.getSpeed();
+		return new Point.Double(this.getX() + way * Math.sin(this.getDirection()), this.getY()
+				+ way * Math.cos(this.getDirection()));
 	}
 }

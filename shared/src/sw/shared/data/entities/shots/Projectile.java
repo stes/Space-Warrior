@@ -15,9 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared.data.entities;
+package sw.shared.data.entities.shots;
 
 import sw.shared.GameConstants;
+import sw.shared.data.entities.MoveableEntity;
+import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.players.IDamageable;
+import sw.shared.data.entities.players.SpaceShip;
 
 /**
  * Basic class for all shots based on moving projectiles
@@ -30,34 +34,45 @@ public abstract class Projectile extends ShotEntity
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{
 		super(x, y, direction, owner, shottype);
-		
+
 		// TODO improve
 		this.setAcceleration(GameConstants.ACCELERATION);
 		this.setAngularAcceleration(0);
-		this.setMaximumSpeed(GameConstants.MAX_SPEED / 2 );
+		this.setMaximumSpeed(GameConstants.MAX_SPEED / 2);
+	}
+
+	@Override
+	public void causeDamage(IDamageable target)
+	{
+		super.causeDamage(target);
+		this.destroy();
 	}
 
 	@Override
 	public void setX(double x)
 	{
 		if (x < StaticEntity.MIN_X || x > StaticEntity.MAX_X)
+		{
 			this.destroy();
+		}
 		super.setX(x);
 	}
-	
+
 	@Override
 	public void setY(double y)
 	{
 		if (y < StaticEntity.MIN_Y || y > StaticEntity.MAX_Y)
+		{
 			this.destroy();
+		}
 		super.setY(y);
 	}
-	
+
 	@Override
 	public void tick()
 	{
 		this.setAcceleration(MoveableEntity.ACCELERATION);
+		this.fire();
 		super.tick();
 	}
-
 }
