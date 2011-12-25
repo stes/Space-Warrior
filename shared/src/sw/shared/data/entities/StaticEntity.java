@@ -65,6 +65,16 @@ public abstract class StaticEntity extends Entity
 		return new Point.Double(getX(), getY());
 	}
 
+	public double distanceTo(Point.Double p)
+	{
+		return getPosition().distance(p);
+	}
+	
+	public double distanceTo(StaticEntity entity)
+	{
+		return getPosition().distance(entity.getPosition());
+	}
+	
 	@Override
 	public void fromSnap(Unpacker p)
 	{

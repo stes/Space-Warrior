@@ -25,43 +25,19 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public abstract class Entity implements IEntity
+public interface IEntity
 {
-	private boolean _entDestroy;
-	private byte _entType;
-	private GameWorld _world;
+	public void destroy();
 
-	public Entity(byte type)
-	{
-		_entType = type;
-	}
+	public void fromSnap(Unpacker p);
 
-	public void destroy()
-	{
-		_entDestroy = true;
-	}
+	public byte getType();
 
-	public abstract void fromSnap(Unpacker p);
+	public GameWorld getWorld();
 
-	public byte getType()
-	{
-		return _entType;
-	}
+	public boolean isDestroyed();
 
-	public GameWorld getWorld()
-	{
-		return _world;
-	}
-
-	public boolean isDestroyed()
-	{
-		return _entDestroy;
-	}
-
-	public void setWorld(GameWorld world)
-	{
-		this._world = world;
-	}
+	public void setWorld(GameWorld world);
 
 	public abstract void snap(Packer p, String name);
 

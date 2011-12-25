@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import sw.shared.Packettype;
-import sw.shared.data.entities.Entity;
+import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.LaserBeam;
 import sw.shared.data.entities.SpaceShip;
 import sw.shared.net.Packer;
@@ -33,11 +33,11 @@ import sw.shared.net.Unpacker;
  */
 public class GameWorld
 {
-	private Vector<Entity> _entities;
+	private Vector<IEntity> _entities;
 
 	public GameWorld()
 	{
-		_entities = new Vector<Entity>();
+		_entities = new Vector<IEntity>();
 	}
 
 	public void clear()
@@ -47,12 +47,12 @@ public class GameWorld
 
 	public void fromSnap(Unpacker p)
 	{
-		Vector<Entity> tmp = new Vector<Entity>();
+		Vector<IEntity> tmp = new Vector<IEntity>();
 
 		int size = p.readInt();
 		for (int i = 0; i < size; i++)
 		{
-			Entity newEnt;
+			IEntity newEnt;
 			// TODO move this somewhere else?
 			byte type = p.readByte();
 			if (type == Packettype.SNAP_PLAYERDATA)
@@ -68,15 +68,15 @@ public class GameWorld
 		_entities = tmp;
 	}
 
-	public Entity[] getAllEntities()
+	public IEntity[] getAllEntities()
 	{
-		return _entities.toArray(new Entity[0]);
+		return _entities.toArray(new IEntity[0]);
 	}
 
 	public <T> T[] getEntitiesByType(byte type, T[] a)
 	{
-		Vector<Entity> tmp = new Vector<Entity>();
-		for (Entity ent : _entities)
+		Vector<IEntity> tmp = new Vector<IEntity>();
+		for (IEntity ent : _entities)
 		{
 			if (ent.getType() == type)
 				tmp.add(ent);
@@ -89,13 +89,13 @@ public class GameWorld
 		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new SpaceShip[] {});
 	}
 
-	public void insert(Entity e)
+	public void insert(IEntity e)
 	{
 		e.setWorld(this);
 		_entities.add(e);
 	}
 
-	public void remove(Entity e)
+	public void remove(IEntity e)
 	{
 		_entities.remove(e);
 	}
@@ -104,7 +104,7 @@ public class GameWorld
 	{
 		p.writeInt(_entities.size());
 
-		for (Entity ent : _entities)
+		for (IEntity ent : _entities)
 		{
 			ent.snap(p, name);
 		}
@@ -112,7 +112,7 @@ public class GameWorld
 
 	public void tick()
 	{
-		for (Iterator<Entity> i = _entities.iterator(); i.hasNext();)
+		for (Iterator<IEntity> i = _entities.iterator(); i.hasNext();)
 		{
 			while (i.hasNext() && i.next().isDestroyed())
 				i.remove();

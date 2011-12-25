@@ -31,7 +31,7 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class LaserBeam extends StaticEntity
+public class LaserBeam extends StaticEntity implements IShot
 {
 	private boolean _isMaster;
 	private int _lifetime;
@@ -61,14 +61,21 @@ public class LaserBeam extends StaticEntity
 	}
 
 	/**
-	 * Calculates the decency to specified point
+	 * Calculates the distance to specified point
 	 * 
 	 * @Param p The point
 	 * @Return The distance
 	 */
+	@Override
 	public double distanceTo(Point.Double p)
 	{
 		return getLine().ptLineDist(p.getX(), p.getY());
+	}
+	
+	@Override
+	public double distanceTo(StaticEntity entity)
+	{
+		return distanceTo(entity.getPosition());
 	}
 
 	/**
@@ -86,7 +93,7 @@ public class LaserBeam extends StaticEntity
 		for (SpaceShip pl : players)
 		{
 			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
-					&& this.distanceTo(pl.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+					&& this.distanceTo(pl.getPosition()) < GameConstants.MAX_RANGE)
 			{
 				pl.takeDamage(this.getDamage());
 				if (!pl.isAlive())

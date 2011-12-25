@@ -321,17 +321,35 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 		_score = value;
 	}
 
-	public void shoot(boolean master)
+	public void shoot(int id)
 	{
-		int neededAmmo = master ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
+		int neededAmmo = GameConstants.AMMO_PER_SHOT;
+		
+		IShot s = null;
 		if (_ammo >= neededAmmo && this.isReadyToShoot())
 		{
 			_ammo -= neededAmmo;
 			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			LaserBeam s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), master);
+			switch (id)
+			{
+				case ShotType.LASER:
+					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection());
+					break;
+				case ShotType.MASTER_LASER:
+					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection());
+					break;
+				case ShotType.ROCKET:
+					// TODO init rocket
+					throw new UnsupportedOperationException("Not implemented yet.");
+					//break;
+				case ShotType.MG:
+					throw new UnsupportedOperationException("Not implemented yet.");
+					//break;
+			}
 			this.getWorld().insert(s);
 			s.fire(this);
+			
 		}
 	}
 
@@ -352,9 +370,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 		p.writeShort(_ammo * l);
 	}
 
-	public void takeDamage(int dmg)
+	public void takeDamage(double d)
 	{
-		_lifepoints -= dmg;
+		_lifepoints -= d;
 		if (_lifepoints <= 0)
 		{
 			this.die();
@@ -369,7 +387,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 
 		if (_input.shot() > 0)
 		{
-			this.shoot(_input.shot() == 2);
+			this.shoot(_input.shot());
 		}
 
 		if (_input.moveDirection() == 0)

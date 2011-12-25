@@ -43,6 +43,21 @@ public abstract class Projectile extends MoveableEntity
 		return _damage;
 	}
 
+	public void checkHit(SpaceShip attacker)
+	{
+		SpaceShip[] players = this.getWorld().getPlayers();
+		for (SpaceShip pl : players)
+		{
+			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
+					&& this.distanceTo(pl.getPosition()) < GameConstants.MAX_RANGE)
+			{
+				pl.takeDamage(this.getDamage());
+				if (!pl.isAlive())
+					attacker.setScore(attacker.getScore() + 1);
+			}
+		}
+	}
+	
 	@Override
 	public void tick()
 	{
