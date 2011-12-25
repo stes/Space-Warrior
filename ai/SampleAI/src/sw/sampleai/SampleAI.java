@@ -12,16 +12,16 @@ import sw.shared.data.entities.shots.LaserBeam;
 public class SampleAI extends AIPlayer
 {
 	private static Random _random = new Random(System.currentTimeMillis());
-		
+
 	private int _hold;
-	
+
 	public SampleAI(IGameStateManager stateManager)
 	{
 		super(stateManager);
 		System.out.println("init ai player");
 		this.getCurrentState().setDirection(1);
 	}
-	
+
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
 	{
@@ -29,29 +29,29 @@ public class SampleAI extends AIPlayer
 		if (getDataSet().getPosition().x < 150)
 		{
 			turn = true;
-			this.getCurrentState().setRotation((int)Math.signum(90-getDataSet().getDirection()));
+			this.getCurrentState().setRotation((int) Math.signum(90 - getDataSet().getDirection()));
 		}
 		if (getDataSet().getPosition().y < 150)
 		{
 			turn = true;
-			this.getCurrentState().setRotation(-(int)Math.signum(180-getDataSet().getDirection()));
+			this.getCurrentState().setRotation(-(int) Math.signum(180 - getDataSet().getDirection()));
 		}
-		if (getDataSet().getPosition().x > GameConstants.PLAYING_FIELD_WIDTH-150)
+		if (getDataSet().getPosition().x > GameConstants.PLAYING_FIELD_WIDTH - 150)
 		{
 			turn = true;
-			this.getCurrentState().setRotation((int)Math.signum(270-getDataSet().getDirection()));
+			this.getCurrentState().setRotation((int) Math.signum(270 - getDataSet().getDirection()));
 		}
-		if (getDataSet().getPosition().y > GameConstants.PLAYING_FIELD_HEIGHT-150)
+		if (getDataSet().getPosition().y > GameConstants.PLAYING_FIELD_HEIGHT - 150)
 		{
 			turn = true;
-			this.getCurrentState().setRotation((int)Math.signum(180-getDataSet().getDirection()));
+			this.getCurrentState().setRotation((int) Math.signum(180 - getDataSet().getDirection()));
 		}
 		if (!turn && _hold == 0)
 		{
 			if (_random.nextDouble() > 0.9)
 			{
 				_hold = 1 + _random.nextInt(9);
-				this.getCurrentState().setRotation(_random.nextInt(2)*2-1);
+				this.getCurrentState().setRotation(_random.nextInt(2) * 2 - 1);
 			}
 			else
 				this.getCurrentState().setRotation(0);
@@ -61,9 +61,16 @@ public class SampleAI extends AIPlayer
 		{
 			_hold--;
 		}
-		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getPosition(), this.getDataSet().getDirection(), false);
-		LaserBeam mshot = new LaserBeam(this.getDataSet().getPosition(), this.getDataSet().getDirection(), true);
-		for (SpaceShip d : this.getStateManager().getPlayerList()) 
+		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getX(),
+				this.getDataSet().getY(),
+				this.getDataSet().getDirection(),
+				this.getDataSet());
+		LaserBeam mshot = new LaserBeam(this.getDataSet().getX(),
+				this.getDataSet().getY(),
+				this.getDataSet().getDirection(),
+				this.getDataSet(),
+				true);
+		for (SpaceShip d : this.getStateManager().getPlayerList())
 		{
 			if (d.equals(this.getDataSet()))
 				continue;
