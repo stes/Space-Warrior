@@ -18,8 +18,6 @@
 package sw.shared.data.entities;
 
 import sw.shared.GameConstants;
-import sw.shared.net.Packer;
-import sw.shared.net.Unpacker;
 
 /**
  * Basic class for all shots based on moving projectiles
@@ -27,59 +25,32 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.12.11
  */
-public abstract class Projectile extends MoveableEntity
+public abstract class Projectile extends ShotEntity
 {
-	private double _damage;
-	
-	// TODO private
-	public Projectile(byte type)
+	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{
-		super(type);
+		super(x, y, direction, owner, shottype);
 		
 		// TODO improve
 		this.setAcceleration(GameConstants.ACCELERATION);
 		this.setAngularAcceleration(0);
-		this.setMaximumSpeed(GameConstants.MAX_SPEED * 2);
+		this.setMaximumSpeed(GameConstants.MAX_SPEED / 2 );
 	}
 
 	@Override
-	public void fromSnap(Unpacker p)
+	public void setX(double x)
 	{
-		super.fromSnap(p);
-		this.setDamage(p.readDouble());
+		if (x < StaticEntity.MIN_X || x > StaticEntity.MAX_X)
+			this.destroy();
+		super.setX(x);
 	}
-
+	
 	@Override
-	public void snap(Packer p, String name)
+	public void setY(double y)
 	{
-		super.snap(p, name);
-		p.writeDouble(getDamage());
-		
-	}
-
-	public void setDamage(double damage)
-	{
-		this._damage = damage;
-	}
-
-	public double getDamage()
-	{
-		return _damage;
-	}
-
-	public void checkHit(SpaceShip attacker)
-	{
-		SpaceShip[] players = this.getWorld().getPlayers();
-		for (SpaceShip pl : players)
-		{
-			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
-					&& this.distanceTo(pl.getPosition()) < GameConstants.MAX_RANGE)
-			{
-				pl.takeDamage(this.getDamage());
-				if (!pl.isAlive())
-					attacker.setScore(attacker.getScore() + 1);
-			}
-		}
+		if (y < StaticEntity.MIN_Y || y > StaticEntity.MAX_Y)
+			this.destroy();
+		super.setY(y);
 	}
 	
 	@Override
@@ -88,4 +59,5 @@ public abstract class Projectile extends MoveableEntity
 		this.setAcceleration(MoveableEntity.ACCELERATION);
 		super.tick();
 	}
+
 }

@@ -46,6 +46,14 @@ public abstract class StaticEntity extends Entity
 		super(type);
 	}	
 	
+	public StaticEntity(byte type, double x, double y, double direction)
+	{
+		this(type);
+		setX(x);
+		setY(y);
+		setDirection(direction);
+	}
+	
 	public double getX()
 	{
 		return _x;
@@ -103,6 +111,7 @@ public abstract class StaticEntity extends Entity
 	@Override
 	public void snap(Packer p, String name)
 	{
+		super.snap(p, name);
 		p.writeDouble(getX());
 		p.writeDouble(getY());
 		p.writeDouble(getDirection());

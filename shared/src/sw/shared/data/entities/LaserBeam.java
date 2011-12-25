@@ -21,7 +21,6 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 
 import sw.shared.GameConstants;
-import sw.shared.Packettype;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -31,7 +30,7 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class LaserBeam extends StaticEntity implements IShot
+public class LaserBeam extends ShotEntity
 {
 	private boolean _isMaster;
 	private int _lifetime;
@@ -44,11 +43,8 @@ public class LaserBeam extends StaticEntity implements IShot
 
 	public LaserBeam(double x, double y, double direction, SpaceShip owner, boolean master)
 	{
-		super(Packettype.SNAP_SHOT);
+		super(x, y, direction, owner, master ? ShotEntity.MASTER_LASER : ShotEntity.LASER);
 		_isMaster = master;
-		setDirection(direction);
-		setX(x);
-		setY(y);
 		_owner = owner;
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
 	}
@@ -89,22 +85,6 @@ public class LaserBeam extends StaticEntity implements IShot
 		return new Point.Double(l.getX2(), l.getY2());
 	}
 
-	//TODO move into another class..
-	public void fire()
-	{
-		SpaceShip[] players = this.getWorld().getPlayers();
-		for (SpaceShip pl : players)
-		{
-			if (pl.isAlive() && !pl.getName().equals(getOwner().getName())
-					&& this.distanceTo(pl.getPosition()) < GameConstants.MAX_RANGE)
-			{
-				pl.takeDamage(this.getDamage());
-				if (!pl.isAlive())
-					getOwner().setScore(getOwner().getScore() + 1);
-			}
-		}
-	}
-
 	@Override
 	public void fromSnap(Unpacker p)
 	{
@@ -131,7 +111,6 @@ public class LaserBeam extends StaticEntity implements IShot
 	@Override
 	public void snap(Packer p, String name)
 	{
-		p.writeByte(this.getType());
 		super.snap(p, name);
 		p.writeBoolean(this.isMaster());
 	}

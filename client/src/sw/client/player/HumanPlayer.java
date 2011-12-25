@@ -105,6 +105,9 @@ public class HumanPlayer extends Player implements KeyListener
 			case 'm':
 				this.getCurrentState().setShot(2);
 				break;
+			case 'b':
+				this.getCurrentState().setShot(3);
+				break;
 		}
 
 		this.updateInput();
@@ -129,6 +132,7 @@ public class HumanPlayer extends Player implements KeyListener
 				break;
 			case 'n':
 			case 'm':
+			case 'b':
 				this.getCurrentState().setShot(0);
 				break;
 		}

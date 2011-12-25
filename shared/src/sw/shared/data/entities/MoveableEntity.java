@@ -28,7 +28,7 @@ import sw.shared.GameConstants;
  */
 public abstract class MoveableEntity extends StaticEntity
 {	
-	public static final double MAX_SPEED = GameConstants.MAX_SPEED;
+	//public static final double MAX_SPEED = GameConstants.MAX_SPEED;
 	public static final double MAX_TURN_SPEED = GameConstants.MAX_ANGULAR_SPEED;
 	
 	public static final double ACCELERATION = GameConstants.ACCELERATION;
@@ -47,12 +47,17 @@ public abstract class MoveableEntity extends StaticEntity
 	
 	public MoveableEntity(byte type)
 	{
-		super(type);
+		this(type, 0, 0, 0);
 	}	
 	
+	public MoveableEntity(byte i, double x, double y, double direction)
+	{
+		super(i, x, y, direction);
+	}
+
 	public void setSpeed(double speed)
 	{
-		_speed = Math.max(0, Math.min(GameConstants.MAX_SPEED, speed));
+		_speed = Math.max(0, Math.min(this.getMaximumSpeed(), speed));
 	}
 
 	public double getSpeed()

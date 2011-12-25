@@ -71,6 +71,8 @@ public class ImageContainer
 					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/DeathFighter1.gif"))));
 			_images.put(GameConstants.Images.SHIP_4.getID(),
 					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
+			_images.put(GameConstants.Images.SHOT_ROCKET.getID(),
+					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Rocket.gif"))));
 		}
 		catch (IOException e)
 		{

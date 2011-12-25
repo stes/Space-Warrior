@@ -33,6 +33,6 @@ public final class Packettype
 	public final static byte SV_SNAPSHOT = 2;
 
 	// snapshot types
-	public final static byte SNAP_PLAYERDATA = 0;
-	public final static byte SNAP_SHOT = 1;
+	public final static byte SNAP_PLAYERDATA = 0x01;
+	public final static byte SNAP_SHOT = 0x02;
 }

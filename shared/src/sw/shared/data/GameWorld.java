@@ -23,6 +23,9 @@ import java.util.Vector;
 import sw.shared.Packettype;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.LaserBeam;
+import sw.shared.data.entities.MGProjectile;
+import sw.shared.data.entities.Rocket;
+import sw.shared.data.entities.ShotEntity;
 import sw.shared.data.entities.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -69,13 +72,30 @@ public class GameWorld
 			IEntity newEnt;
 			// TODO move this somewhere else?
 			byte type = p.readByte();
-			if (type == Packettype.SNAP_PLAYERDATA)
+			if ((type & 0x0F) == Packettype.SNAP_PLAYERDATA)
 				newEnt = new SpaceShip("");
-			else if (type == Packettype.SNAP_SHOT)
-				newEnt = new LaserBeam(0, 0, 0, null);
+			else if ((type & 0x0F) == Packettype.SNAP_SHOT)
+				switch (type & 0xF0)
+				{
+					case ShotEntity.LASER:
+						newEnt = new LaserBeam(0, 0, 0, null);
+						break;
+					case ShotEntity.MASTER_LASER:
+						newEnt = new LaserBeam(0, 0, 0, null);
+						break;
+					case ShotEntity.ROCKET:
+						newEnt = new Rocket(0, 0, 0, null);
+						break;
+					case ShotEntity.MG:
+						newEnt = new MGProjectile(0, 0, 0, null);
+						break;
+					default:
+						return;
+				}
 			else
 				return;
 			newEnt.fromSnap(p);
+			System.out.println(newEnt);
 			tmp.add(newEnt);
 		}
 
@@ -109,7 +129,7 @@ public class GameWorld
 		Vector<IEntity> tmp = new Vector<IEntity>();
 		for (IEntity ent : _entities)
 		{
-			if (ent.getType() == type)
+			if (ent.getMainType() == type)
 				tmp.add(ent);
 		}
 		return tmp.toArray(a);

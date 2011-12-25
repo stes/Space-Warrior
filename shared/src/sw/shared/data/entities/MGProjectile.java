@@ -19,11 +19,16 @@ package sw.shared.data.entities;
 
 public class MGProjectile extends Projectile
 {
-
-	public MGProjectile(byte type)
+	public MGProjectile(double x, double y, double direction, SpaceShip owner)
 	{
-		super(type);
+		super(x, y, direction, owner, ShotEntity.MG);
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public double getDamage()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

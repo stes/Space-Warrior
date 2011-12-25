@@ -140,9 +140,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	@Override
 	public void fromSnap(Unpacker p)
 	{
+		super.fromSnap(p);
 		_name = p.readUTF();
 		_local = p.readBoolean();
-		super.fromSnap(p);
 		_score = p.readShort();
 		_alive = p.readBoolean();
 		this.setImageID(p.readInt());
@@ -340,9 +340,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this, true);
 					break;
 				case ShotType.ROCKET:
-					// TODO init rocket
-					throw new UnsupportedOperationException("Not implemented yet.");
-					//break;
+					s = new Rocket(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this);
+					((Rocket)s).setSpeed(this.getSpeed());
+					break;
 				case ShotType.MG:
 					throw new UnsupportedOperationException("Not implemented yet.");
 					//break;
@@ -356,11 +356,10 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 	@Override
 	public void snap(Packer p, String name)
 	{
+		super.snap(p, name);
 		boolean local = this.getName().equals(name);
-		p.writeByte(this.getType());
 		p.writeUTF(_name);
 		p.writeBoolean(local);
-		super.snap(p, name);
 		p.writeShort(_score);
 		p.writeBoolean(_alive);
 		p.writeInt(_imageID);

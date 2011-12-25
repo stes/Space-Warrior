@@ -17,11 +17,18 @@
  ******************************************************************************/
 package sw.shared.data.entities;
 
+
 public class Rocket extends Projectile
 {
-	public Rocket(byte type)
+	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
-		super(type);
-		// TODO Auto-generated constructor stub
+		super(x, y, direction, owner, ShotEntity.ROCKET);
+	}
+
+	@Override
+	public double getDamage()
+	{
+		// TODO Auto-generated method stub
+		return 100;
 	}
 }

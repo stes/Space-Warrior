@@ -42,4 +42,8 @@ public interface IEntity
 	public abstract void snap(Packer p, String name);
 
 	public abstract void tick();
+
+	public byte getMainType();
+	
+	public byte getSubType();
 }

@@ -67,6 +67,19 @@ public abstract class Entity implements IEntity
 	{
 		return _entType;
 	}
+	
+	/**
+	 * @return the entity's type ID
+	 */
+	public byte getMainType()
+	{
+		return (byte) (getType() & 0x0F);
+	}
+	
+	public byte getSubType()
+	{
+		return (byte) (getType() & 0xF0);
+	}
 
 	/**
 	 * @return the GameWorld containing this entity
@@ -100,7 +113,10 @@ public abstract class Entity implements IEntity
 	 * @param p The Packer object
 	 * @param name The entity's name
 	 */
-	public abstract void snap(Packer p, String name);
+	public void snap(Packer p, String name)
+	{
+		p.writeByte(this.getType());
+	}
 
 	/**
 	 * Processes an update step
