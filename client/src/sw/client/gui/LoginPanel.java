@@ -109,6 +109,7 @@ public class LoginPanel extends JPanel implements ClientListener
 	{
 		BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		super.paintComponents(img.getGraphics());
+		this._fileChooser.paint(_fileChooser.getGraphics());
 		g.drawImage(img, 5, 30, null);
 	}
 	
