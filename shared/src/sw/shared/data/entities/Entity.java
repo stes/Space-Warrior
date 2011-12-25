@@ -22,6 +22,8 @@ import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
 /**
+ * Represents an entity in the game world.
+ * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
@@ -31,39 +33,77 @@ public abstract class Entity implements IEntity
 	private byte _entType;
 	private GameWorld _world;
 
+	/**
+	 * creates a new entity with the specified type ID
+	 * 
+	 * @param type
+	 *            the entity's type ID
+	 */
 	public Entity(byte type)
 	{
 		_entType = type;
 	}
 
+	/**
+	 * destroys the entity object
+	 */
 	public void destroy()
 	{
 		_entDestroy = true;
 	}
 
+	/**
+	 * creates an entity out of an Unpacker object
+	 * 
+	 * @param p
+	 *            The Unpacker
+	 */
 	public abstract void fromSnap(Unpacker p);
 
+	/**
+	 * @return the entity's type ID
+	 */
 	public byte getType()
 	{
 		return _entType;
 	}
 
+	/**
+	 * @return the GameWorld containing this entity
+	 */
 	public GameWorld getWorld()
 	{
 		return _world;
 	}
 
+	/**
+	 * @return true, if this entity is destroyed
+	 */
 	public boolean isDestroyed()
 	{
 		return _entDestroy;
 	}
 
+	/**
+	 * Sets the GameWorld in which the entity is integrated
+	 * 
+	 * @param world
+	 *            The GameWorld
+	 */
 	public void setWorld(GameWorld world)
 	{
 		this._world = world;
 	}
 
+	/**
+	 * Packs the entity into a Packer object
+	 * @param p The Packer object
+	 * @param name The entity's name
+	 */
 	public abstract void snap(Packer p, String name);
 
+	/**
+	 * Processes an update step
+	 */
 	public abstract void tick();
 }

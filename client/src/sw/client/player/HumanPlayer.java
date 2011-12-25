@@ -52,6 +52,11 @@ public class HumanPlayer extends Player implements KeyListener
 	private boolean _left;
 	private boolean _right;
 
+	/**
+	 * Creates a new instance
+	 * 
+	 * @param stateManager
+	 */
 	public HumanPlayer(IGameStateManager stateManager)
 	{
 		super(stateManager);

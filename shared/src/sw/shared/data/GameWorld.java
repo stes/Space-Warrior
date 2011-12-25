@@ -28,6 +28,8 @@ import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
 /**
+ * Represents the world which contains the various kinds of entities
+ * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
@@ -35,16 +37,28 @@ public class GameWorld
 {
 	private Vector<IEntity> _entities;
 
+	/**
+	 * Creates a new, empty GameWorld
+	 */
 	public GameWorld()
 	{
 		_entities = new Vector<IEntity>();
 	}
 
+	/**
+	 * Removes all entities
+	 */
 	public void clear()
 	{
 		_entities.clear();
 	}
 
+	/**
+	 * Derives a GameWorld from a snapshot
+	 * 
+	 * @param p
+	 *            The Unpacker representing the snapshot
+	 */
 	public void fromSnap(Unpacker p)
 	{
 		Vector<IEntity> tmp = new Vector<IEntity>();
@@ -58,7 +72,7 @@ public class GameWorld
 			if (type == Packettype.SNAP_PLAYERDATA)
 				newEnt = new SpaceShip("");
 			else if (type == Packettype.SNAP_SHOT)
-				newEnt = new LaserBeam(0, 0, 0);
+				newEnt = new LaserBeam(0, 0, 0, null);
 			else
 				return;
 			newEnt.fromSnap(p);
@@ -68,11 +82,28 @@ public class GameWorld
 		_entities = tmp;
 	}
 
+	/**
+	 * @return an array of all entities in this game world
+	 */
 	public IEntity[] getAllEntities()
 	{
 		return _entities.toArray(new IEntity[0]);
 	}
 
+	/**
+	 * Returns all entities of the specified type Note that the vector's content
+	 * is based on the specified entity ID by the parameter "type", not by the
+	 * type of the returned array
+	 * 
+	 * @param <T>
+	 *            The entity type
+	 * @param type
+	 *            The type id
+	 * @param a
+	 *            An arbitrary array (may even be empty) which specifies the
+	 *            type of the returned array
+	 * @return All entities matching the specified ID
+	 */
 	public <T> T[] getEntitiesByType(byte type, T[] a)
 	{
 		Vector<IEntity> tmp = new Vector<IEntity>();
@@ -84,22 +115,46 @@ public class GameWorld
 		return tmp.toArray(a);
 	}
 
+	/**
+	 * @return all player entities
+	 */
 	public SpaceShip[] getPlayers()
 	{
 		return this.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new SpaceShip[] {});
 	}
 
+	/**
+	 * Inserts the specified entity
+	 * 
+	 * @param e
+	 *            The entity to integrate in this game world
+	 */
 	public void insert(IEntity e)
 	{
 		e.setWorld(this);
 		_entities.add(e);
 	}
 
+	/**
+	 * Removes the specified entity from this game world
+	 * 
+	 * @param e
+	 *            The entity to remove from this game world
+	 */
 	public void remove(IEntity e)
 	{
 		_entities.remove(e);
 	}
 
+	// TODO name?
+	/**
+	 * Packs this game world into a Packer instance
+	 * 
+	 * @param p
+	 *            The Packer instance
+	 * @param name
+	 *            The name
+	 */
 	public void snap(Packer p, String name)
 	{
 		p.writeInt(_entities.size());
@@ -110,6 +165,10 @@ public class GameWorld
 		}
 	}
 
+	/**
+	 * Processes one update step in this game world Calls all update methods in
+	 * the entities in this game world
+	 */
 	public void tick()
 	{
 		for (Iterator<IEntity> i = _entities.iterator(); i.hasNext();)

@@ -17,9 +17,24 @@
  ******************************************************************************/
 package sw.shared.data.entities;
 
+/**
+ * Represents any kind of shots who damages a player
+ * @author Redix, stes, Abbadonn
+ * @version 25.12.11
+ */
 public interface IShot extends IEntity
 {
-	
-	void fire(SpaceShip spaceShip);
+	/**
+	 * @return the damage this shot causes when hitting a player
+	 */
+	double getDamage();
+	/**
+	 * @return the player who has fired this shot
+	 */
+	SpaceShip getOwner();
+	/**
+	 * Fires this shot and causes damages
+	 */
+	void fire();
 
 }

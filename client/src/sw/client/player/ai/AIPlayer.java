@@ -23,7 +23,7 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.Player;
 
 /**
- * The basic class for an artificial intelligence player (bot)
+ * The basic class for an artificial intelligence player / bot
  * 
  * @author Redix, stes, Abbadonn
  * @version 27.11.2011

@@ -21,10 +21,17 @@ import sw.shared.GameConstants;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
+/**
+ * Basic class for all shots based on moving projectiles
+ * 
+ * @author Redix, stes, Abbadonn
+ * @version 25.12.11
+ */
 public abstract class Projectile extends MoveableEntity
 {
 	private double _damage;
 	
+	// TODO private
 	public Projectile(byte type)
 	{
 		super(type);

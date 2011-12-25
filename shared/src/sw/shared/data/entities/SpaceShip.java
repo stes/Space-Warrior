@@ -334,10 +334,10 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 			switch (id)
 			{
 				case ShotType.LASER:
-					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection());
+					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this);
 					break;
 				case ShotType.MASTER_LASER:
-					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection());
+					s = new LaserBeam(this.positionAfter(time).x, this.positionAfter(time).y, getDirection(), this, true);
 					break;
 				case ShotType.ROCKET:
 					// TODO init rocket
@@ -348,7 +348,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>
 					//break;
 			}
 			this.getWorld().insert(s);
-			s.fire(this);
+			s.fire();
 			
 		}
 	}

@@ -35,19 +35,21 @@ public class LaserBeam extends StaticEntity implements IShot
 {
 	private boolean _isMaster;
 	private int _lifetime;
+	private SpaceShip _owner;
 
-	public LaserBeam(double x, double y, double direction)
+	public LaserBeam(double x, double y, double direction, SpaceShip owner)
 	{
-		this(x, y, direction, false);
+		this(x, y, direction,owner, false);
 	}
 
-	public LaserBeam(double x, double y, double direction, boolean master)
+	public LaserBeam(double x, double y, double direction, SpaceShip owner, boolean master)
 	{
 		super(Packettype.SNAP_SHOT);
 		_isMaster = master;
 		setDirection(direction);
 		setX(x);
 		setY(y);
+		_owner = owner;
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
 	}
 
@@ -87,17 +89,18 @@ public class LaserBeam extends StaticEntity implements IShot
 		return new Point.Double(l.getX2(), l.getY2());
 	}
 
-	public void fire(SpaceShip attacker)
+	//TODO move into another class..
+	public void fire()
 	{
 		SpaceShip[] players = this.getWorld().getPlayers();
 		for (SpaceShip pl : players)
 		{
-			if (pl.isAlive() && !pl.getName().equals(attacker.getName())
+			if (pl.isAlive() && !pl.getName().equals(getOwner().getName())
 					&& this.distanceTo(pl.getPosition()) < GameConstants.MAX_RANGE)
 			{
 				pl.takeDamage(this.getDamage());
 				if (!pl.isAlive())
-					attacker.setScore(attacker.getScore() + 1);
+					getOwner().setScore(getOwner().getScore() + 1);
 			}
 		}
 	}
@@ -112,7 +115,7 @@ public class LaserBeam extends StaticEntity implements IShot
 	/**
 	 * @return the damage from the shot
 	 */
-	public int getDamage()
+	public double getDamage()
 	{
 		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
 	}
@@ -139,5 +142,11 @@ public class LaserBeam extends StaticEntity implements IShot
 		_lifetime--;
 		if (_lifetime <= 0)
 			this.destroy();
+	}
+
+	@Override
+	public SpaceShip getOwner()
+	{
+		return _owner;
 	}
 }

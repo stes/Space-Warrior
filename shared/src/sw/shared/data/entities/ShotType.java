@@ -17,6 +17,11 @@
  ******************************************************************************/
 package sw.shared.data.entities;
 
+/**
+ * Represents the various kinds of shots a player can fire
+ * @author Redix stes Abbadonn
+ * @version 25.12.11
+ */
 public final class ShotType
 {
 	public final static int LASER = 1;

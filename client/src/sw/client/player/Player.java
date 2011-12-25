@@ -112,6 +112,9 @@ public abstract class Player
 		return _stateManager.getGameWorld();
 	}
 
+	/**
+	 * @return the state manager assigned to this player
+	 */
 	public IGameStateManager getStateManager()
 	{
 		return _stateManager;
