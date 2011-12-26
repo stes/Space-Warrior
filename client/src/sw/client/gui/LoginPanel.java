@@ -109,6 +109,7 @@ public class LoginPanel extends JPanel implements ClientListener
 	{
 		BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		super.paintComponents(img.getGraphics());
+		// TODO improve
 		if (_fileChooser.isShowing())
 			this._fileChooser.paint(_fileChooser.getGraphics());
 		g.drawImage(img, 5, 30, null);
@@ -262,6 +263,7 @@ public class LoginPanel extends JPanel implements ClientListener
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				// TODO bugfix: problem with event dispatching
 				// Handle open button action.
 				int returnVal = _fileChooser.showOpenDialog(_self);
 

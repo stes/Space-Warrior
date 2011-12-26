@@ -101,8 +101,8 @@ public abstract class MoveableEntity extends StaticEntity
 	 */
 	public void move()
 	{
-		double x = _speed * Math.sin(this.getDirection());
-		double y = _speed * Math.cos(this.getDirection());
+		double x = -_speed * Math.sin(this.getDirection());
+		double y = -_speed * Math.cos(this.getDirection());
 		this.setX(this.getX() + x);
 		this.setY(this.getY() + y);
 		this.setDirection(this.getDirection() + _turnSpeed);

@@ -11,8 +11,7 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=SampleAI/src&lt;sw.rlagent"/>
-        <javaElement handleIdentifier="=SampleAI/src&lt;config"/>
+        <javaElement handleIdentifier="=SampleAI/src"/>
         <file path="/SampleAI/.project"/>
         <file path="/SampleAI/.classpath"/>
     </selectedElements>

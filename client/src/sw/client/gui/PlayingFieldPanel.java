@@ -60,6 +60,8 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	private BufferedImage _backgroundImg;
 	private Insets _insets;
 
+	private boolean _isDebugActive;
+
 	private IGameStateManager _stateManager;
 
 	/**
@@ -108,6 +110,12 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
+		_isDebugActive = true;;
+	}
+
+	public void setDebugMode(boolean active)
+	{
+		_isDebugActive = active;
 	}
 
 	public void paintComponent(Graphics g)
@@ -160,10 +168,14 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			if (pl.isLocal())
 			{
 				this.paintBars(g2d, pl);
+				if (_isDebugActive)
+				{
+					this.showDebugInfo(g2d, pl);
+				}
 			}
 
 			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
-					Math.PI - pl.getDirection()),
+					-pl.getDirection()),
 					_insets.left
 							+ (int) (scaleX * (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
 					_insets.top
@@ -194,7 +206,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 					g2d.setColor(Color.GREEN);
 					double size = GameConstants.ROCKET_SIZE;
 					g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
-							Math.PI - r.getDirection()),
+							-r.getDirection()),
 							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
 							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
 							(int) (size * scaleX),
@@ -202,6 +214,27 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 							null);
 				}
 			}
+		}
+	}
+
+	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)
+	{
+		int x = this.getWidth() - 200;
+		int y = 300;
+
+		g2d.setColor(Color.WHITE);
+		String[] info = new String[]
+        {
+			"X:\t\t" + pl.getX(),
+			"Y:\t\t" + pl.getY(),
+			"Direction:\t" + pl.getDirection(),
+			"Speed:\t" + pl.getSpeed(),
+			"Turn Speed:\t" + pl.getTurnSpeed()
+		};
+		
+		for (String s : info)
+		{
+			g2d.drawString(s, x, y += 35);
 		}
 	}
 
