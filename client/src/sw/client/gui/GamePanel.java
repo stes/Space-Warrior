@@ -40,6 +40,8 @@ import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientListener;
 import sw.client.IClient;
+import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.ConnectionEvent.ActionType;
 import sw.client.player.HumanPlayer;
@@ -49,7 +51,7 @@ import sw.shared.data.ServerInfo;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public class GamePanel extends JPanel implements ClientListener, ActionListener
+public class GamePanel extends JPanel implements ClientListener, ActionListener, GameStateChangedListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
 
@@ -360,6 +362,25 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public void gameStateChanged(GameStateChangedEvent e)
+	{
+	}
+
+
+	@Override
+	public void newRound(GameStateChangedEvent e)
+	{
+	}
+
+
+	@Override
+	public void playerInit(GameStateChangedEvent e)
+	{
+		// TODO best practise?
+		_playingField.playerInit(e);
 	}
 
 }
