@@ -1,61 +1,56 @@
 package sw.pagent;
 
+import java.util.HashMap;
+
 public class ProbabilityDistribution
 {
-	private double[][] _distribution;
+	private HashMap<Integer, double[]> _distribution;
 	private int _actions;
-	private int _states;
 	
-	public ProbabilityDistribution(int actions, int states)
+	public ProbabilityDistribution(int actions)
 	{
 		_actions = actions;
-		_states = states;
-		_distribution = new double[getActions()][getStates()];
+		_distribution = new HashMap<Integer, double[]>();
 	}
 	
 	public int getActions()
 	{
 		return _actions;
 	}
-	
-	public int getStates()
+
+	public double getProbability(int action, PState givenState)
 	{
-		return _states;
+		return _distribution.get(givenState)[action];
 	}
 	
-	public double getProbability(int action, int givenState)
+	public void setProbabilty(int action, PState givenState, double value)
 	{
-		return _distribution[action][givenState];
-	}
-	
-	public void setProbabilty(int action, int givenState, double value)
-	{
-		_distribution[action][givenState] = value;
+		_distribution.get(givenState)[action] = value;
 	}
 	
 	public void normalize()
 	{
-		for (int i = 0; i < getStates(); i++)
+		for (double[] d : _distribution.values())
 		{
 			double sum = 0;
 			for (int j = 0; j < getActions(); j++)
 			{
-				sum += getProbability(j, i);
+				sum += d[j];
 			}
 			for (int j = 0; j < getActions(); j++)
 			{
-				setProbabilty(j, i, getProbability(j, i) / sum);
+				d[j] /= sum;
 			}
 		}
 	}
 	
 	public void init()
 	{
-		for (int i = 0; i < getStates(); i++)
+		for (double[] d : _distribution.values())
 		{
 			for (int j = 0; j < getActions(); j++)
 			{
-				setProbabilty(j, i, 1);
+				d[j] = 1;
 			}
 		}
 		this.normalize();

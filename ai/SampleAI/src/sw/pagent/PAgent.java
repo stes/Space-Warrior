@@ -22,7 +22,7 @@ public class PAgent extends AIPlayer
 	
 	private void init()
 	{
-		_distribution = new ProbabilityDistribution(ACTIONS, STATES);
+		_distribution = new ProbabilityDistribution(ACTIONS);
 		_distribution.init();
 		_visitedStates = new ArrayList<PState>();
 	}
