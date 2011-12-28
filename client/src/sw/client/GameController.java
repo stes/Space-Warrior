@@ -74,7 +74,7 @@ public class GameController implements ClientListener, IGameStateManager
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
 		_players = new SpaceShip[0];
-		_localPlayer = new HumanPlayer(this);
+		//_localPlayer = new HumanPlayer(this);
 		_rendering = false;
 	}
 	

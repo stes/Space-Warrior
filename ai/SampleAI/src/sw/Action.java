@@ -1,6 +1,6 @@
-package sw.rlagent;
+package sw;
 
-public enum Actions
+public enum Action
 {
 	ACCELERATE(1), TURN_RIGHT(2), TURN_LEFT(3), SHOOT(4);
 
@@ -11,7 +11,7 @@ public enum Actions
 		return _id;
 	}
 
-	Actions(int id)
+	Action(int id)
 	{
 		_id = id;
 	}

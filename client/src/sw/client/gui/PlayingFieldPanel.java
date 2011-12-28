@@ -63,6 +63,8 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	private Insets _insets;
 	private double _snapTime;
 
+	private boolean _isDebugActive;
+
 	private IGameStateManager _stateManager;
 
 	/**
@@ -111,6 +113,12 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
+		_isDebugActive = true;;
+	}
+
+	public void setDebugMode(boolean active)
+	{
+		_isDebugActive = active;
 	}
 
 	public void paintComponent(Graphics g)
@@ -178,6 +186,10 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			if (pl.isLocal())
 			{
 				this.paintBars(g2d, pl);
+				if (_isDebugActive)
+				{
+					this.showDebugInfo(g2d, pl);
+				}
 			}
 			
 			// TODO: generalize this for all entities
@@ -187,12 +199,9 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			
 			double direction = prevPl.getDirection() + Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
 
-			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
-					Math.PI - direction),
-					_insets.left
-							+ (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
-					_insets.top
-							+ (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
+			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), direction),
+					_insets.left + (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
+					_insets.top + (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
 					(int) (GameConstants.PLAYER_SIZE * scaleX),
 					(int) (GameConstants.PLAYER_SIZE * scaleY),
 					null);
@@ -219,7 +228,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 					g2d.setColor(Color.GREEN);
 					double size = GameConstants.ROCKET_SIZE;
 					g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
-							Math.PI - r.getDirection()),
+							-r.getDirection()),
 							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
 							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
 							(int) (size * scaleX),
@@ -227,6 +236,27 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 							null);
 				}
 			}
+		}
+	}
+
+	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)
+	{
+		int x = this.getWidth() - 200;
+		int y = 300;
+
+		g2d.setColor(Color.WHITE);
+		String[] info = new String[]
+        {
+			"X:\t\t" + pl.getX(),
+			"Y:\t\t" + pl.getY(),
+			"Direction:\t" + pl.getDirection(),
+			"Speed:\t" + pl.getSpeed(),
+			"Turn Speed:\t" + pl.getTurnSpeed()
+		};
+		
+		for (String s : info)
+		{
+			g2d.drawString(s, x, y += 35);
 		}
 	}
 

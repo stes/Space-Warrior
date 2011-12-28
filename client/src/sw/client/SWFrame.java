@@ -268,6 +268,8 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_gamePanel.setLocation(_insets.left, _insets.top + 100);
+		
+		_controller.addGameStateChangedListener(_gamePanel);
 
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
 		_loginPanel.setLocation(_insets.left, _insets.top);

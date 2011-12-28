@@ -30,9 +30,9 @@ public class SimpleState
 		ArrayList<Byte> buffer = new ArrayList<Byte>();
 		for (SpaceShip d : _playerList)
 		{
-			buffer.add((byte) ((int)d.getDirection()));
-			buffer.add((byte) ((int)d.getPosition().x));
-			buffer.add((byte) ((int)d.getPosition().y));
+			buffer.add((byte) ((int) d.getDirection()));
+			buffer.add((byte) ((int) d.getPosition().x));
+			buffer.add((byte) ((int) d.getPosition().y));
 		}
 
 		id = buffer;
@@ -68,8 +68,8 @@ public class SimpleState
 				}
 			}
 		}
-		_features = new double[] {minDist};
-		_weights = new double[] {1};
+		_features = new double[] { minDist };
+		_weights = new double[] { 1 };
 	}
 
 	public double value()
@@ -101,7 +101,7 @@ public class SimpleState
 	}
 
 	public SimpleState successor(Actions a)
-	{		
+	{
 		SpaceShip data = new SpaceShip(_localDataSet);
 		PlayerInput input = RLAgent._self.applyAction(a);
 		if (data != null && data.isAlive())
@@ -110,8 +110,8 @@ public class SimpleState
 			data.reload();
 			data.move();
 		}
-		
+
 		return new SimpleState(_localDataSet, _playerList);
 	}
-	
+
 }

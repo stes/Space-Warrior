@@ -97,7 +97,15 @@ public abstract class StaticEntity extends Entity
 
 	public void setDirection(double direction)
 	{
-		_direction = direction % (2 * Math.PI);
+		_direction = direction;
+		if (_direction > Math.PI)
+		{
+			_direction = -Math.PI;
+		}
+		else if (_direction < -Math.PI)
+		{
+			_direction = Math.PI;
+		}
 	}
 
 	public void setX(double x)
