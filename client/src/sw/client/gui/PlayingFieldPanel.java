@@ -29,6 +29,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
@@ -42,6 +43,7 @@ import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
+import sw.shared.data.GameWorld;
 import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.LaserBeam;
@@ -59,6 +61,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
 	private Insets _insets;
+	private double _snapTime;
 
 	private IGameStateManager _stateManager;
 
@@ -137,22 +140,37 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				null);
 
 		Graphics2D g2d = (Graphics2D) g;
-
-		for (Entity ent : _stateManager.getGameWorld().getEntitiesByType(Packettype.SNAP_SHOT,
-				new Entity[] {}))
+		
+		_stateManager.setRendering(true);
+		
+		_snapTime = _stateManager.snapTime();
+		GameWorld prevWorld = _stateManager.getPrevGameWorld();
+		GameWorld world = _stateManager.getGameWorld();
+		
+		_stateManager.setRendering(false);
+		
+		for (Entity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new Entity[] {}))
 		{
-			this.drawEntity(g2d, ent, scaleX, scaleY);
+			this.drawEntity(g2d, ent, ent, scaleX, scaleY);
 		}
-		for (Entity ent : _stateManager.getGameWorld().getPlayers())
+		
+		for (SpaceShip ent : world.getPlayers())
 		{
-			this.drawEntity(g2d, ent, scaleX, scaleY);
+			SpaceShip prevEnt = ent;
+			for(SpaceShip prev : prevWorld.getPlayers())
+			{
+				if(prev.getName().equals(ent.getName()))
+					prevEnt = prev;
+			}
+			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
 		}
 	}
 
-	private void drawEntity(Graphics2D g2d, Entity ent, double scaleX, double scaleY)
+	private void drawEntity(Graphics2D g2d, Entity ent, Entity prevEnt, double scaleX, double scaleY)
 	{
 		if (ent.getMainType() == Packettype.SNAP_PLAYERDATA)
 		{
+			SpaceShip prevPl = (SpaceShip) prevEnt;
 			SpaceShip pl = (SpaceShip) ent;
 			if (!pl.isAlive())
 				return;
@@ -161,13 +179,20 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			{
 				this.paintBars(g2d, pl);
 			}
+			
+			// TODO: generalize this for all entities
+			Point2D.Double pos = new Point2D.Double(
+					prevPl.getPosition().getX() + (pl.getPosition().getX() - prevPl.getPosition().getX()) * _snapTime,
+					prevPl.getPosition().getY() + (pl.getPosition().getY() - prevPl.getPosition().getY()) * _snapTime);
+			
+			double direction = prevPl.getDirection() + Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
 
 			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
-					Math.PI - pl.getDirection()),
+					Math.PI - direction),
 					_insets.left
-							+ (int) (scaleX * (pl.getPosition().getX() - GameConstants.PLAYER_SIZE / 2)),
+							+ (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
 					_insets.top
-							+ (int) (scaleY * (pl.getPosition().getY() - GameConstants.PLAYER_SIZE / 2)),
+							+ (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
 					(int) (GameConstants.PLAYER_SIZE * scaleX),
 					(int) (GameConstants.PLAYER_SIZE * scaleY),
 					null);
