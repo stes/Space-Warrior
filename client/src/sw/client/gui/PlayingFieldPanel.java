@@ -199,7 +199,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			
 			double direction = prevPl.getDirection() + Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
 
-			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), direction),
+			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), -direction),
 					_insets.left + (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
 					_insets.top + (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
 					(int) (GameConstants.PLAYER_SIZE * scaleX),
