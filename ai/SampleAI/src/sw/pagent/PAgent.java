@@ -1,18 +1,22 @@
 package sw.pagent;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
+import sw.shared.data.entities.shots.IShot;
 
 public class PAgent extends AIPlayer
 {
-	public static final int ACTIONS = 5;
-	public static final int STATES = 50;
+	public static final int ACTIONS = 4;
+	public static final double LEARNRATE = 0.5;
 	
 	ProbabilityDistribution _distribution;
-	private ArrayList<PState> _visitedStates;
+	private HashMap<PState, int[]> _visitedStates;
+	private int _oldScore;
 	
 	public PAgent(IGameStateManager stateManager)
 	{
@@ -23,8 +27,8 @@ public class PAgent extends AIPlayer
 	private void init()
 	{
 		_distribution = new ProbabilityDistribution(ACTIONS);
-		_distribution.init();
-		_visitedStates = new ArrayList<PState>();
+		_visitedStates = new HashMap<PState, int[]>();
+		_oldScore = 0;
 	}
 
 	@Override
@@ -32,22 +36,99 @@ public class PAgent extends AIPlayer
 	{
 		super.gameStateChanged(e);
 		
-		if (e.getGameWorld().getPlayers().length == 1)
-			return;
+//		if (e.getGameWorld().getPlayers().length == 1)
+//			return;
 		
+		// determine current state
 		PState state = new PState(this.getDataSet(), this.getGameWorld());
-		state.showAngle();
-		if (!_visitedStates.contains(state))
-		{
-			_visitedStates.add(state);
-		}
+		
+		// add state, if new
+		this.exploreState(state);
+		
+		// perform action
+		this.performAction(state);
 	}
 
+	private void exploreState(PState state)
+	{
+		if (!_visitedStates.containsKey(state))
+		{
+			_visitedStates.put(state, new int[]{1});
+			_distribution.initProbabilities(state);
+		}
+		else
+		{
+			_visitedStates.get(state)[0]++;
+		}
+		_distribution.normalize();
+	}
+	
+	private void performAction(PState state)
+	{
+		int action = _distribution.sampleAction(state);
+		
+		switch(action)
+		{
+			case Actions.HALT:
+				getCurrentState().setDirection(0);
+				getCurrentState().setRotation(0);
+				getCurrentState().setShot(0);
+				break;
+			case Actions.ACCELERATE:
+				getCurrentState().setDirection(1);
+				break;
+			case Actions.TURN_LEFT:
+				getCurrentState().setRotation(1);
+				break;		
+			case Actions.TURN_RIGHT:
+				getCurrentState().setRotation(-1);
+				break;
+			case Actions.SHOOT:
+				getCurrentState().setShot(IShot.LASER);
+				break;			
+			case Actions.MASTER_SHOOT:
+				getCurrentState().setShot(IShot.MASTER_LASER);
+				break;
+		}
+		
+		this.update();
+		getCurrentState().setShot(0);
+	}
+	
+	private void updateProbabilities(int reward)
+	{
+		for (Entry<PState, int[]> stateSet : _visitedStates.entrySet())
+		{
+			for (int i = 0; i < _distribution.getActions(); i++)
+			{
+				double oldProb = _distribution.getProbability(i, stateSet.getKey());
+				double newProb = oldProb + Math.tanh(reward * stateSet.getValue()[0] / 200);
+				System.out.println("Updated probability for action " + i + ": "+ newProb);
+				_distribution.setProbabilty(i, stateSet.getKey(), newProb);
+			}
+		}
+		_distribution.normalize();
+		System.out.println("new distribution: \n"+_distribution.toString());
+		try
+		{
+			_distribution.save(System.getProperty("user.dir"));
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void newRound(GameStateChangedEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+		int reward = (this.getDataSet().getScore() - _oldScore) * 100 / getGameWorld().getPlayers().length;
+		_oldScore = this.getDataSet().getScore();
+		if (e.getWinner().equals(this.getDataSet()))
+			reward += 100;
+		System.out.println("got a reward of " + reward);
+		this.updateProbabilities(reward);
 	}
 
 }

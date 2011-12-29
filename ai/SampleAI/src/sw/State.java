@@ -1,16 +1,11 @@
 package sw;
 
-import java.util.ArrayList;
-
-import sw.shared.data.GameWorld;
 
 
 public abstract class State
 {
 	private double[] _features;
 	private double[] _weights;
-
-	public ArrayList<Byte> id;
 
 	public State(int features)
 	{
@@ -60,7 +55,7 @@ public abstract class State
 		for (double f : _features)
 		{
 			sb.append(f);
-			sb.append("; ");
+			sb.append(";");
 		}
 		return sb.toString();
 	}
