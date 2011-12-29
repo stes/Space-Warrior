@@ -24,11 +24,14 @@ import sw.shared.data.entities.players.SpaceShip;
 
 public interface IGameStateManager
 {
-	/**
-	 * @return a list of all players currently participating in the game
-	 */
+	public void setRendering(boolean render);
+	
+	public GameWorld getPrevGameWorld();
+	
 	public GameWorld getGameWorld();
-
+	
+	public double snapTime();
+	
 	public SpaceShip[] getPlayerList();
 
 	public Player getLocalPlayer();

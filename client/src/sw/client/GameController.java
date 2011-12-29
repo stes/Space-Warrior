@@ -49,25 +49,40 @@ public class GameController implements ClientListener, IGameStateManager
 		GameController._runAI = true;
 	}
 
+	private GameWorld _prevWorld;
 	private GameWorld _world;
 	private IClient _client;
 	private SpaceShip[] _players;
 	private Player _localPlayer;
+	
+	private long _prevLastSnap;
+	private long _lastSnap;
 
 	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
 
 	private boolean _isConnected;
+	
+	private boolean _rendering;
 
 	/**
 	 * creates an new GameController
 	 */
 	public GameController(IClient client)
 	{
+		_prevWorld = new GameWorld();
 		_world = new GameWorld();
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
 		_players = new SpaceShip[0];
 		//_localPlayer = new HumanPlayer(this);
+		_rendering = false;
+	}
+	
+	public synchronized void setRendering(boolean render)
+	{
+		_rendering = render;
+		if(_rendering == false)
+			this.notify();
 	}
 
 	@Override
@@ -93,9 +108,15 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		this.setIsConnected(false);
 	}
+	
+	@Override
+	public synchronized GameWorld getPrevGameWorld()
+	{
+		return _prevWorld;
+	}
 
 	@Override
-	public GameWorld getGameWorld()
+	public synchronized GameWorld getGameWorld()
 	{
 		return _world;
 	}
@@ -103,6 +124,14 @@ public class GameController implements ClientListener, IGameStateManager
 	public boolean getIsPlayerHuman()
 	{
 		return (_localPlayer instanceof HumanPlayer);
+	}
+	
+	@Override
+	public synchronized double snapTime() // TODO: find a better name
+	{
+		if(_lastSnap == 0 || _prevLastSnap == 0)
+			return 1;
+		return (System.currentTimeMillis() - _lastSnap) / (double) (_lastSnap - _prevLastSnap);
 	}
 
 	@Override
@@ -112,7 +141,7 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public SpaceShip[] getPlayerList()
+	public synchronized SpaceShip[] getPlayerList()
 	{
 		return _players;
 	}
@@ -156,6 +185,23 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		_gameStateChangedListener.remove(l);
 	}
+	
+	public synchronized void setGameworld(GameWorld world)
+	{
+		while(_rendering)
+		{
+			try
+			{
+				this.wait();
+			}
+			catch (InterruptedException e1) { }
+		}
+		_prevLastSnap = _lastSnap;
+		_lastSnap = System.currentTimeMillis();
+		_prevWorld = _world;
+		_world = world;
+		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
+	}
 
 	@Override
 	public void serverInfo(ServerInfo info)
@@ -165,8 +211,9 @@ public class GameController implements ClientListener, IGameStateManager
 	@Override
 	public void snapshot(Unpacker snapshot)
 	{
-		_world.fromSnap(snapshot);
-		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
+		GameWorld world = new GameWorld();
+		world.fromSnap(snapshot);
+		this.setGameworld(world);
 		for (SpaceShip pl : _players)
 		{
 			if (pl.isLocal())
