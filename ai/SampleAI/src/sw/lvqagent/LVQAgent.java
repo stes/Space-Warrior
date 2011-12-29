@@ -10,17 +10,16 @@ import sw.client.player.ai.AIPlayer;
 public class LVQAgent extends AIPlayer
 {
 	private ArrayList<State> _visitedStates;
-	
+
 	public LVQAgent(IGameStateManager stateManager)
 	{
 		super(stateManager);
 		_visitedStates = new ArrayList<State>();
 	}
-	
+
 	@Override
 	public void newRound(GameStateChangedEvent e)
-	{
-	}
+	{}
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
@@ -33,9 +32,9 @@ public class LVQAgent extends AIPlayer
 			System.out.println("added state: " + state.toString());
 		}
 	}
-	
+
 	private void saveResults()
 	{
-		
+
 	}
 }

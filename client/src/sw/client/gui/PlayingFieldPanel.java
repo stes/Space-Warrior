@@ -46,9 +46,9 @@ import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.data.entities.shots.IShot;
 import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.Rocket;
-import sw.shared.data.entities.shots.ShotEntity;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -83,14 +83,185 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		this.init();
 	}
 
+	@Override
+	public void gameStateChanged(GameStateChangedEvent e)
+	{}
+
+	@Override
+	public void newRound(GameStateChangedEvent e)
+	{}
+
+	@Override
+	public void paintComponent(Graphics g)
+	{}
+
+	@Override
+	public void paintComponents(Graphics g)
+	{}
+
+	@Override
+	public void playerInit(GameStateChangedEvent e)
+	{
+		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
+		{
+			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
+		}
+	}
+
+	public void render(Graphics g)
+	{
+		// get parent frame's insets
+		if (_insets == null)
+		{
+			_insets = this.getParentFrame(this).getInsets();
+		}
+
+		// determine scale factors
+		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
+		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
+
+		// TODO use insets
+		g.drawImage(_backgroundImg,
+				_insets.left,
+				_insets.top,
+				this.getWidth(),
+				this.getHeight(),
+				null);
+
+		Graphics2D g2d = (Graphics2D) g;
+
+		_stateManager.setRendering(true);
+
+		_snapTime = _stateManager.snapTime();
+		GameWorld prevWorld = _stateManager.getPrevGameWorld();
+		GameWorld world = _stateManager.getGameWorld();
+
+		_stateManager.setRendering(false);
+
+		for (Entity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new Entity[] {}))
+		{
+			this.drawEntity(g2d, ent, ent, scaleX, scaleY);
+		}
+
+		for (SpaceShip ent : world.getPlayers())
+		{
+			SpaceShip prevEnt = ent;
+			for (SpaceShip prev : prevWorld.getPlayers())
+			{
+				if (prev.getName().equals(ent.getName()))
+				{
+					prevEnt = prev;
+				}
+			}
+			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
+		}
+	}
+
+	public void setDebugMode(boolean active)
+	{
+		_isDebugActive = active;
+	}
+
+	// TODO improve this
+	protected BufferedImage rotateImage(BufferedImage src, double degrees)
+	{
+		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
+				src.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = rotatedImage.createGraphics();
+		g.drawImage(src, this.rotateTransform(src, degrees), null);
+		return rotatedImage;
+	}
+
+	protected AffineTransform rotateTransform(BufferedImage src, double degrees)
+	{
+		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
+	}
+
+	private void drawEntity(Graphics2D g2d, Entity ent, Entity prevEnt, double scaleX, double scaleY)
+	{
+		if (ent.getMainType() == Packettype.SNAP_PLAYERDATA)
+		{
+			SpaceShip prevPl = (SpaceShip) prevEnt;
+			SpaceShip pl = (SpaceShip) ent;
+			if (!pl.isAlive())
+			{
+				return;
+			}
+
+			if (pl.isLocal())
+			{
+				this.paintBars(g2d, pl);
+				if (_isDebugActive)
+				{
+					this.showDebugInfo(g2d, pl);
+				}
+			}
+
+			// TODO: generalize this for all entities
+			Point2D.Double pos = new Point2D.Double(prevPl.getPosition().getX()
+					+ (pl.getPosition().getX() - prevPl.getPosition().getX()) * _snapTime,
+					prevPl.getPosition().getY()
+							+ (pl.getPosition().getY() - prevPl.getPosition().getY()) * _snapTime);
+
+			double direction = prevPl.getDirection()
+					+ Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
+
+			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
+					-direction),
+					_insets.left + (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
+					_insets.top + (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
+					(int) (GameConstants.PLAYER_SIZE * scaleX),
+					(int) (GameConstants.PLAYER_SIZE * scaleY),
+					null);
+		}
+		else if (ent.getMainType() == Packettype.SNAP_SHOT)
+		{
+			switch (ent.getSubType())
+			{
+				case IShot.LASER:
+				case IShot.MASTER_LASER:
+				{
+					LaserBeam s = (LaserBeam) ent;
+					g2d.setColor(Color.BLUE);
+					g2d.setStroke(new BasicStroke(3));
+					g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
+							_insets.top + (int) (s.getY() * scaleY),
+							_insets.left + (int) (s.endPoint().getX() * scaleX),
+							_insets.top + (int) (s.endPoint().getY() * scaleY));
+					break;
+				}
+				case IShot.ROCKET:
+				{
+					Rocket r = (Rocket) ent;
+					g2d.setColor(Color.GREEN);
+					double size = GameConstants.ROCKET_SIZE;
+					g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
+							-r.getDirection()),
+							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
+							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
+							(int) (size * scaleX),
+							(int) (size * scaleY),
+							null);
+				}
+			}
+		}
+	}
+
 	private JFrame getParentFrame(Component c)
 	{
 		if (c.getParent() == null)
+		{
 			return null;
+		}
 		if (c.getParent() instanceof JFrame)
+		{
 			return (JFrame) c.getParent();
+		}
 		else
-			return getParentFrame(c.getParent());
+		{
+			return this.getParentFrame(c.getParent());
+		}
 	}
 
 	private void init()
@@ -116,151 +287,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		_isDebugActive = true;;
 	}
 
-	public void setDebugMode(boolean active)
-	{
-		_isDebugActive = active;
-	}
-
-	public void paintComponent(Graphics g)
-	{
-	}
-
-	public void paintComponents(Graphics g)
-	{
-	}
-
-	public void render(Graphics g)
-	{
-		// get parent frame's insets
-		if (_insets == null)
-			_insets = getParentFrame(this).getInsets();
-
-		// determine scale factors
-		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
-		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
-
-		// TODO use insets
-		g.drawImage(_backgroundImg,
-				_insets.left,
-				_insets.top,
-				this.getWidth(),
-				this.getHeight(),
-				null);
-
-		Graphics2D g2d = (Graphics2D) g;
-		
-		_stateManager.setRendering(true);
-		
-		_snapTime = _stateManager.snapTime();
-		GameWorld prevWorld = _stateManager.getPrevGameWorld();
-		GameWorld world = _stateManager.getGameWorld();
-		
-		_stateManager.setRendering(false);
-		
-		for (Entity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new Entity[] {}))
-		{
-			this.drawEntity(g2d, ent, ent, scaleX, scaleY);
-		}
-		
-		for (SpaceShip ent : world.getPlayers())
-		{
-			SpaceShip prevEnt = ent;
-			for(SpaceShip prev : prevWorld.getPlayers())
-			{
-				if(prev.getName().equals(ent.getName()))
-					prevEnt = prev;
-			}
-			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
-		}
-	}
-
-	private void drawEntity(Graphics2D g2d, Entity ent, Entity prevEnt, double scaleX, double scaleY)
-	{
-		if (ent.getMainType() == Packettype.SNAP_PLAYERDATA)
-		{
-			SpaceShip prevPl = (SpaceShip) prevEnt;
-			SpaceShip pl = (SpaceShip) ent;
-			if (!pl.isAlive())
-				return;
-
-			if (pl.isLocal())
-			{
-				this.paintBars(g2d, pl);
-				if (_isDebugActive)
-				{
-					this.showDebugInfo(g2d, pl);
-				}
-			}
-			
-			// TODO: generalize this for all entities
-			Point2D.Double pos = new Point2D.Double(
-					prevPl.getPosition().getX() + (pl.getPosition().getX() - prevPl.getPosition().getX()) * _snapTime,
-					prevPl.getPosition().getY() + (pl.getPosition().getY() - prevPl.getPosition().getY()) * _snapTime);
-			
-			double direction = prevPl.getDirection() + Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
-
-			g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()), -direction),
-					_insets.left + (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
-					_insets.top + (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
-					(int) (GameConstants.PLAYER_SIZE * scaleX),
-					(int) (GameConstants.PLAYER_SIZE * scaleY),
-					null);
-		}
-		else if (ent.getMainType() == Packettype.SNAP_SHOT)
-		{
-			switch (ent.getSubType())
-			{
-				case ShotEntity.LASER:
-				case ShotEntity.MASTER_LASER:
-				{
-					LaserBeam s = (LaserBeam) ent;
-					g2d.setColor(Color.BLUE);
-					g2d.setStroke(new BasicStroke(3));
-					g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
-							_insets.top + (int) (s.getY() * scaleY),
-							_insets.left + (int) (s.endPoint().getX() * scaleX),
-							_insets.top + (int) (s.endPoint().getY() * scaleY));
-					break;
-				}
-				case ShotEntity.ROCKET:
-				{
-					Rocket r = (Rocket) ent;
-					g2d.setColor(Color.GREEN);
-					double size = GameConstants.ROCKET_SIZE;
-					g2d.drawImage(rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
-							-r.getDirection()),
-							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
-							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
-							(int) (size * scaleX),
-							(int) (size * scaleY),
-							null);
-				}
-			}
-		}
-	}
-
-	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)
-	{
-		int x = this.getWidth() - 200;
-		int y = 300;
-
-		g2d.setColor(Color.WHITE);
-		String[] info = new String[]
-        {
-			"X:\t\t" + pl.getX(),
-			"Y:\t\t" + pl.getY(),
-			"Direction:\t" + pl.getDirection(),
-			"Speed:\t" + pl.getSpeed(),
-			"Turn Speed:\t" + pl.getTurnSpeed(),
-			"Score:\t" + pl.getScore()
-		};
-		
-		for (String s : info)
-		{
-			g2d.drawString(s, x, y += 35);
-		}
-	}
-
 	private void paintBars(Graphics2D g2d, SpaceShip d)
 	{
 		g2d.setStroke(new BasicStroke(15));
@@ -283,38 +309,19 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		g2d.drawLine(_insets.left + start_x, _insets.top + y, _insets.left + end_x, _insets.top + y);
 	}
 
-	protected AffineTransform rotateTransform(BufferedImage src, double degrees)
+	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)
 	{
-		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
-	}
+		int x = this.getWidth() - 200;
+		int y = 300;
 
-	// TODO improve this
-	protected BufferedImage rotateImage(BufferedImage src, double degrees)
-	{
-		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
-				src.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = rotatedImage.createGraphics();
-		g.drawImage(src, rotateTransform(src, degrees), null);
-		return rotatedImage;
-	}
+		g2d.setColor(Color.WHITE);
+		String[] info = new String[] { "X:\t\t" + pl.getX(), "Y:\t\t" + pl.getY(),
+				"Direction:\t" + pl.getDirection(), "Speed:\t" + pl.getSpeed(),
+				"Turn Speed:\t" + pl.getTurnSpeed(), "Score:\t" + pl.getScore() };
 
-	@Override
-	public void gameStateChanged(GameStateChangedEvent e)
-	{
-	}
-
-	@Override
-	public void newRound(GameStateChangedEvent e)
-	{
-	}
-
-	@Override
-	public void playerInit(GameStateChangedEvent e)
-	{
-		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
+		for (String s : info)
 		{
-			this.addKeyListener((HumanPlayer) _stateManager.getLocalPlayer());
+			g2d.drawString(s, x, y += 35);
 		}
 	}
 }

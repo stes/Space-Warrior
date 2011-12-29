@@ -45,19 +45,17 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 
 	@Override
 	/**
-	 * Invoked after the game controller initialized the players.
-	 * When overriding, always call super.playerInit(e) first!
-	 */
-	public void playerInit(GameStateChangedEvent e)
-	{
-	}
-
-	@Override
-	/**
 	 * Invoked after the game state has changed
 	 * When overriding, always call super.gameStateChanged(e) first!
 	 */
 	public void gameStateChanged(GameStateChangedEvent e)
-	{
-	}
+	{}
+
+	@Override
+	/**
+	 * Invoked after the game controller initialized the players.
+	 * When overriding, always call super.playerInit(e) first!
+	 */
+	public void playerInit(GameStateChangedEvent e)
+	{}
 }

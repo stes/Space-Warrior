@@ -54,14 +54,14 @@ public class GameController implements ClientListener, IGameStateManager
 	private IClient _client;
 	private SpaceShip[] _players;
 	private Player _localPlayer;
-	
+
 	private long _prevLastSnap;
 	private long _lastSnap;
 
 	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
 
 	private boolean _isConnected;
-	
+
 	private boolean _rendering;
 
 	/**
@@ -74,15 +74,8 @@ public class GameController implements ClientListener, IGameStateManager
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
 		_client = client;
 		_players = new SpaceShip[0];
-		//_localPlayer = new HumanPlayer(this);
+		// _localPlayer = new HumanPlayer(this);
 		_rendering = false;
-	}
-	
-	public synchronized void setRendering(boolean render)
-	{
-		_rendering = render;
-		if(_rendering == false)
-			this.notify();
 	}
 
 	@Override
@@ -93,8 +86,7 @@ public class GameController implements ClientListener, IGameStateManager
 
 	@Override
 	public void chatMessage(String name, String text)
-	{
-	}
+	{}
 
 	@Override
 	public void connected()
@@ -108,12 +100,6 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		this.setIsConnected(false);
 	}
-	
-	@Override
-	public synchronized GameWorld getPrevGameWorld()
-	{
-		return _prevWorld;
-	}
 
 	@Override
 	public synchronized GameWorld getGameWorld()
@@ -124,14 +110,6 @@ public class GameController implements ClientListener, IGameStateManager
 	public boolean getIsPlayerHuman()
 	{
 		return (_localPlayer instanceof HumanPlayer);
-	}
-	
-	@Override
-	public synchronized double snapTime() // TODO: find a better name
-	{
-		if(_lastSnap == 0 || _prevLastSnap == 0)
-			return 1;
-		return (System.currentTimeMillis() - _lastSnap) / (double) (_lastSnap - _prevLastSnap);
 	}
 
 	@Override
@@ -144,6 +122,12 @@ public class GameController implements ClientListener, IGameStateManager
 	public synchronized SpaceShip[] getPlayerList()
 	{
 		return _players;
+	}
+
+	@Override
+	public synchronized GameWorld getPrevGameWorld()
+	{
+		return _prevWorld;
 	}
 
 	public void init()
@@ -181,20 +165,33 @@ public class GameController implements ClientListener, IGameStateManager
 		return this.isConnected();
 	}
 
+	@Override
+	public void newRound()
+	{
+		// TODO improve, add loser/winner to event
+		GameStateChangedEvent e = new GameStateChangedEvent(this);
+		this.invokeNewRound(e);
+	}
+
 	public void removeGameStateChangedListener(GameStateChangedListener l)
 	{
 		_gameStateChangedListener.remove(l);
 	}
-	
+
+	@Override
+	public void serverInfo(ServerInfo info)
+	{}
+
 	public synchronized void setGameworld(GameWorld world)
 	{
-		while(_rendering)
+		while (_rendering)
 		{
 			try
 			{
 				this.wait();
 			}
-			catch (InterruptedException e1) { }
+			catch (InterruptedException e1)
+			{}
 		}
 		_prevLastSnap = _lastSnap;
 		_lastSnap = System.currentTimeMillis();
@@ -204,8 +201,13 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public void serverInfo(ServerInfo info)
+	public synchronized void setRendering(boolean render)
 	{
+		_rendering = render;
+		if (_rendering == false)
+		{
+			this.notify();
+		}
 	}
 
 	@Override
@@ -226,6 +228,16 @@ public class GameController implements ClientListener, IGameStateManager
 		// TODO only pass a copy!
 		e.setGameWorld(_world);
 		this.invokeStateChanged(e);
+	}
+
+	@Override
+	public synchronized double snapTime() // TODO: find a better name
+	{
+		if (_lastSnap == 0 || _prevLastSnap == 0)
+		{
+			return 1;
+		}
+		return (System.currentTimeMillis() - _lastSnap) / (double) (_lastSnap - _prevLastSnap);
 	}
 
 	@Override
@@ -274,13 +286,5 @@ public class GameController implements ClientListener, IGameStateManager
 	private void setIsConnected(boolean _isConnected)
 	{
 		this._isConnected = _isConnected;
-	}
-
-	@Override
-	public void newRound()
-	{
-		// TODO improve, add loser/winner to event
-		GameStateChangedEvent e = new GameStateChangedEvent(this);
-		this.invokeNewRound(e);
 	}
 }

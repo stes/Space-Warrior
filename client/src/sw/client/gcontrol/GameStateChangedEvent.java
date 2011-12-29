@@ -41,6 +41,14 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
+	 * @return the _playerList
+	 */
+	public GameWorld getGameWorld()
+	{
+		return _world;
+	}
+
+	/**
 	 * @return the _localDataSet
 	 */
 	public SpaceShip getLocalDataSet()
@@ -49,20 +57,19 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @param _localDataSet
-	 *            the _localDataSet to set
+	 * @return the _loser
 	 */
-	public void setLocalDataSet(SpaceShip localDataSet)
+	public SpaceShip getLoser()
 	{
-		this._localDataSet = localDataSet;
+		return _loser;
 	}
 
 	/**
-	 * @return the _playerList
+	 * @return the _winner
 	 */
-	public GameWorld getGameWorld()
+	public SpaceShip getWinner()
 	{
-		return _world;
+		return _winner;
 	}
 
 	/**
@@ -75,28 +82,12 @@ public class GameStateChangedEvent extends EventObject
 	}
 
 	/**
-	 * @return the _winner
+	 * @param _localDataSet
+	 *            the _localDataSet to set
 	 */
-	public SpaceShip getWinner()
+	public void setLocalDataSet(SpaceShip localDataSet)
 	{
-		return _winner;
-	}
-
-	/**
-	 * @param _winner
-	 *            the _winner to set
-	 */
-	public void setWinner(SpaceShip winner)
-	{
-		_winner = winner;
-	}
-
-	/**
-	 * @return the _loser
-	 */
-	public SpaceShip getLoser()
-	{
-		return _loser;
+		this._localDataSet = localDataSet;
 	}
 
 	/**
@@ -106,5 +97,14 @@ public class GameStateChangedEvent extends EventObject
 	public void setLoser(SpaceShip loser)
 	{
 		_loser = loser;
+	}
+
+	/**
+	 * @param _winner
+	 *            the _winner to set
+	 */
+	public void setWinner(SpaceShip winner)
+	{
+		_winner = winner;
 	}
 }

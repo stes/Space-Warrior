@@ -1,7 +1,5 @@
 package sw;
 
-
-
 public abstract class State
 {
 	private double[] _features;
@@ -12,27 +10,27 @@ public abstract class State
 		_features = new double[features];
 		_weights = new double[features];
 	}
-	
+
 	protected double[] getFeatures()
 	{
 		return _features;
 	}
-	
+
 	public void setFeature(int index, double value)
 	{
 		_features[index] = value;
 	}
-	
+
 	public double getFeature(int index)
 	{
 		return _features[index];
 	}
-	
+
 	public void setWeight(int index, double value)
 	{
 		_weights[index] = value;
 	}
-	
+
 	public double getWeight(int index)
 	{
 		return _weights[index];
@@ -47,7 +45,7 @@ public abstract class State
 		}
 		return sum;
 	}
-	
+
 	@Override
 	public String toString()
 	{

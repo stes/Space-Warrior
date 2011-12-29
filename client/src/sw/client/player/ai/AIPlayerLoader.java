@@ -74,7 +74,7 @@ public class AIPlayerLoader
 		}
 		try
 		{
-			_properties.load(new FileInputStream(configFile));
+			AIPlayerLoader._properties.load(new FileInputStream(configFile));
 		}
 		catch (IOException e)
 		{
@@ -83,8 +83,8 @@ public class AIPlayerLoader
 
 		URLClassLoader loader = new URLClassLoader(new URL[] { p },
 				ClassLoader.getSystemClassLoader());
-		System.out.println("Loaded class: " + _properties.get("class"));
-		Class<?> c = loader.loadClass(_properties.get("class").toString());
+		System.out.println("Loaded class: " + AIPlayerLoader._properties.get("class"));
+		Class<?> c = loader.loadClass(AIPlayerLoader._properties.get("class").toString());
 		try
 		{
 			Object o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);

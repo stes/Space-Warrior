@@ -52,64 +52,12 @@ public abstract class Player
 		_dataSet = new SpaceShip("");
 	}
 
-	protected void sendInput()
-	{
-		if (_stateManager.isReady())
-		{
-			_stateManager.stateUpdated(this.getCurrentState());
-		}
-	}
-
-	protected void update()
-	{
-		if (!this.getOldState().equals(this.getCurrentState()))
-		{
-			this.setOldState(new PlayerInput(this.getCurrentState()));
-			this.sendInput();
-		}
-	}
-
-	/**
-	 * @return the _currentState
-	 */
-	protected PlayerInput getCurrentState()
-	{
-		return _currentState;
-	}
-
-	/**
-	 * @param _currentState
-	 *            the _currentState to set
-	 */
-	protected void setCurrentState(PlayerInput _currentState)
-	{
-		this._currentState = _currentState;
-	}
-
-	/**
-	 * @return the _oldState
-	 */
-	private PlayerInput getOldState()
-	{
-		return _oldState;
-	}
-
-	private void setOldState(PlayerInput oldState)
-	{
-		this._oldState = oldState;
-	}
-
 	/**
 	 * @return the player data set
 	 */
 	public SpaceShip getDataSet()
 	{
 		return _dataSet;
-	}
-
-	protected GameWorld getGameWorld()
-	{
-		return _stateManager.getGameWorld();
 	}
 
 	/**
@@ -127,5 +75,57 @@ public abstract class Player
 	public void setDataSet(SpaceShip data)
 	{
 		this._dataSet = data;
+	}
+
+	/**
+	 * @return the _currentState
+	 */
+	protected PlayerInput getCurrentState()
+	{
+		return _currentState;
+	}
+
+	protected GameWorld getGameWorld()
+	{
+		return _stateManager.getGameWorld();
+	}
+
+	protected void sendInput()
+	{
+		if (_stateManager.isReady())
+		{
+			_stateManager.stateUpdated(this.getCurrentState());
+		}
+	}
+
+	/**
+	 * @param _currentState
+	 *            the _currentState to set
+	 */
+	protected void setCurrentState(PlayerInput _currentState)
+	{
+		this._currentState = _currentState;
+	}
+
+	protected void update()
+	{
+		if (!this.getOldState().equals(this.getCurrentState()))
+		{
+			this.setOldState(new PlayerInput(this.getCurrentState()));
+			this.sendInput();
+		}
+	}
+
+	/**
+	 * @return the _oldState
+	 */
+	private PlayerInput getOldState()
+	{
+		return _oldState;
+	}
+
+	private void setOldState(PlayerInput oldState)
+	{
+		this._oldState = oldState;
 	}
 }

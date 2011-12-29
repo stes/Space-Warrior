@@ -34,7 +34,8 @@ public class PState extends State
 
 	private double distanceToNearestShip()
 	{
-		double max = Math.sqrt(Math.pow(GameConstants.PLAYING_FIELD_WIDTH, 2) + Math.pow(GameConstants.PLAYING_FIELD_HEIGHT,2));
+		double max = Math.sqrt(Math.pow(GameConstants.PLAYING_FIELD_WIDTH, 2)
+				+ Math.pow(GameConstants.PLAYING_FIELD_HEIGHT, 2));
 		SpaceShip s = this.nextShip();
 		if (s != null)
 			return _localPlayer.distanceTo(s) * VALUE_RANGE / max;
@@ -135,24 +136,25 @@ public class PState extends State
 		}
 		return state;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 3; i++)
 		{
-			sb.append((int)getFeature(i));
+			sb.append((int) getFeature(i));
 			sb.append(";");
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * for debug purposes.. TODO remove when no longer used
 	 */
-//	public void showAngle()
-//	{
-//		System.out.println(this.angleToNextPlayer() + " ; " + this.nextPlayersAngle());
-//	}
+	// public void showAngle()
+	// {
+	// System.out.println(this.angleToNextPlayer() + " ; " +
+	// this.nextPlayersAngle());
+	// }
 }

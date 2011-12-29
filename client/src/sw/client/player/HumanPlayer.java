@@ -63,26 +63,6 @@ public class HumanPlayer extends Player implements KeyListener
 		super(stateManager);
 	}
 
-	private void updateInput()
-	{
-		int direction = 0;
-		if (_forward && !_backward)
-			direction = 1;
-		if (!_forward && _backward)
-			direction = -1;
-
-		int rotation = 0;
-		if (_left && !_right)
-			rotation = 1;
-		if (!_left && _right)
-			rotation = -1;
-
-		this.getCurrentState().setDirection(direction);
-		this.getCurrentState().setRotation(rotation);
-
-		this.update();
-	}
-
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -143,6 +123,33 @@ public class HumanPlayer extends Player implements KeyListener
 
 	@Override
 	public void keyTyped(KeyEvent e)
+	{}
+
+	private void updateInput()
 	{
+		int direction = 0;
+		if (_forward && !_backward)
+		{
+			direction = 1;
+		}
+		if (!_forward && _backward)
+		{
+			direction = -1;
+		}
+
+		int rotation = 0;
+		if (_left && !_right)
+		{
+			rotation = 1;
+		}
+		if (!_left && _right)
+		{
+			rotation = -1;
+		}
+
+		this.getCurrentState().setDirection(direction);
+		this.getCurrentState().setRotation(rotation);
+
+		this.update();
 	}
 }

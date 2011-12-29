@@ -50,7 +50,7 @@ public class VectorQuantizationNetwork
 	private double[] _normalizer;
 	private int _winner;
 	private double _learnrate;
-	
+
 	public double[] getCurrentInput()
 	{
 		return _currentInput;

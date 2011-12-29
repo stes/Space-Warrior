@@ -41,29 +41,9 @@ public class ConnectionEvent extends EventObject
 		this.setActionType(actionType);
 	}
 
-	public void setIPAdress(InetSocketAddress ipAdress)
+	public ActionType getActionType()
 	{
-		this._ipAdress = ipAdress;
-	}
-
-	public InetSocketAddress getIPAdress()
-	{
-		return _ipAdress;
-	}
-
-	public void setLoginName(String loginName)
-	{
-		this._loginName = loginName;
-	}
-
-	public String getLoginName()
-	{
-		return _loginName;
-	}
-
-	public void setImageID(int imageID)
-	{
-		_imageID = imageID;
+		return _actionType;
 	}
 
 	public int getImageID()
@@ -71,13 +51,33 @@ public class ConnectionEvent extends EventObject
 		return _imageID;
 	}
 
+	public InetSocketAddress getIPAdress()
+	{
+		return _ipAdress;
+	}
+
+	public String getLoginName()
+	{
+		return _loginName;
+	}
+
 	public void setActionType(ActionType _actionType)
 	{
 		this._actionType = _actionType;
 	}
 
-	public ActionType getActionType()
+	public void setImageID(int imageID)
 	{
-		return _actionType;
+		_imageID = imageID;
+	}
+
+	public void setIPAdress(InetSocketAddress ipAdress)
+	{
+		this._ipAdress = ipAdress;
+	}
+
+	public void setLoginName(String loginName)
+	{
+		this._loginName = loginName;
 	}
 }

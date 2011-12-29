@@ -60,23 +60,19 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	{
 		@Override
 		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
-		{
-		}
+		{}
 
 		@Override
 		public void addInvalidComponent(JComponent invalidComponent)
-		{
-		}
+		{}
 
 		@Override
 		public void markCompletelyDirty(JComponent aComponent)
-		{
-		}
+		{}
 
 		@Override
 		public void paintDirtyRegions()
-		{
-		}
+		{}
 	}
 
 	// change to limit fps in order to minimize cpu usage
@@ -131,8 +127,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 
 	@Override
 	public void chatMessage(String name, String text)
-	{
-	}
+	{}
 
 	@Override
 	public void connected()
@@ -217,6 +212,13 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	}
 
 	@Override
+	public void newRound()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void scan()
 	{
 		_client.scan();
@@ -224,13 +226,11 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 
 	@Override
 	public void serverInfo(ServerInfo info)
-	{
-	}
+	{}
 
 	@Override
 	public void snapshot(Unpacker packet)
-	{
-	}
+	{}
 
 	/**
 	 * Connects to a server
@@ -268,7 +268,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_gamePanel.setLocation(_insets.left, _insets.top + 100);
-		
+
 		_controller.addGameStateChangedListener(_gamePanel);
 
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
@@ -333,12 +333,5 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.add(_activePanel);
 		System.out.println("switch mode");
 		this.setVisible(true);
-	}
-
-	@Override
-	public void newRound()
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

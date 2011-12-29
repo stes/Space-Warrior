@@ -45,8 +45,7 @@ public class PlayerInput
 	 * player input instance is created
 	 */
 	public PlayerInput()
-	{
-	}
+	{}
 
 	/**
 	 * player input instance is created

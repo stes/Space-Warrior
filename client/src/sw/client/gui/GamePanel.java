@@ -54,25 +54,74 @@ import sw.shared.net.Unpacker;
 public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		GameStateChangedListener
 {
-	private static final long serialVersionUID = -8751902318746091633L;
+	private class PlayerTableModel extends AbstractTableModel
+	{
 
+		private static final long serialVersionUID = 3882143612301180149L;
+
+		private String[] _headers = { "Player", "Score" };
+
+		@Override
+		public int getColumnCount()
+		{
+			return _headers.length;
+		}
+
+		@Override
+		public String getColumnName(int col)
+		{
+			return _headers[col];
+		}
+
+		@Override
+		public int getRowCount()
+		{
+			return _stateManager.getPlayerList().length;
+		}
+
+		@Override
+		public Object getValueAt(int row, int col)
+		{
+			switch (col)
+			{
+				case 0:
+					return _stateManager.getPlayerList()[row].getName();
+				case 1:
+					return _stateManager.getPlayerList()[row].getScore();
+				default:
+					return null;
+			}
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int col)
+		{
+			return false;
+		}
+	}
+
+	private static final long serialVersionUID = -8751902318746091633L;
 	private PlayingFieldPanel _playingField;
 	private JTextField _txtChatmessage;
 	private JTextArea _lstChathistory;
 	private JScrollPane _scrollScoreBoard;
 	private JScrollPane _scrollChathistory;
 	private JTable _tblScoreBoard;
+
 	private JButton _btnDisconnect;
 
 	private PlayerTableModel _model;
 
 	private GamePanel _self;
-
 	// other references
 	private IGameStateManager _stateManager;
+
 	private IClient _client;
 
 	private ArrayList<ConnectionListener> _connectionListener;
+
+	int counter;
+	BufferedImage img;
 
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
@@ -105,8 +154,65 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		});
 	}
 
-	int counter;
-	BufferedImage img;
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		this.processInput();
+	}
+
+	public void addConnectionListener(ConnectionListener l)
+	{
+		_connectionListener.add(l);
+	}
+
+	/**
+	 * invoked after chat button is pressed
+	 */
+	public void btnChat_Action(ActionEvent e)
+	{
+		if (e.getID() == ActionEvent.ACTION_PERFORMED)
+		{
+			this.processInput();
+		}
+	}
+
+	@Override
+	public void chatMessage(String name, String text)
+	{
+		this.appendMessage("[ " + name + " ] " + text + "\n");
+	}
+
+	@Override
+	public void connected()
+	{}
+
+	@Override
+	public void disconnected(String reason)
+	{} // TODO: show reason
+
+	@Override
+	public void gameStateChanged(GameStateChangedEvent e)
+	{}
+
+	@Override
+	public void newRound()
+	{}
+
+	@Override
+	public void newRound(GameStateChangedEvent e)
+	{}
+
+	@Override
+	public void playerInit(GameStateChangedEvent e)
+	{
+		// TODO best practise?
+		_playingField.playerInit(e);
+	}
+
+	public void removeConnecionListener(ConnectionListener l)
+	{
+		_connectionListener.remove(l);
+	}
 
 	public void render(Graphics2D g)
 	{
@@ -122,23 +228,33 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		g.drawImage(img, 5, 30, null);
 	}
 
-	/**
-	 * invoked after chat button is pressed
-	 */
-	public void btnChat_Action(ActionEvent e)
+	@Override
+	public void serverInfo(ServerInfo info)
+	{}
+
+	@Override
+	public void snapshot(Unpacker packet)
 	{
-		if (e.getID() == ActionEvent.ACTION_PERFORMED)
-		{
-			this.processInput();
-		}
+		_model.fireTableDataChanged();
 	}
 
-	private void processInput()
+	protected void invokeDisconnect(ConnectionEvent e)
 	{
-		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
-		p.writeUTF(_txtChatmessage.getText());
-		_client.sendPacket(p);
-		_txtChatmessage.setText("");
+		if (_connectionListener.size() == 0)
+		{
+			return;
+		}
+		for (ConnectionListener l : _connectionListener)
+		{
+			l.logout(e);
+		}
+
+	}
+
+	private void appendMessage(String message)
+	{
+		_lstChathistory.append(message);
+		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
 	}
 
 	private void initComponents()
@@ -172,7 +288,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 				this.setBackground(Color.white);
 				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
 				g2d.setComposite(alphaComp);
-				g2d.setColor(getBackground());
+				g2d.setColor(this.getBackground());
 				Rectangle tBounds = g2d.getClip().getBounds();
 				g2d.fillRect((int) tBounds.getX(),
 						(int) tBounds.getY(),
@@ -203,7 +319,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 				this.setBackground(Color.white);
 				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
 				g2d.setComposite(alphaComp);
-				g2d.setColor(getBackground());
+				g2d.setColor(this.getBackground());
 				Rectangle tBounds = g2d.getClip().getBounds();
 				g2d.fillRect((int) tBounds.getX(),
 						(int) tBounds.getY(),
@@ -235,7 +351,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 				this.setBackground(Color.white);
 				Composite alphaComp = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f);
 				g2d.setComposite(alphaComp);
-				g2d.setColor(getBackground());
+				g2d.setColor(this.getBackground());
 				Rectangle tBounds = g2d.getClip().getBounds();
 				g2d.fillRect((int) tBounds.getX(),
 						(int) tBounds.getY(),
@@ -259,124 +375,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		this.add(_playingField);
 	}
 
-	protected void invokeDisconnect(ConnectionEvent e)
+	private void processInput()
 	{
-		if (_connectionListener.size() == 0)
-			return;
-		for (ConnectionListener l : _connectionListener)
-			l.logout(e);
-
+		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
+		p.writeUTF(_txtChatmessage.getText());
+		_client.sendPacket(p);
+		_txtChatmessage.setText("");
 	}
-
-	@Override
-	public void connected()
-	{}
-
-	@Override
-	public void disconnected(String reason)
-	{} // TODO: show reason
-
-	@Override
-	public void chatMessage(String name, String text)
-	{
-		this.appendMessage("[ " + name + " ] " + text + "\n");
-	}
-
-	@Override
-	public void snapshot(Unpacker packet)
-	{
-		_model.fireTableDataChanged();
-	}
-
-	@Override
-	public void serverInfo(ServerInfo info)
-	{}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		this.processInput();
-	}
-
-	private void appendMessage(String message)
-	{
-		_lstChathistory.append(message);
-		_lstChathistory.setCaretPosition(_lstChathistory.getText().length());
-	}
-
-	public void addConnectionListener(ConnectionListener l)
-	{
-		_connectionListener.add(l);
-	}
-
-	public void removeConnecionListener(ConnectionListener l)
-	{
-		_connectionListener.remove(l);
-	}
-
-	private class PlayerTableModel extends AbstractTableModel
-	{
-
-		private static final long serialVersionUID = 3882143612301180149L;
-
-		private String[] _headers = { "Player", "Score" };
-
-		@Override
-		public String getColumnName(int col)
-		{
-			return _headers[col];
-		}
-
-		@Override
-		public int getColumnCount()
-		{
-			return _headers.length;
-		}
-
-		@Override
-		public int getRowCount()
-		{
-			return _stateManager.getPlayerList().length;
-		}
-
-		@Override
-		public Object getValueAt(int row, int col)
-		{
-			switch (col)
-			{
-				case 0:
-					return _stateManager.getPlayerList()[row].getName();
-				case 1:
-					return _stateManager.getPlayerList()[row].getScore();
-				default:
-					return null;
-			}
-		}
-
-		@Override
-		public boolean isCellEditable(int row, int col)
-		{
-			return false;
-		}
-	}
-
-	@Override
-	public void gameStateChanged(GameStateChangedEvent e)
-	{}
-
-	@Override
-	public void newRound(GameStateChangedEvent e)
-	{}
-
-	@Override
-	public void playerInit(GameStateChangedEvent e)
-	{
-		// TODO best practise?
-		_playingField.playerInit(e);
-	}
-
-	@Override
-	public void newRound()
-	{}
 
 }

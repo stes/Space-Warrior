@@ -8,7 +8,7 @@ public class LVQState extends State
 {
 	private SpaceShip _localPlayer;
 	private GameWorld _world;
-	
+
 	public LVQState(SpaceShip localPlayer, GameWorld world)
 	{
 		super(2);
@@ -19,10 +19,10 @@ public class LVQState extends State
 
 	public void init()
 	{
-		this.setFeature(0, (int)this.distanceToNearestShip());
-		this.setFeature(1, (int)_localPlayer.getDirection() * 180 / 2 / Math.PI);
+		this.setFeature(0, (int) this.distanceToNearestShip());
+		this.setFeature(1, (int) _localPlayer.getDirection() * 180 / 2 / Math.PI);
 	}
-	
+
 	private double distanceToNearestShip()
 	{
 		double minDist = 1000;
@@ -44,7 +44,7 @@ public class LVQState extends State
 	{
 		if (!(o instanceof LVQState))
 			return false;
-		LVQState s = (LVQState)o;
+		LVQState s = (LVQState) o;
 		if (s.getFeatures().length != this.getFeatures().length)
 			return false;
 		for (int i = 0; i < this.getFeatures().length; i++)

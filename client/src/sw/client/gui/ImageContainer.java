@@ -37,16 +37,16 @@ public class ImageContainer
 
 	public static ImageContainer getLocalInstance()
 	{
-		if (_self == null)
+		if (ImageContainer._self == null)
 		{
 			ImageContainer.init();
 		}
-		return _self;
+		return ImageContainer._self;
 	}
 
 	public static void init()
 	{
-		_self = new ImageContainer();
+		ImageContainer._self = new ImageContainer();
 	}
 
 	private HashMap<Integer, BufferedImage> _images;
@@ -57,22 +57,42 @@ public class ImageContainer
 		this.loadImages();
 	}
 
+	public BufferedImage getImage(GameConstants.Images id)
+	{
+		return _images.get(id.getID());
+	}
+
+	public BufferedImage getImage(int id)
+	{
+		return _images.get(id);
+	}
+
+	public void scaleImages(double scaleX, double scaleY)
+	{
+		HashMap<Integer, BufferedImage> newImg = new HashMap<Integer, BufferedImage>();
+		for (int i : _images.keySet())
+		{
+			newImg.put(i, this.scale(_images.get(i), scaleX, scaleY));
+		}
+		_images = newImg;
+	}
+
 	private void loadImages()
 	{
 		try
 		{
 			_images.put(GameConstants.Images.BACKGROUND.getID(),
-					ImageIO.read(getClass().getResourceAsStream("/rsc/background.jpg")));
+					ImageIO.read(this.getClass().getResourceAsStream("/rsc/background.jpg")));
 			_images.put(GameConstants.Images.SHIP_1.getID(),
-					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship2Grey.gif"))));
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship2Grey.gif"))));
 			_images.put(GameConstants.Images.SHIP_2.getID(),
-					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship3Grey.gif"))));
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship3Grey.gif"))));
 			_images.put(GameConstants.Images.SHIP_3.getID(),
-					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/DeathFighter1.gif"))));
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/DeathFighter1.gif"))));
 			_images.put(GameConstants.Images.SHIP_4.getID(),
-					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
 			_images.put(GameConstants.Images.SHOT_ROCKET.getID(),
-					scale(ImageIO.read(getClass().getResourceAsStream("/rsc/Rocket.gif"))));
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Rocket.gif"))));
 		}
 		catch (IOException e)
 		{
@@ -82,7 +102,7 @@ public class ImageContainer
 
 	private BufferedImage scale(BufferedImage source)
 	{
-		return scale(source, 1, 1);
+		return this.scale(source, 1, 1);
 	}
 
 	private BufferedImage scale(BufferedImage source, double scaleX, double scaleY)
@@ -105,25 +125,5 @@ public class ImageContainer
 		graphics2D.dispose();
 
 		return scaledImage;
-	}
-
-	public void scaleImages(double scaleX, double scaleY)
-	{
-		HashMap<Integer, BufferedImage> newImg = new HashMap<Integer, BufferedImage>();
-		for (int i : _images.keySet())
-		{
-			newImg.put(i, scale(_images.get(i), scaleX, scaleY));
-		}
-		_images = newImg;
-	}
-
-	public BufferedImage getImage(GameConstants.Images id)
-	{
-		return _images.get(id.getID());
-	}
-
-	public BufferedImage getImage(int id)
-	{
-		return _images.get(id);
 	}
 }

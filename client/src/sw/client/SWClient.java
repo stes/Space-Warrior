@@ -162,8 +162,7 @@ public class SWClient implements IClient, NetworkListener
 			}
 		}
 		catch (Exception e)
-		{
-		}
+		{}
 	}
 
 	@Override

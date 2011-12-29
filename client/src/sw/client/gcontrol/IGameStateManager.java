@@ -24,21 +24,21 @@ import sw.shared.data.entities.players.SpaceShip;
 
 public interface IGameStateManager
 {
-	public void setRendering(boolean render);
-	
-	public GameWorld getPrevGameWorld();
-	
+	public void addGameStateChangedListener(GameStateChangedListener l);
+
 	public GameWorld getGameWorld();
-	
-	public double snapTime();
-	
-	public SpaceShip[] getPlayerList();
 
 	public Player getLocalPlayer();
 
+	public SpaceShip[] getPlayerList();
+
+	public GameWorld getPrevGameWorld();
+
 	public boolean isReady();
 
-	public void stateUpdated(PlayerInput input);
+	public void setRendering(boolean render);
 
-	public void addGameStateChangedListener(GameStateChangedListener l);
+	public double snapTime();
+
+	public void stateUpdated(PlayerInput input);
 }
