@@ -51,7 +51,8 @@ import sw.shared.data.ServerInfo;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public class GamePanel extends JPanel implements ClientListener, ActionListener, GameStateChangedListener
+public class GamePanel extends JPanel implements ClientListener, ActionListener,
+		GameStateChangedListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
 
@@ -85,7 +86,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
-		
+
 		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
@@ -106,7 +107,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 
 	int counter;
 	BufferedImage img;
-	
+
 	public void render(Graphics2D g)
 	{
 		_playingField.render(g);
@@ -120,7 +121,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		}
 		g.drawImage(img, 5, 30, null);
 	}
-
 
 	/**
 	 * invoked after chat button is pressed
@@ -148,7 +148,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		this.add(_btnDisconnect);
 		_btnDisconnect.addActionListener(new ActionListener()
 		{
-
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -271,13 +270,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 
 	@Override
 	public void connected()
-	{
-	}
+	{}
 
 	@Override
 	public void disconnected(String reason)
-	{
-	} // TODO: show reason
+	{} // TODO: show reason
 
 	@Override
 	public void chatMessage(String name, String text)
@@ -293,8 +290,7 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 
 	@Override
 	public void serverInfo(ServerInfo info)
-	{
-	}
+	{}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -366,15 +362,11 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
-	{
-	}
-
+	{}
 
 	@Override
 	public void newRound(GameStateChangedEvent e)
-	{
-	}
-
+	{}
 
 	@Override
 	public void playerInit(GameStateChangedEvent e)
@@ -383,12 +375,8 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		_playingField.playerInit(e);
 	}
 
-
 	@Override
 	public void newRound()
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	{}
 
 }

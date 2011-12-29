@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -31,7 +32,6 @@ import java.util.Vector;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -61,7 +61,7 @@ public class LoginPanel extends JPanel implements ClientListener
 	private JTextField _txtName;
 	private AbstractButton _btnConnect;
 	private AbstractButton _btnUpdate;
-	private JFileChooser _fileChooser;
+//	private JFileChooser _fileChooser;
 	private AbstractButton _btnChooseAI;
 	private JLabel _lblIPAdress;
 	private JLabel _lblName;
@@ -76,6 +76,8 @@ public class LoginPanel extends JPanel implements ClientListener
 	private ArrayList<ConnectionListener> _connectionListener;
 
 	private int _imageID;
+
+	private JTextField _txtChooseAI;
 
 	public LoginPanel(int width, int height)
 	{
@@ -107,14 +109,16 @@ public class LoginPanel extends JPanel implements ClientListener
 
 	public void render(Graphics g)
 	{
-		BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img = new BufferedImage(this.getWidth(),
+				this.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 		super.paintComponents(img.getGraphics());
 		// TODO improve
-		if (_fileChooser.isShowing())
-			this._fileChooser.paint(_fileChooser.getGraphics());
+//		if (_fileChooser.isShowing())
+//			this._fileChooser.paint(_fileChooser.getGraphics());
 		g.drawImage(img, 5, 30, null);
 	}
-	
+
 	public void addConnectionListener(ConnectionListener l)
 	{
 		_connectionListener.add(l);
@@ -254,8 +258,8 @@ public class LoginPanel extends JPanel implements ClientListener
 		_scroll.setBounds(this.getWidth() - 300, 300, 200, 300);
 		this.add(_scroll);
 
-		_fileChooser = new JFileChooser(System.getProperty("user.dir"));
-
+//		_fileChooser = new JFileChooser(System.getProperty("user.dir"));
+//
 		_btnChooseAI = new JButton("Choose AI");
 		_btnChooseAI.setBounds(100, 500, 100, 25);
 		_btnChooseAI.addActionListener(new ActionListener()
@@ -265,15 +269,21 @@ public class LoginPanel extends JPanel implements ClientListener
 			{
 				// TODO bugfix: problem with event dispatching
 				// Handle open button action.
-				int returnVal = _fileChooser.showOpenDialog(_self);
+//				int returnVal = _fileChooser.showOpenDialog(_self);
 
-				if (returnVal == JFileChooser.APPROVE_OPTION)
-				{
-					GameController.setAIPlugin(_fileChooser.getSelectedFile());
-				}
+//				if (returnVal == JFileChooser.APPROVE_OPTION)
+//				{
+//					GameController.setAIPlugin(_fileChooser.getSelectedFile());
+//				}
+				GameController.setAIPlugin(new File(_txtChooseAI.getText()));
 			}
 		});
+		
 		this.add(_btnChooseAI);
+		_txtChooseAI = new JTextField();
+		_txtChooseAI.setBounds(100, 550, 300, 25);
+		_txtChooseAI.setText("C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/ai_players/sample_ai.jar");
+		this.add(_txtChooseAI);
 	}
 
 	@Override
@@ -285,23 +295,19 @@ public class LoginPanel extends JPanel implements ClientListener
 
 	@Override
 	public void connected()
-	{
-	}
+	{}
 
 	@Override
 	public void disconnected(String reason)
-	{
-	}
+	{}
 
 	@Override
 	public void chatMessage(String name, String text)
-	{
-	}
+	{}
 
 	@Override
 	public void snapshot(Unpacker packet)
-	{
-	}
+	{}
 
 	private class ServerTableModel extends AbstractTableModel
 	{
@@ -351,8 +357,5 @@ public class LoginPanel extends JPanel implements ClientListener
 
 	@Override
 	public void newRound()
-	{
-		// TODO Auto-generated method stub
-		
-	}
+	{}
 }

@@ -11,7 +11,7 @@ import sw.shared.data.entities.shots.IShot;
 
 public class PAgent extends AIPlayer
 {
-	public static final int ACTIONS = 4;
+	public static final int ACTIONS = 6;
 	public static final double LEARNRATE = 0.5;
 	
 	ProbabilityDistribution _distribution;
@@ -45,28 +45,24 @@ public class PAgent extends AIPlayer
 		// add state, if new
 		this.exploreState(state);
 		
+		int action = _distribution.sampleAction(state);
+		
 		// perform action
-		this.performAction(state);
+		this.performAction(state, action);
 	}
 
 	private void exploreState(PState state)
 	{
 		if (!_visitedStates.containsKey(state))
 		{
-			_visitedStates.put(state, new int[]{1});
+			_visitedStates.put(state, new int[ACTIONS]);
 			_distribution.initProbabilities(state);
-		}
-		else
-		{
-			_visitedStates.get(state)[0]++;
 		}
 		_distribution.normalize();
 	}
 	
-	private void performAction(PState state)
-	{
-		int action = _distribution.sampleAction(state);
-		
+	private void performAction(PState state, int action)
+	{	
 		switch(action)
 		{
 			case Actions.HALT:
@@ -93,6 +89,8 @@ public class PAgent extends AIPlayer
 		
 		this.update();
 		getCurrentState().setShot(0);
+		
+		_visitedStates.get(state)[action]++;
 	}
 	
 	private void updateProbabilities(int reward)
@@ -102,16 +100,21 @@ public class PAgent extends AIPlayer
 			for (int i = 0; i < _distribution.getActions(); i++)
 			{
 				double oldProb = _distribution.getProbability(i, stateSet.getKey());
-				double newProb = oldProb + Math.tanh(reward * stateSet.getValue()[0] / 200);
-				System.out.println("Updated probability for action " + i + ": "+ newProb);
+				
+				double delta = Math.tanh((double)reward * (double)stateSet.getValue()[i] / 200.0);
+				if (delta > 0)
+					System.out.println("delta: " + delta);
+				
+				double newProb = oldProb + delta;
+//				System.out.println("Updated probability for action " + i + ": "+ newProb);
 				_distribution.setProbabilty(i, stateSet.getKey(), newProb);
 			}
 		}
 		_distribution.normalize();
-		System.out.println("new distribution: \n"+_distribution.toString());
+//		System.out.println("new distribution: \n"+_distribution.toString());
 		try
 		{
-			_distribution.save(System.getProperty("user.dir"));
+			_distribution.save(System.getProperty("user.dir")+"/" + this.getDataSet().getName());
 		}
 		catch (IOException e)
 		{
@@ -124,6 +127,7 @@ public class PAgent extends AIPlayer
 	public void newRound(GameStateChangedEvent e)
 	{
 		int players = getGameWorld().getPlayers().length;
+		System.out.println(this.getDataSet().getScore());
 		int reward  = 0;
 		if (players > 1)
 			reward = (this.getDataSet().getScore() - _oldScore) * 100 / players;

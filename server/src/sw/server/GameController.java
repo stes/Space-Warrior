@@ -110,6 +110,7 @@ public class GameController
 		{
 			pl.respawn();
 		}
+		this.broadcastSnapshots();
 		Packer info = new Packer(Packettype.SV_NEW_ROUND);
 		info.writeUTF("Server");
 		info.writeUTF("New round");

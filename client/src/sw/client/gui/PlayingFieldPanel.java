@@ -251,7 +251,8 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			"Y:\t\t" + pl.getY(),
 			"Direction:\t" + pl.getDirection(),
 			"Speed:\t" + pl.getSpeed(),
-			"Turn Speed:\t" + pl.getTurnSpeed()
+			"Turn Speed:\t" + pl.getTurnSpeed(),
+			"Score:\t" + pl.getScore()
 		};
 		
 		for (String s : info)
