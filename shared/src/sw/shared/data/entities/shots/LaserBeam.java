@@ -97,9 +97,11 @@ public class LaserBeam extends ShotEntity
 	public Line2D.Double getLine()
 	{
 		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
-		return new Line2D.Double(this.getX(), this.getY(), this.getX() + range
-				* Math.sin(this.getDirection()), (this.getY() + range
-				* Math.cos(this.getDirection())));
+		return new Line2D.Double(
+				this.getX(), 
+				this.getY(), 
+				this.getX() - range * Math.sin(this.getDirection()),
+				this.getY() - range	* Math.cos(this.getDirection()));
 	}
 
 	@Override
