@@ -110,7 +110,7 @@ public class GameController
 		{
 			pl.respawn();
 		}
-		Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
+		Packer info = new Packer(Packettype.SV_NEW_ROUND);
 		info.writeUTF("Server");
 		info.writeUTF("New round");
 		_server.sendBroadcast(info);

@@ -90,7 +90,6 @@ public class ProbabilityDistribution
 		for (int i = 0; i < getActions(); i++)
 		{
 			p += probs[i];
-			System.out.println("" + p);
 			if (_random.nextDouble() <= p)
 				return i;
 		}

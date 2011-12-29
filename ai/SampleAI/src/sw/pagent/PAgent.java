@@ -123,10 +123,13 @@ public class PAgent extends AIPlayer
 	@Override
 	public void newRound(GameStateChangedEvent e)
 	{
-		int reward = (this.getDataSet().getScore() - _oldScore) * 100 / getGameWorld().getPlayers().length;
+		int players = getGameWorld().getPlayers().length;
+		int reward  = 0;
+		if (players > 1)
+			reward = (this.getDataSet().getScore() - _oldScore) * 100 / players;
 		_oldScore = this.getDataSet().getScore();
-		if (e.getWinner().equals(this.getDataSet()))
-			reward += 100;
+//		if (e.getWinner().equals(this.getDataSet()))
+//			reward += 100;
 		System.out.println("got a reward of " + reward);
 		this.updateProbabilities(reward);
 	}

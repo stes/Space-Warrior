@@ -383,4 +383,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 		_playingField.playerInit(e);
 	}
 
+
+	@Override
+	public void newRound()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

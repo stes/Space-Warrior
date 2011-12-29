@@ -62,4 +62,9 @@ public interface ClientListener
 	 *            snapshot
 	 */
 	public void snapshot(Unpacker packet);
+	
+	/**
+	 * Invoked when a new round starts
+	 */
+	public void newRound();
 }

@@ -348,4 +348,11 @@ public class LoginPanel extends JPanel implements ClientListener
 			return false;
 		}
 	}
+
+	@Override
+	public void newRound()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

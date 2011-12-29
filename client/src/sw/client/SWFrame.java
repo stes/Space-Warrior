@@ -334,4 +334,11 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		System.out.println("switch mode");
 		this.setVisible(true);
 	}
+
+	@Override
+	public void newRound()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

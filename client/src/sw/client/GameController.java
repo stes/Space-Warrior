@@ -235,7 +235,6 @@ public class GameController implements ClientListener, IGameStateManager
 		_client.sendPacket(p);
 	}
 
-	@SuppressWarnings("unused")
 	private void invokeNewRound(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
@@ -275,5 +274,13 @@ public class GameController implements ClientListener, IGameStateManager
 	private void setIsConnected(boolean _isConnected)
 	{
 		this._isConnected = _isConnected;
+	}
+
+	@Override
+	public void newRound()
+	{
+		// TODO improve, add loser/winner to event
+		GameStateChangedEvent e = new GameStateChangedEvent(this);
+		this.invokeNewRound(e);
 	}
 }

@@ -151,8 +151,8 @@ public class PState extends State
 	/**
 	 * for debug purposes.. TODO remove when no longer used
 	 */
-	public void showAngle()
-	{
-		System.out.println(this.angleToNextPlayer() + " ; " + this.nextPlayersAngle());
-	}
+//	public void showAngle()
+//	{
+//		System.out.println(this.angleToNextPlayer() + " ; " + this.nextPlayersAngle());
+//	}
 }
