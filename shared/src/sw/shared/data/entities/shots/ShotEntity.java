@@ -81,9 +81,10 @@ public abstract class ShotEntity extends MoveableEntity implements IShot
 	{
 		target.takeDamage(this.getDamage());
 		// TODO move this & remove get/set score from IAttacker!!
+		this.getOwner().setScore(this.getOwner().getScore() + GameConstants.POINTS_PER_HIT);
 		if (!target.isAlive())
 		{
-			this.getOwner().setScore(this.getOwner().getScore() + 1);
+			this.getOwner().setScore(this.getOwner().getScore() + GameConstants.POINTS_PER_KILL);
 		}
 	}
 

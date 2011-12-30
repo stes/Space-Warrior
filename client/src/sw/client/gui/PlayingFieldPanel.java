@@ -167,7 +167,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				}
 			}
 		}
-	
 	}
 
 	public void setDebugMode(boolean active)
