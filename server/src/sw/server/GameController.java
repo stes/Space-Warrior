@@ -22,6 +22,7 @@ import java.util.HashMap;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 
@@ -35,6 +36,7 @@ public class GameController
 	private GameWorld _world;
 	private HashMap<String, SpaceShip> _players;
 	private IServer _server;
+	private GameState _gameState;
 
 	/**
 	 * Creates a new game controller
@@ -47,6 +49,8 @@ public class GameController
 		_world = new GameWorld();
 		_players = new HashMap<String, SpaceShip>();
 		_server = server;
+		_gameState = new GameState();
+		_world.insert(_gameState);
 	}
 
 	/**
@@ -110,12 +114,7 @@ public class GameController
 		{
 			pl.respawn();
 		}
-		this.broadcastSnapshots();
-		Packer info = new Packer(Packettype.SV_NEW_ROUND);
-		info.writeUTF("Server");
-		info.writeUTF("New round");
-		_server.sendBroadcast(info);
-		System.out.println("New round");
+		_gameState.startNewRound();
 	}
 
 	public void tick()

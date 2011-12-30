@@ -195,10 +195,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 	{}
 
 	@Override
-	public void newRound()
-	{}
-
-	@Override
 	public void newRound(GameStateChangedEvent e)
 	{}
 

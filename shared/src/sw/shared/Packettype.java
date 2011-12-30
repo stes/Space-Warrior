@@ -31,9 +31,9 @@ public final class Packettype
 	// server
 	public final static byte SV_CHAT_MESSAGE = 1;
 	public final static byte SV_SNAPSHOT = 2;
-	public final static byte SV_NEW_ROUND = 3;
 
 	// snapshot types
-	public final static byte SNAP_PLAYERDATA = 0x01;
-	public final static byte SNAP_SHOT = 0x02;
+	public final static byte SNAP_GAMESTATE = 0x01;
+	public final static byte SNAP_PLAYERDATA = 0x02;
+	public final static byte SNAP_SHOT = 0x03;
 }

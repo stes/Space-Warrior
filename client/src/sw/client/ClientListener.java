@@ -48,11 +48,6 @@ public interface ClientListener
 	public void disconnected(String reason);
 
 	/**
-	 * Invoked when a new round starts
-	 */
-	public void newRound();
-
-	/**
 	 * Invoked when server info was received
 	 * 
 	 * @param info

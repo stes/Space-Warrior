@@ -30,6 +30,7 @@ import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.ServerInfo;
+import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -164,8 +165,7 @@ public class GameController implements ClientListener, IGameStateManager
 		return this.isConnected();
 	}
 
-	@Override
-	public void newRound()
+	private void newRound()
 	{
 		// TODO improve, add loser/winner to event
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
@@ -221,6 +221,12 @@ public class GameController implements ClientListener, IGameStateManager
 			{
 				_localPlayer.setDataSet(pl);
 			}
+		}
+		GameState[] state = _world.getEntitiesByType(Packettype.SNAP_GAMESTATE, new GameState[]{});
+		if(state.length >= 1)
+		{
+			if(state[0].isNewRoundStarted())
+				this.newRound();
 		}
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
 		e.setLocalDataSet(_localPlayer.getDataSet());

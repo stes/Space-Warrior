@@ -186,10 +186,6 @@ public class LoginPanel extends JPanel implements ClientListener
 		return _txtName.getText();
 	}
 
-	@Override
-	public void newRound()
-	{}
-
 	public void removeConnecionListener(ConnectionListener l)
 	{
 		_connectionListener.remove(l);

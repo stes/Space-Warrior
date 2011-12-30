@@ -106,13 +106,6 @@ public class SWClient implements IClient, NetworkListener
 				l.chatMessage(name, text);
 			}
 		}
-		else if (Packettype.SV_NEW_ROUND == packet.getType())
-		{
-			for (ClientListener l : _clientListener)
-			{
-				l.newRound();
-			}
-		}
 		else if (Packettype.SV_SNAPSHOT == packet.getType())
 		{
 			for (ClientListener l : _clientListener)

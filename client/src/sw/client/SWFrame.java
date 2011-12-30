@@ -212,13 +212,6 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	}
 
 	@Override
-	public void newRound()
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void scan()
 	{
 		_client.scan();
