@@ -17,47 +17,22 @@
  ******************************************************************************/
 package sw.server;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import sw.shared.GameConstants;
+import sw.shared.data.PlayerInput;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class Program
+
+public interface ServerListener
 {
-	public static void main(String[] args)
-	{
-		(new Program()).run();
-	}
+	public void tick();
 
-	private ServerGUI _serverGUI;
-	private SWServer _server;
+	public void broadcastSnapshots();
+	
+	public void playerConnected(String name, int imageID);
 
-	public Program()
-	{
-		_serverGUI = new ServerGUI(800, 400);
-		_server = new SWServer(GameConstants.STANDARD_PORT);
-		_serverGUI.setNetServer(_server);
-		_server.addServerListener(_serverGUI);
+	public void playerLeft(String name, String reason);
 
-		_serverGUI.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				_server.close();
-			}
-		});
-	}
-
-	public void run()
-	{
-		while (true)
-		{
-			_server.tick();
-		}
-	}
+	public void processPlayerInput(String name, PlayerInput input);
 }

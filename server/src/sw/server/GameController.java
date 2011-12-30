@@ -31,7 +31,7 @@ import sw.shared.net.Packer;
  * @version 25.11.11
  */
 
-public class GameController
+public class GameController implements ServerListener
 {
 	private GameWorld _world;
 	private HashMap<String, SpaceShip> _players;
@@ -52,10 +52,15 @@ public class GameController
 		_gameState = new GameState();
 		_world.insert(_gameState);
 	}
+	
+	@Override
+	public void tick()
+	{
+		this.checkTurn();
+		_world.tick();
+	}
 
-	/**
-	 * Sends a snapshot to every player
-	 */
+	@Override
 	public void broadcastSnapshots()
 	{
 		for (SpaceShip pl : _players.values())
@@ -65,14 +70,8 @@ public class GameController
 			_server.sendPacket(pl.getName(), snapshot);
 		}
 	}
-
-	/**
-	 * A new player joined the game
-	 * 
-	 * @param name
-	 *            the player's name
-	 * @param imageID
-	 */
+	
+	@Override
 	public void playerConnected(String name, int imageID)
 	{
 		SpaceShip newPl = new SpaceShip(name, imageID);
@@ -80,26 +79,14 @@ public class GameController
 		_world.insert(newPl);
 	}
 
-	/**
-	 * A player left the game
-	 * 
-	 * @param name
-	 *            the player's name
-	 */
+	@Override
 	public void playerLeft(String name, String reason)
 	{
 		_players.get(name).destroy();
 		_players.remove(name);
 	}
 
-	/**
-	 * processes a server input
-	 * 
-	 * @param name
-	 *            the name of the affected player
-	 * @param input
-	 *            the player's input
-	 */
+	@Override
 	public void processPlayerInput(String name, PlayerInput input)
 	{
 		_players.get(name).setInput(input);
@@ -115,12 +102,6 @@ public class GameController
 			pl.respawn();
 		}
 		_gameState.startNewRound();
-	}
-
-	public void tick()
-	{
-		this.checkTurn();
-		_world.tick();
 	}
 
 	private void checkTurn()
