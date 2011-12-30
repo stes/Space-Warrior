@@ -41,15 +41,13 @@ import sw.client.gui.ConnectionListener;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
 import sw.shared.Packettype;
-import sw.shared.data.ServerInfo;
 import sw.shared.net.Packer;
-import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWFrame extends JFrame implements ClientListener, ConnectionListener
+public class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener
 {
 	private enum GUIMode
 	{
@@ -59,20 +57,13 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 	class UnRepaintManager extends RepaintManager
 	{
 		@Override
-		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
-		{}
-
+		public void addDirtyRegion(JComponent c, int x, int y, int w, int h) {}
 		@Override
-		public void addInvalidComponent(JComponent invalidComponent)
-		{}
-
+		public void addInvalidComponent(JComponent invalidComponent) {}
 		@Override
-		public void markCompletelyDirty(JComponent aComponent)
-		{}
-
+		public void markCompletelyDirty(JComponent aComponent) {}
 		@Override
-		public void paintDirtyRegions()
-		{}
+		public void paintDirtyRegions() {}
 	}
 
 	// change to limit fps in order to minimize cpu usage
@@ -124,27 +115,66 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		_isRunning = true;
 		this.gameLoop();
 	}
-
-	@Override
-	public void chatMessage(String name, String text)
-	{}
-
-	@Override
-	public void connected()
+	
+	private void init()
 	{
-		this.setGUIMode(GUIMode.GAME);
-		Packer start = new Packer(Packettype.CL_START_INFO);
-		start.writeUTF(_loginPanel.getName());
-		start.writeInt(_loginPanel.getImageID());
-		_client.sendPacket(start);
-	}
+		this.setVisible(true);
+		this.toFront();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		_insets = this.getInsets();
+		System.out.println(_insets);
+		int insetWide = _insets.left + _insets.right;
+		int insetTall = _insets.top + _insets.bottom;
+		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
+		
+		this.addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				_client.close();
+			}
+		});
+		
+		System.out.println("init");
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		
+		_client = new SWClient();
+		_controller = new GameController(_client);
+		
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+		_gamePanel.setLocation(_insets.left, _insets.top + 100);
+		
+		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
+		_loginPanel.setLocation(_insets.left, _insets.top);
 
-	@Override
-	public void disconnected(String reason)
-	{
+		_controller.addGameStateChangedListener(_gamePanel);
+
+		_client.addClientConnectionListener(this);
+		_client.addClientConnectionListener(_controller);
+		_client.addClientMessageListener(_controller);
+		_client.addClientMessageListener(_gamePanel);
+		_client.addClientConnlessListener(_loginPanel);
+
+		_loginPanel.addConnectionListener(this);
+		_gamePanel.addConnectionListener(this);
+
 		this.setGUIMode(GUIMode.LOGIN);
+
 	}
 
+	private void initBugLogger()
+	{
+		try
+		{
+			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Method containing the game's loop. Each iteration of the loop updates all
 	 * animations and sprite locations and draws the graphics to the screen
@@ -198,97 +228,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			}
 		}
 	}
-
-	@Override
-	public void login(ConnectionEvent e)
-	{
-		this.connect(e.getIPAdress());
-	}
-
-	@Override
-	public void logout(ConnectionEvent e)
-	{
-		_client.disconnect("user logout");
-	}
-
-	@Override
-	public void scan()
-	{
-		_client.scan();
-	}
-
-	@Override
-	public void serverInfo(ServerInfo info)
-	{}
-
-	@Override
-	public void snapshot(Unpacker packet)
-	{}
-
-	/**
-	 * Connects to a server
-	 */
-	private void connect(InetSocketAddress ip)
-	{
-		_client.connect(ip.getAddress().getHostAddress(), ip.getPort());
-	}
-
-	private void init()
-	{
-		this.setVisible(true);
-		this.toFront();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_insets = this.getInsets();
-		System.out.println(_insets);
-		int insetWide = _insets.left + _insets.right;
-		int insetTall = _insets.top + _insets.bottom;
-		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
-
-		_client = new SWClient();
-		_controller = new GameController(_client);
-		_client.addClientListener(this);
-		_client.addClientListener(_controller);
-		//
-		this.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				_client.close();
-			}
-		});
-		System.out.println("init");
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
-		_gamePanel.setLocation(_insets.left, _insets.top + 100);
-
-		_controller.addGameStateChangedListener(_gamePanel);
-
-		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-		_loginPanel.setLocation(_insets.left, _insets.top);
-
-		_client.addClientListener(_gamePanel);
-		_client.addClientListener(_loginPanel);
-
-		_loginPanel.addConnectionListener(this);
-		_gamePanel.addConnectionListener(this);
-
-		this.setGUIMode(GUIMode.LOGIN);
-
-	}
-
-	private void initBugLogger()
-	{
-		try
-		{
-			System.setErr(new PrintStream(System.getProperty("user.dir") + "/buglog.txt"));
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
+	
 	private void render(Graphics2D g2d)
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -326,5 +266,40 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 		this.add(_activePanel);
 		System.out.println("switch mode");
 		this.setVisible(true);
+	}
+
+	@Override
+	public void connected()
+	{
+		this.setGUIMode(GUIMode.GAME);
+		Packer start = new Packer(Packettype.CL_START_INFO);
+		start.writeUTF(_loginPanel.getName());
+		start.writeInt(_loginPanel.getImageID());
+		_client.sendPacket(start);
+	}
+
+	@Override
+	public void disconnected(String reason)
+	{
+		this.setGUIMode(GUIMode.LOGIN);
+	}
+
+	@Override
+	public void login(ConnectionEvent e)
+	{
+		InetSocketAddress addr = e.getIPAdress();
+		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+	}
+
+	@Override
+	public void logout(ConnectionEvent e)
+	{
+		_client.disconnect("user logout");
+	}
+
+	@Override
+	public void scan()
+	{
+		_client.scan();
 	}
 }

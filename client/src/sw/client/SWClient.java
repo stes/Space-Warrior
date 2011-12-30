@@ -39,19 +39,33 @@ public class SWClient implements IClient, NetworkListener
 	private UDPHost _netClient;
 	private UDPConnection _server;
 
-	private ArrayList<ClientListener> _clientListener;
+	private ArrayList<ClientConnectionListener> _clientConnectionListener;
+	private ArrayList<ClientMessageListener> _clientMessageListener;
+	private ArrayList<ClientConnlessListener> _clientConnlessListener;
 
 	public SWClient()
 	{
 		_netClient = new UDPHost(null, 1);
 		_netClient.addNetworkListener(this);
-		_clientListener = new ArrayList<ClientListener>();
+		_clientConnectionListener = new ArrayList<ClientConnectionListener>();
+		_clientMessageListener = new ArrayList<ClientMessageListener>();
+		_clientConnlessListener = new ArrayList<ClientConnlessListener>();
 		_netClient.start();
 	}
 
-	public void addClientListener(ClientListener listener)
+	public void addClientConnectionListener(ClientConnectionListener listener)
 	{
-		_clientListener.add(listener);
+		_clientConnectionListener.add(listener);
+	}
+	
+	public void addClientMessageListener(ClientMessageListener listener)
+	{
+		_clientMessageListener.add(listener);
+	}
+	
+	public void addClientConnlessListener(ClientConnlessListener listener)
+	{
+		_clientConnlessListener.add(listener);
 	}
 
 	public void close()
@@ -68,7 +82,7 @@ public class SWClient implements IClient, NetworkListener
 	public void connected(UDPConnection connection)
 	{
 		_server = connection;
-		for (ClientListener l : _clientListener)
+		for (ClientConnectionListener l : _clientConnectionListener)
 		{
 			l.connected();
 		}
@@ -86,7 +100,7 @@ public class SWClient implements IClient, NetworkListener
 	public void disconnected(UDPConnection connection, String reason)
 	{
 		_server = null;
-		for (ClientListener l : _clientListener)
+		for (ClientConnectionListener l : _clientConnectionListener)
 		{
 			l.disconnected(reason);
 		}
@@ -101,14 +115,14 @@ public class SWClient implements IClient, NetworkListener
 		{
 			String name = packet.readUTF();
 			String text = packet.readUTF();
-			for (ClientListener l : _clientListener)
+			for (ClientMessageListener l : _clientMessageListener)
 			{
 				l.chatMessage(name, text);
 			}
 		}
 		else if (Packettype.SV_SNAPSHOT == packet.getType())
 		{
-			for (ClientListener l : _clientListener)
+			for (ClientMessageListener l : _clientMessageListener)
 			{
 				l.snapshot(packet);
 			}
@@ -127,7 +141,7 @@ public class SWClient implements IClient, NetworkListener
 			ServerInfo serverInfo = ServerInfo.unpack(new Unpacker(info));
 			serverInfo.setAddress(addr);
 
-			for (ClientListener l : _clientListener)
+			for (ClientConnlessListener l : _clientConnlessListener)
 			{
 				l.serverInfo(serverInfo);
 			}

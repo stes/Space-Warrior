@@ -38,7 +38,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
-import sw.client.ClientListener;
+import sw.client.ClientMessageListener;
 import sw.client.IClient;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
@@ -47,11 +47,10 @@ import sw.client.gui.ConnectionEvent.ActionType;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.shared.Packettype;
-import sw.shared.data.ServerInfo;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public class GamePanel extends JPanel implements ClientListener, ActionListener,
+public class GamePanel extends JPanel implements ClientMessageListener, ActionListener,
 		GameStateChangedListener
 {
 	private class PlayerTableModel extends AbstractTableModel
@@ -181,14 +180,12 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 	{
 		this.appendMessage("[ " + name + " ] " + text + "\n");
 	}
-
+	
 	@Override
-	public void connected()
-	{}
-
-	@Override
-	public void disconnected(String reason)
-	{} // TODO: show reason
+	public void snapshot(Unpacker packet)
+	{
+		_model.fireTableDataChanged();
+	}
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
@@ -222,16 +219,6 @@ public class GamePanel extends JPanel implements ClientListener, ActionListener,
 			super.paintComponents(img.getGraphics());
 		}
 		g.drawImage(img, 5, 30, null);
-	}
-
-	@Override
-	public void serverInfo(ServerInfo info)
-	{}
-
-	@Override
-	public void snapshot(Unpacker packet)
-	{
-		_model.fireTableDataChanged();
 	}
 
 	protected void invokeDisconnect(ConnectionEvent e)
