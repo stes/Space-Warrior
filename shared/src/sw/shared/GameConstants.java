@@ -36,7 +36,7 @@ public final class GameConstants
 			Images img = null;
 			for (Images i : Images.values())
 			{
-				if (max < i.getID() && i.getID() != BACKGROUND.getID())
+				if (max < i.getID() && i.name().toLowerCase().contains("ship"))
 				{
 					max = i.getID();
 					img = i;
@@ -51,7 +51,7 @@ public final class GameConstants
 			Images img = null;
 			for (Images i : Images.values())
 			{
-				if (min > i.getID() && i.getID() != BACKGROUND.getID())
+				if (min > i.getID() && i.name().toLowerCase().contains("ship"))
 				{
 					min = i.getID();
 					img = i;
@@ -104,12 +104,12 @@ public final class GameConstants
 	public final static double ANGULAR_ACCELERATION = 0.0005 * GameConstants.TICK_INTERVAL;
 	// Shooting
 	public final static int AMMO_PER_SHOT = 20;
-
 	public final static int AMMO_PER_MASTER_SHOT = 100;
+	public static final int AMMO_PER_ROCKET = 150;
 	// Movements
 	public final static double ACCELERATION = 0.01 * GameConstants.TICK_INTERVAL;
-
 	public final static double DECELERATION = -0.01 * GameConstants.TICK_INTERVAL;
+	// TODO remove if no longer needed
 	// public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
 
 	public final static int MAX_COLLISION_DAMAGE_RANGE = GameConstants.PLAYER_SIZE;

@@ -50,6 +50,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	private long _lastShot;
 	private boolean _local;
 	private int _imageID;
+	
+	private double _acceleration;
+	private double _angularAcceleration;
 
 	private PlayerInput _input;
 
@@ -99,10 +102,6 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	private SpaceShip(byte type)
 	{
 		super(type);
-		// TODO improve?
-		this.setAcceleration(GameConstants.ACCELERATION);
-		this.setAngularAcceleration(GameConstants.ANGULAR_ACCELERATION);
-		this.setMaximumSpeed(GameConstants.MAX_SPEED);
 	}
 
 	/**
@@ -349,13 +348,9 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 
 	public void shoot(int id)
 	{
-		int neededAmmo = GameConstants.AMMO_PER_SHOT;
-
 		IShot s = null;
-		if (_ammo >= neededAmmo && this.isReadyToShoot())
+		if (this.isReadyToShoot())
 		{
-			_ammo -= neededAmmo;
-			_lastShot = System.currentTimeMillis();
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
 			switch (id)
 			{
@@ -385,8 +380,13 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 				default:
 					return;
 			}
-			this.getWorld().insert(s);
-			s.fire();
+			if (_ammo >= s.getNeededAmmo())
+			{
+				_ammo -= s.getNeededAmmo();
+				_lastShot = System.currentTimeMillis();
+				this.getWorld().insert(s);
+				s.fire();
+			}
 		}
 	}
 
@@ -459,5 +459,33 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public Dimension getSize()
 	{
 		return new Dimension(GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE);
+	}
+
+	private void setAcceleration(double value)
+	{
+		_acceleration = value;
+	}
+
+	private void setAngularAcceleration(double value)
+	{
+		_angularAcceleration = value;
+	}
+	
+	@Override
+	public double getAcceleration()
+	{
+		return _acceleration;
+	}
+
+	@Override
+	public double getAngularAcceleration()
+	{
+		return _angularAcceleration;
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		return GameConstants.MAX_SPEED;
 	}
 }

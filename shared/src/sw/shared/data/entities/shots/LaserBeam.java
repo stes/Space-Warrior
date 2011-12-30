@@ -132,4 +132,28 @@ public class LaserBeam extends ShotEntity
 			this.destroy();
 		}
 	}
+
+	@Override
+	public double getAcceleration()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getAngularAcceleration()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getNeededAmmo()
+	{
+		return isMaster() ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
+	}
 }

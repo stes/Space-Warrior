@@ -48,4 +48,29 @@ public class Rocket extends Projectile
 	{
 		return new Dimension(GameConstants.ROCKET_SIZE, GameConstants.ROCKET_SIZE);
 	}
+
+	@Override
+	public double getAcceleration()
+	{
+		// TODO modify
+		return GameConstants.ACCELERATION * 2;
+	}
+
+	@Override
+	public double getAngularAcceleration()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		return GameConstants.MAX_SPEED * 2;
+	}
+
+	@Override
+	public int getNeededAmmo()
+	{
+		return GameConstants.AMMO_PER_ROCKET;
+	}
 }

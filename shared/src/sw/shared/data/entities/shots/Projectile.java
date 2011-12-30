@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sw.shared.data.entities.shots;
 
-import sw.shared.GameConstants;
 import sw.shared.data.entities.IDrawable;
-import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
@@ -37,9 +35,9 @@ public abstract class Projectile extends ShotEntity implements IDrawable
 		super(x, y, direction, owner, shottype);
 
 		// TODO improve
-		this.setAcceleration(GameConstants.ACCELERATION);
-		this.setAngularAcceleration(0);
-		this.setMaximumSpeed(GameConstants.MAX_SPEED / 2);
+//		this.setAcceleration(GameConstants.ACCELERATION);
+//		this.setAngularAcceleration(0);
+//		this.setMaximumSpeed(GameConstants.MAX_SPEED / 2);
 	}
 
 	@Override
@@ -72,7 +70,6 @@ public abstract class Projectile extends ShotEntity implements IDrawable
 	@Override
 	public void tick()
 	{
-		this.setAcceleration(MoveableEntity.ACCELERATION);
 		this.fire();
 		super.tick();
 	}

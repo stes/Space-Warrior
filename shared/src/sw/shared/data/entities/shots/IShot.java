@@ -48,4 +48,6 @@ public interface IShot extends IEntity
 	 */
 	IAttacker getOwner();
 
+	int getNeededAmmo();
+
 }

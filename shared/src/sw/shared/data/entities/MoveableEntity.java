@@ -39,13 +39,6 @@ public abstract class MoveableEntity extends StaticEntity
 	private double _speed;
 	private double _turnSpeed;
 
-	// acceleration variables
-	private double _acceleration;
-	private double _adirection;
-
-	// maximums
-	private double _maxSpeed;
-
 	public MoveableEntity(byte type)
 	{
 		this(type, 0, 0, 0);
@@ -61,24 +54,15 @@ public abstract class MoveableEntity extends StaticEntity
 	 */
 	public void accelerate()
 	{
-		this.setSpeed(_speed + _acceleration);
-		this.setTurnSpeed(_turnSpeed + _adirection);
+		this.setSpeed(_speed + getAcceleration());
+		this.setTurnSpeed(_turnSpeed + getAngularAcceleration());
 	}
 
-	public double getAcceleration()
-	{
-		return _acceleration;
-	}
+	public abstract double getAcceleration();
 
-	public double getAngularAcceleration()
-	{
-		return _adirection;
-	}
+	public abstract double getAngularAcceleration();
 
-	public double getMaximumSpeed()
-	{
-		return _maxSpeed;
-	}
+	public abstract double getMaximumSpeed();
 
 	@Override
 	public Point.Double getPosition()
@@ -106,21 +90,6 @@ public abstract class MoveableEntity extends StaticEntity
 		this.setX(this.getX() + x);
 		this.setY(this.getY() + y);
 		this.setDirection(this.getDirection() + _turnSpeed);
-	}
-
-	public void setAcceleration(double acceleration)
-	{
-		this._acceleration = Math.min(acceleration, MoveableEntity.ACCELERATION);
-	}
-
-	public void setAngularAcceleration(double angularAcceleration)
-	{
-		this._adirection = Math.min(angularAcceleration, MoveableEntity.ANGULAR_ACCELERATION);
-	}
-
-	public void setMaximumSpeed(double speed)
-	{
-		_maxSpeed = speed;
 	}
 
 	public void setSpeed(double speed)

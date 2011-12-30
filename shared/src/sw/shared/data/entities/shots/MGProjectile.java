@@ -19,6 +19,7 @@ package sw.shared.data.entities.shots;
 
 import java.awt.Dimension;
 
+import sw.shared.GameConstants;
 import sw.shared.data.entities.players.SpaceShip;
 
 public class MGProjectile extends Projectile
@@ -26,7 +27,6 @@ public class MGProjectile extends Projectile
 	public MGProjectile(double x, double y, double direction, SpaceShip owner)
 	{
 		super(x, y, direction, owner, IShot.MG);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,5 +46,31 @@ public class MGProjectile extends Projectile
 	public Dimension getSize()
 	{
 		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public double getAcceleration()
+	{
+		// TODO modify
+		return GameConstants.ACCELERATION;
+	}
+
+	@Override
+	public double getAngularAcceleration()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		// TODO modify
+		return GameConstants.MAX_SPEED * 3;
+	}
+
+	@Override
+	public int getNeededAmmo()
+	{
+		throw new UnsupportedOperationException("Not implemented yet.");
 	}
 }
