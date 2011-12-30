@@ -117,20 +117,12 @@ public class GameWorld
 		_entities = tmp;
 	}
 
-	private Integer nextID()
-	{
-		int i = 0;
-		for (; _entities.containsKey(i); i++)
-			;
-		return i;
-	}
-
 	/**
 	 * @return an array of all entities in this game world
 	 */
 	public IEntity[] getAllEntities()
 	{
-		return _entities.values().toArray(new Entity[]{});
+		return _entities.values().toArray(new Entity[] {});
 	}
 
 	/**
@@ -177,7 +169,7 @@ public class GameWorld
 	public void insert(IEntity e)
 	{
 		e.setWorld(this);
-		e.setID(nextID());
+		e.setID(this.nextID());
 		_entities.put(e.getID(), e);
 	}
 
@@ -225,10 +217,20 @@ public class GameWorld
 			}
 		}
 
-		Integer[] keys = _entities.keySet().toArray(new Integer[]{});
+		Integer[] keys = _entities.keySet().toArray(new Integer[] {});
 		for (int i = 0; i < keys.length; i++)
 		{
 			_entities.get(keys[i]).tick();
 		}
+	}
+
+	private Integer nextID()
+	{
+		int i = 0;
+		for (; _entities.containsKey(i); i++)
+		{
+			;
+		}
+		return i;
 	}
 }

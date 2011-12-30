@@ -67,6 +67,15 @@ public abstract class Entity implements IEntity
 	}
 
 	/**
+	 * @return the ID of this entity
+	 */
+	@Override
+	public int getID()
+	{
+		return _id;
+	}
+
+	/**
 	 * @return the entity's type ID
 	 */
 	@Override
@@ -107,16 +116,9 @@ public abstract class Entity implements IEntity
 	{
 		return _entDestroy;
 	}
-	
-	/**
-	 * @return the ID of this entity
-	 */
-	public int getID()
-	{
-		return _id;
-	}
-	
+
 	// TODO this mustn't be public!
+	@Override
 	public void setID(int id)
 	{
 		_id = id;

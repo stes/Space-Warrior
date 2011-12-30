@@ -180,12 +180,6 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	{
 		this.appendMessage("[ " + name + " ] " + text + "\n");
 	}
-	
-	@Override
-	public void snapshot(Unpacker packet)
-	{
-		_model.fireTableDataChanged();
-	}
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
@@ -219,6 +213,12 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 			super.paintComponents(img.getGraphics());
 		}
 		g.drawImage(img, 5, 30, null);
+	}
+
+	@Override
+	public void snapshot(Unpacker packet)
+	{
+		_model.fireTableDataChanged();
 	}
 
 	protected void invokeDisconnect(ConnectionEvent e)

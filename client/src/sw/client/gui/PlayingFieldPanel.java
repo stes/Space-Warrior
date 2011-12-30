@@ -140,9 +140,12 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		for (IEntity ent : world.getAllEntities())
 		{
 			if (!(ent instanceof StaticEntity))
+			{
 				continue;
-			StaticEntity prevEnt = (StaticEntity)ent;
-			for (StaticEntity prev : prevWorld.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new StaticEntity[] {}))
+			}
+			StaticEntity prevEnt = (StaticEntity) ent;
+			for (StaticEntity prev : prevWorld.getEntitiesByType(Packettype.SNAP_PLAYERDATA,
+					new StaticEntity[] {}))
 			{
 				if (prev.getID() == ent.getID())
 				{
@@ -151,13 +154,15 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			}
 			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
 		}
-		
+
 		if (_stateManager.getLocalPlayer() != null)
 		{
 			SpaceShip p = _stateManager.getLocalPlayer().getDataSet();
 			if (p == null || !p.isAlive())
+			{
 				return;
-	
+			}
+
 			if (p.isLocal())
 			{
 				this.paintBars(g2d, p);
@@ -190,7 +195,12 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	private void drawEntity(Graphics2D g2d, IEntity ent, IEntity prevEnt, double scaleX, double scaleY)
+	private void drawEntity(
+			Graphics2D g2d,
+			IEntity ent,
+			IEntity prevEnt,
+			double scaleX,
+			double scaleY)
 	{
 		if (ent instanceof StaticEntity && prevEnt instanceof StaticEntity)
 		{
@@ -207,9 +217,9 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 			if (pl instanceof IDrawable)
 			{
-				Dimension d = ((IDrawable)pl).getSize();
-				
-				g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable)pl).getImageID()),
+				Dimension d = ((IDrawable) pl).getSize();
+
+				g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable) pl).getImageID()),
 						-direction),
 						_insets.left + (int) (scaleX * (pos.getX() - d.width / 2)),
 						_insets.top + (int) (scaleY * (pos.getY() - d.height / 2)),
@@ -300,7 +310,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		String[] info = new String[] { "X:\t\t" + pl.getX(), "Y:\t\t" + pl.getY(),
 				"Direction:\t" + pl.getDirection(), "Speed:\t" + pl.getSpeed(),
 				"Turn Speed:\t" + pl.getTurnSpeed(), "Score:\t" + pl.getScore(),
-				"ID:\t" + pl.getID()};
+				"ID:\t" + pl.getID() };
 
 		for (String s : info)
 		{

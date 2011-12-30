@@ -54,8 +54,8 @@ public abstract class MoveableEntity extends StaticEntity
 	 */
 	public void accelerate()
 	{
-		this.setSpeed(_speed + getAcceleration());
-		this.setTurnSpeed(_turnSpeed + getAngularAcceleration());
+		this.setSpeed(_speed + this.getAcceleration());
+		this.setTurnSpeed(_turnSpeed + this.getAngularAcceleration());
 	}
 
 	public abstract double getAcceleration();

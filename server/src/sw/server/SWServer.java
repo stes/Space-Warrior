@@ -44,7 +44,7 @@ public class SWServer implements IServer, NetworkListener
 
 	private int _tick;
 	private long _lastUpdate;
-	
+
 	private ArrayList<ServerListener> _serverListener;
 
 	public SWServer(int port)
@@ -61,7 +61,7 @@ public class SWServer implements IServer, NetworkListener
 		_lastUpdate = System.currentTimeMillis();
 		this.addServerListener(new GameController(this));
 	}
-	
+
 	public void addServerListener(ServerListener listener)
 	{
 		_serverListener.add(listener);

@@ -30,25 +30,6 @@ public class MGProjectile extends Projectile
 	}
 
 	@Override
-	public double getDamage()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getImageID()
-	{
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
-
-	@Override
-	public Dimension getSize()
-	{
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
-
-	@Override
 	public double getAcceleration()
 	{
 		// TODO modify
@@ -62,6 +43,19 @@ public class MGProjectile extends Projectile
 	}
 
 	@Override
+	public double getDamage()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getImageID()
+	{
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
 	public double getMaximumSpeed()
 	{
 		// TODO modify
@@ -72,5 +66,11 @@ public class MGProjectile extends Projectile
 	public int getNeededAmmo()
 	{
 		throw new UnsupportedOperationException("Not implemented yet.");
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

@@ -24,47 +24,48 @@ import sw.shared.net.Unpacker;
 public class GameState extends Entity
 {
 	private final static byte STATE_RUNNING = 0;
-	//private final static byte STATE_PAUSEDE = 1; // not used right now
+	// private final static byte STATE_PAUSEDE = 1; // not used right now
 	private final static byte STATE_NEW_ROUND = 2;
-	
+
 	private byte _state;
-	
+
 	public GameState()
 	{
 		super(Packettype.SNAP_GAMESTATE);
-		_state = STATE_NEW_ROUND;
+		_state = GameState.STATE_NEW_ROUND;
 	}
 
-	@Override
-	public void tick()
-	{
-	}
-	
-	@Override
-	public void snap(Packer p, String name)
-	{
-		super.snap(p, name);
-		p.writeByte(_state);
-		
-		if(_state == STATE_NEW_ROUND)
-			_state = STATE_RUNNING;
-	}
-	
 	@Override
 	public void fromSnap(Unpacker p)
 	{
 		super.fromSnap(p);
 		_state = p.readByte();
 	}
-	
+
+	public boolean isNewRoundStarted()
+	{
+		return _state == GameState.STATE_NEW_ROUND;
+	}
+
+	@Override
+	public void snap(Packer p, String name)
+	{
+		super.snap(p, name);
+		p.writeByte(_state);
+
+		if (_state == GameState.STATE_NEW_ROUND)
+		{
+			_state = GameState.STATE_RUNNING;
+		}
+	}
+
 	public void startNewRound()
 	{
 		System.out.println("New round");
-		_state = STATE_NEW_ROUND;
+		_state = GameState.STATE_NEW_ROUND;
 	}
-	
-	public boolean isNewRoundStarted()
-	{
-		return _state == STATE_NEW_ROUND;
-	}
+
+	@Override
+	public void tick()
+	{}
 }

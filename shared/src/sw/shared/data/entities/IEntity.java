@@ -31,6 +31,8 @@ public interface IEntity
 
 	public void fromSnap(Unpacker p);
 
+	public int getID();
+
 	public byte getMainType();
 
 	public byte getSubType();
@@ -41,13 +43,11 @@ public interface IEntity
 
 	public boolean isDestroyed();
 
+	public void setID(int id);
+
 	public void setWorld(GameWorld world);
 
 	public abstract void snap(Packer p, String name);
 
 	public abstract void tick();
-
-	public int getID();
-
-	public void setID(int id);
 }

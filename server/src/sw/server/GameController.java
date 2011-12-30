@@ -52,13 +52,6 @@ public class GameController implements ServerListener
 		_gameState = new GameState();
 		_world.insert(_gameState);
 	}
-	
-	@Override
-	public void tick()
-	{
-		this.checkTurn();
-		_world.tick();
-	}
 
 	@Override
 	public void broadcastSnapshots()
@@ -70,7 +63,7 @@ public class GameController implements ServerListener
 			_server.sendPacket(pl.getName(), snapshot);
 		}
 	}
-	
+
 	@Override
 	public void playerConnected(String name, int imageID)
 	{
@@ -102,6 +95,13 @@ public class GameController implements ServerListener
 			pl.respawn();
 		}
 		_gameState.startNewRound();
+	}
+
+	@Override
+	public void tick()
+	{
+		this.checkTurn();
+		_world.tick();
 	}
 
 	private void checkTurn()

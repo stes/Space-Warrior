@@ -85,6 +85,18 @@ public class LaserBeam extends ShotEntity
 		_isMaster = p.readBoolean();
 	}
 
+	@Override
+	public double getAcceleration()
+	{
+		return 0;
+	}
+
+	@Override
+	public double getAngularAcceleration()
+	{
+		return 0;
+	}
+
 	/**
 	 * @return the damage from the shot
 	 */
@@ -100,6 +112,18 @@ public class LaserBeam extends ShotEntity
 		return new Line2D.Double(this.getX(), this.getY(), this.getX() - range
 				* Math.sin(this.getDirection()), this.getY() - range
 				* Math.cos(this.getDirection()));
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getNeededAmmo()
+	{
+		return this.isMaster() ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
 	}
 
 	@Override
@@ -131,29 +155,5 @@ public class LaserBeam extends ShotEntity
 		{
 			this.destroy();
 		}
-	}
-
-	@Override
-	public double getAcceleration()
-	{
-		return 0;
-	}
-
-	@Override
-	public double getAngularAcceleration()
-	{
-		return 0;
-	}
-
-	@Override
-	public double getMaximumSpeed()
-	{
-		return 0;
-	}
-
-	@Override
-	public int getNeededAmmo()
-	{
-		return isMaster() ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
 	}
 }

@@ -50,7 +50,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	private long _lastShot;
 	private boolean _local;
 	private int _imageID;
-	
+
 	private double _acceleration;
 	private double _angularAcceleration;
 
@@ -151,7 +151,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public void die()
 	{
 		_alive = false;
-		this.setScore(getScore()/2);
+		this.setScore(this.getScore() / 2);
 	}
 
 	@Override
@@ -167,6 +167,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		_ammo = p.readShort();
 	}
 
+	@Override
+	public double getAcceleration()
+	{
+		return _acceleration;
+	}
+
 	/**
 	 * returns the current munition
 	 * 
@@ -177,6 +183,13 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		return _ammo;
 	}
 
+	@Override
+	public double getAngularAcceleration()
+	{
+		return _angularAcceleration;
+	}
+
+	@Override
 	public int getImageID()
 	{
 		return _imageID;
@@ -190,6 +203,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public int getLifepoints()
 	{
 		return _lifepoints;
+	}
+
+	@Override
+	public double getMaximumSpeed()
+	{
+		return GameConstants.MAX_SPEED;
 	}
 
 	/**
@@ -212,6 +231,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public int getScore()
 	{
 		return _score;
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		return new Dimension(GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE);
 	}
 
 	public boolean intersects(SpaceShip d)
@@ -455,12 +480,6 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 				+ way * Math.cos(this.getDirection()));
 	}
 
-	@Override
-	public Dimension getSize()
-	{
-		return new Dimension(GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE);
-	}
-
 	private void setAcceleration(double value)
 	{
 		_acceleration = value;
@@ -469,23 +488,5 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	private void setAngularAcceleration(double value)
 	{
 		_angularAcceleration = value;
-	}
-	
-	@Override
-	public double getAcceleration()
-	{
-		return _acceleration;
-	}
-
-	@Override
-	public double getAngularAcceleration()
-	{
-		return _angularAcceleration;
-	}
-
-	@Override
-	public double getMaximumSpeed()
-	{
-		return GameConstants.MAX_SPEED;
 	}
 }

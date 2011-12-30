@@ -122,7 +122,7 @@ public final class GameConstants
 
 	// Shots
 	public final static int SHOT_TTL = 20; // ticks
-	
+
 	// Scoring
 	public final static int POINTS_PER_HIT = 1;
 	public final static int POINTS_PER_KILL = 10;

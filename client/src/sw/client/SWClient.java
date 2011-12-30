@@ -57,15 +57,15 @@ public class SWClient implements IClient, NetworkListener
 	{
 		_clientConnectionListener.add(listener);
 	}
-	
-	public void addClientMessageListener(ClientMessageListener listener)
-	{
-		_clientMessageListener.add(listener);
-	}
-	
+
 	public void addClientConnlessListener(ClientConnlessListener listener)
 	{
 		_clientConnlessListener.add(listener);
+	}
+
+	public void addClientMessageListener(ClientMessageListener listener)
+	{
+		_clientMessageListener.add(listener);
 	}
 
 	public void close()

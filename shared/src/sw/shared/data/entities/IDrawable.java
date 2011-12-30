@@ -5,6 +5,6 @@ import java.awt.Dimension;
 public interface IDrawable
 {
 	public int getImageID();
-	
+
 	public Dimension getSize();
 }

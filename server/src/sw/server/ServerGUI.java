@@ -107,7 +107,7 @@ public class ServerGUI extends JFrame implements ActionListener, ServerListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource() == _kickButton)
+		if (e.getSource() == _kickButton)
 		{
 			Client cl = (Client) _clientList.getSelectedValue();
 			if (_server != null && cl != null)
@@ -115,44 +115,55 @@ public class ServerGUI extends JFrame implements ActionListener, ServerListener
 				_server.drop(cl, "You were kicked");
 			}
 		}
-		else if(e.getSource() == _nameField)
+		else if (e.getSource() == _nameField)
 		{
 			_server.setServerName(e.getActionCommand());
 			_nameField.setText("");
 		}
 	}
 
+	@Override
+	public void broadcastSnapshots()
+	{}
+
+	@Override
+	public void playerConnected(String name, int imageID)
+	{
+		this.updateClientList();
+	}
+
+	@Override
+	public void playerLeft(String name, String reason)
+	{
+		this.updateClientList();
+	}
+
+	@Override
+	public void processPlayerInput(String name, PlayerInput input)
+	{}
+
 	public void setClientList(Vector<Client> data)
 	{
 		_clientList.setListData(data);
 	}
-	
 
 	public void setNetServer(SWServer server)
 	{
 		_server = server;
 	}
 
+	@Override
+	public void tick()
+	{}
+
 	private void addMessage(String str)
 	{
 		_area.append(str);
 		_area.setCaretPosition(_area.getDocument().getLength());
 	}
-	
+
 	private void updateClientList()
 	{
 		_clientList.setListData(_server.clListe());
 	}
-	
-	@Override
-	public void playerConnected(String name, int imageID) { this.updateClientList(); }
-	@Override
-	public void playerLeft(String name, String reason) { this.updateClientList(); }
-
-	@Override
-	public void tick() {}
-	@Override
-	public void broadcastSnapshots() {}
-	@Override
-	public void processPlayerInput(String name, PlayerInput input) {}
 }

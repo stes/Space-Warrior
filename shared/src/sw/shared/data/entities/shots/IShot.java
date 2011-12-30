@@ -43,11 +43,11 @@ public interface IShot extends IEntity
 	 */
 	double getDamage();
 
+	int getNeededAmmo();
+
 	/**
 	 * @return the player who has fired this shot
 	 */
 	IAttacker getOwner();
-
-	int getNeededAmmo();
 
 }

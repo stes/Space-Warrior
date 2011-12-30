@@ -26,13 +26,13 @@ import sw.shared.data.PlayerInput;
 
 public interface ServerListener
 {
-	public void tick();
-
 	public void broadcastSnapshots();
-	
+
 	public void playerConnected(String name, int imageID);
 
 	public void playerLeft(String name, String reason);
 
 	public void processPlayerInput(String name, PlayerInput input);
+
+	public void tick();
 }

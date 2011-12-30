@@ -31,25 +31,6 @@ public class Rocket extends Projectile
 	}
 
 	@Override
-	public double getDamage()
-	{
-		// TODO Auto-generated method stub
-		return 100;
-	}
-
-	@Override
-	public int getImageID()
-	{
-		return Images.SHOT_ROCKET.getID();
-	}
-
-	@Override
-	public Dimension getSize()
-	{
-		return new Dimension(GameConstants.ROCKET_SIZE, GameConstants.ROCKET_SIZE);
-	}
-
-	@Override
 	public double getAcceleration()
 	{
 		// TODO modify
@@ -63,6 +44,19 @@ public class Rocket extends Projectile
 	}
 
 	@Override
+	public double getDamage()
+	{
+		// TODO Auto-generated method stub
+		return 100;
+	}
+
+	@Override
+	public int getImageID()
+	{
+		return Images.SHOT_ROCKET.getID();
+	}
+
+	@Override
 	public double getMaximumSpeed()
 	{
 		return GameConstants.MAX_SPEED * 2;
@@ -72,5 +66,11 @@ public class Rocket extends Projectile
 	public int getNeededAmmo()
 	{
 		return GameConstants.AMMO_PER_ROCKET;
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		return new Dimension(GameConstants.ROCKET_SIZE, GameConstants.ROCKET_SIZE);
 	}
 }
