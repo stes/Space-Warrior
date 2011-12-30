@@ -29,7 +29,7 @@ import sw.client.player.ai.AIPlayerLoader;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.ServerInfo;
+import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -38,7 +38,7 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class GameController implements ClientListener, IGameStateManager
+public class GameController implements ClientConnectionListener, ClientMessageListener, IGameStateManager
 {
 	private static File _aiPlugin;
 	private static boolean _runAI = false;
@@ -84,10 +84,6 @@ public class GameController implements ClientListener, IGameStateManager
 	}
 
 	@Override
-	public void chatMessage(String name, String text)
-	{}
-
-	@Override
 	public void connected()
 	{
 		this.setIsConnected(true);
@@ -99,6 +95,35 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		this.setIsConnected(false);
 	}
+	
+	@Override
+	public void snapshot(Unpacker snapshot)
+	{
+		GameWorld world = new GameWorld();
+		world.fromSnap(snapshot);
+		this.setGameworld(world);
+		for (SpaceShip pl : _players)
+		{
+			if (pl.isLocal())
+			{
+				_localPlayer.setDataSet(pl);
+			}
+		}
+		GameState[] state = _world.getEntitiesByType(Packettype.SNAP_GAMESTATE, new GameState[]{});
+		if(state.length >= 1)
+		{
+			if(state[0].isNewRoundStarted())
+				this.newRound();
+		}
+		GameStateChangedEvent e = new GameStateChangedEvent(this);
+		e.setLocalDataSet(_localPlayer.getDataSet());
+		// TODO only pass a copy!
+		e.setGameWorld(_world);
+		this.invokeStateChanged(e);
+	}
+	
+	@Override
+	public void chatMessage(String name, String text) {}
 
 	@Override
 	public synchronized GameWorld getGameWorld()
@@ -164,8 +189,7 @@ public class GameController implements ClientListener, IGameStateManager
 		return this.isConnected();
 	}
 
-	@Override
-	public void newRound()
+	private void newRound()
 	{
 		// TODO improve, add loser/winner to event
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
@@ -176,10 +200,6 @@ public class GameController implements ClientListener, IGameStateManager
 	{
 		_gameStateChangedListener.remove(l);
 	}
-
-	@Override
-	public void serverInfo(ServerInfo info)
-	{}
 
 	public synchronized void setGameworld(GameWorld world)
 	{
@@ -207,26 +227,6 @@ public class GameController implements ClientListener, IGameStateManager
 		{
 			this.notify();
 		}
-	}
-
-	@Override
-	public void snapshot(Unpacker snapshot)
-	{
-		GameWorld world = new GameWorld();
-		world.fromSnap(snapshot);
-		this.setGameworld(world);
-		for (SpaceShip pl : _players)
-		{
-			if (pl.isLocal())
-			{
-				_localPlayer.setDataSet(pl);
-			}
-		}
-		GameStateChangedEvent e = new GameStateChangedEvent(this);
-		e.setLocalDataSet(_localPlayer.getDataSet());
-		// TODO only pass a copy!
-		e.setGameWorld(_world);
-		this.invokeStateChanged(e);
 	}
 
 	@Override

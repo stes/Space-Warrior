@@ -15,49 +15,56 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.server;
+package sw.shared.data.entities;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import sw.shared.Packettype;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
-import sw.shared.GameConstants;
-
-/**
- * @author Redix, stes, Abbadonn
- * @version 25.11.11
- */
-public class Program
+public class GameState extends Entity
 {
-	public static void main(String[] args)
+	private final static byte STATE_RUNNING = 0;
+	//private final static byte STATE_PAUSEDE = 1; // not used right now
+	private final static byte STATE_NEW_ROUND = 2;
+	
+	private byte _state;
+	
+	public GameState()
 	{
-		(new Program()).run();
+		super(Packettype.SNAP_GAMESTATE);
+		_state = STATE_NEW_ROUND;
 	}
 
-	private ServerGUI _serverGUI;
-	private SWServer _server;
-
-	public Program()
+	@Override
+	public void tick()
 	{
-		_serverGUI = new ServerGUI(800, 400);
-		_server = new SWServer(GameConstants.STANDARD_PORT);
-		_serverGUI.setNetServer(_server);
-		_server.addServerListener(_serverGUI);
-
-		_serverGUI.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				_server.close();
-			}
-		});
 	}
-
-	public void run()
+	
+	@Override
+	public void snap(Packer p, String name)
 	{
-		while (true)
-		{
-			_server.tick();
-		}
+		super.snap(p, name);
+		p.writeByte(_state);
+		
+		if(_state == STATE_NEW_ROUND)
+			_state = STATE_RUNNING;
+	}
+	
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		super.fromSnap(p);
+		_state = p.readByte();
+	}
+	
+	public void startNewRound()
+	{
+		System.out.println("New round");
+		_state = STATE_NEW_ROUND;
+	}
+	
+	public boolean isNewRoundStarted()
+	{
+		return _state == STATE_NEW_ROUND;
 	}
 }

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 
@@ -30,11 +31,12 @@ import sw.shared.net.Packer;
  * @version 25.11.11
  */
 
-public class GameController
+public class GameController implements ServerListener
 {
 	private GameWorld _world;
 	private HashMap<String, SpaceShip> _players;
 	private IServer _server;
+	private GameState _gameState;
 
 	/**
 	 * Creates a new game controller
@@ -47,11 +49,18 @@ public class GameController
 		_world = new GameWorld();
 		_players = new HashMap<String, SpaceShip>();
 		_server = server;
+		_gameState = new GameState();
+		_world.insert(_gameState);
+	}
+	
+	@Override
+	public void tick()
+	{
+		this.checkTurn();
+		_world.tick();
 	}
 
-	/**
-	 * Sends a snapshot to every player
-	 */
+	@Override
 	public void broadcastSnapshots()
 	{
 		for (SpaceShip pl : _players.values())
@@ -61,14 +70,8 @@ public class GameController
 			_server.sendPacket(pl.getName(), snapshot);
 		}
 	}
-
-	/**
-	 * A new player joined the game
-	 * 
-	 * @param name
-	 *            the player's name
-	 * @param imageID
-	 */
+	
+	@Override
 	public void playerConnected(String name, int imageID)
 	{
 		SpaceShip newPl = new SpaceShip(name, imageID);
@@ -76,26 +79,14 @@ public class GameController
 		_world.insert(newPl);
 	}
 
-	/**
-	 * A player left the game
-	 * 
-	 * @param name
-	 *            the player's name
-	 */
+	@Override
 	public void playerLeft(String name, String reason)
 	{
 		_players.get(name).destroy();
 		_players.remove(name);
 	}
 
-	/**
-	 * processes a server input
-	 * 
-	 * @param name
-	 *            the name of the affected player
-	 * @param input
-	 *            the player's input
-	 */
+	@Override
 	public void processPlayerInput(String name, PlayerInput input)
 	{
 		_players.get(name).setInput(input);
@@ -110,18 +101,7 @@ public class GameController
 		{
 			pl.respawn();
 		}
-		this.broadcastSnapshots();
-		Packer info = new Packer(Packettype.SV_NEW_ROUND);
-		info.writeUTF("Server");
-		info.writeUTF("New round");
-		_server.sendBroadcast(info);
-		System.out.println("New round");
-	}
-
-	public void tick()
-	{
-		this.checkTurn();
-		_world.tick();
+		_gameState.startNewRound();
 	}
 
 	private void checkTurn()

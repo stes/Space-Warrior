@@ -19,11 +19,11 @@ package sw.shared.data;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import sw.shared.Packettype;
 import sw.shared.data.entities.Entity;
+import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.IShot;
@@ -74,14 +74,20 @@ public class GameWorld
 		{
 			IEntity newEnt;
 			// TODO move this somewhere else?
-			byte type = p.readByte();
-			if ((type & 0x0F) == Packettype.SNAP_PLAYERDATA)
+			int val = p.readByte();
+			int type = val & 0x0F;
+			int subtype = val & 0xF0;
+			if (type == Packettype.SNAP_GAMESTATE)
+			{
+				newEnt = new GameState();
+			}
+			else if (type == Packettype.SNAP_PLAYERDATA)
 			{
 				newEnt = new SpaceShip("");
 			}
-			else if ((type & 0x0F) == Packettype.SNAP_SHOT)
+			else if (type == Packettype.SNAP_SHOT)
 			{
-				switch (type & 0xF0)
+				switch (subtype)
 				{
 					case IShot.LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
@@ -101,6 +107,7 @@ public class GameWorld
 			}
 			else
 			{
+				System.out.println("Error: unknown snap item (" + type + ")");
 				return;
 			}
 			newEnt.fromSnap(p);

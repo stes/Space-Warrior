@@ -33,19 +33,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import sw.shared.data.PlayerInput;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 
-public class ServerGUI extends JFrame implements ActionListener
+public class ServerGUI extends JFrame implements ActionListener, ServerListener
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2967561560162321268L;
 	private JTextArea _area;
-	private JList/* <Client> */_clientList;
+	private JList<Client> _clientList;
 	private JScrollPane _scroll;
 	private JButton _kickButton;
 	private JTextField _nameField;
@@ -67,7 +66,7 @@ public class ServerGUI extends JFrame implements ActionListener
 		_scroll = new JScrollPane(_area);
 		_scroll.setBounds(10, 10, width / 3 * 2 - 20, height - 90);
 
-		_clientList = new JList/* <Client> */();
+		_clientList = new JList<Client>();
 		_clientList.setBounds(20 + width / 3 * 2 - 20, 10, width / 3 - 30, height - 90);
 
 		_kickButton = new JButton("Kick");
@@ -108,7 +107,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getActionCommand().equals("Kick"))
+		if(e.getSource() == _kickButton)
 		{
 			Client cl = (Client) _clientList.getSelectedValue();
 			if (_server != null && cl != null)
@@ -116,7 +115,7 @@ public class ServerGUI extends JFrame implements ActionListener
 				_server.drop(cl, "You were kicked");
 			}
 		}
-		else
+		else if(e.getSource() == _nameField)
 		{
 			_server.setServerName(e.getActionCommand());
 			_nameField.setText("");
@@ -127,6 +126,7 @@ public class ServerGUI extends JFrame implements ActionListener
 	{
 		_clientList.setListData(data);
 	}
+	
 
 	public void setNetServer(SWServer server)
 	{
@@ -138,4 +138,21 @@ public class ServerGUI extends JFrame implements ActionListener
 		_area.append(str);
 		_area.setCaretPosition(_area.getDocument().getLength());
 	}
+	
+	private void updateClientList()
+	{
+		_clientList.setListData(_server.clListe());
+	}
+	
+	@Override
+	public void playerConnected(String name, int imageID) { this.updateClientList(); }
+	@Override
+	public void playerLeft(String name, String reason) { this.updateClientList(); }
+
+	@Override
+	public void tick() {}
+	@Override
+	public void broadcastSnapshots() {}
+	@Override
+	public void processPlayerInput(String name, PlayerInput input) {}
 }

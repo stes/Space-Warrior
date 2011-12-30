@@ -18,6 +18,7 @@
 package sw.server;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import sw.shared.GameConstants;
@@ -39,26 +40,31 @@ public class SWServer implements IServer, NetworkListener
 	private UDPHost _netServer;
 	private Vector<Client> _clients;
 	private PropertyLoader _propertyLoader;
+	private ServerInfo _serverInfo;
 
 	private int _tick;
 	private long _lastUpdate;
-
-	private ServerInfo _serverInfo;
-
-	private GameController _controller;
+	
+	private ArrayList<ServerListener> _serverListener;
 
 	public SWServer(int port)
 	{
 		_propertyLoader = new PropertyLoader();
-		_controller = new GameController(this);
+		_serverListener = new ArrayList<ServerListener>();
 		_netServer = new UDPHost(new InetSocketAddress(_propertyLoader.getPort()),
 				_propertyLoader.getMaxPlayers());
 		_netServer.setAcceptConnections();
 		_netServer.addNetworkListener(this);
 		_netServer.start();
 		_clients = new Vector<Client>();
-		_lastUpdate = System.currentTimeMillis();
 		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
+		_lastUpdate = System.currentTimeMillis();
+		this.addServerListener(new GameController(this));
+	}
+	
+	public void addServerListener(ServerListener listener)
+	{
+		_serverListener.add(listener);
 	}
 
 	public void close()
@@ -78,7 +84,10 @@ public class SWServer implements IServer, NetworkListener
 		Client client = this.getClientbyConnection(connection);
 		if (client.isPlaying())
 		{
-			_controller.playerLeft(client.getName(), reason);
+			for (ServerListener l : _serverListener)
+			{
+				l.playerLeft(client.getName(), reason);
+			}
 		}
 		_clients.remove(client);
 	}
@@ -114,7 +123,10 @@ public class SWServer implements IServer, NetworkListener
 			{
 				client.setName(name);
 				client.enterGame();
-				_controller.playerConnected(client.getName(), imageID);
+				for (ServerListener l : _serverListener)
+				{
+					l.playerConnected(client.getName(), imageID);
+				}
 			}
 			else
 			{
@@ -131,7 +143,11 @@ public class SWServer implements IServer, NetworkListener
 		}
 		else if (Packettype.CL_INPUT == packet.getType() && client.isPlaying())
 		{
-			_controller.processPlayerInput(client.getName(), PlayerInput.unpack(packet));
+			PlayerInput input = PlayerInput.unpack(packet);
+			for (ServerListener l : _serverListener)
+			{
+				l.processPlayerInput(client.getName(), input);
+			}
 		}
 	}
 
@@ -180,10 +196,13 @@ public class SWServer implements IServer, NetworkListener
 		long curTime = System.currentTimeMillis();
 		if (curTime - _lastUpdate > GameConstants.TICK_INTERVAL)
 		{
-			_controller.tick();
-			if ((_tick % 2) == 0) // save bandwidth
+			for (ServerListener l : _serverListener)
 			{
-				_controller.broadcastSnapshots();
+				l.tick();
+				if ((_tick % 2) == 0) // save bandwidth
+				{
+					l.broadcastSnapshots();
+				}
 			}
 			_lastUpdate = curTime;
 			_tick++;

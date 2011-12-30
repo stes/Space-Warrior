@@ -15,25 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+package sw.client;
+
+import sw.shared.net.Unpacker;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class Packettype
+
+public interface ClientMessageListener
 {
-	// client
-	public final static byte CL_START_INFO = 0;
-	public final static byte CL_CHAT_MESSAGE = 1;
-	public final static byte CL_INPUT = 2;
+	/**
+	 * Invoked when a chat message was received
+	 * 
+	 * @param name
+	 *            the addresser's name
+	 * @param text
+	 *            the chat message
+	 */
+	public void chatMessage(String name, String text);
 
-	// server
-	public final static byte SV_CHAT_MESSAGE = 1;
-	public final static byte SV_SNAPSHOT = 2;
-
-	// snapshot types
-	public final static byte SNAP_GAMESTATE = 0x01;
-	public final static byte SNAP_PLAYERDATA = 0x02;
-	public final static byte SNAP_SHOT = 0x03;
+	/**
+	 * Invoked when a snapshot was received
+	 * 
+	 * @param packet
+	 *            snapshot
+	 */
+	public void snapshot(Unpacker packet);
 }

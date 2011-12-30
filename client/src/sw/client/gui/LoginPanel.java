@@ -42,15 +42,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import sw.client.ClientListener;
+import sw.client.ClientConnlessListener;
 import sw.client.GameController;
 import sw.client.gui.ConnectionEvent.ActionType;
 import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
-import sw.shared.net.Unpacker;
 
-public class LoginPanel extends JPanel implements ClientListener
+public class LoginPanel extends JPanel implements ClientConnlessListener
 {
 	private class ServerTableModel extends AbstractTableModel
 	{
@@ -158,18 +157,6 @@ public class LoginPanel extends JPanel implements ClientListener
 		_connectionListener.add(l);
 	}
 
-	@Override
-	public void chatMessage(String name, String text)
-	{}
-
-	@Override
-	public void connected()
-	{}
-
-	@Override
-	public void disconnected(String reason)
-	{}
-
 	public int getImageID()
 	{
 		return _imageID;
@@ -185,10 +172,6 @@ public class LoginPanel extends JPanel implements ClientListener
 	{
 		return _txtName.getText();
 	}
-
-	@Override
-	public void newRound()
-	{}
 
 	public void removeConnecionListener(ConnectionListener l)
 	{
@@ -214,10 +197,6 @@ public class LoginPanel extends JPanel implements ClientListener
 		_servers.add(info);
 		_tableModel.fireTableDataChanged();
 	}
-
-	@Override
-	public void snapshot(Unpacker packet)
-	{}
 
 	protected void invokeLogin(ConnectionEvent e)
 	{
