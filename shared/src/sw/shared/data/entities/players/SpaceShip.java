@@ -242,7 +242,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	}
 
 	/**
-	 * moves the character with the actual speed
+	 * moves the spaceship
 	 */
 	@Override
 	public void move()
@@ -276,8 +276,8 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		SpaceShip d = new SpaceShip(this);
 		if (_alive)
 		{
-			double x = d.getSpeed() * Math.sin(d.getDirection());
-			double y = d.getSpeed() * Math.cos(d.getDirection());
+			double x = -d.getSpeed() * Math.sin(d.getDirection());
+			double y = -d.getSpeed() * Math.cos(d.getDirection());
 			d.setX(d.getX() + x);
 			d.setY(d.getY() + y);
 			d.rotate(this.getTurnSpeed());
