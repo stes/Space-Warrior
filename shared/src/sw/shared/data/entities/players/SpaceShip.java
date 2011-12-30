@@ -17,12 +17,14 @@
  ******************************************************************************/
 package sw.shared.data.entities.players;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.IDrawable;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.shots.IShot;
@@ -36,7 +38,7 @@ import sw.shared.net.Unpacker;
  * @version 25.11.11
  */
 public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, IDamageable,
-		IAttacker
+		IAttacker, IDrawable
 {
 	private static Random _random = new Random();
 
@@ -450,5 +452,11 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		double way = time * this.getSpeed();
 		return new Point.Double(this.getX() + way * Math.sin(this.getDirection()), this.getY()
 				+ way * Math.cos(this.getDirection()));
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		return new Dimension(GameConstants.PLAYER_SIZE, GameConstants.PLAYER_SIZE);
 	}
 }

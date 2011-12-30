@@ -18,6 +18,7 @@
 package sw.shared.data.entities.shots;
 
 import sw.shared.GameConstants;
+import sw.shared.data.entities.IDrawable;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.players.IDamageable;
@@ -29,7 +30,7 @@ import sw.shared.data.entities.players.SpaceShip;
  * @author Redix, stes, Abbadonn
  * @version 25.12.11
  */
-public abstract class Projectile extends ShotEntity
+public abstract class Projectile extends ShotEntity implements IDrawable
 {
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{

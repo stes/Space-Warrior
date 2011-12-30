@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.shared.data.entities.shots;
 
+import java.awt.Dimension;
+
 import sw.shared.data.entities.players.SpaceShip;
 
 public class MGProjectile extends Projectile
@@ -32,5 +34,17 @@ public class MGProjectile extends Projectile
 	{
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int getImageID()
+	{
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

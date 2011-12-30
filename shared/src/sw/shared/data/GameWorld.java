@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import sw.shared.Packettype;
+import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.IShot;
@@ -107,12 +108,17 @@ public class GameWorld
 		_entities = tmp;
 	}
 
+	private Integer nextID()
+	{
+		return 0;
+	}
+
 	/**
 	 * @return an array of all entities in this game world
 	 */
 	public IEntity[] getAllEntities()
 	{
-		return _entities.toArray(new IEntity[0]);
+		return _entities.toArray(new Entity[]{});
 	}
 
 	/**
@@ -170,7 +176,7 @@ public class GameWorld
 	 */
 	public void remove(IEntity e)
 	{
-		_entities.remove(e);
+		_entities.remove(e.getID());
 	}
 
 	// TODO name?

@@ -70,6 +70,7 @@ public abstract class StaticEntity extends Entity
 	@Override
 	public void fromSnap(Unpacker p)
 	{
+		super.fromSnap(p);
 		this.setX(p.readDouble());
 		this.setY(p.readDouble());
 		this.setDirection(p.readDouble());

@@ -32,6 +32,7 @@ public abstract class Entity implements IEntity
 	private boolean _entDestroy;
 	private byte _entType;
 	private GameWorld _world;
+	private int _id;
 
 	/**
 	 * creates a new entity with the specified type ID
@@ -60,7 +61,10 @@ public abstract class Entity implements IEntity
 	 *            The Unpacker
 	 */
 	@Override
-	public abstract void fromSnap(Unpacker p);
+	public void fromSnap(Unpacker p)
+	{
+		this.setID(p.readInt());
+	}
 
 	/**
 	 * @return the entity's type ID
@@ -103,6 +107,19 @@ public abstract class Entity implements IEntity
 	{
 		return _entDestroy;
 	}
+	
+	/**
+	 * @return the ID of this entity
+	 */
+	public int getID()
+	{
+		return _id;
+	}
+	
+	private void setID(int id)
+	{
+		_id = id;
+	}
 
 	/**
 	 * Sets the GameWorld in which the entity is integrated
@@ -128,6 +145,7 @@ public abstract class Entity implements IEntity
 	public void snap(Packer p, String name)
 	{
 		p.writeByte(this.getType());
+		p.writeInt(this.getID());
 	}
 
 	/**

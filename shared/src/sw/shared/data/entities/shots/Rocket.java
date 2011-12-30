@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sw.shared.data.entities.shots;
 
+import java.awt.Dimension;
+
+import sw.shared.GameConstants;
+import sw.shared.GameConstants.Images;
 import sw.shared.data.entities.players.SpaceShip;
 
 public class Rocket extends Projectile
@@ -31,5 +35,17 @@ public class Rocket extends Projectile
 	{
 		// TODO Auto-generated method stub
 		return 100;
+	}
+
+	@Override
+	public int getImageID()
+	{
+		return Images.SHOT_ROCKET.getID();
+	}
+
+	@Override
+	public Dimension getSize()
+	{
+		return new Dimension(GameConstants.ROCKET_SIZE, GameConstants.ROCKET_SIZE);
 	}
 }

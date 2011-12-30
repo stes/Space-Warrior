@@ -20,6 +20,7 @@ package sw.client.gui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,14 +42,13 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
-import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.Entity;
+import sw.shared.data.entities.IDrawable;
+import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.data.entities.shots.IShot;
 import sw.shared.data.entities.shots.LaserBeam;
-import sw.shared.data.entities.shots.Rocket;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -120,7 +120,6 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
 		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
 
-		// TODO use insets
 		g.drawImage(_backgroundImg,
 				_insets.left,
 				_insets.top,
@@ -138,11 +137,7 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 		_stateManager.setRendering(false);
 
-		for (Entity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new Entity[] {}))
-		{
-			this.drawEntity(g2d, ent, ent, scaleX, scaleY);
-		}
-
+//		for (StaticEntity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new StaticEntity[] {}))
 		for (SpaceShip ent : world.getPlayers())
 		{
 			SpaceShip prevEnt = ent;
@@ -155,6 +150,23 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			}
 			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
 		}
+		
+		if (_stateManager.getLocalPlayer() != null)
+		{
+			SpaceShip p = _stateManager.getLocalPlayer().getDataSet();
+			if (p == null || !p.isAlive())
+				return;
+	
+			if (p.isLocal())
+			{
+				this.paintBars(g2d, p);
+				if (_isDebugActive)
+				{
+					this.showDebugInfo(g2d, p);
+				}
+			}
+		}
+	
 	}
 
 	public void setDebugMode(boolean active)
@@ -180,25 +192,11 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 	private void drawEntity(Graphics2D g2d, Entity ent, Entity prevEnt, double scaleX, double scaleY)
 	{
-		if (ent.getMainType() == Packettype.SNAP_PLAYERDATA)
+		if (ent instanceof StaticEntity)
 		{
-			SpaceShip prevPl = (SpaceShip) prevEnt;
-			SpaceShip pl = (SpaceShip) ent;
-			if (!pl.isAlive())
-			{
-				return;
-			}
+			StaticEntity prevPl = (StaticEntity) prevEnt;
+			StaticEntity pl = (StaticEntity) ent;
 
-			if (pl.isLocal())
-			{
-				this.paintBars(g2d, pl);
-				if (_isDebugActive)
-				{
-					this.showDebugInfo(g2d, pl);
-				}
-			}
-
-			// TODO: generalize this for all entities
 			Point2D.Double pos = new Point2D.Double(prevPl.getPosition().getX()
 					+ (pl.getPosition().getX() - prevPl.getPosition().getX()) * _snapTime,
 					prevPl.getPosition().getY()
@@ -207,43 +205,27 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 			double direction = prevPl.getDirection()
 					+ Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
 
-			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(pl.getImageID()),
-					-direction),
-					_insets.left + (int) (scaleX * (pos.getX() - GameConstants.PLAYER_SIZE / 2)),
-					_insets.top + (int) (scaleY * (pos.getY() - GameConstants.PLAYER_SIZE / 2)),
-					(int) (GameConstants.PLAYER_SIZE * scaleX),
-					(int) (GameConstants.PLAYER_SIZE * scaleY),
-					null);
-		}
-		else if (ent.getMainType() == Packettype.SNAP_SHOT)
-		{
-			switch (ent.getSubType())
+			if (pl instanceof IDrawable)
 			{
-				case IShot.LASER:
-				case IShot.MASTER_LASER:
-				{
-					LaserBeam s = (LaserBeam) ent;
-					g2d.setColor(Color.BLUE);
-					g2d.setStroke(new BasicStroke(3));
-					g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
-							_insets.top + (int) (s.getY() * scaleY),
-							_insets.left + (int) (s.endPoint().getX() * scaleX),
-							_insets.top + (int) (s.endPoint().getY() * scaleY));
-					break;
-				}
-				case IShot.ROCKET:
-				{
-					Rocket r = (Rocket) ent;
-					g2d.setColor(Color.GREEN);
-					double size = GameConstants.ROCKET_SIZE;
-					g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(Images.SHOT_ROCKET),
-							-r.getDirection()),
-							_insets.left + (int) (scaleX * (r.getX() - size / 2)),
-							_insets.top + (int) (scaleY * (r.getY() - size / 2)),
-							(int) (size * scaleX),
-							(int) (size * scaleY),
-							null);
-				}
+				Dimension d = ((IDrawable)pl).getSize();
+				
+				g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable)pl).getImageID()),
+						-direction),
+						_insets.left + (int) (scaleX * (pos.getX() - d.width / 2)),
+						_insets.top + (int) (scaleY * (pos.getY() - d.height / 2)),
+						(int) (d.width * scaleX),
+						(int) (d.height * scaleY),
+						null);
+			}
+			else if (pl instanceof LaserBeam)
+			{
+				LaserBeam s = (LaserBeam) pl;
+				g2d.setColor(Color.BLUE);
+				g2d.setStroke(new BasicStroke(3));
+				g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
+						_insets.top + (int) (s.getY() * scaleY),
+						_insets.left + (int) (s.endPoint().getX() * scaleX),
+						_insets.top + (int) (s.endPoint().getY() * scaleY));
 			}
 		}
 	}
