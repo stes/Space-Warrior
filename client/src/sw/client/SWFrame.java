@@ -180,6 +180,7 @@ public class SWFrame extends JFrame implements ClientListener, ConnectionListene
 			{
 				g.dispose();
 			}
+			
 			if (!_bufferStrategy.contentsLost())
 			{
 				_bufferStrategy.show();
