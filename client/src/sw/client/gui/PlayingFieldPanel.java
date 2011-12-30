@@ -44,8 +44,8 @@ import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
-import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.IDrawable;
+import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.LaserBeam;
@@ -137,13 +137,14 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 		_stateManager.setRendering(false);
 
-//		for (StaticEntity ent : world.getEntitiesByType(Packettype.SNAP_SHOT, new StaticEntity[] {}))
-		for (SpaceShip ent : world.getPlayers())
+		for (IEntity ent : world.getAllEntities())
 		{
-			SpaceShip prevEnt = ent;
-			for (SpaceShip prev : prevWorld.getPlayers())
+			if (!(ent instanceof StaticEntity))
+				continue;
+			StaticEntity prevEnt = (StaticEntity)ent;
+			for (StaticEntity prev : prevWorld.getEntitiesByType(Packettype.SNAP_PLAYERDATA, new StaticEntity[] {}))
 			{
-				if (prev.getName().equals(ent.getName()))
+				if (prev.getID() == ent.getID())
 				{
 					prevEnt = prev;
 				}
@@ -190,9 +191,9 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	private void drawEntity(Graphics2D g2d, Entity ent, Entity prevEnt, double scaleX, double scaleY)
+	private void drawEntity(Graphics2D g2d, IEntity ent, IEntity prevEnt, double scaleX, double scaleY)
 	{
-		if (ent instanceof StaticEntity)
+		if (ent instanceof StaticEntity && prevEnt instanceof StaticEntity)
 		{
 			StaticEntity prevPl = (StaticEntity) prevEnt;
 			StaticEntity pl = (StaticEntity) ent;
@@ -299,7 +300,8 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		g2d.setColor(Color.WHITE);
 		String[] info = new String[] { "X:\t\t" + pl.getX(), "Y:\t\t" + pl.getY(),
 				"Direction:\t" + pl.getDirection(), "Speed:\t" + pl.getSpeed(),
-				"Turn Speed:\t" + pl.getTurnSpeed(), "Score:\t" + pl.getScore() };
+				"Turn Speed:\t" + pl.getTurnSpeed(), "Score:\t" + pl.getScore(),
+				"ID:\t" + pl.getID()};
 
 		for (String s : info)
 		{

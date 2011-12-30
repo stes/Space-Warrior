@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import sw.shared.Packettype;
@@ -39,14 +41,14 @@ import sw.shared.net.Unpacker;
  */
 public class GameWorld
 {
-	private Vector<IEntity> _entities;
+	private HashMap<Integer, IEntity> _entities;
 
 	/**
 	 * Creates a new, empty GameWorld
 	 */
 	public GameWorld()
 	{
-		_entities = new Vector<IEntity>();
+		_entities = new HashMap<Integer, IEntity>();
 	}
 
 	/**
@@ -65,7 +67,7 @@ public class GameWorld
 	 */
 	public void fromSnap(Unpacker p)
 	{
-		Vector<IEntity> tmp = new Vector<IEntity>();
+		HashMap<Integer, IEntity> tmp = new HashMap<Integer, IEntity>();
 
 		int size = p.readInt();
 		for (int i = 0; i < size; i++)
@@ -102,7 +104,7 @@ public class GameWorld
 				return;
 			}
 			newEnt.fromSnap(p);
-			tmp.add(newEnt);
+			tmp.put(newEnt.getID(), newEnt);
 		}
 
 		_entities = tmp;
@@ -110,7 +112,10 @@ public class GameWorld
 
 	private Integer nextID()
 	{
-		return 0;
+		int i = 0;
+		for (; _entities.containsKey(i); i++)
+			;
+		return i;
 	}
 
 	/**
@@ -118,7 +123,7 @@ public class GameWorld
 	 */
 	public IEntity[] getAllEntities()
 	{
-		return _entities.toArray(new Entity[]{});
+		return _entities.values().toArray(new Entity[]{});
 	}
 
 	/**
@@ -138,7 +143,7 @@ public class GameWorld
 	public <T> T[] getEntitiesByType(byte type, T[] a)
 	{
 		Vector<IEntity> tmp = new Vector<IEntity>();
-		for (IEntity ent : _entities)
+		for (IEntity ent : _entities.values())
 		{
 			if (ent.getMainType() == type)
 			{
@@ -165,7 +170,8 @@ public class GameWorld
 	public void insert(IEntity e)
 	{
 		e.setWorld(this);
-		_entities.add(e);
+		e.setID(nextID());
+		_entities.put(e.getID(), e);
 	}
 
 	/**
@@ -192,7 +198,7 @@ public class GameWorld
 	{
 		p.writeInt(_entities.size());
 
-		for (IEntity ent : _entities)
+		for (IEntity ent : _entities.values())
 		{
 			ent.snap(p, name);
 		}
@@ -204,7 +210,7 @@ public class GameWorld
 	 */
 	public void tick()
 	{
-		for (Iterator<IEntity> i = _entities.iterator(); i.hasNext();)
+		for (Iterator<IEntity> i = _entities.values().iterator(); i.hasNext();)
 		{
 			while (i.hasNext() && i.next().isDestroyed())
 			{
@@ -212,9 +218,10 @@ public class GameWorld
 			}
 		}
 
-		for (int i = 0; i < _entities.size(); i++)
+		Integer[] keys = _entities.keySet().toArray(new Integer[]{});
+		for (int i = 0; i < keys.length; i++)
 		{
-			_entities.get(i).tick();
+			_entities.get(keys[i]).tick();
 		}
 	}
 }

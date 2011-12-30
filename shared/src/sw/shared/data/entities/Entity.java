@@ -116,7 +116,8 @@ public abstract class Entity implements IEntity
 		return _id;
 	}
 	
-	private void setID(int id)
+	// TODO this mustn't be public!
+	public void setID(int id)
 	{
 		_id = id;
 	}

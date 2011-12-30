@@ -48,4 +48,6 @@ public interface IEntity
 	public abstract void tick();
 
 	public int getID();
+
+	public void setID(int id);
 }
