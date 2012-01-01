@@ -194,7 +194,7 @@ public class SWServer implements IServer, NetworkListener
 	public void tick()
 	{
 		long curTime = System.currentTimeMillis();
-		if (curTime - _lastUpdate > GameConstants.TICK_INTERVAL)
+		if (curTime - _lastUpdate >= GameConstants.TICK_INTERVAL)
 		{
 			for (ServerListener l : _serverListener)
 			{

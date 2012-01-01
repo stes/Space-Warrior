@@ -58,6 +58,11 @@ public class Program
 		while (true)
 		{
 			_server.tick();
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e) {}
 		}
 	}
 }

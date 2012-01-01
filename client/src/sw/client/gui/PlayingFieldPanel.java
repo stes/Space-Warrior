@@ -19,12 +19,10 @@ package sw.client.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -33,16 +31,12 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
-import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.IDrawable;
 import sw.shared.data.entities.IEntity;
@@ -54,13 +48,12 @@ import sw.shared.data.entities.shots.LaserBeam;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldPanel extends JPanel implements GameStateChangedListener
+public class PlayingFieldPanel extends JPanel 
 {
 	private static final long serialVersionUID = -8647279084154615455L;
 
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
-	private Insets _insets;
 	private double _snapTime;
 
 	private boolean _isDebugActive;
@@ -82,25 +75,13 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		this.setIgnoreRepaint(true);
 		this.init();
 	}
-
+	
 	@Override
-	public void gameStateChanged(GameStateChangedEvent e)
-	{}
-
+	public void paintComponent(Graphics g) {}
 	@Override
-	public void newRound(GameStateChangedEvent e)
-	{}
+	public void paintComponents(Graphics g) {}
 
-	@Override
-	public void paintComponent(Graphics g)
-	{}
-
-	@Override
-	public void paintComponents(Graphics g)
-	{}
-
-	@Override
-	public void playerInit(GameStateChangedEvent e)
+	public void playerInit()
 	{
 		if (_stateManager.getLocalPlayer() instanceof HumanPlayer)
 		{
@@ -110,19 +91,13 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 	public void render(Graphics g)
 	{
-		// get parent frame's insets
-		if (_insets == null)
-		{
-			_insets = this.getParentFrame(this).getInsets();
-		}
-
 		// determine scale factors
 		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
 		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
 
 		g.drawImage(_backgroundImg,
-				_insets.left,
-				_insets.top,
+				0,
+				0,
 				this.getWidth(),
 				this.getHeight(),
 				null);
@@ -140,12 +115,10 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 		for (IEntity ent : world.getAllEntities())
 		{
 			if (!(ent instanceof StaticEntity))
-			{
 				continue;
-			}
-			StaticEntity prevEnt = (StaticEntity) ent;
-			for (StaticEntity prev : prevWorld.getEntitiesByType(Packettype.SNAP_PLAYERDATA,
-					new StaticEntity[] {}))
+			
+			IEntity prevEnt = ent;
+			for (IEntity prev : prevWorld.getAllEntities())
 			{
 				if (prev.getID() == ent.getID())
 				{
@@ -221,8 +194,8 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 
 				g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable) pl).getImageID()),
 						-direction),
-						_insets.left + (int) (scaleX * (pos.getX() - d.width / 2)),
-						_insets.top + (int) (scaleY * (pos.getY() - d.height / 2)),
+						(int) (scaleX * (pos.getX() - d.width / 2)),
+						(int) (scaleY * (pos.getY() - d.height / 2)),
 						(int) (d.width * scaleX),
 						(int) (d.height * scaleY),
 						null);
@@ -232,27 +205,11 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				LaserBeam s = (LaserBeam) pl;
 				g2d.setColor(Color.BLUE);
 				g2d.setStroke(new BasicStroke(3));
-				g2d.drawLine(_insets.left + (int) (s.getX() * scaleX),
-						_insets.top + (int) (s.getY() * scaleY),
-						_insets.left + (int) (s.endPoint().getX() * scaleX),
-						_insets.top + (int) (s.endPoint().getY() * scaleY));
+				g2d.drawLine((int) (s.getX() * scaleX),
+						(int) (s.getY() * scaleY),
+						(int) (s.endPoint().getX() * scaleX),
+						(int) (s.endPoint().getY() * scaleY));
 			}
-		}
-	}
-
-	private JFrame getParentFrame(Component c)
-	{
-		if (c.getParent() == null)
-		{
-			return null;
-		}
-		if (c.getParent() instanceof JFrame)
-		{
-			return (JFrame) c.getParent();
-		}
-		else
-		{
-			return this.getParentFrame(c.getParent());
 		}
 	}
 
@@ -292,13 +249,13 @@ public class PlayingFieldPanel extends JPanel implements GameStateChangedListene
 				0,
 				100));
 		g2d.setPaint(pat);
-		g2d.drawLine(_insets.left + start_x, _insets.top + y, _insets.left + end_x, _insets.top + y);
+		g2d.drawLine(start_x, y, end_x, y);
 
 		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
 		y = 30;
 		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(100, 100, 100, 100));
 		g2d.setPaint(pat);
-		g2d.drawLine(_insets.left + start_x, _insets.top + y, _insets.left + end_x, _insets.top + y);
+		g2d.drawLine(start_x, y, end_x, y);
 	}
 
 	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)

@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -180,14 +179,10 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 	public void render(Graphics g)
 	{
-		BufferedImage img = new BufferedImage(this.getWidth(),
-				this.getHeight(),
-				BufferedImage.TYPE_INT_ARGB);
-		super.paintComponents(img.getGraphics());
+		this.paintComponents(g);
 		// TODO improve
 		// if (_fileChooser.isShowing())
 		// this._fileChooser.paint(_fileChooser.getGraphics());
-		g.drawImage(img, 5, 30, null);
 	}
 
 	@Override

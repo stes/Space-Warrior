@@ -33,7 +33,6 @@ public class GameStateChangedEvent extends EventObject
 	private SpaceShip _localDataSet;
 	private GameWorld _world;
 	private SpaceShip _winner;
-	private SpaceShip _loser;
 
 	public GameStateChangedEvent(Object source)
 	{
@@ -54,14 +53,6 @@ public class GameStateChangedEvent extends EventObject
 	public SpaceShip getLocalDataSet()
 	{
 		return _localDataSet;
-	}
-
-	/**
-	 * @return the _loser
-	 */
-	public SpaceShip getLoser()
-	{
-		return _loser;
 	}
 
 	/**
@@ -87,16 +78,7 @@ public class GameStateChangedEvent extends EventObject
 	 */
 	public void setLocalDataSet(SpaceShip localDataSet)
 	{
-		this._localDataSet = localDataSet;
-	}
-
-	/**
-	 * @param _loser
-	 *            the _loser to set
-	 */
-	public void setLoser(SpaceShip loser)
-	{
-		_loser = loser;
+		_localDataSet = localDataSet;
 	}
 
 	/**
