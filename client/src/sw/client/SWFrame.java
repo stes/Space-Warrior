@@ -278,7 +278,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		_client.scan();
 	}
 
-	private void render(Graphics2D g2d)
+	public void render(Graphics2D g2d)
 	{
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
