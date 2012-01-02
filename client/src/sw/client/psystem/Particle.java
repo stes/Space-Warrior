@@ -1,22 +1,52 @@
+/*******************************************************************************
+ * Space Warrior - an open source multiplayer shooter
+ * Copyright (C) 2011 Redix stes Abbadonn
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package sw.client.psystem;
 
 import java.awt.Graphics2D;
+import java.util.Random;
 
+/**
+ * Base class for a particle
+ * 
+ * @author Redix stes Abbadonn
+ * @version 02.01.12 
+ */
 public abstract class Particle
 {
+	protected static Random _random = new Random(System.currentTimeMillis());
+	
+	private final static int LIFETIME = 20;
+	private final static double SIZE = 3;
+	
 	private ValuePair _location;
 	private ValuePair _velocity;
 	private ValuePair _acceleration;
 	
 	private double _size;
-	// TODO improve
-	private int _lifetime = 100;
+	private int _lifetime;
 	
 	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration)
 	{
 		_location = location;
 		_velocity = velocity;
 		_acceleration = acceleration;
+		_size = SIZE;
+		_lifetime = LIFETIME;
 	}
 
 	private void move()

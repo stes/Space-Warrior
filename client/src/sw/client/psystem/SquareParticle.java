@@ -17,18 +17,17 @@
  ******************************************************************************/
 package sw.client.psystem;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * Particle with circular shape
+ * Particle with rectangular shape
  * 
  * @author Redix stes Abbadonn
  * @version 02.01.12 
  */
-public class CircularParticle extends Particle
+public class SquareParticle extends Particle
 {
-	public CircularParticle(ValuePair location, ValuePair velocity, ValuePair acceleration)
+	public SquareParticle(ValuePair location, ValuePair velocity, ValuePair acceleration)
 	{
 		super(location, velocity, acceleration);
 	}
@@ -38,11 +37,9 @@ public class CircularParticle extends Particle
 	{
 		if (!isAlive())
 			return;
-		g.setColor(new Color(_random.nextInt(255), 0, 0));
-		g.fillOval((int)(getLocation().getX() - getSize() / 2),
+		g.fillRect((int)(getLocation().getX() - getSize() / 2),
 				(int)(getLocation().getY() - getSize() / 2),
 				(int)getSize(),
 				(int)getSize());
 	}
-
 }
