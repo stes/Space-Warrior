@@ -35,6 +35,7 @@ import java.net.InetSocketAddress;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
@@ -257,6 +258,9 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	public void disconnected(String reason)
 	{
 		this.setGUIMode(GUIMode.LOGIN);
+		// enough for now
+		if(!reason.equals(""))
+			JOptionPane.showMessageDialog(this, reason);
 	}
 
 	@Override
