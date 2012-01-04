@@ -114,18 +114,19 @@ public class PlayingFieldPanel extends JPanel
 
 		for (IEntity ent : world.getAllEntities())
 		{
-			if (!(ent instanceof StaticEntity))
+			if(!(ent instanceof StaticEntity))
 				continue;
 			
-			IEntity prevEnt = ent;
-			for (IEntity prev : prevWorld.getAllEntities())
+			if(ent instanceof SpaceShip && !((SpaceShip) ent).isAlive())
+				continue;
+			
+			IEntity prevEnt = prevWorld.getEntityByID(ent.getID());
+			if(prevEnt == null)
 			{
-				if (prev.getID() == ent.getID())
-				{
-					prevEnt = prev;
-				}
+				prevEnt = ent;
 			}
-			this.drawEntity(g2d, ent, prevEnt, scaleX, scaleY);
+			
+			this.drawEntity(g2d, (StaticEntity)ent, (StaticEntity)prevEnt, scaleX, scaleY);
 		}
 
 		if (_stateManager.getLocalPlayer() != null)
@@ -170,46 +171,40 @@ public class PlayingFieldPanel extends JPanel
 
 	private void drawEntity(
 			Graphics2D g2d,
-			IEntity ent,
-			IEntity prevEnt,
+			StaticEntity ent,
+			StaticEntity prevEnt,
 			double scaleX,
 			double scaleY)
 	{
-		if (ent instanceof StaticEntity && prevEnt instanceof StaticEntity)
+		Point2D.Double pos = new Point2D.Double(prevEnt.getPosition().getX()
+				+ (ent.getPosition().getX() - prevEnt.getPosition().getX()) * _snapTime,
+				prevEnt.getPosition().getY()
+						+ (ent.getPosition().getY() - prevEnt.getPosition().getY()) * _snapTime);
+
+		double direction = prevEnt.getDirection()
+				+ Math.asin(Math.sin(ent.getDirection() - prevEnt.getDirection())) * _snapTime;
+
+		if (ent instanceof IDrawable)
 		{
-			StaticEntity prevPl = (StaticEntity) prevEnt;
-			StaticEntity pl = (StaticEntity) ent;
+			Dimension d = ((IDrawable) ent).getSize();
 
-			Point2D.Double pos = new Point2D.Double(prevPl.getPosition().getX()
-					+ (pl.getPosition().getX() - prevPl.getPosition().getX()) * _snapTime,
-					prevPl.getPosition().getY()
-							+ (pl.getPosition().getY() - prevPl.getPosition().getY()) * _snapTime);
-
-			double direction = prevPl.getDirection()
-					+ Math.asin(Math.sin(pl.getDirection() - prevPl.getDirection())) * _snapTime;
-
-			if (pl instanceof IDrawable)
-			{
-				Dimension d = ((IDrawable) pl).getSize();
-
-				g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable) pl).getImageID()),
-						-direction),
-						(int) (scaleX * (pos.getX() - d.width / 2)),
-						(int) (scaleY * (pos.getY() - d.height / 2)),
-						(int) (d.width * scaleX),
-						(int) (d.height * scaleY),
-						null);
-			}
-			else if (pl instanceof LaserBeam)
-			{
-				LaserBeam s = (LaserBeam) pl;
-				g2d.setColor(Color.BLUE);
-				g2d.setStroke(new BasicStroke(3));
-				g2d.drawLine((int) (s.getX() * scaleX),
-						(int) (s.getY() * scaleY),
-						(int) (s.endPoint().getX() * scaleX),
-						(int) (s.endPoint().getY() * scaleY));
-			}
+			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable) ent).getImageID()),
+					-direction),
+					(int) (scaleX * (pos.getX() - d.width / 2)),
+					(int) (scaleY * (pos.getY() - d.height / 2)),
+					(int) (d.width * scaleX),
+					(int) (d.height * scaleY),
+					null);
+		}
+		else if (ent instanceof LaserBeam)
+		{
+			LaserBeam s = (LaserBeam) ent;
+			g2d.setColor(Color.BLUE);
+			g2d.setStroke(new BasicStroke(3));
+			g2d.drawLine((int) (s.getX() * scaleX),
+					(int) (s.getY() * scaleY),
+					(int) (s.endPoint().getX() * scaleX),
+					(int) (s.endPoint().getY() * scaleY));
 		}
 	}
 
