@@ -113,7 +113,7 @@ public class ParticleDemo extends JFrame
 		this.createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
 		
-		_psys = new ParticleSystem(new ValuePair(200, 200));
+		_psys = new ParticleSystem();
 		
 		_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
 
@@ -236,6 +236,8 @@ public class ParticleDemo extends JFrame
 			{
 				_psys.spawnParticle(
 						ParticleType.CIRCULAR, 
+						50,
+						new ValuePair(200, 200),
 						new ValuePair(0, 0), 
 						new ValuePair(10 * ((_random.nextDouble() * 2) - 1), 10 * ((_random.nextDouble() * 2) - 1)));
 			}
@@ -245,7 +247,8 @@ public class ParticleDemo extends JFrame
 //			{
 //				double acc = 20 * (_random.nextDouble() - 0.5);
 //				_psys.spawnParticle(
-//					ParticleType.CIRCULAR, 
+//					ParticleType.CIRCULAR,
+//					new ValuePair(200, 200),
 //					new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
 //					new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 * Math.abs(acc)));
 //			}

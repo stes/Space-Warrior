@@ -24,9 +24,9 @@ import java.util.Random;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.IDrawable;
+import sw.shared.data.entities.IImageEntity;
+import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.MoveableEntity;
-import sw.shared.data.entities.StaticEntity;
 import sw.shared.data.entities.shots.IShot;
 import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.Rocket;
@@ -38,7 +38,7 @@ import sw.shared.net.Unpacker;
  * @version 25.11.11
  */
 public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, IDamageable,
-		IAttacker, IDrawable
+		IAttacker, IImageEntity
 {
 	private static Random _random = new Random();
 
@@ -326,8 +326,8 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public void respawn()
 	{
 		int rand = GameConstants.PLAYER_SIZE / 2 + 1;
-		int x = rand + SpaceShip._random.nextInt((int) StaticEntity.MAX_X - rand);
-		int y = rand + SpaceShip._random.nextInt((int) StaticEntity.MAX_Y - rand);
+		int x = rand + SpaceShip._random.nextInt((int) IStaticEntity.MAX_X - rand);
+		int y = rand + SpaceShip._random.nextInt((int) IStaticEntity.MAX_Y - rand);
 		this.setX(x);
 		this.setY(y);
 		this.setSpeed(0);

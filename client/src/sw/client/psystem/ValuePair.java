@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.client.psystem;
 
+import java.awt.Point;
+
 /**
  * Represents a pair of two double values
  * 
@@ -32,6 +34,16 @@ public class ValuePair
 	{
 		_x = x;
 		_y = y;
+	}
+	
+	public ValuePair(Point p)
+	{
+		this(p.x, p.y);
+	}
+	
+	public ValuePair(Point.Double p)
+	{
+		this(p.x, p.y);
 	}
 	
 	public double getX()
@@ -57,5 +69,20 @@ public class ValuePair
 	public ValuePair add(ValuePair p)
 	{
 		return new ValuePair(getX() + p.getX(), getY() + p.getY());
+	}
+	
+//	public ValuePair multiply(double scalar)
+//	{
+//		return this.multiply(scalar, scalar);
+//	}
+
+	public ValuePair multiply(double x, double y)
+	{
+		return new ValuePair(getX() * x, getY() * y);
+	}
+	
+	public double getVectorLength()
+	{
+		return Math.sqrt(_x * _x + _y * _y);
 	}
 }

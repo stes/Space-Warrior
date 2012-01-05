@@ -19,83 +19,76 @@ package sw.client.gui.sprites;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-import sw.client.gui.ImageContainer;
+import sw.shared.data.entities.IStaticEntity;
 
+/**
+ * 
+ * @author Redix, stes
+ * @version 05.01.2012
+ */
 public abstract class Sprite
 {
-	private BufferedImage _image;
+	private IStaticEntity _entity;
+	private IStaticEntity _prevEntity;
 
-	private int _x;
-	private int _y;
-	private double _angle;
-	private int _id;
-
-	public Sprite(int id)
+	public Sprite(IStaticEntity entity)
 	{
-		_id = id;
-		this.loadImg(_id);
-	}
-
-	private void loadImg(int id)
-	{
-		_image = ImageContainer.getLocalInstance().getImage(id);
-	}
-
-	protected AffineTransform affineTransform(BufferedImage src, double degrees)
-	{
-		return AffineTransform.getRotateInstance(Math.toRadians(degrees),
-				src.getWidth() / 2, src.getHeight() / 2);
+		_entity = entity;
+		_prevEntity = entity;
 	}
 
 	protected BufferedImage rotateImage(BufferedImage src, double degrees)
 	{
 		BufferedImage rotatedImage = new BufferedImage(src.getWidth(),
-				src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				src.getHeight(),
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = rotatedImage.createGraphics();
-		g.drawImage(src, affineTransform(src, degrees), null);
+		g.drawImage(src, this.rotateTransform(src, degrees), null);
 		return rotatedImage;
 	}
 
-	public void draw(Graphics2D g)
+	protected AffineTransform rotateTransform(BufferedImage src, double degrees)
 	{
-		g.drawImage(rotateImage(_image, 180 - getAngle()), null, (int) getX()
-				- _image.getWidth() / 2, (int) getY() - _image.getHeight() / 2);
+		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	public void setAngle(double _angle)
+	public IStaticEntity getEntity()
 	{
-		this._angle = _angle;
+		return _entity;
 	}
 
-	public double getAngle()
+	public IStaticEntity getPreviousEntity()
 	{
-		return _angle;
+		return _prevEntity;
 	}
 
-	public void setY(int _y)
+	public void updateEntity(IStaticEntity entity)
 	{
-		this._y = _y;
+		if (_entity.getID() != entity.getID())
+			throw new IllegalArgumentException("Player ID does not match");
+		// TODO use a copy?
+		_prevEntity = _entity;
+		_entity = entity;
 	}
 
-	public int getY()
+	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
+
+	protected Point2D.Double getPosition(double time)
 	{
-		return _y;
+		return new Point2D.Double(getPreviousEntity().getPosition().getX()
+				+ (getEntity().getPosition().getX() - getPreviousEntity().getPosition().getX())
+				* time, getPreviousEntity().getPosition().getY()
+				+ (getEntity().getPosition().getY() - getPreviousEntity().getPosition().getY())
+				* time);
 	}
 
-	public void setX(int _x)
+	protected double getDirection(double time)
 	{
-		this._x = _x;
-	}
-
-	public int getX()
-	{
-		return _x;
-	}
-	
-	public BufferedImage getImage()
-	{
-		return _image;
+		return getPreviousEntity().getDirection()
+				+ Math.asin(Math.sin(getEntity().getDirection()
+						- getPreviousEntity().getDirection())) * time;
 	}
 }

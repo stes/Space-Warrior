@@ -28,9 +28,9 @@ import java.awt.Graphics2D;
  */
 public class CircularParticle extends Particle
 {
-	public CircularParticle(ValuePair location, ValuePair velocity, ValuePair acceleration)
+	public CircularParticle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime)
 	{
-		super(location, velocity, acceleration);
+		super(location, velocity, acceleration, lifetime);
 	}
 
 	@Override
@@ -38,7 +38,8 @@ public class CircularParticle extends Particle
 	{
 		if (!isAlive())
 			return;
-		g.setColor(new Color(_random.nextInt(255), 0, 0));
+		g.setColor(Color.RED);
+		//g.setColor(new Color(_random.nextInt(255), 0, 0));
 		g.fillOval((int)(getLocation().getX() - getSize() / 2),
 				(int)(getLocation().getY() - getSize() / 2),
 				(int)getSize(),

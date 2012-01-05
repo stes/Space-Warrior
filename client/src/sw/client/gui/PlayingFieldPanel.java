@@ -30,19 +30,25 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
 import sw.client.gcontrol.IGameStateManager;
+import sw.client.gui.sprites.ProjectileSprite;
+import sw.client.gui.sprites.SpaceShipSprite;
+import sw.client.gui.sprites.Sprite;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.GameWorld;
-import sw.shared.data.entities.IDrawable;
 import sw.shared.data.entities.IEntity;
-import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.IImageEntity;
+import sw.shared.data.entities.IStaticEntity;
+import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.Projectile;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -59,6 +65,8 @@ public class PlayingFieldPanel extends JPanel
 	private boolean _isDebugActive;
 
 	private IGameStateManager _stateManager;
+	
+	private HashMap<Integer, Sprite> _sprites;
 
 	/**
 	 * Creates a new playing field given a reference to the player list
@@ -72,6 +80,7 @@ public class PlayingFieldPanel extends JPanel
 		_self = this;
 		_stateManager = stateManager;
 		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
+		_sprites = new HashMap<Integer, Sprite>();
 		this.setIgnoreRepaint(true);
 		this.init();
 	}
@@ -109,25 +118,34 @@ public class PlayingFieldPanel extends JPanel
 		_snapTime = _stateManager.snapTime();
 		GameWorld prevWorld = _stateManager.getPrevGameWorld();
 		GameWorld world = _stateManager.getGameWorld();
+		
+		this.updateSprites();
 
 		_stateManager.setRendering(false);
 
-		for (IEntity ent : world.getAllEntities())
+		for (Sprite s : _sprites.values())
 		{
-			if(!(ent instanceof StaticEntity))
-				continue;
-			
-			if(ent instanceof SpaceShip && !((SpaceShip) ent).isAlive())
-				continue;
-			
-			IEntity prevEnt = prevWorld.getEntityByID(ent.getID());
-			if(prevEnt == null)
-			{
-				prevEnt = ent;
-			}
-			
-			this.drawEntity(g2d, (StaticEntity)ent, (StaticEntity)prevEnt, scaleX, scaleY);
+			s.render(g2d, scaleX, scaleY, _snapTime);
 		}
+//		for (IEntity ent : world.getAllEntities())
+//		{
+//			if(!(ent instanceof IStaticEntity))
+//				continue;
+//			
+//			if(ent instanceof SpaceShip && !((SpaceShip) ent).isAlive())
+//				continue;
+//			
+//			IEntity prevEnt = prevWorld.getEntityByID(ent.getID());
+//			if(prevEnt == null)
+//			{
+//				prevEnt = ent;
+//			}
+//			
+//			if (!(ent instanceof SpaceShip))
+//			{
+//				this.drawEntity(g2d, (IStaticEntity)ent, (IStaticEntity)prevEnt, scaleX, scaleY);
+//			}
+//		}
 
 		if (_stateManager.getLocalPlayer() != null)
 		{
@@ -143,6 +161,40 @@ public class PlayingFieldPanel extends JPanel
 				if (_isDebugActive)
 				{
 					this.showDebugInfo(g2d, p);
+				}
+			}
+		}
+	}
+
+	private void updateSprites()
+	{
+		for (IEntity ent : _stateManager.getGameWorld().getAllEntities())
+		{
+			if (ent instanceof IStaticEntity)
+			{
+				IStaticEntity e = (IStaticEntity)ent;
+				if (_sprites.containsKey(e.getID()))
+				{
+					if (e.isDestroyed() || (e instanceof IDamageable && ((IDamageable) e).isAlive()))
+					{
+						_sprites.remove(e.getID());
+					}
+					else
+					{
+						_sprites.get(e.getID()).updateEntity(e);
+					}
+				}
+				else
+				{
+					if (e instanceof SpaceShip)
+					{
+						_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip)e));
+					}
+					else if (e instanceof Projectile)
+					{
+						_sprites.put(e.getID(), new ProjectileSprite((Projectile)e));
+					}
+					// TODO handle other entity types as well
 				}
 			}
 		}
@@ -171,8 +223,8 @@ public class PlayingFieldPanel extends JPanel
 
 	private void drawEntity(
 			Graphics2D g2d,
-			StaticEntity ent,
-			StaticEntity prevEnt,
+			IStaticEntity ent,
+			IStaticEntity prevEnt,
 			double scaleX,
 			double scaleY)
 	{
@@ -184,11 +236,11 @@ public class PlayingFieldPanel extends JPanel
 		double direction = prevEnt.getDirection()
 				+ Math.asin(Math.sin(ent.getDirection() - prevEnt.getDirection())) * _snapTime;
 
-		if (ent instanceof IDrawable)
+		if (ent instanceof IImageEntity)
 		{
-			Dimension d = ((IDrawable) ent).getSize();
+			Dimension d = ((IImageEntity) ent).getSize();
 
-			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IDrawable) ent).getImageID()),
+			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IImageEntity) ent).getImageID()),
 					-direction),
 					(int) (scaleX * (pos.getX() - d.width / 2)),
 					(int) (scaleY * (pos.getY() - d.height / 2)),

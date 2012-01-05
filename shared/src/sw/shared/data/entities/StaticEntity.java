@@ -19,7 +19,6 @@ package sw.shared.data.entities;
 
 import java.awt.Point;
 
-import sw.shared.GameConstants;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -29,16 +28,8 @@ import sw.shared.net.Unpacker;
  * @author Redix stes Abbadonn
  * @version 24.12.11
  */
-public abstract class StaticEntity extends Entity
+abstract class StaticEntity extends Entity implements IStaticEntity
 {
-	public static final double MIN_X = GameConstants.PLAYER_SIZE / 2;
-	public static final double MIN_Y = GameConstants.PLAYER_SIZE / 2;
-
-	public static final double MAX_X = GameConstants.PLAYING_FIELD_WIDTH
-			- GameConstants.PLAYER_SIZE / 2;
-	public static final double MAX_Y = GameConstants.PLAYING_FIELD_HEIGHT
-			- GameConstants.PLAYER_SIZE / 2;
-
 	// state variables
 	private double _x;
 	private double _y;
@@ -62,7 +53,7 @@ public abstract class StaticEntity extends Entity
 		return this.getPosition().distance(p);
 	}
 
-	public double distanceTo(StaticEntity entity)
+	public double distanceTo(IStaticEntity entity)
 	{
 		return this.getPosition().distance(entity.getPosition());
 	}

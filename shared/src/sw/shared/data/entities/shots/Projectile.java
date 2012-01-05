@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sw.shared.data.entities.shots;
 
-import sw.shared.data.entities.IDrawable;
-import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.IImageEntity;
+import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
 
@@ -28,7 +28,7 @@ import sw.shared.data.entities.players.SpaceShip;
  * @author Redix, stes, Abbadonn
  * @version 25.12.11
  */
-public abstract class Projectile extends ShotEntity implements IDrawable
+public abstract class Projectile extends ShotEntity implements IImageEntity
 {
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{
@@ -50,7 +50,7 @@ public abstract class Projectile extends ShotEntity implements IDrawable
 	@Override
 	public void setX(double x)
 	{
-		if (x < StaticEntity.MIN_X || x > StaticEntity.MAX_X)
+		if (x < IStaticEntity.MIN_X || x > IStaticEntity.MAX_X)
 		{
 			this.destroy();
 		}
@@ -60,7 +60,7 @@ public abstract class Projectile extends ShotEntity implements IDrawable
 	@Override
 	public void setY(double y)
 	{
-		if (y < StaticEntity.MIN_Y || y > StaticEntity.MAX_Y)
+		if (y < IStaticEntity.MIN_Y || y > IStaticEntity.MAX_Y)
 		{
 			this.destroy();
 		}

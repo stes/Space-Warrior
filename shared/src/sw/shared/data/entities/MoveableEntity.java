@@ -20,6 +20,8 @@ package sw.shared.data.entities;
 import java.awt.Point;
 
 import sw.shared.GameConstants;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * A moveable entity
@@ -109,11 +111,26 @@ public abstract class MoveableEntity extends StaticEntity
 			_turnSpeed = -MoveableEntity.MAX_TURN_SPEED;
 		}
 	}
+	
 
 	@Override
 	public void tick()
 	{
 		this.accelerate();
 		this.move();
+	}
+
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		super.fromSnap(p);
+		setSpeed(p.readDouble());
+	}
+
+	@Override
+	public void snap(Packer p, String name)
+	{
+		super.snap(p, name);
+		p.writeDouble(this.getSpeed());
 	}
 }

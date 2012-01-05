@@ -32,25 +32,25 @@ public class ParticleSystem
 	
 	private ArrayList<Particle> _particles;
 	
-	private ValuePair _spawnPoint;
+//	private ValuePair _spawnPoint;
 //	private ValuePair _initialVelocity;
 //	private ValuePair _initialAcceleration;
 	
-	public ParticleSystem(ValuePair spawnPoint)
+	public ParticleSystem()
 	{
-		_spawnPoint = spawnPoint;
+//		_spawnPoint = spawnPoint;
 //		_initialVelocity = velocity;
 //		_initialAcceleration = acceleration;
 		_particles = new ArrayList<Particle>();
 	}
 	
-	public void spawnParticle(ParticleType type, ValuePair velocity, ValuePair acceleration)
+	public void spawnParticle(ParticleType type, int lifetime, ValuePair spawnPoint, ValuePair velocity, ValuePair acceleration)
 	{
 		Particle particle = null;
 		switch (type)
 		{
 			case CIRCULAR:
-				particle = new CircularParticle(_spawnPoint, velocity, acceleration);
+				particle = new CircularParticle(spawnPoint, velocity, acceleration, lifetime);
 				break;
 		}
 		_particles.add(particle);

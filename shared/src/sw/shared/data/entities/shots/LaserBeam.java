@@ -21,7 +21,7 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 
 import sw.shared.GameConstants;
-import sw.shared.data.entities.StaticEntity;
+import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -64,7 +64,7 @@ public class LaserBeam extends ShotEntity
 	}
 
 	@Override
-	public double distanceTo(StaticEntity entity)
+	public double distanceTo(IStaticEntity entity)
 	{
 		return this.distanceTo(entity.getPosition());
 	}

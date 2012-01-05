@@ -33,6 +33,8 @@ public abstract class Particle
 	private final static int LIFETIME = 50;
 	private final static double SIZE = 3;
 	
+	public final static int REMOVE_WHEN_HALTED = -1;
+	
 	private ValuePair _location;
 	private ValuePair _velocity;
 	private ValuePair _acceleration;
@@ -42,11 +44,16 @@ public abstract class Particle
 	
 	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration)
 	{
+		this(location, velocity, acceleration, LIFETIME);
+	}
+
+	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime)
+	{
 		_location = location;
 		_velocity = velocity;
 		_acceleration = acceleration;
 		_size = SIZE;
-		_lifetime = LIFETIME;
+		_lifetime = lifetime;
 	}
 
 	private void move()
@@ -59,7 +66,8 @@ public abstract class Particle
 	{
 		if (!isAlive())
 			return;
-		setLifetime(_lifetime - 1);
+		if (_lifetime != REMOVE_WHEN_HALTED)
+			setLifetime(_lifetime - 1);
 		this.move();
 	}
 	
@@ -130,6 +138,6 @@ public abstract class Particle
 	
 	public boolean isAlive()
 	{
-		return (_lifetime > 0);
+		return (_lifetime > 0 || (_lifetime == REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
 	}
 }

@@ -18,26 +18,69 @@
 package sw.client.gui.sprites;
 
 import java.awt.Graphics2D;
+import java.util.Random;
 
-import sw.shared.data.PlayerData;
+import sw.client.psystem.Particle;
+import sw.client.psystem.ParticleSystem;
+import sw.client.psystem.ParticleSystem.ParticleType;
+import sw.client.psystem.ValuePair;
+import sw.shared.data.entities.players.SpaceShip;
 
-public class SpaceShipSprite extends Sprite
+/**
+ * 
+ * @author Redix, stes
+ * @version 05.01.2012
+ */
+public class SpaceShipSprite extends ImageSprite
 {
-	public SpaceShipSprite(PlayerData d)
+	private static Random _random = new Random(System.currentTimeMillis());
+	
+	private ParticleSystem _particleSystem;
+	private long _lastParticleUpdate;
+	
+	public SpaceShipSprite(SpaceShip player)
 	{
-		super(d.getImageID());
-	}
-
-	public void update(PlayerData data)
-	{
-		this.setX((int) data.getPosition().x);
-		this.setY((int) data.getPosition().y);
-		this.setAngle(data.getDirection());
+		super(player);
+		_particleSystem = new ParticleSystem();
 	}
 	
-	@Override
-	public void draw(Graphics2D g)
+	public void render(
+			Graphics2D g2d,
+			double scaleX,
+			double scaleY,
+			double time)
 	{
-		super.draw(g);
+		_particleSystem.render(g2d);
+		super.render(g2d, scaleX, scaleY, time);
+		this.processParticles(scaleX, scaleY);
+	}
+
+	private void processParticles(double scaleX, double scaleY)
+	{
+		// TODO get an own thread for this
+		if (System.currentTimeMillis() - this._lastParticleUpdate < 10)
+		{
+			return;
+		}
+		_lastParticleUpdate = System.currentTimeMillis();
+		
+		_particleSystem.tick();
+		SpaceShip player = (SpaceShip)getEntity();
+
+		// TODO improve
+		if (_particleSystem.countParticles() < 200)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				double dir = -player.getDirection() + _random.nextDouble() * Math.PI/2 - Math.PI/4 + Math.PI/2;
+				ValuePair v = new ValuePair(Math.cos(dir) * player.getSpeed(), Math.sin(dir) * player.getSpeed());
+				_particleSystem.spawnParticle(
+						ParticleType.CIRCULAR,
+						Particle.REMOVE_WHEN_HALTED,
+						new ValuePair(player.getPosition()).multiply(scaleX, scaleY),
+						v,
+						v.multiply(-0.1, -0.1));
+			}
+		}
 	}
 }
