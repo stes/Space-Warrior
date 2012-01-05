@@ -185,7 +185,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		_lastSnap = System.currentTimeMillis();
 		_prevWorld = _world;
 		_world = world;
-		_players = _world.getEntitiesByType(Packettype.SNAP_PLAYERDATA, _players);
+		_players = _world.getPlayers();
 	}
 
 	@Override

@@ -116,21 +116,20 @@ public class SWServer implements IServer, NetworkListener
 
 		if (Packettype.CL_START_INFO == packet.getType() && !client.isPlaying())
 		{
-			String name = packet.readUTF();
+			String wantedName = packet.readUTF();
+			String name = wantedName;
 			int imageID = packet.readInt();
-			Client cl = this.getClientbyName(name);
-			if (cl == null)
+			int num = 0;
+			while (this.getClientbyName(name) != null)
 			{
-				client.setName(name);
-				client.enterGame();
-				for (ServerListener l : _serverListener)
-				{
-					l.playerConnected(client.getName(), imageID);
-				}
+				num++;
+				name = wantedName + " (" + num + ")";
 			}
-			else
+			client.setName(name);
+			client.enterGame();
+			for (ServerListener l : _serverListener)
 			{
-				connection.disconnect("The name '" + name + "' is already in use");
+				l.playerConnected(client.getName(), imageID);
 			}
 		}
 		else if (Packettype.CL_CHAT_MESSAGE == packet.getType() && client.isPlaying())
