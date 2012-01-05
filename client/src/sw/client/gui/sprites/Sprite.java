@@ -65,12 +65,12 @@ public abstract class Sprite
 		return _prevEntity;
 	}
 
-	public void updateEntity(IStaticEntity entity)
+	public void updateEntity(IStaticEntity entity, IStaticEntity prevEntity)
 	{
 		if (_entity.getID() != entity.getID())
 			throw new IllegalArgumentException("Player ID does not match");
 		// TODO use a copy?
-		_prevEntity = _entity;
+		_prevEntity = prevEntity;
 		_entity = entity;
 	}
 

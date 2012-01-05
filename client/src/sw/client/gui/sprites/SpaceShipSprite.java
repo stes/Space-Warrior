@@ -17,13 +17,10 @@
  ******************************************************************************/
 package sw.client.gui.sprites;
 
-import java.awt.Graphics2D;
-import java.util.Random;
-
 import sw.client.psystem.Particle;
-import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
+import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.players.SpaceShip;
 
 /**
@@ -31,50 +28,27 @@ import sw.shared.data.entities.players.SpaceShip;
  * @author Redix, stes
  * @version 05.01.2012
  */
-public class SpaceShipSprite extends ImageSprite
+public class SpaceShipSprite extends ParticleSprite
 {
-	private static Random _random = new Random(System.currentTimeMillis());
-	
-	private ParticleSystem _particleSystem;
-	private long _lastParticleUpdate;
-	
 	public SpaceShipSprite(SpaceShip player)
 	{
 		super(player);
-		_particleSystem = new ParticleSystem();
 	}
 	
-	public void render(
-			Graphics2D g2d,
-			double scaleX,
-			double scaleY,
-			double time)
+	@Override
+	protected void processParticles(double scaleX, double scaleY)
 	{
-		_particleSystem.render(g2d);
-		super.render(g2d, scaleX, scaleY, time);
-		this.processParticles(scaleX, scaleY);
-	}
-
-	private void processParticles(double scaleX, double scaleY)
-	{
-		// TODO get an own thread for this
-		if (System.currentTimeMillis() - this._lastParticleUpdate < 10)
-		{
-			return;
-		}
-		_lastParticleUpdate = System.currentTimeMillis();
-		
-		_particleSystem.tick();
-		SpaceShip player = (SpaceShip)getEntity();
+		super.processParticles(scaleX, scaleY);
+		MoveableEntity player = (MoveableEntity)getEntity();
 
 		// TODO improve
-		if (_particleSystem.countParticles() < 200)
+		if (getParticleSystem().countParticles() < 200)
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				double dir = -player.getDirection() + _random.nextDouble() * Math.PI/2 - Math.PI/4 + Math.PI/2;
+				double dir = -player.getDirection() + _random.nextDouble() * Math.PI/2 + Math.PI/4;
 				ValuePair v = new ValuePair(Math.cos(dir) * player.getSpeed(), Math.sin(dir) * player.getSpeed());
-				_particleSystem.spawnParticle(
+				getParticleSystem().spawnParticle(
 						ParticleType.CIRCULAR,
 						Particle.REMOVE_WHEN_HALTED,
 						new ValuePair(player.getPosition()).multiply(scaleX, scaleY),

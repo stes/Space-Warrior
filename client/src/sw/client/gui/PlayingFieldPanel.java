@@ -19,7 +19,6 @@ package sw.client.gui;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,7 +27,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -41,13 +39,10 @@ import sw.client.gui.sprites.SpaceShipSprite;
 import sw.client.gui.sprites.Sprite;
 import sw.client.player.HumanPlayer;
 import sw.shared.GameConstants;
-import sw.shared.data.GameWorld;
 import sw.shared.data.entities.IEntity;
-import sw.shared.data.entities.IImageEntity;
 import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
@@ -65,7 +60,6 @@ public class PlayingFieldPanel extends JPanel
 	private boolean _isDebugActive;
 
 	private IGameStateManager _stateManager;
-	
 	private HashMap<Integer, Sprite> _sprites;
 
 	/**
@@ -116,8 +110,6 @@ public class PlayingFieldPanel extends JPanel
 		_stateManager.setRendering(true);
 
 		_snapTime = _stateManager.snapTime();
-		GameWorld prevWorld = _stateManager.getPrevGameWorld();
-		GameWorld world = _stateManager.getGameWorld();
 		
 		this.updateSprites();
 
@@ -127,25 +119,6 @@ public class PlayingFieldPanel extends JPanel
 		{
 			s.render(g2d, scaleX, scaleY, _snapTime);
 		}
-//		for (IEntity ent : world.getAllEntities())
-//		{
-//			if(!(ent instanceof IStaticEntity))
-//				continue;
-//			
-//			if(ent instanceof SpaceShip && !((SpaceShip) ent).isAlive())
-//				continue;
-//			
-//			IEntity prevEnt = prevWorld.getEntityByID(ent.getID());
-//			if(prevEnt == null)
-//			{
-//				prevEnt = ent;
-//			}
-//			
-//			if (!(ent instanceof SpaceShip))
-//			{
-//				this.drawEntity(g2d, (IStaticEntity)ent, (IStaticEntity)prevEnt, scaleX, scaleY);
-//			}
-//		}
 
 		if (_stateManager.getLocalPlayer() != null)
 		{
@@ -173,18 +146,24 @@ public class PlayingFieldPanel extends JPanel
 			if (ent instanceof IStaticEntity)
 			{
 				IStaticEntity e = (IStaticEntity)ent;
+				IStaticEntity prevEnt = (IStaticEntity)_stateManager.getPrevGameWorld().getEntityByID(ent.getID());
+				if(prevEnt == null)
+				{
+					prevEnt = e;
+				}
 				if (_sprites.containsKey(e.getID()))
 				{
-					if (e.isDestroyed() || (e instanceof IDamageable && ((IDamageable) e).isAlive()))
+					// TODO fix this
+					if (e.isDestroyed() || (e instanceof IDamageable && !((SpaceShip) e).isAlive()))
 					{
 						_sprites.remove(e.getID());
 					}
 					else
 					{
-						_sprites.get(e.getID()).updateEntity(e);
+						_sprites.get(e.getID()).updateEntity(e, prevEnt);
 					}
 				}
-				else
+				else if (!(e.isDestroyed() || (e instanceof IDamageable && !((IDamageable) e).isAlive())))
 				{
 					if (e instanceof SpaceShip)
 					{
@@ -221,44 +200,45 @@ public class PlayingFieldPanel extends JPanel
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	private void drawEntity(
-			Graphics2D g2d,
-			IStaticEntity ent,
-			IStaticEntity prevEnt,
-			double scaleX,
-			double scaleY)
-	{
-		Point2D.Double pos = new Point2D.Double(prevEnt.getPosition().getX()
-				+ (ent.getPosition().getX() - prevEnt.getPosition().getX()) * _snapTime,
-				prevEnt.getPosition().getY()
-						+ (ent.getPosition().getY() - prevEnt.getPosition().getY()) * _snapTime);
-
-		double direction = prevEnt.getDirection()
-				+ Math.asin(Math.sin(ent.getDirection() - prevEnt.getDirection())) * _snapTime;
-
-		if (ent instanceof IImageEntity)
-		{
-			Dimension d = ((IImageEntity) ent).getSize();
-
-			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IImageEntity) ent).getImageID()),
-					-direction),
-					(int) (scaleX * (pos.getX() - d.width / 2)),
-					(int) (scaleY * (pos.getY() - d.height / 2)),
-					(int) (d.width * scaleX),
-					(int) (d.height * scaleY),
-					null);
-		}
-		else if (ent instanceof LaserBeam)
-		{
-			LaserBeam s = (LaserBeam) ent;
-			g2d.setColor(Color.BLUE);
-			g2d.setStroke(new BasicStroke(3));
-			g2d.drawLine((int) (s.getX() * scaleX),
-					(int) (s.getY() * scaleY),
-					(int) (s.endPoint().getX() * scaleX),
-					(int) (s.endPoint().getY() * scaleY));
-		}
-	}
+	// TODO remove after finishing the improved rendering
+//	private void drawEntity(
+//			Graphics2D g2d,
+//			IStaticEntity ent,
+//			IStaticEntity prevEnt,
+//			double scaleX,
+//			double scaleY)
+//	{
+//		Point2D.Double pos = new Point2D.Double(prevEnt.getPosition().getX()
+//				+ (ent.getPosition().getX() - prevEnt.getPosition().getX()) * _snapTime,
+//				prevEnt.getPosition().getY()
+//						+ (ent.getPosition().getY() - prevEnt.getPosition().getY()) * _snapTime);
+//
+//		double direction = prevEnt.getDirection()
+//				+ Math.asin(Math.sin(ent.getDirection() - prevEnt.getDirection())) * _snapTime;
+//
+//		if (ent instanceof IImageEntity)
+//		{
+//			Dimension d = ((IImageEntity) ent).getSize();
+//
+//			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IImageEntity) ent).getImageID()),
+//					-direction),
+//					(int) (scaleX * (pos.getX() - d.width / 2)),
+//					(int) (scaleY * (pos.getY() - d.height / 2)),
+//					(int) (d.width * scaleX),
+//					(int) (d.height * scaleY),
+//					null);
+//		}
+//		else if (ent instanceof LaserBeam)
+//		{
+//			LaserBeam s = (LaserBeam) ent;
+//			g2d.setColor(Color.BLUE);
+//			g2d.setStroke(new BasicStroke(3));
+//			g2d.drawLine((int) (s.getX() * scaleX),
+//					(int) (s.getY() * scaleY),
+//					(int) (s.endPoint().getX() * scaleX),
+//					(int) (s.endPoint().getY() * scaleY));
+//		}
+//	}
 
 	private void init()
 	{

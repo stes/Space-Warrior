@@ -24,27 +24,28 @@ import java.util.ArrayList;
  * Particle system to create animations such as explosions, fog etc.
  * 
  * @author Redix stes Abbadonn
- * @version 02.01.12 
+ * @version 02.01.12
  */
 public class ParticleSystem
 {
-	public enum ParticleType {CIRCULAR};
-	
+	public enum ParticleType
+	{
+		CIRCULAR
+	};
+
 	private ArrayList<Particle> _particles;
-	
-//	private ValuePair _spawnPoint;
-//	private ValuePair _initialVelocity;
-//	private ValuePair _initialAcceleration;
-	
+
 	public ParticleSystem()
 	{
-//		_spawnPoint = spawnPoint;
-//		_initialVelocity = velocity;
-//		_initialAcceleration = acceleration;
 		_particles = new ArrayList<Particle>();
 	}
-	
-	public void spawnParticle(ParticleType type, int lifetime, ValuePair spawnPoint, ValuePair velocity, ValuePair acceleration)
+
+	public void spawnParticle(
+			ParticleType type,
+			int lifetime,
+			ValuePair spawnPoint,
+			ValuePair velocity,
+			ValuePair acceleration)
 	{
 		Particle particle = null;
 		switch (type)
@@ -66,15 +67,15 @@ public class ParticleSystem
 				_particles.remove(i);
 		}
 	}
-	
+
 	public void render(Graphics2D g)
 	{
-		for (int i = 0; i<_particles.size(); i++)
+		for (int i = 0; i < _particles.size(); i++)
 		{
 			_particles.get(i).render(g);
 		}
 	}
-	
+
 	public int countParticles()
 	{
 		return _particles.size();

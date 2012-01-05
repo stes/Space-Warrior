@@ -64,6 +64,7 @@ public abstract class Entity implements IEntity
 	public void fromSnap(Unpacker p)
 	{
 		this.setID(p.readInt());
+		_entDestroy = p.readBoolean();
 	}
 
 	/**
@@ -149,6 +150,7 @@ public abstract class Entity implements IEntity
 	{
 		p.writeByte(this.getType());
 		p.writeInt(this.getID());
+		p.writeBoolean(this.isDestroyed());
 	}
 
 	/**

@@ -33,11 +33,6 @@ public abstract class Projectile extends ShotEntity implements IImageEntity
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{
 		super(x, y, direction, owner, shottype);
-
-		// TODO improve
-		// this.setAcceleration(GameConstants.ACCELERATION);
-		// this.setAngularAcceleration(0);
-		// this.setMaximumSpeed(GameConstants.MAX_SPEED / 2);
 	}
 
 	@Override
