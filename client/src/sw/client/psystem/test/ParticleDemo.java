@@ -225,12 +225,13 @@ public class ParticleDemo extends JFrame
 		if (_psys == null)
 			return;
 		long timespan = System.currentTimeMillis() - _lastUpdate;
-		if (timespan < 50)
+		if (timespan < 25)
 			return;
 		_lastUpdate = System.currentTimeMillis();
 		_psys.tick();
 		if (_psys.countParticles() < 1000)
 		{
+			// explosion:
 			for (int i = 0; i < 1000; i++)
 			{
 				_psys.spawnParticle(
@@ -238,6 +239,16 @@ public class ParticleDemo extends JFrame
 						new ValuePair(0, 0), 
 						new ValuePair(10 * ((_random.nextDouble() * 2) - 1), 10 * ((_random.nextDouble() * 2) - 1)));
 			}
+			
+			// fountain
+//			for (int i = 0; i < 20; i++)
+//			{
+//				double acc = 20 * (_random.nextDouble() - 0.5);
+//				_psys.spawnParticle(
+//					ParticleType.CIRCULAR, 
+//					new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
+//					new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 * Math.abs(acc)));
+//			}
 		}
 		else
 			System.out.println("enough particles");

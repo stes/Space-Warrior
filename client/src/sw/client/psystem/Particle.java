@@ -30,7 +30,7 @@ public abstract class Particle
 {
 	protected static Random _random = new Random(System.currentTimeMillis());
 	
-	private final static int LIFETIME = 20;
+	private final static int LIFETIME = 50;
 	private final static double SIZE = 3;
 	
 	private ValuePair _location;
