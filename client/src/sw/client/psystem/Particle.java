@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client.psystem;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
@@ -26,14 +27,12 @@ import java.util.Random;
  * @author Redix stes Abbadonn
  * @version 02.01.12
  */
-public abstract class Particle
+abstract class Particle
 {
 	protected static Random _random = new Random(System.currentTimeMillis());
 
 	private final static int LIFETIME = 50;
 	private final static double SIZE = 3;
-
-	public final static int REMOVE_WHEN_HALTED = -1;
 
 	private ValuePair _location;
 	private ValuePair _velocity;
@@ -41,19 +40,27 @@ public abstract class Particle
 
 	private double _size;
 	private int _lifetime;
+	private Color _color;
 
-	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration)
+	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration, Color color)
 	{
-		this(location, velocity, acceleration, Particle.LIFETIME);
+		this(location, velocity, acceleration, Particle.LIFETIME, Particle.SIZE, color);
 	}
 
-	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime)
+	public Particle(
+			ValuePair location,
+			ValuePair velocity,
+			ValuePair acceleration,
+			int lifetime,
+			double size,
+			Color color)
 	{
 		_location = location;
 		_velocity = velocity;
 		_acceleration = acceleration;
-		_size = Particle.SIZE;
+		_size = size;
 		_lifetime = lifetime;
+		_color = color;
 	}
 
 	/**
@@ -83,6 +90,14 @@ public abstract class Particle
 	}
 
 	/**
+	 * @return the color
+	 */
+	public Color getColor()
+	{
+		return _color;
+	}
+
+	/**
 	 * @return the velocity
 	 */
 	public ValuePair getVelocity()
@@ -92,10 +107,10 @@ public abstract class Particle
 
 	public boolean isAlive()
 	{
-		return (_lifetime > 0 || (_lifetime == Particle.REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
+		return (_lifetime > 0 || (_lifetime == ParticleSystem.REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
 	}
 
-	public abstract void render(Graphics2D g);
+	public abstract void render(Graphics2D g, double scaleX, double scaleY);
 
 	/**
 	 * @param acceleration
@@ -135,7 +150,7 @@ public abstract class Particle
 		{
 			return;
 		}
-		if (_lifetime != Particle.REMOVE_WHEN_HALTED)
+		if (_lifetime != ParticleSystem.REMOVE_WHEN_HALTED)
 		{
 			this.setLifetime(_lifetime - 1);
 		}

@@ -159,7 +159,7 @@ public class ParticleDemo extends JFrame
 
 		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-		_psys.render(g2d);
+		_psys.render(g2d, 1, 1);
 
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
@@ -270,7 +270,9 @@ public class ParticleDemo extends JFrame
 						new ValuePair(200, 200),
 						new ValuePair(0, 0),
 						new ValuePair(10 * ((_random.nextDouble() * 2) - 1),
-								10 * ((_random.nextDouble() * 2) - 1)));
+								10 * ((_random.nextDouble() * 2) - 1)),
+						5,
+						Color.RED);
 			}
 
 			// fountain

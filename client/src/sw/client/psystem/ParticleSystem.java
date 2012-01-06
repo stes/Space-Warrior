@@ -17,8 +17,10 @@
  ******************************************************************************/
 package sw.client.psystem;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Particle system to create animations such as explosions, fog etc.
@@ -28,6 +30,9 @@ import java.util.ArrayList;
  */
 public class ParticleSystem
 {
+	private static final Random _random = new Random(System.currentTimeMillis());
+	public final static int REMOVE_WHEN_HALTED = -1;
+	
 	public enum ParticleType
 	{
 		CIRCULAR
@@ -45,11 +50,11 @@ public class ParticleSystem
 		return _particles.size();
 	}
 
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
 		for (int i = 0; i < _particles.size(); i++)
 		{
-			_particles.get(i).render(g);
+			_particles.get(i).render(g, scaleX, scaleY);
 		}
 	}
 
@@ -58,13 +63,15 @@ public class ParticleSystem
 			int lifetime,
 			ValuePair spawnPoint,
 			ValuePair velocity,
-			ValuePair acceleration)
+			ValuePair acceleration,
+			double size,
+			Color color)
 	{
 		Particle particle = null;
 		switch (type)
 		{
 			case CIRCULAR:
-				particle = new CircularParticle(spawnPoint, velocity, acceleration, lifetime);
+				particle = new CircularParticle(spawnPoint, velocity, acceleration, lifetime, size, color);
 				break;
 		}
 		_particles.add(particle);
@@ -80,6 +87,29 @@ public class ParticleSystem
 			{
 				_particles.remove(i);
 			}
+		}
+	}
+
+	/**
+	 * Spawns particles to simulate an explosion at the specific point
+	 * 
+	 * @param x the x coordinate
+	 * @param y this y coordinate
+	 */
+	public void explosion(double x, double y)
+	{
+		for (int i = 0; i < 500; i++)
+		{
+			double dir = _random.nextDouble() * 2 * Math.PI;
+			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10 * _random.nextDouble(),
+					Math.sin(dir) * 10 + 10 * _random.nextDouble());
+			this.spawnParticle(ParticleType.CIRCULAR,
+					30,
+					new ValuePair(x, y),
+					v.multiply(3),
+					v.multiply(0.1),
+					5,
+					new Color(_random.nextInt(255), 0, 0));
 		}
 	}
 }

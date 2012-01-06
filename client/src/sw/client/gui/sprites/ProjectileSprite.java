@@ -17,7 +17,8 @@
  ******************************************************************************/
 package sw.client.gui.sprites;
 
-import sw.client.psystem.Particle;
+import java.awt.Color;
+
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
@@ -55,10 +56,12 @@ public class ProjectileSprite extends ParticleSprite
 							* Math.abs((1 + ParticleSprite._random.nextGaussian()));
 					ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);
 					this.getParticleSystem().spawnParticle(ParticleType.CIRCULAR,
-							Particle.REMOVE_WHEN_HALTED,
-							new ValuePair(projectile.getPosition()).multiply(scaleX, scaleY),
+							ParticleSystem.REMOVE_WHEN_HALTED,
+							new ValuePair(projectile.getPosition()),
 							v,
-							v.multiply(-0.1, -0.1));
+							v.multiply(-0.1, -0.1),
+							5,
+							Color.RED.darker().darker());
 				}
 			}
 		}

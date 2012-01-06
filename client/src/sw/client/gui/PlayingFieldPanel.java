@@ -35,18 +35,18 @@ import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
 import sw.client.gcontrol.IGameStateManager;
+import sw.client.gui.sprites.LaserSprite;
 import sw.client.gui.sprites.ProjectileSprite;
 import sw.client.gui.sprites.SpaceShipSprite;
 import sw.client.gui.sprites.Sprite;
 import sw.client.player.HumanPlayer;
 import sw.client.psystem.ParticleSystem;
-import sw.client.psystem.ParticleSystem.ParticleType;
-import sw.client.psystem.ValuePair;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
@@ -55,6 +55,7 @@ import sw.shared.data.entities.shots.Projectile;
  */
 public class PlayingFieldPanel extends JPanel
 {
+	@SuppressWarnings("unused")
 	private static final Random _random = new Random(System.currentTimeMillis());
 	private static final long serialVersionUID = -8647279084154615455L;
 
@@ -107,13 +108,15 @@ public class PlayingFieldPanel extends JPanel
 		// determine scale factors
 		double scaleX = this.getScaleX();
 		double scaleY = this.getScaleY();
+
+		// draw
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		Graphics2D g2d = (Graphics2D) g;
 		_stateManager.setRendering(true);
 		_snapTime = _stateManager.snapTime();
 		this.updateSprites();
 		_stateManager.setRendering(false);
-		_particleSystem.render(g2d);
+		_particleSystem.render(g2d, scaleX, scaleY);
 
 		for (Sprite s : _sprites.values())
 		{
@@ -195,18 +198,7 @@ public class PlayingFieldPanel extends JPanel
 
 	private void invokeExplosion(double x, double y)
 	{
-		for (int i = 0; i < 500; i++)
-		{
-			double dir = PlayingFieldPanel._random.nextDouble() * 2 * Math.PI;
-			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10
-					* PlayingFieldPanel._random.nextDouble(), Math.sin(dir) * 10 + 10
-					* PlayingFieldPanel._random.nextDouble());
-			_particleSystem.spawnParticle(ParticleType.CIRCULAR,
-					40,
-					new ValuePair(x, y).multiply(this.getScaleX(), this.getScaleY()),
-					v,
-					v.multiply(0.1, 0.1));
-		}
+		_particleSystem.explosion(x, y);
 	}
 
 	private void paintBars(Graphics2D g2d, SpaceShip d)
@@ -250,6 +242,8 @@ public class PlayingFieldPanel extends JPanel
 
 	private void updateSprites()
 	{
+		for (Sprite s : _sprites.values())
+			s.notifyUpdate();
 		for (IEntity ent : _stateManager.getGameWorld().getAllEntities())
 		{
 			// TODO improve/sort the if statements
@@ -283,13 +277,24 @@ public class PlayingFieldPanel extends JPanel
 					}
 					else if (e instanceof Projectile)
 					{
-						System.out.println("added rocket");
 						_sprites.put(e.getID(), new ProjectileSprite((Projectile) e,
 								_particleSystem));
+					}
+					else if (e instanceof LaserBeam)
+					{
+						System.out.println("added laser");
+						_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
 					}
 					// TODO handle other entity types as well
 				}
 			}
+		}
+		
+		Integer[] keys = _sprites.keySet().toArray(new Integer[]{});
+		for (int i = 0; i < keys.length; i++)
+		{
+			if (_sprites.containsKey(keys[i]) && !_sprites.get(keys[i]).isUpdated())
+				_sprites.remove(keys[i]);
 		}
 	}
 }

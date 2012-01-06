@@ -32,24 +32,26 @@ public class CircularParticle extends Particle
 			ValuePair location,
 			ValuePair velocity,
 			ValuePair acceleration,
-			int lifetime)
+			int lifetime,
+			double size,
+			Color color)
 	{
-		super(location, velocity, acceleration, lifetime);
+		super(location, velocity, acceleration, lifetime, size, color);
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
 		if (!this.isAlive())
 		{
 			return;
 		}
-		g.setColor(Color.RED);
-		// g.setColor(new Color(_random.nextInt(255), 0, 0));
-		g.fillOval((int) (this.getLocation().getX() - this.getSize() / 2),
-				(int) (this.getLocation().getY() - this.getSize() / 2),
-				(int) this.getSize(),
-				(int) this.getSize());
+		g.setColor(getColor());
+		g.fillOval(
+				(int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
+				(int) (scaleY * (this.getLocation().getY() - this.getSize() / 2)),
+				(int) (scaleX * this.getSize()),
+				(int) (scaleY * this.getSize()));
 	}
 
 }

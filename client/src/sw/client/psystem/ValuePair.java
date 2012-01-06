@@ -71,10 +71,10 @@ public class ValuePair
 		return new ValuePair(this.getX() * x, this.getY() * y);
 	}
 
-	// public ValuePair multiply(double scalar)
-	// {
-	// return this.multiply(scalar, scalar);
-	// }
+	public ValuePair multiply(double scalar)
+	{
+		return this.multiply(scalar, scalar);
+	}
 
 	public void setX(double x)
 	{

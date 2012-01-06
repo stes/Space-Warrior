@@ -32,13 +32,20 @@ public abstract class Sprite
 {
 	private IStaticEntity _entity;
 	private IStaticEntity _prevEntity;
+	private boolean _isUpdated;
 
 	public Sprite(IStaticEntity entity)
 	{
 		_entity = entity;
 		_prevEntity = entity;
+		_isUpdated = true;
 	}
 
+	public boolean isUpdated()
+	{
+		return _isUpdated;
+	}
+	
 	public IStaticEntity getEntity()
 	{
 		return _entity;
@@ -51,15 +58,20 @@ public abstract class Sprite
 
 	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
 
+	public void notifyUpdate()
+	{
+		_isUpdated = false;
+	}
+	
 	public void updateEntity(IStaticEntity entity, IStaticEntity prevEntity)
 	{
 		if (_entity.getID() != entity.getID())
 		{
 			throw new IllegalArgumentException("Player ID does not match");
 		}
-		// TODO use a copy?
 		_prevEntity = prevEntity;
 		_entity = entity;
+		_isUpdated = true;
 	}
 
 	protected double getDirection(double time)

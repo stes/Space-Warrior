@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client.psystem;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
@@ -27,21 +28,22 @@ import java.awt.Graphics2D;
  */
 public class SquareParticle extends Particle
 {
-	public SquareParticle(ValuePair location, ValuePair velocity, ValuePair acceleration)
+	public SquareParticle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime, double size, Color color)
 	{
-		super(location, velocity, acceleration);
+		super(location, velocity, acceleration, lifetime, size, color);
 	}
 
 	@Override
-	public void render(Graphics2D g)
+	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
 		if (!this.isAlive())
 		{
 			return;
 		}
-		g.fillRect((int) (this.getLocation().getX() - this.getSize() / 2),
-				(int) (this.getLocation().getY() - this.getSize() / 2),
-				(int) this.getSize(),
-				(int) this.getSize());
+		g.fillRect(				
+				(int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
+				(int) (scaleY * (this.getLocation().getY() - this.getSize() / 2)),
+				(int) (scaleX * this.getSize()),
+				(int) (scaleY * this.getSize()));
 	}
 }
