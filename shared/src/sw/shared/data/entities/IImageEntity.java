@@ -28,5 +28,6 @@ import java.awt.Dimension;
 public interface IImageEntity
 {
 	public int getImageID();
+
 	public Dimension getSize();
 }

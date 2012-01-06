@@ -24,11 +24,15 @@ import java.awt.Graphics2D;
  * Particle with circular shape
  * 
  * @author Redix stes Abbadonn
- * @version 02.01.12 
+ * @version 02.01.12
  */
 public class CircularParticle extends Particle
 {
-	public CircularParticle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime)
+	public CircularParticle(
+			ValuePair location,
+			ValuePair velocity,
+			ValuePair acceleration,
+			int lifetime)
 	{
 		super(location, velocity, acceleration, lifetime);
 	}
@@ -36,14 +40,16 @@ public class CircularParticle extends Particle
 	@Override
 	public void render(Graphics2D g)
 	{
-		if (!isAlive())
+		if (!this.isAlive())
+		{
 			return;
+		}
 		g.setColor(Color.RED);
-		//g.setColor(new Color(_random.nextInt(255), 0, 0));
-		g.fillOval((int)(getLocation().getX() - getSize() / 2),
-				(int)(getLocation().getY() - getSize() / 2),
-				(int)getSize(),
-				(int)getSize());
+		// g.setColor(new Color(_random.nextInt(255), 0, 0));
+		g.fillOval((int) (this.getLocation().getX() - this.getSize() / 2),
+				(int) (this.getLocation().getY() - this.getSize() / 2),
+				(int) this.getSize(),
+				(int) this.getSize());
 	}
 
 }

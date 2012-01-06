@@ -24,27 +24,27 @@ import java.util.Random;
  * Base class for a particle
  * 
  * @author Redix stes Abbadonn
- * @version 02.01.12 
+ * @version 02.01.12
  */
 public abstract class Particle
 {
 	protected static Random _random = new Random(System.currentTimeMillis());
-	
+
 	private final static int LIFETIME = 50;
 	private final static double SIZE = 3;
-	
+
 	public final static int REMOVE_WHEN_HALTED = -1;
-	
+
 	private ValuePair _location;
 	private ValuePair _velocity;
 	private ValuePair _acceleration;
-	
+
 	private double _size;
 	private int _lifetime;
-	
+
 	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration)
 	{
-		this(location, velocity, acceleration, LIFETIME);
+		this(location, velocity, acceleration, Particle.LIFETIME);
 	}
 
 	public Particle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime)
@@ -52,57 +52,8 @@ public abstract class Particle
 		_location = location;
 		_velocity = velocity;
 		_acceleration = acceleration;
-		_size = SIZE;
+		_size = Particle.SIZE;
 		_lifetime = lifetime;
-	}
-
-	private void move()
-	{
-		_location = _location.add(_velocity);
-		_velocity = _velocity.add(_acceleration);
-	}
-	
-	public void tick()
-	{
-		if (!isAlive())
-			return;
-		if (_lifetime != REMOVE_WHEN_HALTED)
-			setLifetime(_lifetime - 1);
-		this.move();
-	}
-	
-	public abstract void render(Graphics2D g);
-	
-	/**
-	 * @return the location
-	 */
-	public ValuePair getLocation()
-	{
-		return _location;
-	}
-
-	/**
-	 * @param location the location to set
-	 */
-	public void setLocation(ValuePair location)
-	{
-		this._location = location;
-	}
-
-	/**
-	 * @return the velocity
-	 */
-	public ValuePair getVelocity()
-	{
-		return _velocity;
-	}
-
-	/**
-	 * @param velocity the velocity to set
-	 */
-	public void setVelocity(ValuePair velocity)
-	{
-		this._velocity = velocity;
 	}
 
 	/**
@@ -113,31 +64,87 @@ public abstract class Particle
 		return _acceleration;
 	}
 
+	public int getLifetime()
+	{
+		return _lifetime;
+	}
+
 	/**
-	 * @param acceleration the acceleration to set
+	 * @return the location
+	 */
+	public ValuePair getLocation()
+	{
+		return _location;
+	}
+
+	public double getSize()
+	{
+		return _size;
+	}
+
+	/**
+	 * @return the velocity
+	 */
+	public ValuePair getVelocity()
+	{
+		return _velocity;
+	}
+
+	public boolean isAlive()
+	{
+		return (_lifetime > 0 || (_lifetime == Particle.REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
+	}
+
+	public abstract void render(Graphics2D g);
+
+	/**
+	 * @param acceleration
+	 *            the acceleration to set
 	 */
 	public void setAcceleration(ValuePair acceleration)
 	{
 		this._acceleration = acceleration;
 	}
-	
-	public int getLifetime()
-	{
-		return _lifetime;
-	}
-	
+
 	public void setLifetime(int lifetime)
 	{
 		_lifetime = Math.max(0, lifetime);
 	}
-	
-	public double getSize()
+
+	/**
+	 * @param location
+	 *            the location to set
+	 */
+	public void setLocation(ValuePair location)
 	{
-		return _size;
+		this._location = location;
 	}
-	
-	public boolean isAlive()
+
+	/**
+	 * @param velocity
+	 *            the velocity to set
+	 */
+	public void setVelocity(ValuePair velocity)
 	{
-		return (_lifetime > 0 || (_lifetime == REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
+		this._velocity = velocity;
+	}
+
+	public void tick()
+	{
+		if (!this.isAlive())
+		{
+			return;
+		}
+		if (_lifetime != Particle.REMOVE_WHEN_HALTED)
+		{
+			this.setLifetime(_lifetime - 1);
+		}
+		this.move();
+	}
+
+	private void move()
+	{
+		_location = _location.add(_velocity);
+		_velocity = _velocity.add(_acceleration);
 	}
 }

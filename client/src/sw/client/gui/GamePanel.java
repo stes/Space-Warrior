@@ -106,7 +106,7 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	private PlayerTableModel _model;
 
 	private GamePanel _self;
-	
+
 	// other references
 	private IGameStateManager _stateManager;
 	private IClient _client;
@@ -137,15 +137,6 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 			}
 		});
 	}
-	
-	private void resizeComponents()
-	{
-		_scrollScoreBoard.setBounds(this.getWidth() * 5 / 6 - 50, 50, this.getWidth() / 6, 150);
-		_scrollChathistory.setBounds(50, this.getHeight() - 150, this.getWidth() / 3, 90);
-		_txtChatmessage.setBounds(50, this.getHeight() - 50, this.getWidth() / 3, 25);
-		_btnDisconnect.setBounds(this.getWidth() - 150, 20, 100, 20);
-		_playingField.setSize(this.getSize());
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -166,9 +157,12 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	}
 
 	@Override
-	public void gameStateChanged(GameStateChangedEvent e) {}
+	public void gameStateChanged(GameStateChangedEvent e)
+	{}
+
 	@Override
-	public void newRound(GameStateChangedEvent e) {}
+	public void newRound(GameStateChangedEvent e)
+	{}
 
 	@Override
 	public void playerInit(GameStateChangedEvent e)
@@ -226,7 +220,7 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 				_self.invokeDisconnect(e);
 			}
 		});
-		
+
 		_txtChatmessage = new JTextField()
 		{
 			private static final long serialVersionUID = 2109656328663846511L;
@@ -298,6 +292,15 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 
 		_playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
 		this.add(_playingField);
+	}
+
+	private void resizeComponents()
+	{
+		_scrollScoreBoard.setBounds(this.getWidth() * 5 / 6 - 50, 50, this.getWidth() / 6, 150);
+		_scrollChathistory.setBounds(50, this.getHeight() - 150, this.getWidth() / 3, 90);
+		_txtChatmessage.setBounds(50, this.getHeight() - 50, this.getWidth() / 3, 25);
+		_btnDisconnect.setBounds(this.getWidth() - 150, 20, 100, 20);
+		_playingField.setSize(this.getSize());
 	}
 
 	private void sendChat(String text)

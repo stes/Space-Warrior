@@ -62,19 +62,31 @@ public class ParticleDemo extends JFrame
 	class UnRepaintManager extends RepaintManager
 	{
 		@Override
-		public void addDirtyRegion(JComponent c, int x, int y, int w, int h) {}
+		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
+		{}
+
 		@Override
-		public void addInvalidComponent(JComponent invalidComponent) {}
+		public void addInvalidComponent(JComponent invalidComponent)
+		{}
+
 		@Override
-		public void markCompletelyDirty(JComponent aComponent) {}
+		public void markCompletelyDirty(JComponent aComponent)
+		{}
+
 		@Override
-		public void paintDirtyRegions() {}
+		public void paintDirtyRegions()
+		{}
+	}
+
+	public static void main(String[] args)
+	{
+		new ParticleDemo();
 	}
 
 	// change to limit fps in order to minimize cpu usage
 	public final int SLEEP_TIME = 1;
+
 	private static final long serialVersionUID = 1575599799999464878L;
-	
 	private ParticleSystem _psys;
 	// should be okay for now
 	private VolatileImage _screen;
@@ -82,8 +94,10 @@ public class ParticleDemo extends JFrame
 	private boolean _isRunning;
 	private int _fps;
 	private Random _random = new Random(System.currentTimeMillis());
+
 	private ParticleDemo _self;
-	
+
+	private long _lastUpdate;
 
 	/**
 	 * Creates a new SWFrame
@@ -103,7 +117,7 @@ public class ParticleDemo extends JFrame
 		((JComponent) this.getContentPane()).setOpaque(false);
 
 		this.init();
-		
+
 		new Thread()
 		{
 			@Override
@@ -123,31 +137,32 @@ public class ParticleDemo extends JFrame
 					}
 				}
 			}
-			
+
 		}.start();
 
 		this.createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
-		
+
 		_psys = new ParticleSystem();
-		
+
 		_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
 
 		_isRunning = true;
 		this.renderLoop();
 	}
-	
-	private void init()
-	{
-		this.setVisible(true);
-		this.toFront();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Insets insets = this.getInsets();
-		int insetWide = insets.left + insets.right;
-		int insetTall = insets.top + insets.bottom;
-		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
 
-		System.out.println("init");
+	public void render(Graphics2D g2d)
+	{
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+		_psys.render(g2d);
+
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
 	}
 
 	/**
@@ -181,7 +196,7 @@ public class ParticleDemo extends JFrame
 				g = _bufferStrategy.getDrawGraphics();
 				do
 				{
-					int state = _screen.validate(getGraphicsConfiguration());
+					int state = _screen.validate(this.getGraphicsConfiguration());
 					if (state == VolatileImage.IMAGE_INCOMPATIBLE)
 					{
 						_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
@@ -191,7 +206,8 @@ public class ParticleDemo extends JFrame
 					g2d.dispose();
 					Insets insets = this.getInsets();
 					g.drawImage(_screen, insets.left, insets.top, null);
-				} while (_screen.contentsLost());
+				}
+				while (_screen.contentsLost());
 			}
 			finally
 			{
@@ -203,7 +219,7 @@ public class ParticleDemo extends JFrame
 				_bufferStrategy.show();
 			}
 			Toolkit.getDefaultToolkit().sync();
-			
+
 			if (this.SLEEP_TIME > 0)
 			{
 				try
@@ -218,31 +234,30 @@ public class ParticleDemo extends JFrame
 		}
 	}
 
-
-	public void render(Graphics2D g2d)
+	private void init()
 	{
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		this.setVisible(true);
+		this.toFront();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Insets insets = this.getInsets();
+		int insetWide = insets.left + insets.right;
+		int insetTall = insets.top + insets.bottom;
+		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
 
-		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
-		
-		_psys.render(g2d);
-
-		
-		g2d.setColor(Color.BLACK);
-		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
+		System.out.println("init");
 	}
-	
-	private long _lastUpdate;
-	
+
 	private void spawnLoop()
 	{
 		if (_psys == null)
+		{
 			return;
+		}
 		long timespan = System.currentTimeMillis() - _lastUpdate;
 		if (timespan < 25)
+		{
 			return;
+		}
 		_lastUpdate = System.currentTimeMillis();
 		_psys.tick();
 		if (_psys.countParticles() < 1000)
@@ -250,32 +265,29 @@ public class ParticleDemo extends JFrame
 			// explosion:
 			for (int i = 0; i < 1000; i++)
 			{
-				_psys.spawnParticle(
-						ParticleType.CIRCULAR, 
+				_psys.spawnParticle(ParticleType.CIRCULAR,
 						50,
 						new ValuePair(200, 200),
-						new ValuePair(0, 0), 
-						new ValuePair(10 * ((_random.nextDouble() * 2) - 1), 10 * ((_random.nextDouble() * 2) - 1)));
+						new ValuePair(0, 0),
+						new ValuePair(10 * ((_random.nextDouble() * 2) - 1),
+								10 * ((_random.nextDouble() * 2) - 1)));
 			}
-			
+
 			// fountain
-//			for (int i = 0; i < 20; i++)
-//			{
-//				double acc = 20 * (_random.nextDouble() - 0.5);
-//				_psys.spawnParticle(
-//					ParticleType.CIRCULAR,
-//					new ValuePair(200, 200),
-//					new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
-//					new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 * Math.abs(acc)));
-//			}
+			// for (int i = 0; i < 20; i++)
+			// {
+			// double acc = 20 * (_random.nextDouble() - 0.5);
+			// _psys.spawnParticle(
+			// ParticleType.CIRCULAR,
+			// new ValuePair(200, 200),
+			// new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
+			// new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 *
+			// Math.abs(acc)));
+			// }
 		}
 		else
+		{
 			System.out.println("enough particles");
-	}
-	
-	public static void main(String[] args)
-	{
-		new ParticleDemo();
+		}
 	}
 }
-

@@ -151,7 +151,7 @@ public class GameWorld
 		}
 		return tmp.toArray(a);
 	}
-	
+
 	public IEntity getEntityByID(Integer ID)
 	{
 		return _entities.get(ID);

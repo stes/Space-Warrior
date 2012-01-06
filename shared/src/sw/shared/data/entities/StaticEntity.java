@@ -48,14 +48,14 @@ abstract class StaticEntity extends Entity implements IStaticEntity
 		this.setDirection(direction);
 	}
 
-	public double distanceTo(Point.Double p)
-	{
-		return this.getPosition().distance(p);
-	}
-
 	public double distanceTo(IStaticEntity entity)
 	{
 		return this.getPosition().distance(entity.getPosition());
+	}
+
+	public double distanceTo(Point.Double p)
+	{
+		return this.getPosition().distance(p);
 	}
 
 	@Override
@@ -67,21 +67,25 @@ abstract class StaticEntity extends Entity implements IStaticEntity
 		this.setDirection(p.readDouble());
 	}
 
+	@Override
 	public double getDirection()
 	{
 		return _direction;
 	}
 
+	@Override
 	public Point.Double getPosition()
 	{
 		return new Point.Double(this.getX(), this.getY());
 	}
 
+	@Override
 	public double getX()
 	{
 		return _x;
 	}
 
+	@Override
 	public double getY()
 	{
 		return _y;
@@ -102,12 +106,12 @@ abstract class StaticEntity extends Entity implements IStaticEntity
 
 	public void setX(double x)
 	{
-		_x = Math.max(Math.min(x, StaticEntity.MAX_X), StaticEntity.MIN_X);
+		_x = Math.max(Math.min(x, IStaticEntity.MAX_X), IStaticEntity.MIN_X);
 	}
 
 	public void setY(double y)
 	{
-		_y = Math.max(Math.min(y, StaticEntity.MAX_Y), StaticEntity.MIN_Y);
+		_y = Math.max(Math.min(y, IStaticEntity.MAX_Y), IStaticEntity.MIN_Y);
 	}
 
 	@Override

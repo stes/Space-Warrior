@@ -18,43 +18,50 @@
 package sw.client.gui.sprites;
 
 import sw.client.psystem.Particle;
+import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
-import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
- * 
  * @author Redix, stes
  * @version 05.01.2012
  */
 public class ProjectileSprite extends ParticleSprite
 {
-	public ProjectileSprite(Projectile entity)
+	private boolean _isExploded;
+
+	public ProjectileSprite(Projectile entity, ParticleSystem particleSystem)
 	{
-		super(entity);
+		super(entity, particleSystem);
 	}
-	
+
 	@Override
 	protected void processParticles(double scaleX, double scaleY)
 	{
 		super.processParticles(scaleX, scaleY);
-		MoveableEntity projectile = (MoveableEntity)getEntity();
+		Projectile projectile = (Projectile) this.getEntity();
 
 		// TODO improve
-		if (getParticleSystem().countParticles() < 1000)
+		if (this.getParticleSystem().countParticles() < 1000)
 		{
-			for (int i = 0; i < 20; i++)
+			if (!_isExploded)
 			{
-				double dir = -projectile.getDirection() + _random.nextDouble() * Math.PI/4 - Math.PI/8 + Math.PI/2;
-				ValuePair v = new ValuePair(Math.cos(dir) * projectile.getSpeed(), Math.sin(dir) * projectile.getSpeed());
-				getParticleSystem().spawnParticle(
-						ParticleType.CIRCULAR,
-						Particle.REMOVE_WHEN_HALTED,
-						new ValuePair(projectile.getPosition()).multiply(scaleX, scaleY),
-						v,
-						v.multiply(-0.1, -0.1));
+				for (int i = 0; i < 20; i++)
+				{
+					double dir = -projectile.getDirection() + ParticleSprite._random.nextDouble()
+							* Math.PI / 4 - Math.PI / 8 + Math.PI / 2;
+					double speed = projectile.getSpeed()
+							* Math.abs((1 + ParticleSprite._random.nextGaussian()));
+					ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);
+					this.getParticleSystem().spawnParticle(ParticleType.CIRCULAR,
+							Particle.REMOVE_WHEN_HALTED,
+							new ValuePair(projectile.getPosition()).multiply(scaleX, scaleY),
+							v,
+							v.multiply(-0.1, -0.1));
+				}
 			}
 		}
+		_isExploded = projectile.isExploding() || _isExploded;
 	}
 }

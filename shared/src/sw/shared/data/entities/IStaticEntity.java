@@ -36,9 +36,12 @@ public interface IStaticEntity extends IEntity
 			- GameConstants.PLAYER_SIZE / 2;
 	public static final double MAX_Y = GameConstants.PLAYING_FIELD_HEIGHT
 			- GameConstants.PLAYER_SIZE / 2;
-	
-	public Point2D.Double getPosition();
+
 	public double getDirection();
+
+	public Point2D.Double getPosition();
+
 	public double getX();
+
 	public double getY();
 }

@@ -21,6 +21,8 @@ import sw.shared.data.entities.IImageEntity;
 import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.net.Packer;
+import sw.shared.net.Unpacker;
 
 /**
  * Basic class for all shots based on moving projectiles
@@ -30,6 +32,8 @@ import sw.shared.data.entities.players.SpaceShip;
  */
 public abstract class Projectile extends ShotEntity implements IImageEntity
 {
+	private boolean _isExploding;
+
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)
 	{
 		super(x, y, direction, owner, shottype);
@@ -43,13 +47,37 @@ public abstract class Projectile extends ShotEntity implements IImageEntity
 	}
 
 	@Override
+	public void destroy()
+	{
+		if (!this.isDestroyed())
+		{
+			_isExploding = true;
+		}
+	}
+
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		super.fromSnap(p);
+		_isExploding = p.readBoolean();
+	}
+
+	public boolean isExploding()
+	{
+		return _isExploding;
+	}
+
+	@Override
 	public void setX(double x)
 	{
 		if (x < IStaticEntity.MIN_X || x > IStaticEntity.MAX_X)
 		{
 			this.destroy();
 		}
-		super.setX(x);
+		else
+		{
+			super.setX(x);
+		}
 	}
 
 	@Override
@@ -59,7 +87,22 @@ public abstract class Projectile extends ShotEntity implements IImageEntity
 		{
 			this.destroy();
 		}
-		super.setY(y);
+		else
+		{
+			super.setY(y);
+		}
+	}
+
+	@Override
+	public void snap(Packer p, String name)
+	{
+		super.snap(p, name);
+		p.writeBoolean(_isExploding);
+		if (_isExploding)
+		{
+			_isExploding = false;
+			super.destroy();
+		}
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -38,6 +39,9 @@ import sw.client.gui.sprites.ProjectileSprite;
 import sw.client.gui.sprites.SpaceShipSprite;
 import sw.client.gui.sprites.Sprite;
 import sw.client.player.HumanPlayer;
+import sw.client.psystem.ParticleSystem;
+import sw.client.psystem.ParticleSystem.ParticleType;
+import sw.client.psystem.ValuePair;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.IStaticEntity;
@@ -49,8 +53,9 @@ import sw.shared.data.entities.shots.Projectile;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayingFieldPanel extends JPanel 
+public class PlayingFieldPanel extends JPanel
 {
+	private static final Random _random = new Random(System.currentTimeMillis());
 	private static final long serialVersionUID = -8647279084154615455L;
 
 	private PlayingFieldPanel _self;
@@ -61,6 +66,7 @@ public class PlayingFieldPanel extends JPanel
 
 	private IGameStateManager _stateManager;
 	private HashMap<Integer, Sprite> _sprites;
+	private ParticleSystem _particleSystem;
 
 	/**
 	 * Creates a new playing field given a reference to the player list
@@ -75,14 +81,18 @@ public class PlayingFieldPanel extends JPanel
 		_stateManager = stateManager;
 		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
 		_sprites = new HashMap<Integer, Sprite>();
+		_particleSystem = new ParticleSystem();
 		this.setIgnoreRepaint(true);
 		this.init();
 	}
-	
+
 	@Override
-	public void paintComponent(Graphics g) {}
+	public void paintComponent(Graphics g)
+	{}
+
 	@Override
-	public void paintComponents(Graphics g) {}
+	public void paintComponents(Graphics g)
+	{}
 
 	public void playerInit()
 	{
@@ -95,25 +105,15 @@ public class PlayingFieldPanel extends JPanel
 	public void render(Graphics g)
 	{
 		// determine scale factors
-		double scaleX = (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
-		double scaleY = (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
-
-		g.drawImage(_backgroundImg,
-				0,
-				0,
-				this.getWidth(),
-				this.getHeight(),
-				null);
-
+		double scaleX = this.getScaleX();
+		double scaleY = this.getScaleY();
+		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
 		Graphics2D g2d = (Graphics2D) g;
-
 		_stateManager.setRendering(true);
-
 		_snapTime = _stateManager.snapTime();
-		
 		this.updateSprites();
-
 		_stateManager.setRendering(false);
+		_particleSystem.render(g2d);
 
 		for (Sprite s : _sprites.values())
 		{
@@ -134,46 +134,6 @@ public class PlayingFieldPanel extends JPanel
 				if (_isDebugActive)
 				{
 					this.showDebugInfo(g2d, p);
-				}
-			}
-		}
-	}
-
-	private void updateSprites()
-	{
-		for (IEntity ent : _stateManager.getGameWorld().getAllEntities())
-		{
-			if (ent instanceof IStaticEntity)
-			{
-				IStaticEntity e = (IStaticEntity)ent;
-				IStaticEntity prevEnt = (IStaticEntity)_stateManager.getPrevGameWorld().getEntityByID(ent.getID());
-				if(prevEnt == null)
-				{
-					prevEnt = e;
-				}
-				if (_sprites.containsKey(e.getID()))
-				{
-					// TODO fix this
-					if (e.isDestroyed() || (e instanceof IDamageable && !((SpaceShip) e).isAlive()))
-					{
-						_sprites.remove(e.getID());
-					}
-					else
-					{
-						_sprites.get(e.getID()).updateEntity(e, prevEnt);
-					}
-				}
-				else if (!(e.isDestroyed() || (e instanceof IDamageable && !((IDamageable) e).isAlive())))
-				{
-					if (e instanceof SpaceShip)
-					{
-						_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip)e));
-					}
-					else if (e instanceof Projectile)
-					{
-						_sprites.put(e.getID(), new ProjectileSprite((Projectile)e));
-					}
-					// TODO handle other entity types as well
 				}
 			}
 		}
@@ -200,45 +160,15 @@ public class PlayingFieldPanel extends JPanel
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
 	}
 
-	// TODO remove after finishing the improved rendering
-//	private void drawEntity(
-//			Graphics2D g2d,
-//			IStaticEntity ent,
-//			IStaticEntity prevEnt,
-//			double scaleX,
-//			double scaleY)
-//	{
-//		Point2D.Double pos = new Point2D.Double(prevEnt.getPosition().getX()
-//				+ (ent.getPosition().getX() - prevEnt.getPosition().getX()) * _snapTime,
-//				prevEnt.getPosition().getY()
-//						+ (ent.getPosition().getY() - prevEnt.getPosition().getY()) * _snapTime);
-//
-//		double direction = prevEnt.getDirection()
-//				+ Math.asin(Math.sin(ent.getDirection() - prevEnt.getDirection())) * _snapTime;
-//
-//		if (ent instanceof IImageEntity)
-//		{
-//			Dimension d = ((IImageEntity) ent).getSize();
-//
-//			g2d.drawImage(this.rotateImage(ImageContainer.getLocalInstance().getImage(((IImageEntity) ent).getImageID()),
-//					-direction),
-//					(int) (scaleX * (pos.getX() - d.width / 2)),
-//					(int) (scaleY * (pos.getY() - d.height / 2)),
-//					(int) (d.width * scaleX),
-//					(int) (d.height * scaleY),
-//					null);
-//		}
-//		else if (ent instanceof LaserBeam)
-//		{
-//			LaserBeam s = (LaserBeam) ent;
-//			g2d.setColor(Color.BLUE);
-//			g2d.setStroke(new BasicStroke(3));
-//			g2d.drawLine((int) (s.getX() * scaleX),
-//					(int) (s.getY() * scaleY),
-//					(int) (s.endPoint().getX() * scaleX),
-//					(int) (s.endPoint().getY() * scaleY));
-//		}
-//	}
+	private double getScaleX()
+	{
+		return (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
+	}
+
+	private double getScaleY()
+	{
+		return (double) this.getHeight() / (double) GameConstants.PLAYING_FIELD_HEIGHT;
+	}
 
 	private void init()
 	{
@@ -261,6 +191,22 @@ public class PlayingFieldPanel extends JPanel
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
 		_isDebugActive = true;;
+	}
+
+	private void invokeExplosion(double x, double y)
+	{
+		for (int i = 0; i < 500; i++)
+		{
+			double dir = PlayingFieldPanel._random.nextDouble() * 2 * Math.PI;
+			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10
+					* PlayingFieldPanel._random.nextDouble(), Math.sin(dir) * 10 + 10
+					* PlayingFieldPanel._random.nextDouble());
+			_particleSystem.spawnParticle(ParticleType.CIRCULAR,
+					40,
+					new ValuePair(x, y).multiply(this.getScaleX(), this.getScaleY()),
+					v,
+					v.multiply(0.1, 0.1));
+		}
 	}
 
 	private void paintBars(Graphics2D g2d, SpaceShip d)
@@ -299,6 +245,51 @@ public class PlayingFieldPanel extends JPanel
 		for (String s : info)
 		{
 			g2d.drawString(s, x, y += 35);
+		}
+	}
+
+	private void updateSprites()
+	{
+		for (IEntity ent : _stateManager.getGameWorld().getAllEntities())
+		{
+			// TODO improve/sort the if statements
+			if (ent instanceof IStaticEntity)
+			{
+				IStaticEntity e = (IStaticEntity) ent;
+				IStaticEntity prevEnt = (IStaticEntity) _stateManager.getPrevGameWorld().getEntityByID(ent.getID());
+				if (prevEnt == null)
+				{
+					prevEnt = e;
+				}
+				if (_sprites.containsKey(e.getID()))
+				{
+					if ((e instanceof Projectile && ((Projectile) e).isExploding())
+							|| (e instanceof IDamageable && !((SpaceShip) e).isAlive()))
+					{
+						System.out.println("removed " + e.toString());
+						this.invokeExplosion(e.getX(), e.getY());
+						_sprites.remove(e.getID());
+					}
+					else
+					{
+						_sprites.get(e.getID()).updateEntity(e, prevEnt);
+					}
+				}
+				else if (!((e instanceof Projectile && ((Projectile) e).isExploding()) || (e instanceof IDamageable && !((SpaceShip) e).isAlive())))
+				{
+					if (e instanceof SpaceShip)
+					{
+						_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip) e, _particleSystem));
+					}
+					else if (e instanceof Projectile)
+					{
+						System.out.println("added rocket");
+						_sprites.put(e.getID(), new ProjectileSprite((Projectile) e,
+								_particleSystem));
+					}
+					// TODO handle other entity types as well
+				}
+			}
 		}
 	}
 }

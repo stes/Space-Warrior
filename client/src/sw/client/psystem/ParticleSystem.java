@@ -40,6 +40,19 @@ public class ParticleSystem
 		_particles = new ArrayList<Particle>();
 	}
 
+	public int countParticles()
+	{
+		return _particles.size();
+	}
+
+	public void render(Graphics2D g)
+	{
+		for (int i = 0; i < _particles.size(); i++)
+		{
+			_particles.get(i).render(g);
+		}
+	}
+
 	public void spawnParticle(
 			ParticleType type,
 			int lifetime,
@@ -56,7 +69,7 @@ public class ParticleSystem
 		}
 		_particles.add(particle);
 	}
-	
+
 	public void tick()
 	{
 		for (int i = 0; i < _particles.size(); i++)
@@ -64,20 +77,9 @@ public class ParticleSystem
 			Particle p = _particles.get(i);
 			p.tick();
 			if (!p.isAlive())
+			{
 				_particles.remove(i);
+			}
 		}
-	}
-
-	public void render(Graphics2D g)
-	{
-		for (int i = 0; i < _particles.size(); i++)
-		{
-			_particles.get(i).render(g);
-		}
-	}
-
-	public int countParticles()
-	{
-		return _particles.size();
 	}
 }

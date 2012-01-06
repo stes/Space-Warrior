@@ -23,66 +23,66 @@ import java.awt.Point;
  * Represents a pair of two double values
  * 
  * @author Redix stes Abbadonn
- * @version 02.01.12 
+ * @version 02.01.12
  */
 public class ValuePair
 {
 	private double _x;
 	private double _y;
-	
+
 	public ValuePair(double x, double y)
 	{
 		_x = x;
 		_y = y;
 	}
-	
+
 	public ValuePair(Point p)
 	{
 		this(p.x, p.y);
 	}
-	
+
 	public ValuePair(Point.Double p)
 	{
 		this(p.x, p.y);
 	}
-	
+
+	public ValuePair add(ValuePair p)
+	{
+		return new ValuePair(this.getX() + p.getX(), this.getY() + p.getY());
+	}
+
+	public double getVectorLength()
+	{
+		return Math.sqrt(_x * _x + _y * _y);
+	}
+
 	public double getX()
 	{
 		return _x;
 	}
-	
-	public void setX(double x)
-	{
-		_x = x;
-	}
-	
+
 	public double getY()
 	{
 		return _y;
 	}
-	
-	public void setY(double y)
-	{
-		_y = y;
-	}
-	
-	public ValuePair add(ValuePair p)
-	{
-		return new ValuePair(getX() + p.getX(), getY() + p.getY());
-	}
-	
-//	public ValuePair multiply(double scalar)
-//	{
-//		return this.multiply(scalar, scalar);
-//	}
 
 	public ValuePair multiply(double x, double y)
 	{
-		return new ValuePair(getX() * x, getY() * y);
+		return new ValuePair(this.getX() * x, this.getY() * y);
 	}
-	
-	public double getVectorLength()
+
+	// public ValuePair multiply(double scalar)
+	// {
+	// return this.multiply(scalar, scalar);
+	// }
+
+	public void setX(double x)
 	{
-		return Math.sqrt(_x * _x + _y * _y);
+		_x = x;
+	}
+
+	public void setY(double y)
+	{
+		_y = y;
 	}
 }

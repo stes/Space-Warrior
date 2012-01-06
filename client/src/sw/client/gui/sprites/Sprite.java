@@ -25,7 +25,6 @@ import java.awt.image.BufferedImage;
 import sw.shared.data.entities.IStaticEntity;
 
 /**
- * 
  * @author Redix, stes
  * @version 05.01.2012
  */
@@ -38,6 +37,46 @@ public abstract class Sprite
 	{
 		_entity = entity;
 		_prevEntity = entity;
+	}
+
+	public IStaticEntity getEntity()
+	{
+		return _entity;
+	}
+
+	public IStaticEntity getPreviousEntity()
+	{
+		return _prevEntity;
+	}
+
+	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
+
+	public void updateEntity(IStaticEntity entity, IStaticEntity prevEntity)
+	{
+		if (_entity.getID() != entity.getID())
+		{
+			throw new IllegalArgumentException("Player ID does not match");
+		}
+		// TODO use a copy?
+		_prevEntity = prevEntity;
+		_entity = entity;
+	}
+
+	protected double getDirection(double time)
+	{
+		return this.getPreviousEntity().getDirection()
+				+ Math.asin(Math.sin(this.getEntity().getDirection()
+						- this.getPreviousEntity().getDirection())) * time;
+	}
+
+	protected Point2D.Double getPosition(double time)
+	{
+		return new Point2D.Double(this.getPreviousEntity().getPosition().getX()
+				+ (this.getEntity().getPosition().getX() - this.getPreviousEntity().getPosition().getX())
+				* time,
+				this.getPreviousEntity().getPosition().getY()
+						+ (this.getEntity().getPosition().getY() - this.getPreviousEntity().getPosition().getY())
+						* time);
 	}
 
 	protected BufferedImage rotateImage(BufferedImage src, double degrees)
@@ -53,42 +92,5 @@ public abstract class Sprite
 	protected AffineTransform rotateTransform(BufferedImage src, double degrees)
 	{
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
-	}
-
-	public IStaticEntity getEntity()
-	{
-		return _entity;
-	}
-
-	public IStaticEntity getPreviousEntity()
-	{
-		return _prevEntity;
-	}
-
-	public void updateEntity(IStaticEntity entity, IStaticEntity prevEntity)
-	{
-		if (_entity.getID() != entity.getID())
-			throw new IllegalArgumentException("Player ID does not match");
-		// TODO use a copy?
-		_prevEntity = prevEntity;
-		_entity = entity;
-	}
-
-	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
-
-	protected Point2D.Double getPosition(double time)
-	{
-		return new Point2D.Double(getPreviousEntity().getPosition().getX()
-				+ (getEntity().getPosition().getX() - getPreviousEntity().getPosition().getX())
-				* time, getPreviousEntity().getPosition().getY()
-				+ (getEntity().getPosition().getY() - getPreviousEntity().getPosition().getY())
-				* time);
-	}
-
-	protected double getDirection(double time)
-	{
-		return getPreviousEntity().getDirection()
-				+ Math.asin(Math.sin(getEntity().getDirection()
-						- getPreviousEntity().getDirection())) * time;
 	}
 }

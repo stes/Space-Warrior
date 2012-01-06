@@ -18,38 +18,40 @@
 package sw.client.gui.sprites;
 
 import sw.client.psystem.Particle;
+import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.players.SpaceShip;
 
 /**
- * 
  * @author Redix, stes
  * @version 05.01.2012
  */
 public class SpaceShipSprite extends ParticleSprite
 {
-	public SpaceShipSprite(SpaceShip player)
+	public SpaceShipSprite(SpaceShip player, ParticleSystem particleSystem)
 	{
-		super(player);
+		super(player, particleSystem);
 	}
-	
+
 	@Override
 	protected void processParticles(double scaleX, double scaleY)
 	{
 		super.processParticles(scaleX, scaleY);
-		MoveableEntity player = (MoveableEntity)getEntity();
+		MoveableEntity player = (MoveableEntity) this.getEntity();
 
 		// TODO improve
-		if (getParticleSystem().countParticles() < 200)
+		if (this.getParticleSystem().countParticles() < 200)
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				double dir = -player.getDirection() + _random.nextDouble() * Math.PI/2 + Math.PI/4;
-				ValuePair v = new ValuePair(Math.cos(dir) * player.getSpeed(), Math.sin(dir) * player.getSpeed());
-				getParticleSystem().spawnParticle(
-						ParticleType.CIRCULAR,
+				double dir = -player.getDirection() + ParticleSprite._random.nextDouble() * Math.PI
+						/ 2 + Math.PI / 4;
+				double speed = player.getSpeed()
+						* Math.abs((1 + ParticleSprite._random.nextGaussian()));
+				ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);
+				this.getParticleSystem().spawnParticle(ParticleType.CIRCULAR,
 						Particle.REMOVE_WHEN_HALTED,
 						new ValuePair(player.getPosition()).multiply(scaleX, scaleY),
 						v,

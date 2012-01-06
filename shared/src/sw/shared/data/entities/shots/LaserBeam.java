@@ -51,6 +51,12 @@ public class LaserBeam extends ShotEntity
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
 	}
 
+	@Override
+	public double distanceTo(IStaticEntity entity)
+	{
+		return this.distanceTo(entity.getPosition());
+	}
+
 	/**
 	 * Calculates the distance to specified point
 	 * 
@@ -61,12 +67,6 @@ public class LaserBeam extends ShotEntity
 	public double distanceTo(Point.Double p)
 	{
 		return this.getLine().ptLineDist(p.getX(), p.getY());
-	}
-
-	@Override
-	public double distanceTo(IStaticEntity entity)
-	{
-		return this.distanceTo(entity.getPosition());
 	}
 
 	/**

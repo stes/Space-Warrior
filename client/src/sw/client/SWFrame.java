@@ -60,13 +60,20 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	class UnRepaintManager extends RepaintManager
 	{
 		@Override
-		public void addDirtyRegion(JComponent c, int x, int y, int w, int h) {}
+		public void addDirtyRegion(JComponent c, int x, int y, int w, int h)
+		{}
+
 		@Override
-		public void addInvalidComponent(JComponent invalidComponent) {}
+		public void addInvalidComponent(JComponent invalidComponent)
+		{}
+
 		@Override
-		public void markCompletelyDirty(JComponent aComponent) {}
+		public void markCompletelyDirty(JComponent aComponent)
+		{}
+
 		@Override
-		public void paintDirtyRegions() {}
+		public void paintDirtyRegions()
+		{}
 	}
 
 	// change to limit fps in order to minimize cpu usage
@@ -75,7 +82,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 
 	private GameController _controller;
 	private SWClient _client;
-	
+
 	private GamePanel _gamePanel;
 	private LoginPanel _loginPanel;
 
@@ -85,7 +92,6 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
 	private int _fps;
-	
 
 	/**
 	 * Creates a new SWFrame
@@ -115,13 +121,142 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		{
 			this.initBugLogger();
 		}
-		
+
 		_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
 
 		_isRunning = true;
 		this.renderLoop();
 	}
-	
+
+	@Override
+	public void connected()
+	{
+		this.setGUIMode(GUIMode.GAME);
+		Packer start = new Packer(Packettype.CL_START_INFO);
+		start.writeUTF(_loginPanel.getName());
+		start.writeInt(_loginPanel.getImageID());
+		_client.sendPacket(start);
+	}
+
+	@Override
+	public void disconnected(String reason)
+	{
+		this.setGUIMode(GUIMode.LOGIN);
+		// enough for now
+		if (!reason.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, reason);
+		}
+	}
+
+	@Override
+	public void login(ConnectionEvent e)
+	{
+		InetSocketAddress addr = e.getIPAdress();
+		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+	}
+
+	@Override
+	public void logout(ConnectionEvent e)
+	{
+		_client.disconnect("user logout");
+	}
+
+	public void render(Graphics2D g2d)
+	{
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+		if (_activePanel.equals(_gamePanel))
+		{
+			_gamePanel.render(g2d);
+		}
+		else if (_activePanel.equals(_loginPanel))
+		{
+			_loginPanel.render(g2d);
+		}
+		g2d.setColor(Color.WHITE);
+		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
+	}
+
+	/**
+	 * Method containing the game's loop. Each iteration of the loop updates all
+	 * animations and sprite locations and draws the graphics to the screen
+	 */
+	public void renderLoop()
+	{
+		long oldTime = System.nanoTime();
+		long nanoseconds = 0;
+		int frames = 0;
+		_fps = 0;
+
+		while (_isRunning)
+		{
+			// fps
+			long elapsedTime = System.nanoTime() - oldTime;
+			oldTime = oldTime + elapsedTime;
+			nanoseconds = nanoseconds + elapsedTime;
+			frames = frames + 1;
+			if (nanoseconds >= 1000000000)
+			{
+				_fps = frames;
+				nanoseconds = nanoseconds - 1000000000;
+				frames = 0;
+			}
+			// related to drawing
+			Graphics g = null;
+			try
+			{
+				g = _bufferStrategy.getDrawGraphics();
+				do
+				{
+					int state = _screen.validate(this.getGraphicsConfiguration());
+					if (state == VolatileImage.IMAGE_INCOMPATIBLE)
+					{
+						_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
+					}
+					Graphics2D g2d = _screen.createGraphics();
+					this.render(g2d);
+					g2d.dispose();
+					Insets insets = this.getInsets();
+					g.drawImage(_screen, insets.left, insets.top, null);
+				}
+				while (_screen.contentsLost());
+			}
+			finally
+			{
+				g.dispose();
+			}
+
+			if (!_bufferStrategy.contentsLost())
+			{
+				_bufferStrategy.show();
+			}
+			Toolkit.getDefaultToolkit().sync();
+
+			if (this.SLEEP_TIME > 0)
+			{
+				try
+				{
+					Thread.sleep(this.SLEEP_TIME);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void scan()
+	{
+		_client.scan();
+	}
+
 	private void init()
 	{
 		this.setVisible(true);
@@ -174,132 +309,6 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		{
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Method containing the game's loop. Each iteration of the loop updates all
-	 * animations and sprite locations and draws the graphics to the screen
-	 */
-	public void renderLoop()
-	{
-		long oldTime = System.nanoTime();
-		long nanoseconds = 0;
-		int frames = 0;
-		_fps = 0;
-
-		while (_isRunning)
-		{
-			// fps
-			long elapsedTime = System.nanoTime() - oldTime;
-			oldTime = oldTime + elapsedTime;
-			nanoseconds = nanoseconds + elapsedTime;
-			frames = frames + 1;
-			if (nanoseconds >= 1000000000)
-			{
-				_fps = frames;
-				nanoseconds = nanoseconds - 1000000000;
-				frames = 0;
-			}
-			// related to drawing
-			Graphics g = null;
-			try
-			{
-				g = _bufferStrategy.getDrawGraphics();
-				do
-				{
-					int state = _screen.validate(getGraphicsConfiguration());
-					if (state == VolatileImage.IMAGE_INCOMPATIBLE)
-					{
-						_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
-					}
-					Graphics2D g2d = _screen.createGraphics();
-					this.render(g2d);
-					g2d.dispose();
-					Insets insets = this.getInsets();
-					g.drawImage(_screen, insets.left, insets.top, null);
-				} while (_screen.contentsLost());
-			}
-			finally
-			{
-				g.dispose();
-			}
-
-			if (!_bufferStrategy.contentsLost())
-			{
-				_bufferStrategy.show();
-			}
-			Toolkit.getDefaultToolkit().sync();
-			
-			if (this.SLEEP_TIME > 0)
-			{
-				try
-				{
-					Thread.sleep(this.SLEEP_TIME);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	@Override
-	public void connected()
-	{
-		this.setGUIMode(GUIMode.GAME);
-		Packer start = new Packer(Packettype.CL_START_INFO);
-		start.writeUTF(_loginPanel.getName());
-		start.writeInt(_loginPanel.getImageID());
-		_client.sendPacket(start);
-	}
-
-	@Override
-	public void disconnected(String reason)
-	{
-		this.setGUIMode(GUIMode.LOGIN);
-		// enough for now
-		if(!reason.equals(""))
-			JOptionPane.showMessageDialog(this, reason);
-	}
-
-	@Override
-	public void login(ConnectionEvent e)
-	{
-		InetSocketAddress addr = e.getIPAdress();
-		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
-	}
-
-	@Override
-	public void logout(ConnectionEvent e)
-	{
-		_client.disconnect("user logout");
-	}
-
-	@Override
-	public void scan()
-	{
-		_client.scan();
-	}
-
-	public void render(Graphics2D g2d)
-	{
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
-		
-		if (_activePanel.equals(_gamePanel))
-		{
-			_gamePanel.render(g2d);
-		}
-		else if (_activePanel.equals(_loginPanel))
-		{
-			_loginPanel.render(g2d);
-		}
-		g2d.setColor(Color.WHITE);
-		g2d.drawString("FPS: " + _fps, 0, 100 + g2d.getFont().getSize());
 	}
 
 	private void setGUIMode(GUIMode mode)

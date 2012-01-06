@@ -60,6 +60,13 @@ public abstract class MoveableEntity extends StaticEntity
 		this.setTurnSpeed(_turnSpeed + this.getAngularAcceleration());
 	}
 
+	@Override
+	public void fromSnap(Unpacker p)
+	{
+		super.fromSnap(p);
+		this.setSpeed(p.readDouble());
+	}
+
 	public abstract double getAcceleration();
 
 	public abstract double getAngularAcceleration();
@@ -111,26 +118,18 @@ public abstract class MoveableEntity extends StaticEntity
 			_turnSpeed = -MoveableEntity.MAX_TURN_SPEED;
 		}
 	}
-	
-
-	@Override
-	public void tick()
-	{
-		this.accelerate();
-		this.move();
-	}
-
-	@Override
-	public void fromSnap(Unpacker p)
-	{
-		super.fromSnap(p);
-		setSpeed(p.readDouble());
-	}
 
 	@Override
 	public void snap(Packer p, String name)
 	{
 		super.snap(p, name);
 		p.writeDouble(this.getSpeed());
+	}
+
+	@Override
+	public void tick()
+	{
+		this.accelerate();
+		this.move();
 	}
 }
