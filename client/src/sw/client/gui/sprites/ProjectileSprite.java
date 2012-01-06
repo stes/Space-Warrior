@@ -28,7 +28,7 @@ import sw.shared.data.entities.shots.Projectile;
  * @author Redix, stes
  * @version 05.01.2012
  */
-public class ProjectileSprite extends ParticleSprite
+public class ProjectileSprite extends ParticleSprite implements IShotSprite
 {
 	private boolean _isExploded;
 

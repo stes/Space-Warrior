@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 
 import sw.client.ClientConstants;
 import sw.client.gcontrol.IGameStateManager;
+import sw.client.gui.sprites.IShotSprite;
 import sw.client.gui.sprites.LaserSprite;
 import sw.client.gui.sprites.ProjectileSprite;
 import sw.client.gui.sprites.SpaceShipSprite;
@@ -120,7 +121,13 @@ public class PlayingFieldPanel extends JPanel
 
 		for (Sprite s : _sprites.values())
 		{
-			s.render(g2d, scaleX, scaleY, _snapTime);
+			if (s instanceof IShotSprite)
+				s.render(g2d, scaleX, scaleY, _snapTime);
+		}
+		for (Sprite s : _sprites.values())
+		{
+			if (s instanceof SpaceShipSprite)
+				s.render(g2d, scaleX, scaleY, _snapTime);
 		}
 
 		if (_stateManager.getLocalPlayer() != null)
@@ -130,7 +137,6 @@ public class PlayingFieldPanel extends JPanel
 			{
 				return;
 			}
-
 			if (p.isLocal())
 			{
 				this.paintBars(g2d, p);
@@ -289,7 +295,11 @@ public class PlayingFieldPanel extends JPanel
 				}
 			}
 		}
-		
+		this.removeOutdatedSprites();
+	}
+	
+	private void removeOutdatedSprites()
+	{
 		Integer[] keys = _sprites.keySet().toArray(new Integer[]{});
 		for (int i = 0; i < keys.length; i++)
 		{

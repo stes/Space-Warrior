@@ -82,6 +82,7 @@ public class LaserBeam extends ShotEntity
 	public void fromSnap(Unpacker p)
 	{
 		super.fromSnap(p);
+		_lifetime = p.readInt();
 		_isMaster = p.readBoolean();
 	}
 
@@ -139,11 +140,17 @@ public class LaserBeam extends ShotEntity
 	{
 		return _isMaster;
 	}
+	
+	public int getLifetime()
+	{
+		return _lifetime;
+	}
 
 	@Override
 	public void snap(Packer p, String name)
 	{
 		super.snap(p, name);
+		p.writeInt(_lifetime);
 		p.writeBoolean(this.isMaster());
 	}
 
