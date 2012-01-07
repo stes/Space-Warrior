@@ -45,7 +45,7 @@ public class LaserBeam extends ShotEntity
 
 	public LaserBeam(double x, double y, double direction, SpaceShip owner, boolean master)
 	{
-		super(x, y, direction, owner, master ? IShot.MASTER_LASER : IShot.LASER);
+		super(x, y, direction, owner, master ? IWeapon.MASTER_LASER : IWeapon.LASER);
 		_isMaster = master;
 		_owner = owner;
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
@@ -104,7 +104,7 @@ public class LaserBeam extends ShotEntity
 	@Override
 	public double getDamage()
 	{
-		return _isMaster ? GameConstants.MAX_MASTER_DAMAGE : GameConstants.MAX_DAMAGE;
+		return _isMaster ? GameConstants.DMG_MASTER_LASER : GameConstants.DMG_LASER;
 	}
 
 	public Line2D.Double getLine()

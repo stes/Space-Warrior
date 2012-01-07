@@ -26,9 +26,10 @@ import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.data.entities.shots.IShot;
+import sw.shared.data.entities.shots.IWeapon;
 import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.MGProjectile;
+import sw.shared.data.entities.shots.Mine;
 import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -89,19 +90,23 @@ public class GameWorld
 			{
 				switch (subtype)
 				{
-					case IShot.LASER:
+					case IWeapon.LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case IShot.MASTER_LASER:
+					case IWeapon.MASTER_LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case IShot.ROCKET:
+					case IWeapon.ROCKET:
 						newEnt = new Rocket(0, 0, 0, null);
 						break;
-					case IShot.MG:
+					case IWeapon.MG:
 						newEnt = new MGProjectile(0, 0, 0, null);
 						break;
+					case IWeapon.MINE:
+						newEnt = new Mine(0, 0, 0, null);
+						break;
 					default:
+						System.out.println("Error: unknown snap item (" + type + ")");
 						return;
 				}
 			}

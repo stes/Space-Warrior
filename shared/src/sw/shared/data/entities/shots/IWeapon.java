@@ -26,12 +26,13 @@ import sw.shared.data.entities.players.IAttacker;
  * @author Redix, stes, Abbadonn
  * @version 25.12.11
  */
-public interface IShot extends IEntity
+public interface IWeapon extends IEntity
 {
 	public final static byte LASER = 0x10;
 	public final static byte MASTER_LASER = 0x20;
 	public final static byte ROCKET = 0x30;
-	public final static byte MG = 0x40;
+	public final static byte MG = 0x50;
+	public static final byte MINE = 0x40;
 
 	/**
 	 * Fires this shot and causes damages
@@ -43,6 +44,9 @@ public interface IShot extends IEntity
 	 */
 	double getDamage();
 
+	/**
+	 * @return the amount of ammo needed to use this weapon
+	 */
 	int getNeededAmmo();
 
 	/**

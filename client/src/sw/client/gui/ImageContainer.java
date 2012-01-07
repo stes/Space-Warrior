@@ -93,6 +93,9 @@ public class ImageContainer
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
 			_images.put(GameConstants.Images.SHOT_ROCKET.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Rocket.gif"))));
+			// TODO chose own image
+			_images.put(GameConstants.Images.SHOT_MINE.getID(),
+					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Rocket.gif"))));
 		}
 		catch (IOException e)
 		{
@@ -109,6 +112,7 @@ public class ImageContainer
 	{
 		// Create new (blank) image of required (scaled) size
 
+		// TODO use the right constants for each image!
 		int width = (int) (GameConstants.PLAYER_SIZE * scaleX);
 		int height = (int) (GameConstants.PLAYER_SIZE * scaleY);
 		BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

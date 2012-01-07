@@ -26,7 +26,7 @@ import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public abstract class ShotEntity extends MoveableEntity implements IShot
+public abstract class ShotEntity extends MoveableEntity implements IWeapon
 {
 	private IAttacker _owner;
 	private int _shottype;

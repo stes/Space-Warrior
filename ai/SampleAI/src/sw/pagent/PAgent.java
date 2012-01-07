@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
-import sw.shared.data.entities.shots.IShot;
+import sw.shared.data.entities.shots.IWeapon;
 
 public class PAgent extends AIPlayer
 {
@@ -97,10 +97,10 @@ public class PAgent extends AIPlayer
 				getCurrentState().setRotation(-1);
 				break;
 			case Actions.SHOOT:
-				getCurrentState().setShot(IShot.LASER);
+				getCurrentState().setShot(IWeapon.LASER);
 				break;
 			case Actions.MASTER_SHOOT:
-				getCurrentState().setShot(IShot.MASTER_LASER);
+				getCurrentState().setShot(IWeapon.MASTER_LASER);
 				break;
 		}
 

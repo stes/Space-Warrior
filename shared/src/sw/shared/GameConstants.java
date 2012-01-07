@@ -28,7 +28,9 @@ public final class GameConstants
 	// Images
 	public static enum Images
 	{
-		SHIP_1(0x11), SHIP_2(0x12), BACKGROUND(0x00), SHIP_3(0x13), SHIP_4(0x14), SHOT_ROCKET(0x21);
+		BACKGROUND(0x00),
+		SHIP_1(0x11), SHIP_2(0x12), SHIP_3(0x13), SHIP_4(0x14),
+		SHOT_ROCKET(0x21), SHOT_MINE(0x22);
 
 		public static Images max()
 		{
@@ -84,6 +86,7 @@ public final class GameConstants
 	// Players
 	public final static int PLAYER_SIZE = 64;
 	public final static int ROCKET_SIZE = 40;
+	public final static int MINE_SIZE = 40;
 
 	public final static int TICK_INTERVAL = 1000 / GameConstants.TICKS_PER_SECOND;
 	// Maximum values
@@ -94,8 +97,6 @@ public final class GameConstants
 	public final static int MAX_RANGE = 200;
 	public final static int MAX_MASTER_RANGE = 500;
 	public final static int MAX_PLAYERS = 6;
-	public final static int MAX_DAMAGE = 10;
-	public final static int MAX_MASTER_DAMAGE = 25;
 	public final static int MAX_COLLISION_DAMAGE = 5;
 	public final static int MAX_SHOT_INTERVAL = 200;
 	public final static double MAX_ANGULAR_SPEED = Math.PI / 20;
@@ -106,11 +107,16 @@ public final class GameConstants
 	public final static int AMMO_PER_SHOT = 20;
 	public final static int AMMO_PER_MASTER_SHOT = 100;
 	public static final int AMMO_PER_ROCKET = 150;
+	public final static int AMMO_PER_MINE = 50;
+
+	public final static int DMG_LASER = 10;
+	public final static int DMG_MASTER_LASER = 25;
+	public final static int DMG_ROCKET = 50;
+	public final static int DMG_MINE = 60;
+
 	// Movements
 	public final static double ACCELERATION = 0.01 * GameConstants.TICK_INTERVAL;
 	public final static double DECELERATION = -0.01 * GameConstants.TICK_INTERVAL;
-	// TODO remove if no longer needed
-	// public final static double ANGEL_OF_ROTATION = 0.3 * TICK_INTERVAL;
 
 	public final static int MAX_COLLISION_DAMAGE_RANGE = GameConstants.PLAYER_SIZE;
 

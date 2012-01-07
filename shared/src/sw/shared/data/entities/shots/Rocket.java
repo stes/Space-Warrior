@@ -27,7 +27,7 @@ public class Rocket extends Projectile
 {
 	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
-		super(x, y, direction, owner, IShot.ROCKET);
+		super(x, y, direction, owner, IWeapon.ROCKET);
 	}
 
 	@Override
@@ -46,8 +46,7 @@ public class Rocket extends Projectile
 	@Override
 	public double getDamage()
 	{
-		// TODO Auto-generated method stub
-		return 100;
+		return GameConstants.DMG_ROCKET;
 	}
 
 	@Override

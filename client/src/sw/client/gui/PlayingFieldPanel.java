@@ -48,6 +48,7 @@ import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.Mine;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
@@ -287,8 +288,12 @@ public class PlayingFieldPanel extends JPanel
 					}
 					else if (e instanceof LaserBeam)
 					{
-						System.out.println("added laser");
 						_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
+					}
+					else if (e instanceof Mine)
+					{
+						System.out.println("added mine");
+						_sprites.put(e.getID(), new MineSprite((Mine) e));
 					}
 					// TODO handle other entity types as well
 				}
