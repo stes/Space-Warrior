@@ -129,7 +129,6 @@ public class PlayingFieldPanel extends JPanel
 			if (s instanceof SpaceShipSprite)
 				s.render(g2d, scaleX, scaleY, _snapTime);
 		}
-
 		if (_stateManager.getLocalPlayer() != null)
 		{
 			SpaceShip p = _stateManager.getLocalPlayer().getDataSet();
