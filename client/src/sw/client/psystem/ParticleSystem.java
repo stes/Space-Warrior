@@ -28,7 +28,7 @@ import java.util.Vector;
  * @author Redix stes Abbadonn
  * @version 02.01.12
  */
-public class ParticleSystem
+public final class ParticleSystem
 {
 	public enum ParticleType
 	{
