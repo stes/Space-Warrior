@@ -31,28 +31,9 @@ public class Rocket extends Projectile
 	}
 
 	@Override
-	public double getAcceleration()
-	{
-		// TODO modify
-		return GameConstants.ACCELERATION * 2;
-	}
-
-	@Override
-	public double getAngularAcceleration()
-	{
-		return 0;
-	}
-
-	@Override
 	public int getImageID()
 	{
 		return Images.SHOT_ROCKET.getID();
-	}
-
-	@Override
-	public double getMaximumSpeed()
-	{
-		return GameConstants.MAX_SPEED * 2;
 	}
 
 	@Override

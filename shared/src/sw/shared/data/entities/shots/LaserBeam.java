@@ -86,18 +86,6 @@ public class LaserBeam extends ShotEntity
 		_isMaster = p.readBoolean();
 	}
 
-	@Override
-	public double getAcceleration()
-	{
-		return 0;
-	}
-
-	@Override
-	public double getAngularAcceleration()
-	{
-		return 0;
-	}
-
 	public int getLifetime()
 	{
 		return _lifetime;
@@ -109,12 +97,6 @@ public class LaserBeam extends ShotEntity
 		return new Line2D.Double(this.getX(), this.getY(), this.getX() - range
 				* Math.sin(this.getDirection()), this.getY() - range
 				* Math.cos(this.getDirection()));
-	}
-
-	@Override
-	public double getMaximumSpeed()
-	{
-		return 0;
 	}
 
 	@Override

@@ -49,6 +49,11 @@ import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
 
+/**
+ * 
+ * @author Redix, stes
+ * @version 08.01.2012
+ */
 public class LoginPanel extends JPanel implements ClientConnlessListener
 {
 	private class ServerTableModel extends AbstractTableModel
@@ -342,14 +347,6 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO bugfix: problem with event dispatching
-				// Handle open button action.
-				// int returnVal = _fileChooser.showOpenDialog(_self);
-
-				// if (returnVal == JFileChooser.APPROVE_OPTION)
-				// {
-				// GameController.setAIPlugin(_fileChooser.getSelectedFile());
-				// }
 				GameController.setAIPlugin(new File(_txtChooseAI.getText()));
 			}
 		});
@@ -357,6 +354,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		this.add(_btnChooseAI);
 		_txtChooseAI = new JTextField();
 		_txtChooseAI.setBounds(100, 550, 300, 25);
+		// TODO change this after testing
 		_txtChooseAI.setText("C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/ai_players/sample_ai.jar");
 		this.add(_txtChooseAI);
 	}

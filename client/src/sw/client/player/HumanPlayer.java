@@ -21,7 +21,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import sw.client.gcontrol.IGameStateManager;
-import sw.shared.data.entities.shots.IWeapon;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 /**

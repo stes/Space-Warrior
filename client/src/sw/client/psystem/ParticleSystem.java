@@ -19,8 +19,8 @@ package sw.client.psystem;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  * Particle system to create animations such as explosions, fog etc.
@@ -28,7 +28,7 @@ import java.util.Random;
  * @author Redix stes Abbadonn
  * @version 02.01.12
  */
-public class ParticleSystem
+public final class ParticleSystem
 {
 	public enum ParticleType
 	{
@@ -39,7 +39,7 @@ public class ParticleSystem
 
 	public final static int REMOVE_WHEN_HALTED = -1;;
 
-	private ArrayList<Particle> _particles;
+	private Vector<Particle> _particles;
 	private Thread _tickThread;
 	private ParticleSystem _self;
 	private long _lastTick;
@@ -47,7 +47,7 @@ public class ParticleSystem
 	public ParticleSystem()
 	{
 		_self = this;
-		_particles = new ArrayList<Particle>();
+		_particles = new Vector<Particle>();
 	}
 
 	public int countParticles()
@@ -118,14 +118,10 @@ public class ParticleSystem
 
 	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
-		synchronized (this)
+		for (int i = 0; i < _particles.size(); i++)
 		{
-			for (int i = 0; i < _particles.size(); i++)
-			{
-				Particle p = _particles.get(i);
-				if (p != null)
-					p.render(g, scaleX, scaleY);
-			}
+			Particle p = _particles.get(i);
+			p.render(g, scaleX, scaleY);
 		}
 	}
 
@@ -155,18 +151,13 @@ public class ParticleSystem
 
 	private void tick()
 	{
-		synchronized (this)
+		for (int i = 0; i < _particles.size(); i++)
 		{
-			for (int i = 0; i < _particles.size(); i++)
+			Particle p = _particles.get(i);
+			p.tick();
+			if (!p.isAlive())
 			{
-				Particle p = _particles.get(i);
-				if (p == null)
-					return;
-				p.tick();
-				if (!p.isAlive())
-				{
-					_particles.remove(i);
-				}
+				_particles.remove(i);
 			}
 		}
 	}
