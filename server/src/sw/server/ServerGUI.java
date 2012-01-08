@@ -180,6 +180,6 @@ public class ServerGUI extends JFrame implements ActionListener, ServerListener
 
 	private void updateClientList()
 	{
-		_clientList.setListData(_server.clListe());
+		_clientList.setListData(_server.clList());
 	}
 }

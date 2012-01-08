@@ -15,26 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
 
-/**
- * @author Redix, stes, Abbadonn
- * @version 25.11.11
- */
-public final class Packettype
+package sw.server.cli;
+
+public enum CommandType
 {
-	// client
-	public final static byte CL_START_INFO = 0;
-	public final static byte CL_CHAT_MESSAGE = 1;
-	public final static byte CL_INPUT = 2;
-
-	// server
-	public final static byte SV_CHAT_MESSAGE = 1;
-	public final static byte SV_SNAPSHOT = 2;
-
-	// snapshot types
-	public final static byte SNAP_GAMESTATE = 0x01;
-	public final static byte SNAP_PLAYERDATA = 0x02;
-	public final static byte SNAP_SHOT = 0x03;
-	public static final byte CL_COMMAND = 0x04;
+	KICK("<player name>", "kicks the specified player"),
+	BAN("<ip address>", "bans the specified ip"),
+	STOP("\t", "forces the server to shut down"),
+	NAME("<server name>", "changes the servername"),
+	RESTART("\t", "starts a new round"),
+	HELP("[command name]", "displays this help, or the help of the specified command"),
+	INFO("\t","displays the server info");
+	
+	private String _helpMessage;
+	private String _syntax;
+	private CommandType(String syntax, String help)
+	{
+		_syntax = syntax;
+		_helpMessage = help;
+	}
+	
+	public String getHelpMessage()
+	{
+		return _helpMessage;
+	}
+	
+	public String getSyntax()
+	{
+		return this.toString() + " " + _syntax;
+	}
 }

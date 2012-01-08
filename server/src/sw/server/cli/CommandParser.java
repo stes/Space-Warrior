@@ -15,26 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.shared;
+
+package sw.server.cli;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
- * @author Redix, stes, Abbadonn
- * @version 25.11.11
+ * 
+ * @author Redix, stes
+ * @version 08.01.2012
  */
-public final class Packettype
+public class CommandParser
 {
-	// client
-	public final static byte CL_START_INFO = 0;
-	public final static byte CL_CHAT_MESSAGE = 1;
-	public final static byte CL_INPUT = 2;
+	public CommandParser()
+	{
 
-	// server
-	public final static byte SV_CHAT_MESSAGE = 1;
-	public final static byte SV_SNAPSHOT = 2;
+	}
 
-	// snapshot types
-	public final static byte SNAP_GAMESTATE = 0x01;
-	public final static byte SNAP_PLAYERDATA = 0x02;
-	public final static byte SNAP_SHOT = 0x03;
-	public static final byte CL_COMMAND = 0x04;
+	public void performAction(Command command)
+			throws ClassNotFoundException,
+			SecurityException,
+			NoSuchMethodException,
+			IllegalArgumentException,
+			IllegalAccessException,
+			InvocationTargetException
+	{
+		Class<?> cls = Class.forName("sw.server.cli.SWCommandParser");
+		String commandName = command.getType().toString();
+		commandName = commandName.substring(0, 1).toUpperCase() + commandName.substring(1).toLowerCase();
+		String methodName = "process" + commandName;
+		Method m = cls.getMethod(methodName, Command.class);
+		m.invoke(this, command);
+	}
 }

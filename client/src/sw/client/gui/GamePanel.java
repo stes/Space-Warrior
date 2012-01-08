@@ -46,6 +46,11 @@ import sw.shared.Packettype;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
+/**
+ * 
+ * @author Redix, stes
+ * @version 08.01.2012
+ */
 public class GamePanel extends JPanel implements ClientMessageListener, ActionListener,
 		GameStateChangedListener
 {
@@ -305,8 +310,18 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 
 	private void sendChat(String text)
 	{
-		Packer p = new Packer(Packettype.CL_CHAT_MESSAGE);
-		p.writeUTF(text);
+		Packer p = null;
+		String content = text;
+		if (text.startsWith("/"))
+		{
+			p = new Packer(Packettype.CL_COMMAND);
+			content = content.substring(1);
+		}
+		else
+		{
+			p = new Packer(Packettype.CL_CHAT_MESSAGE);
+		}
+		p.writeUTF(content);
 		_client.sendPacket(p);
 	}
 

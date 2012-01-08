@@ -21,6 +21,8 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import sw.server.cli.Command;
+import sw.server.cli.SWCommandParser;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
@@ -41,6 +43,8 @@ public class SWServer implements IServer, NetworkListener, Runnable
 	private Vector<Client> _clients;
 	private PropertyLoader _propertyLoader;
 	private ServerInfo _serverInfo;
+	private GameController _controller;
+	private SWCommandParser _cmdParser;
 
 	private int _tick;
 	private long _lastUpdate;
@@ -59,7 +63,9 @@ public class SWServer implements IServer, NetworkListener, Runnable
 		_clients = new Vector<Client>();
 		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
 		_lastUpdate = System.currentTimeMillis();
-		this.addServerListener(new GameController(this));
+		_controller = new GameController(this);
+		this.addServerListener(_controller);
+		_cmdParser = new SWCommandParser(this, _controller);
 		new Thread(this).start();
 	}
 
@@ -149,6 +155,19 @@ public class SWServer implements IServer, NetworkListener, Runnable
 				l.processPlayerInput(client.getName(), input);
 			}
 		}
+		else if (Packettype.CL_COMMAND == packet.getType())
+		{
+			String cmd = packet.readUTF();
+			try
+			{
+				_cmdParser.performAction(new Command(cmd, client.getName()));
+			}
+			catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
@@ -209,7 +228,7 @@ public class SWServer implements IServer, NetworkListener, Runnable
 		}
 	}
 
-	protected Vector<Client> clListe()
+	protected Vector<Client> clList()
 	{
 		return _clients;
 	}
@@ -257,5 +276,19 @@ public class SWServer implements IServer, NetworkListener, Runnable
 			catch (InterruptedException e)
 			{}
 		}
+	}
+
+	@Override
+	public void kick(String client)
+	{
+		// TODO implement
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
+	public void ban(String ip)
+	{
+		// TODO implement
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }
