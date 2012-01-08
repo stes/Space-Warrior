@@ -1,0 +1,30 @@
+CHANGELOG for PRE 0.2 since PRE 0.1.1
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+>> gameplay:
+- collision checking
+- limited shotrate
+- improved physics
+- player specific space ships
+
+>> view:
+- active rendering
+- smoother animations
+- particle system
+
+>> gui:
+- scroll bar for the chat history
+- disconnect reason is shown in a dialog
+- disconnect button
+
+>> data issues:
+- improved snapshot system
+- introduced entity framework
+
+>> new weapons:
+- mines
+- rockets
+
+>> other features:
+- server can now be started out of the client and controlled via the command line
+- simple buglogger
+- changed behavior when two clients have the same name
