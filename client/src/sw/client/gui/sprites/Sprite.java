@@ -41,11 +41,6 @@ public abstract class Sprite
 		_isUpdated = true;
 	}
 
-	public boolean isUpdated()
-	{
-		return _isUpdated;
-	}
-	
 	public IStaticEntity getEntity()
 	{
 		return _entity;
@@ -56,13 +51,18 @@ public abstract class Sprite
 		return _prevEntity;
 	}
 
-	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
+	public boolean isUpdated()
+	{
+		return _isUpdated;
+	}
 
 	public void notifyUpdate()
 	{
 		_isUpdated = false;
 	}
-	
+
+	public abstract void render(Graphics2D g2d, double scaleX, double scaleY, double time);
+
 	public void updateEntity(IStaticEntity entity, IStaticEntity prevEntity)
 	{
 		if (_entity.getID() != entity.getID())

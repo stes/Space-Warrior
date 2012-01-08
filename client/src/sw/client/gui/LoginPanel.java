@@ -159,6 +159,14 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_connectionListener.add(l);
 	}
 
+	public void close()
+	{
+		if (_server != null)
+		{
+			_server.close();
+		}
+	}
+
 	public int getImageID()
 	{
 		return _imageID;
@@ -354,11 +362,5 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_txtChooseAI.setBounds(100, 550, 300, 25);
 		_txtChooseAI.setText("C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/ai_players/sample_ai.jar");
 		this.add(_txtChooseAI);
-	}
-
-	public void close()
-	{
-		if (_server != null)
-			_server.close();		
 	}
 }

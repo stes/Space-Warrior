@@ -28,8 +28,7 @@ public final class GameConstants
 	// Images
 	public static enum Images
 	{
-		BACKGROUND(0x00),
-		SHIP_1(0x11), SHIP_2(0x12), SHIP_3(0x13), SHIP_4(0x14),
+		BACKGROUND(0x00), SHIP_1(0x11), SHIP_2(0x12), SHIP_3(0x13), SHIP_4(0x14),
 		SHOT_ROCKET(0x21), SHOT_MINE(0x22);
 
 		public static Images max()
@@ -132,4 +131,4 @@ public final class GameConstants
 	// Scoring
 	public final static int POINTS_PER_HIT = 1;
 	public final static int POINTS_PER_KILL = 10;
-}	
+}

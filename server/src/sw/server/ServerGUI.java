@@ -105,11 +105,11 @@ public class ServerGUI extends JFrame implements ActionListener, ServerListener
 
 		System.setOut(new PrintStream(output, true));
 		System.setErr(new PrintStream(output, true));
-		
+
 		_server = new SWServer(GameConstants.STANDARD_PORT);
 		this.setNetServer(_server);
 		_server.addServerListener(this);
-		
+
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override

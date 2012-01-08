@@ -74,6 +74,14 @@ public class SWServer implements IServer, NetworkListener, Runnable
 		_serverListener.add(listener);
 	}
 
+	@Override
+	public void ban(String ip)
+	{
+		// TODO implement
+		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	@Override
 	public void close()
 	{
 		_netServer.close("Server shutdown");
@@ -113,6 +121,13 @@ public class SWServer implements IServer, NetworkListener, Runnable
 	{
 		_serverInfo.setNumPayers(_clients.size());
 		return _serverInfo.pack();
+	}
+
+	@Override
+	public void kick(String client)
+	{
+		// TODO implement
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
 	@Override
@@ -188,6 +203,21 @@ public class SWServer implements IServer, NetworkListener, Runnable
 	}
 
 	@Override
+	public void run()
+	{
+		while (true)
+		{
+			this.tick();
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e)
+			{}
+		}
+	}
+
+	@Override
 	public void sendBroadcast(Packer packet)
 	{
 		byte[] data = packet.toByteArray();
@@ -204,6 +234,7 @@ public class SWServer implements IServer, NetworkListener, Runnable
 		}
 	}
 
+	@Override
 	public void setServerName(String name)
 	{
 		_serverInfo.setServerName(name);
@@ -261,34 +292,5 @@ public class SWServer implements IServer, NetworkListener, Runnable
 	{
 		byte[] data = packet.toByteArray();
 		client.getConnection().send(data, data.length);
-	}
-
-	@Override
-	public void run()
-	{
-		while (true)
-		{
-			this.tick();
-			try
-			{
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e)
-			{}
-		}
-	}
-
-	@Override
-	public void kick(String client)
-	{
-		// TODO implement
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
-
-	@Override
-	public void ban(String ip)
-	{
-		// TODO implement
-		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

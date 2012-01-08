@@ -47,7 +47,6 @@ import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
 /**
- * 
  * @author Redix, stes
  * @version 08.01.2012
  */

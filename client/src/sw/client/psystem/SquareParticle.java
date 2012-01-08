@@ -28,7 +28,13 @@ import java.awt.Graphics2D;
  */
 public class SquareParticle extends Particle
 {
-	public SquareParticle(ValuePair location, ValuePair velocity, ValuePair acceleration, int lifetime, double size, Color color)
+	public SquareParticle(
+			ValuePair location,
+			ValuePair velocity,
+			ValuePair acceleration,
+			int lifetime,
+			double size,
+			Color color)
 	{
 		super(location, velocity, acceleration, lifetime, size, color);
 	}
@@ -40,8 +46,7 @@ public class SquareParticle extends Particle
 		{
 			return;
 		}
-		g.fillRect(				
-				(int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
+		g.fillRect((int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
 				(int) (scaleY * (this.getLocation().getY() - this.getSize() / 2)),
 				(int) (scaleX * this.getSize()),
 				(int) (scaleY * this.getSize()));

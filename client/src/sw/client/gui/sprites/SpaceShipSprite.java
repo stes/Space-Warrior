@@ -48,7 +48,7 @@ public class SpaceShipSprite extends ParticleSprite
 			for (int i = 0; i < 5; i++)
 			{
 				double dir = -player.getDirection() + ParticleSprite._random.nextDouble() * Math.PI
-						*0.3 - Math.PI * 0.15 + Math.PI/2;
+						* 0.3 - Math.PI * 0.15 + Math.PI / 2;
 				double speed = player.getSpeed()
 						* Math.abs((1 + ParticleSprite._random.nextGaussian()));
 				ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);

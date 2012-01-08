@@ -123,12 +123,16 @@ public class PlayingFieldPanel extends JPanel
 		for (Sprite s : _sprites.values())
 		{
 			if (s instanceof IShotSprite)
+			{
 				s.render(g2d, scaleX, scaleY, _snapTime);
+			}
 		}
 		for (Sprite s : _sprites.values())
 		{
 			if (s instanceof SpaceShipSprite)
+			{
 				s.render(g2d, scaleX, scaleY, _snapTime);
+			}
 		}
 		if (_stateManager.getLocalPlayer() != null)
 		{
@@ -229,6 +233,18 @@ public class PlayingFieldPanel extends JPanel
 		g2d.drawLine(start_x, y, end_x, y);
 	}
 
+	private void removeOutdatedSprites()
+	{
+		Integer[] keys = _sprites.keySet().toArray(new Integer[] {});
+		for (int i = 0; i < keys.length; i++)
+		{
+			if (_sprites.containsKey(keys[i]) && !_sprites.get(keys[i]).isUpdated())
+			{
+				_sprites.remove(keys[i]);
+			}
+		}
+	}
+
 	private void showDebugInfo(Graphics2D g2d, SpaceShip pl)
 	{
 		int x = this.getWidth() - 200;
@@ -249,7 +265,9 @@ public class PlayingFieldPanel extends JPanel
 	private void updateSprites()
 	{
 		for (Sprite s : _sprites.values())
+		{
 			s.notifyUpdate();
+		}
 		for (IEntity ent : _stateManager.getGameWorld().getAllEntities())
 		{
 			// TODO improve/sort the if statements
@@ -300,15 +318,5 @@ public class PlayingFieldPanel extends JPanel
 			}
 		}
 		this.removeOutdatedSprites();
-	}
-	
-	private void removeOutdatedSprites()
-	{
-		Integer[] keys = _sprites.keySet().toArray(new Integer[]{});
-		for (int i = 0; i < keys.length; i++)
-		{
-			if (_sprites.containsKey(keys[i]) && !_sprites.get(keys[i]).isUpdated())
-				_sprites.remove(keys[i]);
-		}
 	}
 }

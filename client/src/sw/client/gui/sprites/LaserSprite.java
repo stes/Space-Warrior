@@ -13,12 +13,12 @@ public class LaserSprite extends Sprite implements IShotSprite
 	{
 		super(entity);
 	}
-	
+
 	@Override
 	public void render(Graphics2D g2d, double scaleX, double scaleY, double time)
 	{
-		LaserBeam s = (LaserBeam) getEntity();
-		Color c = new Color(0, 0, 255, (int)alpha(s.getLifetime()));
+		LaserBeam s = (LaserBeam) this.getEntity();
+		Color c = new Color(0, 0, 255, (int) this.alpha(s.getLifetime()));
 		g2d.setColor(c);
 		g2d.setStroke(new BasicStroke(3));
 		g2d.drawLine((int) (s.getX() * scaleX),
@@ -26,13 +26,13 @@ public class LaserSprite extends Sprite implements IShotSprite
 				(int) (s.endPoint().getX() * scaleX),
 				(int) (s.endPoint().getY() * scaleY));
 	}
-	
-    private double alpha(double time)
-    {
-        double a = -1020 / (double)(GameConstants.SHOT_TTL*GameConstants.SHOT_TTL);
-        double d = (double)GameConstants.SHOT_TTL / 2;
-        double f = 255;
-        return a * (time - d) * (time - d) + f;
-    }
+
+	private double alpha(double time)
+	{
+		double a = -1020 / (double) (GameConstants.SHOT_TTL * GameConstants.SHOT_TTL);
+		double d = (double) GameConstants.SHOT_TTL / 2;
+		double f = 255;
+		return a * (time - d) * (time - d) + f;
+	}
 
 }

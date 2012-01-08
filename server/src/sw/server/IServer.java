@@ -26,16 +26,16 @@ import sw.shared.net.Packer;
 
 public interface IServer
 {
-	public void sendBroadcast(Packer packet);
-
-	public void sendPacket(String name, Packer packet);
-	
-	public void kick(String client);
-	
 	public void ban(String ip);
 
 	public void close();
 
+	public void kick(String client);
+
+	public void sendBroadcast(Packer packet);
+
+	public void sendPacket(String name, Packer packet);
+
 	public void setServerName(String argument);
-	
+
 }

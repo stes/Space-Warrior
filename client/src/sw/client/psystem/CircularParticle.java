@@ -46,9 +46,8 @@ public class CircularParticle extends Particle
 		{
 			return;
 		}
-		g.setColor(getColor());
-		g.fillOval(
-				(int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
+		g.setColor(this.getColor());
+		g.fillOval((int) (scaleX * (this.getLocation().getX() - this.getSize() / 2)),
 				(int) (scaleY * (this.getLocation().getY() - this.getSize() / 2)),
 				(int) (scaleX * this.getSize()),
 				(int) (scaleY * this.getSize()));

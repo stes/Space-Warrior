@@ -66,14 +66,14 @@ public class ValuePair
 		return _y;
 	}
 
-	public ValuePair multiply(double x, double y)
-	{
-		return new ValuePair(this.getX() * x, this.getY() * y);
-	}
-
 	public ValuePair multiply(double scalar)
 	{
 		return this.multiply(scalar, scalar);
+	}
+
+	public ValuePair multiply(double x, double y)
+	{
+		return new ValuePair(this.getX() * x, this.getY() * y);
 	}
 
 	public void setX(double x)

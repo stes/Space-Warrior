@@ -19,6 +19,6 @@ public class MineSprite extends Sprite implements IShotSprite
 	public void render(Graphics2D g2d, double scaleX, double scaleY, double time)
 	{
 		g2d.setColor(Color.GREEN);
-		g2d.fillRect((int)getEntity().getX() - 10, (int)getEntity().getY() - 10, 20, 20);
+		g2d.fillRect((int) this.getEntity().getX() - 10, (int) this.getEntity().getY() - 10, 20, 20);
 	}
 }

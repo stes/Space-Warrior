@@ -107,6 +107,11 @@ public class LaserBeam extends ShotEntity
 		return _isMaster ? GameConstants.DMG_MASTER_LASER : GameConstants.DMG_LASER;
 	}
 
+	public int getLifetime()
+	{
+		return _lifetime;
+	}
+
 	public Line2D.Double getLine()
 	{
 		double range = _isMaster ? GameConstants.MAX_MASTER_RANGE : GameConstants.MAX_RANGE;
@@ -139,11 +144,6 @@ public class LaserBeam extends ShotEntity
 	public boolean isMaster()
 	{
 		return _isMaster;
-	}
-	
-	public int getLifetime()
-	{
-		return _lifetime;
 	}
 
 	@Override

@@ -71,6 +71,14 @@ abstract class Particle
 		return _acceleration;
 	}
 
+	/**
+	 * @return the color
+	 */
+	public Color getColor()
+	{
+		return _color;
+	}
+
 	public int getLifetime()
 	{
 		return _lifetime;
@@ -87,14 +95,6 @@ abstract class Particle
 	public double getSize()
 	{
 		return _size;
-	}
-
-	/**
-	 * @return the color
-	 */
-	public Color getColor()
-	{
-		return _color;
 	}
 
 	/**
