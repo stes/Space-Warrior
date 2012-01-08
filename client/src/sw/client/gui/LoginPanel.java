@@ -44,6 +44,7 @@ import javax.swing.table.AbstractTableModel;
 import sw.client.ClientConnlessListener;
 import sw.client.GameController;
 import sw.client.gui.ConnectionEvent.ActionType;
+import sw.server.SWServer;
 import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
@@ -104,7 +105,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private JTextField _txtName;
 	private AbstractButton _btnConnect;
 	private AbstractButton _btnUpdate;
-	// private JFileChooser _fileChooser;
+	private JButton _btnHost;
 	private AbstractButton _btnChooseAI;
 	private JLabel _lblIPAdress;
 	private JLabel _lblName;
@@ -122,6 +123,8 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private int _imageID;
 
 	private JTextField _txtChooseAI;
+
+	protected SWServer _server;
 
 	public LoginPanel(int width, int height)
 	{
@@ -299,6 +302,18 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 		this.add(_btnUpdate);
 
+		_btnHost = new JButton("Host");
+		_btnHost.setBounds(100, 100, 100, 25);
+		_btnHost.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				_server = new SWServer(GameConstants.STANDARD_PORT);
+			}
+		});
+		this.add(_btnHost);
+
 		_tblServers = new JTable(_tableModel);
 		_tblServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		_tblServers.getSelectionModel().addListSelectionListener(new ListSelectionListener()
@@ -315,8 +330,6 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_scroll.setBounds(this.getWidth() - 300, 300, 200, 300);
 		this.add(_scroll);
 
-		// _fileChooser = new JFileChooser(System.getProperty("user.dir"));
-		//
 		_btnChooseAI = new JButton("Choose AI");
 		_btnChooseAI.setBounds(100, 500, 100, 25);
 		_btnChooseAI.addActionListener(new ActionListener()
@@ -341,5 +354,11 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_txtChooseAI.setBounds(100, 550, 300, 25);
 		_txtChooseAI.setText("C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/ai_players/sample_ai.jar");
 		this.add(_txtChooseAI);
+	}
+
+	public void close()
+	{
+		if (_server != null)
+			_server.close();		
 	}
 }

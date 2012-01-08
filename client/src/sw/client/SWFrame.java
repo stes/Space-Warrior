@@ -77,7 +77,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	}
 
 	// change to limit fps in order to minimize cpu usage
-	public final int SLEEP_TIME = 1;
+	public final int SLEEP_TIME = 0;
 	private static final long serialVersionUID = 1575599799999464878L;
 
 	private GameController _controller;
@@ -92,6 +92,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
 	private int _fps;
+	private SWFrame _self;
 
 	/**
 	 * Creates a new SWFrame
@@ -100,6 +101,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	{
 		super("Space Warrior");
 
+		_self = this;
 		this.setIgnoreRepaint(true);
 
 		RepaintManager repaintManager = new UnRepaintManager();
@@ -125,7 +127,14 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
 
 		_isRunning = true;
-		this.renderLoop();
+		new Thread()
+		{
+			@Override
+			public void run()
+			{
+				_self.renderLoop();
+			}
+		}.start();
 	}
 
 	@Override
@@ -273,6 +282,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			public void windowClosing(WindowEvent e)
 			{
 				_client.close();
+				_loginPanel.close();
 			}
 		});
 

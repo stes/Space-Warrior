@@ -35,7 +35,7 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWServer implements IServer, NetworkListener
+public class SWServer implements IServer, NetworkListener, Runnable
 {
 	private UDPHost _netServer;
 	private Vector<Client> _clients;
@@ -60,6 +60,7 @@ public class SWServer implements IServer, NetworkListener
 		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
 		_lastUpdate = System.currentTimeMillis();
 		this.addServerListener(new GameController(this));
+		new Thread(this).start();
 	}
 
 	public void addServerListener(ServerListener listener)
@@ -241,5 +242,20 @@ public class SWServer implements IServer, NetworkListener
 	{
 		byte[] data = packet.toByteArray();
 		client.getConnection().send(data, data.length);
+	}
+
+	@Override
+	public void run()
+	{
+		while (true)
+		{
+			this.tick();
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (InterruptedException e)
+			{}
+		}
 	}
 }

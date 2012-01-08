@@ -17,10 +17,6 @@
  ******************************************************************************/
 package sw.server;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -30,39 +26,6 @@ public class Program
 {
 	public static void main(String[] args)
 	{
-		(new Program()).run();
-	}
-
-	private ServerGUI _serverGUI;
-	private SWServer _server;
-
-	public Program()
-	{
-		_serverGUI = new ServerGUI(800, 400);
-		_server = new SWServer(GameConstants.STANDARD_PORT);
-		_serverGUI.setNetServer(_server);
-		_server.addServerListener(_serverGUI);
-
-		_serverGUI.addWindowListener(new WindowAdapter()
-		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				_server.close();
-			}
-		});
-	}
-
-	public void run()
-	{
-		while (true)
-		{
-			_server.tick();
-			try
-			{
-				Thread.sleep(1);
-			}
-			catch (InterruptedException e) {}
-		}
+		new ServerGUI(800, 400);
 	}
 }
