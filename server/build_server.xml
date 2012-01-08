@@ -6,14 +6,12 @@
         <jar destfile="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/server/server.jar">
             <manifest>
                 <attribute name="Main-Class" value="sw.server.Program"/>
-                <attribute name="Class-Path" value=". server_lib/junit.jar server_lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+                <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/server/bin"/>
             <fileset dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/shared/bin"/>
         </jar>
         <delete dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/server/server_lib"/>
         <mkdir dir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/server/server_lib"/>
-        <copy file="C:/Program Files/eclipse/eclipse/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar" todir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/server/server_lib"/>
-        <copy file="C:/Program Files/eclipse/eclipse/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar" todir="C:/Users/Steffen/Projekte/Projekte/SpaceWarrior/current_build/server/server_lib"/>
     </target>
 </project>
