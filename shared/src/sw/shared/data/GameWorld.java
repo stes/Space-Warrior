@@ -26,9 +26,8 @@ import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.data.entities.shots.IWeapon;
+import sw.shared.data.entities.shots.IWeapon.WeaponType;
 import sw.shared.data.entities.shots.LaserBeam;
-import sw.shared.data.entities.shots.MGProjectile;
 import sw.shared.data.entities.shots.Mine;
 import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
@@ -88,21 +87,20 @@ public class GameWorld
 			}
 			else if (type == Packettype.SNAP_SHOT)
 			{
-				switch (subtype)
+				switch (WeaponType.getWeaponType(subtype))
 				{
-					case IWeapon.LASER:
+					case LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case IWeapon.MASTER_LASER:
+					case MASTER_LASER:
 						newEnt = new LaserBeam(0, 0, 0, null);
 						break;
-					case IWeapon.ROCKET:
+					case ROCKET:
 						newEnt = new Rocket(0, 0, 0, null);
 						break;
-					case IWeapon.MG:
-						newEnt = new MGProjectile(0, 0, 0, null);
-						break;
-					case IWeapon.MINE:
+					case MG:
+						throw new UnsupportedOperationException("Not implemented yet");
+					case MINE:
 						newEnt = new Mine(0, 0, 0, null);
 						break;
 					default:

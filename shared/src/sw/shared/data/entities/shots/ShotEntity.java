@@ -98,4 +98,37 @@ public abstract class ShotEntity extends MoveableEntity implements IWeapon
 		this._shottype = shottype;
 	}
 
+	@Override
+	public double getDamage()
+	{
+		return WeaponType.getWeaponType(getShotType()).getDamage();
+	}
+
+	@Override
+	public int getNeededAmmo()
+	{
+		return WeaponType.getWeaponType(getShotType()).getAmmo();
+	}
+
+//	@Override
+//	public double getAcceleration()
+//	{
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public double getAngularAcceleration()
+//	{
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public double getMaximumSpeed()
+//	{
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+
 }

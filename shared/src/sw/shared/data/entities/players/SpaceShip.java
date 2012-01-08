@@ -28,6 +28,7 @@ import sw.shared.data.entities.IImageEntity;
 import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.shots.IWeapon;
+import sw.shared.data.entities.shots.IWeapon.WeaponType;
 import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.Mine;
 import sw.shared.data.entities.shots.Rocket;
@@ -378,35 +379,35 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		if (this.isReadyToShoot())
 		{
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			switch (id)
+			switch (WeaponType.getWeaponType(id))
 			{
-				case IWeapon.LASER:
+				case LASER:
 					s = new LaserBeam(this.positionAfter(time).x,
 							this.positionAfter(time).y,
 							this.getDirection(),
 							this);
 					break;
-				case IWeapon.MASTER_LASER:
+				case MASTER_LASER:
 					s = new LaserBeam(this.positionAfter(time).x,
 							this.positionAfter(time).y,
 							this.getDirection(),
 							this,
 							true);
 					break;
-				case IWeapon.ROCKET:
+				case ROCKET:
 					s = new Rocket(this.positionAfter(time).x,
 							this.positionAfter(time).y,
 							this.getDirection(),
 							this);
 					((Rocket) s).setSpeed(this.getSpeed());
 					break;
-				case IWeapon.MINE:
+				case MINE:
 					s = new Mine(this.positionAfter(time).x,
 							this.positionAfter(time).y,
 							this.getDirection(),
 							this);
 					break;
-				case IWeapon.MG:
+				case MG:
 					throw new UnsupportedOperationException("Not implemented yet.");
 					// break;
 				default:

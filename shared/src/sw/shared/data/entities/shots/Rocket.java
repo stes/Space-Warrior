@@ -27,7 +27,7 @@ public class Rocket extends Projectile
 {
 	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
-		super(x, y, direction, owner, IWeapon.ROCKET);
+		super(x, y, direction, owner, WeaponType.ROCKET.getID());
 	}
 
 	@Override
@@ -44,12 +44,6 @@ public class Rocket extends Projectile
 	}
 
 	@Override
-	public double getDamage()
-	{
-		return GameConstants.DMG_ROCKET;
-	}
-
-	@Override
 	public int getImageID()
 	{
 		return Images.SHOT_ROCKET.getID();
@@ -59,12 +53,6 @@ public class Rocket extends Projectile
 	public double getMaximumSpeed()
 	{
 		return GameConstants.MAX_SPEED * 2;
-	}
-
-	@Override
-	public int getNeededAmmo()
-	{
-		return GameConstants.AMMO_PER_ROCKET;
 	}
 
 	@Override

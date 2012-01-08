@@ -122,7 +122,9 @@ public class ParticleSystem
 		{
 			for (int i = 0; i < _particles.size(); i++)
 			{
-				_particles.get(i).render(g, scaleX, scaleY);
+				Particle p = _particles.get(i);
+				if (p != null)
+					p.render(g, scaleX, scaleY);
 			}
 		}
 	}
@@ -151,13 +153,15 @@ public class ParticleSystem
 		_particles.add(particle);
 	}
 
-	public void tick()
+	private void tick()
 	{
 		synchronized (this)
 		{
 			for (int i = 0; i < _particles.size(); i++)
 			{
 				Particle p = _particles.get(i);
+				if (p == null)
+					return;
 				p.tick();
 				if (!p.isAlive())
 				{

@@ -90,7 +90,7 @@ public final class GameConstants
 	public final static int TICK_INTERVAL = 1000 / GameConstants.TICKS_PER_SECOND;
 	// Maximum values
 	public final static int MAX_LIVES = 100;
-	public final static int MAX_AMMO = 200;
+	public final static int MAX_AMMO = 100;
 	public final static int MAX_SPEED = 16;
 	public final static int MAX_MOVEMENT = GameConstants.MAX_SPEED * GameConstants.TICK_INTERVAL;
 	public final static int MAX_RANGE = 200;
@@ -102,16 +102,6 @@ public final class GameConstants
 	public final static int MAX_HITRANGE = GameConstants.PLAYER_SIZE / 2;
 
 	public final static double ANGULAR_ACCELERATION = 0.0005 * GameConstants.TICK_INTERVAL;
-	// Shooting
-	public final static int AMMO_PER_SHOT = 20;
-	public final static int AMMO_PER_MASTER_SHOT = 100;
-	public static final int AMMO_PER_ROCKET = 150;
-	public final static int AMMO_PER_MINE = 50;
-
-	public final static int DMG_LASER = 10;
-	public final static int DMG_MASTER_LASER = 25;
-	public final static int DMG_ROCKET = 50;
-	public final static int DMG_MINE = 60;
 
 	// Movements
 	public final static double ACCELERATION = 0.01 * GameConstants.TICK_INTERVAL;

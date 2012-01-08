@@ -28,11 +28,50 @@ import sw.shared.data.entities.players.IAttacker;
  */
 public interface IWeapon extends IEntity
 {
-	public final static byte LASER = 0x10;
-	public final static byte MASTER_LASER = 0x20;
-	public final static byte ROCKET = 0x30;
-	public final static byte MG = 0x50;
-	public static final byte MINE = 0x40;
+	public enum WeaponType
+	{
+		LASER((byte)0x10, 10, 20),
+		MASTER_LASER((byte)0x20, 50, 30),
+		ROCKET((byte)0x30, 50, 50),
+		MINE((byte)0x40, 20, 60),
+		MG((byte)0x50, 50, 50);
+		
+		private final int _ammo;
+		private final int _dmg;
+		private final byte _id;
+		
+		private WeaponType(byte id, int ammo, int damage)
+		{
+			_id = id;
+			_ammo = ammo;
+			_dmg = damage;
+		}
+		
+		public int getAmmo()
+		{
+			return _ammo;
+		}
+		
+		public int getDamage()
+		{
+			return _dmg;
+		}
+		
+		public byte getID()
+		{
+			return _id;
+		}
+		
+		public static WeaponType getWeaponType(int id)
+		{
+			for (WeaponType w : WeaponType.values())
+			{
+				if (w.getID() == (byte)id)
+					return w;
+			}
+			throw new IllegalArgumentException("ID does not match to any weapon");
+		}
+	}
 
 	/**
 	 * Fires this shot and causes damages

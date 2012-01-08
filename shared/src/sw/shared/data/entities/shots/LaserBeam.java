@@ -45,7 +45,7 @@ public class LaserBeam extends ShotEntity
 
 	public LaserBeam(double x, double y, double direction, SpaceShip owner, boolean master)
 	{
-		super(x, y, direction, owner, master ? IWeapon.MASTER_LASER : IWeapon.LASER);
+		super(x, y, direction, owner, master ? WeaponType.MASTER_LASER.getID() : WeaponType.LASER.getID());
 		_isMaster = master;
 		_owner = owner;
 		_lifetime = GameConstants.SHOT_TTL; // TODO not nice but enough for now
@@ -98,15 +98,6 @@ public class LaserBeam extends ShotEntity
 		return 0;
 	}
 
-	/**
-	 * @return the damage from the shot
-	 */
-	@Override
-	public double getDamage()
-	{
-		return _isMaster ? GameConstants.DMG_MASTER_LASER : GameConstants.DMG_LASER;
-	}
-
 	public int getLifetime()
 	{
 		return _lifetime;
@@ -124,12 +115,6 @@ public class LaserBeam extends ShotEntity
 	public double getMaximumSpeed()
 	{
 		return 0;
-	}
-
-	@Override
-	public int getNeededAmmo()
-	{
-		return this.isMaster() ? GameConstants.AMMO_PER_MASTER_SHOT : GameConstants.AMMO_PER_SHOT;
 	}
 
 	@Override

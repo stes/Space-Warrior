@@ -26,7 +26,7 @@ public class MGProjectile extends Projectile
 {
 	public MGProjectile(double x, double y, double direction, SpaceShip owner)
 	{
-		super(x, y, direction, owner, IWeapon.MG);
+		super(x, y, direction, owner, WeaponType.MG.getID());
 	}
 
 	@Override

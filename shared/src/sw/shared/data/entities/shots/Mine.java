@@ -15,7 +15,7 @@ public class Mine extends Projectile
 
 	public Mine(double x, double y, double direction, SpaceShip owner)
 	{
-		super(x, y, direction, owner, IWeapon.MINE);
+		super(x, y, direction, owner, WeaponType.MINE.getID());
 		_lifetime = 100;
 	}
 
@@ -44,11 +44,6 @@ public class Mine extends Projectile
 		return Math.PI / 8;
 	}
 
-	@Override
-	public double getDamage()
-	{
-		return GameConstants.DMG_MINE;
-	}
 
 	@Override
 	public int getImageID()
@@ -60,12 +55,6 @@ public class Mine extends Projectile
 	public double getMaximumSpeed()
 	{
 		return 0;
-	}
-
-	@Override
-	public int getNeededAmmo()
-	{
-		return GameConstants.AMMO_PER_MINE;
 	}
 
 	@Override
