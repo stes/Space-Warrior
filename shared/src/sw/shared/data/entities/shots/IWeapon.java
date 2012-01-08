@@ -36,11 +36,11 @@ public interface IWeapon extends IEntity
 	public enum WeaponType
 	{
 		LASER((byte) 0x10, 10, 20, 0, 0, 0, "sw.shared.data.entities.shots.LaserBeam"),
-		MASTER_LASER((byte) 0x20, 50, 30, 0, 0, 0, "sw.shared.data.entities.shots.LaserBeam"),
+		MASTER_LASER((byte) 0x20, 50, 30, 0, 0, 0, "sw.shared.data.entities.shots.MasterLaserBeam"),
 		ROCKET((byte) 0x30, 50, 50, GameConstants.TICK_INTERVAL * 0.02, 0, 32,
-				"sw.shared.data.entities.shots.LaserBeam"),
+				"sw.shared.data.entities.shots.Rocket"),
 		MINE((byte) 0x40, 20, 60, 0,
-				GameConstants.TICK_INTERVAL * 0.001, 0, "sw.shared.data.entities.shots.LaserBeam");
+				GameConstants.TICK_INTERVAL * 0.001, 0, "sw.shared.data.entities.shots.Mine");
 		// MG((byte) 0x50, 50, 50, 0, 0, 0);
 
 		private final int _ammo;

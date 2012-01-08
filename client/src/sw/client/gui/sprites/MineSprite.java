@@ -1,10 +1,8 @@
-package sw.client.gui;
+package sw.client.gui.sprites;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import sw.client.gui.sprites.IShotSprite;
-import sw.client.gui.sprites.Sprite;
 import sw.shared.data.entities.shots.Projectile;
 
 public class MineSprite extends Sprite implements IShotSprite

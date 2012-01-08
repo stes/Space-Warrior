@@ -29,9 +29,6 @@ import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.shots.IWeapon;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
-import sw.shared.data.entities.shots.LaserBeam;
-import sw.shared.data.entities.shots.Mine;
-import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -379,39 +376,17 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		if (this.isReadyToShoot())
 		{
 			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
-			switch (WeaponType.getWeaponType(id))
+			try
 			{
-				case LASER:
-					s = new LaserBeam(this.positionAfter(time).x,
-							this.positionAfter(time).y,
-							this.getDirection(),
-							this);
-					break;
-				case MASTER_LASER:
-					s = new LaserBeam(this.positionAfter(time).x,
-							this.positionAfter(time).y,
-							this.getDirection(),
-							this,
-							true);
-					break;
-				case ROCKET:
-					s = new Rocket(this.positionAfter(time).x,
-							this.positionAfter(time).y,
-							this.getDirection(),
-							this);
-					((Rocket) s).setSpeed(this.getSpeed());
-					break;
-				case MINE:
-					s = new Mine(this.positionAfter(time).x,
-							this.positionAfter(time).y,
-							this.getDirection(),
-							this);
-					break;
-//				case MG:
-//					throw new UnsupportedOperationException("Not implemented yet.");
-					// break;
-				default:
-					return;
+				s = WeaponType.getWeaponType(id).createInstance(
+						this.positionAfter(time).x,
+						this.positionAfter(time).y,
+						this.getDirection(),
+						this);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
 			}
 			if (_ammo >= s.getNeededAmmo())
 			{
