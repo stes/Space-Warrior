@@ -56,7 +56,6 @@ public abstract class ParticleSprite extends ImageSprite
 
 	private final void processParticles(double scaleX, double scaleY)
 	{
-		// TODO use an own thread for this?
 		if (System.currentTimeMillis() - this._lastParticleUpdate < 10)
 		{
 			return;

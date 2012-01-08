@@ -407,8 +407,8 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 							this.getDirection(),
 							this);
 					break;
-				case MG:
-					throw new UnsupportedOperationException("Not implemented yet.");
+//				case MG:
+//					throw new UnsupportedOperationException("Not implemented yet.");
 					// break;
 				default:
 					return;

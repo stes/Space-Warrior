@@ -26,10 +26,8 @@ import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.IEntity;
 import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.data.entities.shots.IWeapon;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
-import sw.shared.data.entities.shots.LaserBeam;
-import sw.shared.data.entities.shots.Mine;
-import sw.shared.data.entities.shots.Rocket;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -72,7 +70,7 @@ public class GameWorld
 		int size = p.readInt();
 		for (int i = 0; i < size; i++)
 		{
-			IEntity newEnt;
+			IEntity newEnt = null;
 			// TODO move this somewhere else?
 			int val = p.readByte();
 			int type = val & 0x0F;
@@ -87,25 +85,14 @@ public class GameWorld
 			}
 			else if (type == Packettype.SNAP_SHOT)
 			{
-				switch (WeaponType.getWeaponType(subtype))
+				try
 				{
-					case LASER:
-						newEnt = new LaserBeam(0, 0, 0, null);
-						break;
-					case MASTER_LASER:
-						newEnt = new LaserBeam(0, 0, 0, null);
-						break;
-					case ROCKET:
-						newEnt = new Rocket(0, 0, 0, null);
-						break;
-					case MG:
-						throw new UnsupportedOperationException("Not implemented yet");
-					case MINE:
-						newEnt = new Mine(0, 0, 0, null);
-						break;
-					default:
-						System.out.println("Error: unknown snap item (" + type + ")");
-						return;
+					newEnt = WeaponType.getWeaponType(subtype).createInstance(0, 0, 0, null);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					return;
 				}
 			}
 			else
@@ -114,6 +101,8 @@ public class GameWorld
 				return;
 			}
 			newEnt.fromSnap(p);
+			if (newEnt instanceof IWeapon)
+				System.out.println(newEnt.toString());
 			tmp.put(newEnt.getID(), newEnt);
 		}
 

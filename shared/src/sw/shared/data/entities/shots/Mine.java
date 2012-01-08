@@ -33,28 +33,9 @@ public class Mine extends Projectile
 	}
 
 	@Override
-	public double getAcceleration()
-	{
-		return 0;
-	}
-
-	@Override
-	public double getAngularAcceleration()
-	{
-		return Math.PI / 8;
-	}
-
-
-	@Override
 	public int getImageID()
 	{
 		return GameConstants.Images.SHOT_MINE.getID();
-	}
-
-	@Override
-	public double getMaximumSpeed()
-	{
-		return 0;
 	}
 
 	@Override

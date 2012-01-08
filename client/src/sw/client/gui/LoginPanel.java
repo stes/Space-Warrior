@@ -342,14 +342,6 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				// TODO bugfix: problem with event dispatching
-				// Handle open button action.
-				// int returnVal = _fileChooser.showOpenDialog(_self);
-
-				// if (returnVal == JFileChooser.APPROVE_OPTION)
-				// {
-				// GameController.setAIPlugin(_fileChooser.getSelectedFile());
-				// }
 				GameController.setAIPlugin(new File(_txtChooseAI.getText()));
 			}
 		});
