@@ -26,7 +26,7 @@ import sw.shared.data.entities.IStaticEntity;
 /**
  * A sprite which uses a particle system
  * 
- * @author stes
+ * @author Redix, stes
  * @version 05.01.2012
  */
 public abstract class ParticleSprite extends ImageSprite

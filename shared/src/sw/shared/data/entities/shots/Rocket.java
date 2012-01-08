@@ -28,6 +28,10 @@ public class Rocket extends Projectile
 	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
 		super(x, y, direction, owner, WeaponType.ROCKET.getID());
+		if (owner != null)
+		{
+			this.setSpeed(owner.getSpeed());
+		}
 	}
 
 	@Override

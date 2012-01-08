@@ -65,11 +65,11 @@ public final class ParticleSystem
 				_lastTick = System.currentTimeMillis();
 				while (true)
 				{
-					while (System.currentTimeMillis() - _lastTick < 10)
+					while (System.currentTimeMillis() - _lastTick < 20)
 					{
 						try
 						{
-							Thread.sleep(1);
+							Thread.sleep(4);
 						}
 						catch (InterruptedException e)
 						{
@@ -88,6 +88,7 @@ public final class ParticleSystem
 	{
 		if (_tickThread.isAlive())
 			_tickThread.interrupt();
+		_particles.clear();
 	}
 	
 	/**
@@ -118,10 +119,13 @@ public final class ParticleSystem
 
 	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
-		for (int i = 0; i < _particles.size(); i++)
+		synchronized (_particles)
 		{
-			Particle p = _particles.get(i);
-			p.render(g, scaleX, scaleY);
+			for (int i = 0; i < _particles.size(); i++)
+			{
+				Particle p = _particles.get(i);
+				p.render(g, scaleX, scaleY);
+			}
 		}
 	}
 

@@ -18,7 +18,6 @@
 package sw.shared.data.entities.players;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.util.Random;
 
 import sw.shared.GameConstants;
@@ -299,14 +298,22 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 
 	public SpaceShip predict()
 	{
+		return this.predict(1);
+	}
+	
+	public SpaceShip predict(int ticks)
+	{
 		SpaceShip d = new SpaceShip(this);
-		if (_alive)
+		for (int i = 0; i < ticks; i++)
 		{
-			double x = -d.getSpeed() * Math.sin(d.getDirection());
-			double y = -d.getSpeed() * Math.cos(d.getDirection());
-			d.setX(d.getX() + x);
-			d.setY(d.getY() + y);
-			d.rotate(this.getTurnSpeed());
+			if (_alive)
+			{
+				double x = -d.getSpeed() * Math.sin(d.getDirection());
+				double y = -d.getSpeed() * Math.cos(d.getDirection());
+				d.setX(d.getX() + x);
+				d.setY(d.getY() + y);
+				d.rotate(this.getTurnSpeed());
+			}
 		}
 		return d;
 	}
@@ -375,12 +382,16 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		IWeapon s = null;
 		if (this.isReadyToShoot())
 		{
-			double time = GameConstants.SHOT_TTL / 2 / ((double) GameConstants.TICK_INTERVAL);
+			// TODO improve the prediction
+			int time = 0;
+			if (id == WeaponType.LASER.getID() || id == WeaponType.MASTER_LASER.getID())
+				time = (int)(GameConstants.SHOT_TTL * 0.35);
+			SpaceShip pred = this.predict(time);
 			try
 			{
 				s = WeaponType.getWeaponType(id).createInstance(
-						this.positionAfter(time).x,
-						this.positionAfter(time).y,
+						pred.getX(),
+						pred.getY(),
 						this.getDirection(),
 						this);
 			}
@@ -454,13 +465,6 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 
 		this.reload();
 		super.tick();
-	}
-
-	private Point.Double positionAfter(double time)
-	{
-		double way = time * this.getSpeed();
-		return new Point.Double(this.getX() + way * Math.sin(this.getDirection()), this.getY()
-				+ way * Math.cos(this.getDirection()));
 	}
 
 	private void setAcceleration(double value)

@@ -204,7 +204,7 @@ public class PlayingFieldPanel extends JPanel
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
-		_isDebugActive = true;;
+		_isDebugActive = false;
 	}
 
 	private void invokeExplosion(double x, double y)
