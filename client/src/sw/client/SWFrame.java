@@ -220,26 +220,35 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			try
 			{
 				g = _bufferStrategy.getDrawGraphics();
-				do
-				{
-					int state = _screen.validate(this.getGraphicsConfiguration());
-					if (state == VolatileImage.IMAGE_INCOMPATIBLE)
-					{
-						_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
-					}
-					Graphics2D g2d = _screen.createGraphics();
-					this.render(g2d);
-					g2d.dispose();
-					Insets insets = this.getInsets();
-					g.drawImage(_screen, insets.left, insets.top, null);
-				}
-				while (_screen.contentsLost());
 			}
-			finally
+			catch (IllegalStateException e)
 			{
-				g.dispose();
+				continue;
 			}
-
+			synchronized (g)
+			{
+				try
+				{
+					do
+					{
+						int state = _screen.validate(this.getGraphicsConfiguration());
+						if (state == VolatileImage.IMAGE_INCOMPATIBLE)
+						{
+							_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
+						}
+						Graphics2D g2d = _screen.createGraphics();
+						this.render(g2d);
+						g2d.dispose();
+						Insets insets = this.getInsets();
+						g.drawImage(_screen, insets.left, insets.top, null);
+					}
+					while (_screen.contentsLost());
+				}
+				finally
+				{
+					g.dispose();
+				}
+			}
 			if (!_bufferStrategy.contentsLost())
 			{
 				_bufferStrategy.show();
@@ -330,7 +339,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		if (mode == GUIMode.LOGIN)
 		{
 			_activePanel = _loginPanel;
-			//_gamePanel.removed();
+			// _gamePanel.removed();
 		}
 		else if (mode == GUIMode.GAME)
 		{

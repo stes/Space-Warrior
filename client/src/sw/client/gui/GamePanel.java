@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Space Warrior - an open source multiplayer shooter
+nö * Space Warrior - an open source multiplayer shooter
  * Copyright (C) 2011 Redix stes Abbadonn
  * 
  * This program is free software: you can redistribute it and/or modify

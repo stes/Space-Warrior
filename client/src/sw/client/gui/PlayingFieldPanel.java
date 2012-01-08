@@ -48,7 +48,6 @@ import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.IDamageable;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.LaserBeam;
-import sw.shared.data.entities.shots.Mine;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
@@ -111,6 +110,7 @@ public class PlayingFieldPanel extends JPanel
 		// determine scale factors
 		double scaleX = this.getScaleX();
 		double scaleY = this.getScaleY();
+		System.out.println(scaleX);
 
 		// draw
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
@@ -308,11 +308,6 @@ public class PlayingFieldPanel extends JPanel
 					else if (e instanceof LaserBeam)
 					{
 						_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
-					}
-					else if (e instanceof Mine)
-					{
-						System.out.println("added mine");
-						_sprites.put(e.getID(), new MineSprite((Mine) e));
 					}
 					// TODO handle other entity types as well
 				}
