@@ -29,7 +29,7 @@ import sw.shared.data.entities.IStaticEntity;
  * @author stes
  * @version 05.01.2012
  */
-public class ParticleSprite extends ImageSprite
+public abstract class ParticleSprite extends ImageSprite
 {
 	protected static Random _random = new Random(System.currentTimeMillis());
 
@@ -54,7 +54,7 @@ public class ParticleSprite extends ImageSprite
 		return _particleSystem;
 	}
 
-	protected void processParticles(double scaleX, double scaleY)
+	private final void processParticles(double scaleX, double scaleY)
 	{
 		// TODO use an own thread for this?
 		if (System.currentTimeMillis() - this._lastParticleUpdate < 10)
@@ -62,6 +62,8 @@ public class ParticleSprite extends ImageSprite
 			return;
 		}
 		_lastParticleUpdate = System.currentTimeMillis();
-		_particleSystem.tick();
+		spawnParticles(scaleX, scaleY);
 	}
+	
+	protected abstract void spawnParticles(double scaleX, double scaleY);
 }

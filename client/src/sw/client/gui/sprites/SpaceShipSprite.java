@@ -37,9 +37,8 @@ public class SpaceShipSprite extends ParticleSprite
 	}
 
 	@Override
-	protected void processParticles(double scaleX, double scaleY)
+	protected void spawnParticles(double scaleX, double scaleY)
 	{
-		super.processParticles(scaleX, scaleY);
 		MoveableEntity player = (MoveableEntity) this.getEntity();
 
 		// TODO improve

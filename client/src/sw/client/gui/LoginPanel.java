@@ -191,9 +191,6 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	public void render(Graphics g)
 	{
 		this.paintComponents(g);
-		// TODO improve
-		// if (_fileChooser.isShowing())
-		// this._fileChooser.paint(_fileChooser.getGraphics());
 	}
 
 	@Override

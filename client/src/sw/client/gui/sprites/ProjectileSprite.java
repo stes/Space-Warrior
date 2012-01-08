@@ -38,9 +38,8 @@ public class ProjectileSprite extends ParticleSprite implements IShotSprite
 	}
 
 	@Override
-	protected void processParticles(double scaleX, double scaleY)
+	protected void spawnParticles(double scaleX, double scaleY)
 	{
-		super.processParticles(scaleX, scaleY);
 		Projectile projectile = (Projectile) this.getEntity();
 
 		// TODO improve

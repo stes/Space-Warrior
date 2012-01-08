@@ -130,5 +130,5 @@ public final class GameConstants
 
 	// Scoring
 	public final static int POINTS_PER_HIT = 1;
-	public final static int POINTS_PER_KILL = 10;
+	public final static int POINTS_PER_KILL = 1;
 }

@@ -324,4 +324,13 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 		_client.sendPacket(p);
 	}
 
+	public void removed()
+	{
+		_playingField.stopThreads();
+	}
+	
+	public void added()
+	{
+		_playingField.startThreads();
+	}
 }

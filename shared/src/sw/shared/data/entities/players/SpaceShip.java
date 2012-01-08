@@ -152,7 +152,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public void die()
 	{
 		_alive = false;
-		this.setScore(this.getScore() / 2);
+		this.setScore(this.getScore() - 1);
 	}
 
 	@Override

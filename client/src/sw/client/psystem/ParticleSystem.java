@@ -40,9 +40,13 @@ public class ParticleSystem
 	public final static int REMOVE_WHEN_HALTED = -1;;
 
 	private ArrayList<Particle> _particles;
-
+	private Thread _tickThread;
+	private ParticleSystem _self;
+	private long _lastTick;
+	
 	public ParticleSystem()
 	{
+		_self = this;
 		_particles = new ArrayList<Particle>();
 	}
 
@@ -51,6 +55,41 @@ public class ParticleSystem
 		return _particles.size();
 	}
 
+	public void start()
+	{
+		_tickThread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				_lastTick = System.currentTimeMillis();
+				while (true)
+				{
+					while (System.currentTimeMillis() - _lastTick < 10)
+					{
+						try
+						{
+							Thread.sleep(1);
+						}
+						catch (InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
+					_lastTick = System.currentTimeMillis();
+					_self.tick();
+				}
+			}
+		};
+		_tickThread.start();
+	}
+	
+	public void stop()
+	{
+		if (_tickThread.isAlive())
+			_tickThread.interrupt();
+	}
+	
 	/**
 	 * Spawns particles to simulate an explosion at the specific point
 	 * 
@@ -70,7 +109,7 @@ public class ParticleSystem
 			this.spawnParticle(ParticleType.CIRCULAR,
 					30,
 					new ValuePair(x, y),
-					v.multiply(3),
+					v.multiply(2),
 					v.multiply(0.1),
 					5,
 					new Color(ParticleSystem._random.nextInt(255), 0, 0));
@@ -79,9 +118,12 @@ public class ParticleSystem
 
 	public void render(Graphics2D g, double scaleX, double scaleY)
 	{
-		for (int i = 0; i < _particles.size(); i++)
+		synchronized (this)
 		{
-			_particles.get(i).render(g, scaleX, scaleY);
+			for (int i = 0; i < _particles.size(); i++)
+			{
+				_particles.get(i).render(g, scaleX, scaleY);
+			}
 		}
 	}
 
@@ -111,13 +153,16 @@ public class ParticleSystem
 
 	public void tick()
 	{
-		for (int i = 0; i < _particles.size(); i++)
+		synchronized (this)
 		{
-			Particle p = _particles.get(i);
-			p.tick();
-			if (!p.isAlive())
+			for (int i = 0; i < _particles.size(); i++)
 			{
-				_particles.remove(i);
+				Particle p = _particles.get(i);
+				p.tick();
+				if (!p.isAlive())
+				{
+					_particles.remove(i);
+				}
 			}
 		}
 	}

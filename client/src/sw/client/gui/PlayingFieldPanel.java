@@ -85,6 +85,7 @@ public class PlayingFieldPanel extends JPanel
 		_backgroundImg = ImageContainer.getLocalInstance().getImage(GameConstants.Images.BACKGROUND);
 		_sprites = new HashMap<Integer, Sprite>();
 		_particleSystem = new ParticleSystem();
+		_particleSystem.start();
 		this.setIgnoreRepaint(true);
 		this.init();
 	}
@@ -318,5 +319,15 @@ public class PlayingFieldPanel extends JPanel
 			}
 		}
 		this.removeOutdatedSprites();
+	}
+
+	public void stopThreads()
+	{
+		_particleSystem.stop();
+	}
+
+	public void startThreads()
+	{
+		_particleSystem.start();
 	}
 }

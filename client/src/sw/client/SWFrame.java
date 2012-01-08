@@ -330,10 +330,12 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		if (mode == GUIMode.LOGIN)
 		{
 			_activePanel = _loginPanel;
+			//_gamePanel.removed();
 		}
 		else if (mode == GUIMode.GAME)
 		{
 			_activePanel = _gamePanel;
+			_gamePanel.added();
 		}
 		this.add(_activePanel);
 		System.out.println("switch mode");
