@@ -108,11 +108,11 @@ public final class ParticleSystem
 					* ParticleSystem._random.nextDouble(), Math.sin(dir) * 10 + 10
 					* ParticleSystem._random.nextDouble());
 			this.spawnParticle(ParticleType.CIRCULAR,
-					30,
+					20,
 					new ValuePair(x, y),
-					v.multiply(2),
+					v.multiply(1.5),
 					v.multiply(0.1),
-					5,
+					4,
 					new Color(ParticleSystem._random.nextInt(255), 0, 0));
 		}
 	}

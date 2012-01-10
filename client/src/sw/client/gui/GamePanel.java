@@ -171,7 +171,7 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	@Override
 	public void playerInit(GameStateChangedEvent e)
 	{
-		// TODO best practise?
+		// TODO best practice?
 		_playingField.playerInit();
 	}
 
@@ -328,7 +328,7 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	{
 		_playingField.stopThreads();
 	}
-	
+
 	public void added()
 	{
 		_playingField.startThreads();

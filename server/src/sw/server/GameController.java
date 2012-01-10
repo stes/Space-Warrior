@@ -90,6 +90,7 @@ public class GameController implements ServerListener
 	 */
 	public void startGame()
 	{
+		_world.removeShotEntities();
 		for (SpaceShip pl : _players.values())
 		{
 			pl.respawn();

@@ -50,11 +50,18 @@ public class GameWorld
 	}
 
 	/**
-	 * Removes all entities
+	 * Removes all entities except the gamestate
 	 */
-	public void clear()
+	public void removeShotEntities()
 	{
-		_entities.clear();
+		Integer[] keys = _entities.keySet().toArray(new Integer[]{});
+		for (int i = 0; i < keys.length; i++)
+		{
+			if (_entities.get(keys[i]) instanceof IWeapon)
+			{
+				_entities.remove(keys[i]);
+			}
+		}
 	}
 
 	/**

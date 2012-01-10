@@ -110,7 +110,6 @@ public class PlayingFieldPanel extends JPanel
 		// determine scale factors
 		double scaleX = this.getScaleX();
 		double scaleY = this.getScaleY();
-		System.out.println(scaleX);
 
 		// draw
 		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
@@ -285,7 +284,6 @@ public class PlayingFieldPanel extends JPanel
 					if ((e instanceof Projectile && ((Projectile) e).isExploding())
 							|| (e instanceof IDamageable && !((SpaceShip) e).isAlive()))
 					{
-						System.out.println("removed " + e.toString());
 						this.invokeExplosion(e.getX(), e.getY());
 						_sprites.remove(e.getID());
 					}

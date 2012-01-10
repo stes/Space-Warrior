@@ -59,7 +59,7 @@ public class ProjectileSprite extends ParticleSprite implements IShotSprite
 							new ValuePair(projectile.getPosition()),
 							v,
 							v.multiply(-0.1, -0.1),
-							5,
+							4,
 							Color.RED.darker().darker());
 				}
 			}
