@@ -287,31 +287,41 @@ public class PlayingFieldPanel extends JPanel
 						this.invokeExplosion(e.getX(), e.getY());
 						_sprites.remove(e.getID());
 					}
-					else
+					else if (e.getClass().equals(_sprites.get(e.getID()).getEntity().getClass()))
 					{
 						_sprites.get(e.getID()).updateEntity(e, prevEnt);
+					}
+					else
+					{
+						_sprites.remove(e.getID());
+						this.addEntity(e);
 					}
 				}
 				else if (!((e instanceof Projectile && ((Projectile) e).isExploding()) || (e instanceof IDamageable && !((SpaceShip) e).isAlive())))
 				{
-					if (e instanceof SpaceShip)
-					{
-						_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip) e, _particleSystem));
-					}
-					else if (e instanceof Projectile)
-					{
-						_sprites.put(e.getID(), new ProjectileSprite((Projectile) e,
-								_particleSystem));
-					}
-					else if (e instanceof LaserBeam)
-					{
-						_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
-					}
-					// TODO handle other entity types as well
+					this.addEntity(e);
 				}
 			}
 		}
 		this.removeOutdatedSprites();
+	}
+	
+	private void addEntity(IEntity e)
+	{
+		if (e instanceof SpaceShip)
+		{
+			_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip) e, _particleSystem));
+		}
+		else if (e instanceof Projectile)
+		{
+			_sprites.put(e.getID(), new ProjectileSprite((Projectile) e,
+					_particleSystem));
+		}
+		else if (e instanceof LaserBeam)
+		{
+			_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
+		}
+		// TODO handle other entity types as well
 	}
 
 	public void stopThreads()
