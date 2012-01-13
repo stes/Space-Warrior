@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.shared.data.entities;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import sw.shared.GameConstants;
@@ -38,6 +39,10 @@ public interface IStaticEntity extends IEntity
 			- GameConstants.PLAYER_SIZE / 2;
 
 	public double getDirection();
+	
+	public double distanceTo(IStaticEntity entity);
+
+	public double distanceTo(Point.Double p);
 
 	public Point2D.Double getPosition();
 

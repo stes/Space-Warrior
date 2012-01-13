@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.entities.Entity;
 import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.IEntity;
+import sw.shared.data.entities.IStaticEntity;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.IWeapon;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
@@ -236,5 +238,20 @@ public class GameWorld
 			;
 		}
 		return i;
+	}
+
+	public boolean checkCollision(SpaceShip pl)
+	{
+		for (IEntity e : this.getAllEntities())
+		{
+			if (!e.equals(pl) && e instanceof IStaticEntity)
+			{
+				IStaticEntity stat = (IStaticEntity)e;
+				// TODO improve this (differentiate between different entities?)
+				if (stat.distanceTo(pl) < GameConstants.SPAWN_SAFETY_MARGIN)
+					return true;
+			}
+		}
+		return false;
 	}
 }

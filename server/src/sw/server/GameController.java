@@ -93,7 +93,11 @@ public class GameController implements ServerListener
 		_world.removeShotEntities();
 		for (SpaceShip pl : _players.values())
 		{
-			pl.respawn();
+			do
+			{
+				pl.respawn();
+			}
+			while(_world.checkCollision(pl));
 		}
 		_gameState.startNewRound();
 	}
