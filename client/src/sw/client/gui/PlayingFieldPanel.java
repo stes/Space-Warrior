@@ -29,7 +29,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Random;
 
 import javax.swing.JPanel;
 
@@ -155,6 +154,16 @@ public class PlayingFieldPanel extends JPanel
 		_isDebugActive = active;
 	}
 
+	public void startThreads()
+	{
+		_particleSystem.start();
+	}
+
+	public void stopThreads()
+	{
+		_particleSystem.stop();
+	}
+
 	// TODO improve this
 	protected BufferedImage rotateImage(BufferedImage src, double degrees)
 	{
@@ -169,6 +178,23 @@ public class PlayingFieldPanel extends JPanel
 	protected AffineTransform rotateTransform(BufferedImage src, double degrees)
 	{
 		return AffineTransform.getRotateInstance(degrees, src.getWidth() / 2, src.getHeight() / 2);
+	}
+
+	private void addEntity(IEntity e)
+	{
+		if (e instanceof SpaceShip)
+		{
+			_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip) e, _particleSystem));
+		}
+		else if (e instanceof Projectile)
+		{
+			_sprites.put(e.getID(), new ProjectileSprite((Projectile) e, _particleSystem));
+		}
+		else if (e instanceof LaserBeam)
+		{
+			_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
+		}
+		// TODO handle other entity types as well
 	}
 
 	private double getScaleX()
@@ -302,33 +328,5 @@ public class PlayingFieldPanel extends JPanel
 			}
 		}
 		this.removeOutdatedSprites();
-	}
-	
-	private void addEntity(IEntity e)
-	{
-		if (e instanceof SpaceShip)
-		{
-			_sprites.put(e.getID(), new SpaceShipSprite((SpaceShip) e, _particleSystem));
-		}
-		else if (e instanceof Projectile)
-		{
-			_sprites.put(e.getID(), new ProjectileSprite((Projectile) e,
-					_particleSystem));
-		}
-		else if (e instanceof LaserBeam)
-		{
-			_sprites.put(e.getID(), new LaserSprite((LaserBeam) e));
-		}
-		// TODO handle other entity types as well
-	}
-
-	public void stopThreads()
-	{
-		_particleSystem.stop();
-	}
-
-	public void startThreads()
-	{
-		_particleSystem.start();
 	}
 }

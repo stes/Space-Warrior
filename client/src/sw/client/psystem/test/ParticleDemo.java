@@ -26,7 +26,6 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.VolatileImage;
-import java.util.Random;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -34,8 +33,8 @@ import javax.swing.RepaintManager;
 
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
-import sw.client.psystem.ValuePair;
 import sw.shared.Tools;
+import sw.shared.util.ValuePair;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -246,30 +245,31 @@ public class ParticleDemo extends JFrame
 		if (_psys.countParticles() < 1000)
 		{
 			// explosion:
-			 for (int i = 0; i < 1000; i++)
-			 {
-			 _psys.spawnParticle(ParticleType.CIRCULAR,
-			 50,
-			 new ValuePair(200, 200),
-			 new ValuePair(0, 0),
-			 new ValuePair(10 * ((Tools.getRandom().nextDouble() * 2) - 1),
-			 10 * ((Tools.getRandom().nextDouble() * 2) - 1)),
-			 5,
-			 Color.RED);
-			 }
+			for (int i = 0; i < 1000; i++)
+			{
+				_psys.spawnParticle(ParticleType.CIRCULAR,
+						50,
+						new ValuePair(200, 200),
+						new ValuePair(0, 0),
+						new ValuePair(10 * ((Tools.getRandom().nextDouble() * 2) - 1),
+								10 * ((Tools.getRandom().nextDouble() * 2) - 1)),
+						5,
+						Color.RED);
+			}
 
 			// fountain
-//			for (int i = 0; i < 20; i++)
-//			{
-//				double acc = 20 * (_random.nextDouble() - 0.5);
-//				_psys.spawnParticle(ParticleType.CIRCULAR,
-//						50,
-//						new ValuePair(200, 200),
-//						new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
-//						new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 * Math.abs(acc)),
-//						acc,
-//						Color.RED);
-//			}
+			// for (int i = 0; i < 20; i++)
+			// {
+			// double acc = 20 * (_random.nextDouble() - 0.5);
+			// _psys.spawnParticle(ParticleType.CIRCULAR,
+			// 50,
+			// new ValuePair(200, 200),
+			// new ValuePair(acc * 0.75 * _random.nextDouble(), -Math.abs(acc)),
+			// new ValuePair(acc * 0.075 * _random.nextDouble(), 0.01 *
+			// Math.abs(acc)),
+			// acc,
+			// Color.RED);
+			// }
 		}
 		else
 		{

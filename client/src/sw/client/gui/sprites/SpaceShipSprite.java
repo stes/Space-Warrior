@@ -21,10 +21,10 @@ import java.awt.Color;
 
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
-import sw.client.psystem.ValuePair;
 import sw.shared.Tools;
 import sw.shared.data.entities.MoveableEntity;
 import sw.shared.data.entities.players.SpaceShip;
+import sw.shared.util.ValuePair;
 
 /**
  * @author Redix, stes
@@ -49,8 +49,7 @@ public class SpaceShipSprite extends ParticleSprite
 			{
 				double dir = -player.getDirection() + Tools.getRandom().nextDouble() * Math.PI
 						* 0.3 - Math.PI * 0.15 + Math.PI / 2;
-				double speed = player.getSpeed()
-						* Math.abs((1 + Tools.getRandom().nextGaussian()));
+				double speed = player.getSpeed() * Math.abs((1 + Tools.getRandom().nextGaussian()));
 				ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);
 				this.getParticleSystem().spawnParticle(ParticleType.CIRCULAR,
 						ParticleSystem.REMOVE_WHEN_HALTED,

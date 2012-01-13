@@ -50,7 +50,6 @@ import sw.shared.GameConstants.Images;
 import sw.shared.data.ServerInfo;
 
 /**
- * 
  * @author Redix, stes
  * @version 08.01.2012
  */

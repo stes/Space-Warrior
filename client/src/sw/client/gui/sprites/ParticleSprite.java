@@ -29,7 +29,7 @@ import sw.shared.data.entities.IStaticEntity;
  * @version 05.01.2012
  */
 public abstract class ParticleSprite extends ImageSprite
-{ 
+{
 	private ParticleSystem _particleSystem;
 	private long _lastParticleUpdate;
 
@@ -51,6 +51,8 @@ public abstract class ParticleSprite extends ImageSprite
 		return _particleSystem;
 	}
 
+	protected abstract void spawnParticles(double scaleX, double scaleY);
+
 	private final void processParticles(double scaleX, double scaleY)
 	{
 		if (System.currentTimeMillis() - this._lastParticleUpdate < 10)
@@ -58,8 +60,6 @@ public abstract class ParticleSprite extends ImageSprite
 			return;
 		}
 		_lastParticleUpdate = System.currentTimeMillis();
-		spawnParticles(scaleX, scaleY);
+		this.spawnParticles(scaleX, scaleY);
 	}
-	
-	protected abstract void spawnParticles(double scaleX, double scaleY);
 }

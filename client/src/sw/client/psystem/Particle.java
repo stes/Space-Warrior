@@ -20,6 +20,8 @@ package sw.client.psystem;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import sw.shared.util.ValuePair;
+
 /**
  * Base class for a particle
  * 
@@ -76,6 +78,9 @@ abstract class Particle
 		return _color;
 	}
 
+	/**
+	 * @return the lifetime
+	 */
 	public int getLifetime()
 	{
 		return _lifetime;
@@ -89,6 +94,9 @@ abstract class Particle
 		return _location;
 	}
 
+	/**
+	 * @return the size
+	 */
 	public double getSize()
 	{
 		return _size;
@@ -102,11 +110,24 @@ abstract class Particle
 		return _velocity;
 	}
 
+	/**
+	 * @return true, if the particle is still alive
+	 */
 	public boolean isAlive()
 	{
 		return (_lifetime > 0 || (_lifetime == ParticleSystem.REMOVE_WHEN_HALTED && this.getVelocity().getVectorLength() > 0.00001));
 	}
 
+	/**
+	 * Renders the particle
+	 * 
+	 * @param g
+	 *            The Graphics2D were the particle should be drawn on
+	 * @param scaleX
+	 *            the horizontal scale factor
+	 * @param scaleY
+	 *            the vertical scale factor
+	 */
 	public abstract void render(Graphics2D g, double scaleX, double scaleY);
 
 	/**
@@ -118,12 +139,20 @@ abstract class Particle
 		this._acceleration = acceleration;
 	}
 
+	/**
+	 * Sets the particle's lifetime
+	 * 
+	 * @param lifetime
+	 *            the new value (greater than zero)
+	 */
 	public void setLifetime(int lifetime)
 	{
 		_lifetime = Math.max(0, lifetime);
 	}
 
 	/**
+	 * location
+	 * 
 	 * @param location
 	 *            the location to set
 	 */
@@ -141,7 +170,10 @@ abstract class Particle
 		this._velocity = velocity;
 	}
 
-	public void tick()
+	/**
+	 * Performs one update on this particle
+	 */
+	protected void tick()
 	{
 		if (!this.isAlive())
 		{
@@ -154,6 +186,9 @@ abstract class Particle
 		this.move();
 	}
 
+	/**
+	 * moves and accelerates this particle
+	 */
 	private void move()
 	{
 		_location = _location.add(_velocity);

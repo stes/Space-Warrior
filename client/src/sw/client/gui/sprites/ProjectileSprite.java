@@ -21,9 +21,9 @@ import java.awt.Color;
 
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
-import sw.client.psystem.ValuePair;
 import sw.shared.Tools;
 import sw.shared.data.entities.shots.Projectile;
+import sw.shared.util.ValuePair;
 
 /**
  * @author Redix, stes

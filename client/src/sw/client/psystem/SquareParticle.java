@@ -20,6 +20,8 @@ package sw.client.psystem;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import sw.shared.util.ValuePair;
+
 /**
  * Particle with rectangular shape
  * 

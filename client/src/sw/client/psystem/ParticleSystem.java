@@ -19,10 +19,10 @@ package sw.client.psystem;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Random;
 import java.util.Vector;
 
 import sw.shared.Tools;
+import sw.shared.util.ValuePair;
 
 /**
  * Particle system to create animations such as explosions, fog etc.
@@ -32,6 +32,12 @@ import sw.shared.Tools;
  */
 public final class ParticleSystem
 {
+	/**
+	 * The particle types
+	 * 
+	 * @author stes
+	 * @version 13.01.2012
+	 */
 	public enum ParticleType
 	{
 		CIRCULAR
@@ -43,18 +49,127 @@ public final class ParticleSystem
 	private Thread _tickThread;
 	private ParticleSystem _self;
 	private long _lastTick;
-	
+
+	/**
+	 * Constructs a new Particle System
+	 */
 	public ParticleSystem()
 	{
 		_self = this;
 		_particles = new Vector<Particle>();
 	}
 
+	/**
+	 * @return the number of particles currently active
+	 */
 	public int countParticles()
 	{
 		return _particles.size();
 	}
 
+	/**
+	 * Spawns particles to simulate an explosion at the specific point
+	 * 
+	 * @param x
+	 *            the x coordinate
+	 * @param y
+	 *            this y coordinate
+	 */
+	public void explosion(double x, double y)
+	{
+		for (int i = 0; i < 500; i++)
+		{
+			double dir = Tools.getRandom().nextDouble() * 2 * Math.PI;
+			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10 * Tools.getRandom().nextDouble(),
+					Math.sin(dir) * 10 + 10 * Tools.getRandom().nextDouble());
+			this.spawnParticle(ParticleType.CIRCULAR,
+					20,
+					new ValuePair(x, y),
+					v.multiply(1.5),
+					v.multiply(0.1),
+					4,
+					new Color(Tools.getRandom().nextInt(255), 0, 0));
+		}
+	}
+
+	/**
+	 * Renders all particles
+	 * 
+	 * @param g
+	 *            a Graphics2D instance
+	 */
+	public void render(Graphics2D g)
+	{
+		this.render(g, 1, 1);
+	}
+
+	/**
+	 * Renders all particles
+	 * 
+	 * @param g
+	 *            a Graphics2D instance
+	 * @param scaleX
+	 *            the horizontal scale factor
+	 * @param scaleY
+	 *            the vertical scale factor
+	 */
+	public void render(Graphics2D g, double scaleX, double scaleY)
+	{
+		synchronized (_particles)
+		{
+			for (int i = 0; i < _particles.size(); i++)
+			{
+				Particle p = _particles.get(i);
+				p.render(g, scaleX, scaleY);
+			}
+		}
+	}
+
+	/**
+	 * Spawns a new particle with the specified attributes
+	 * 
+	 * @param type
+	 *            The particle type
+	 * @param lifetime
+	 *            The particle's lifetime in particle system ticks
+	 * @param spawnPoint
+	 *            The particle's initial location
+	 * @param velocity
+	 *            The particle's initial velocity
+	 * @param acceleration
+	 *            The particle's initial acceleration
+	 * @param size
+	 *            The particle's size
+	 * @param color
+	 *            The particle's color
+	 */
+	public void spawnParticle(
+			ParticleType type,
+			int lifetime,
+			ValuePair spawnPoint,
+			ValuePair velocity,
+			ValuePair acceleration,
+			double size,
+			Color color)
+	{
+		Particle particle = null;
+		switch (type)
+		{
+			case CIRCULAR:
+				particle = new CircularParticle(spawnPoint,
+						velocity,
+						acceleration,
+						lifetime,
+						size,
+						color);
+				break;
+		}
+		_particles.add(particle);
+	}
+
+	/**
+	 * starts the particle update thread
+	 */
 	public void start()
 	{
 		_tickThread = new Thread()
@@ -83,76 +198,22 @@ public final class ParticleSystem
 		};
 		_tickThread.start();
 	}
-	
+
+	/**
+	 * stops the particle update thread
+	 */
 	public void stop()
 	{
 		if (_tickThread.isAlive())
+		{
 			_tickThread.interrupt();
+		}
 		_particles.clear();
 	}
-	
+
 	/**
-	 * Spawns particles to simulate an explosion at the specific point
-	 * 
-	 * @param x
-	 *            the x coordinate
-	 * @param y
-	 *            this y coordinate
+	 * performs an update on all particles
 	 */
-	public void explosion(double x, double y)
-	{
-		for (int i = 0; i < 500; i++)
-		{
-			double dir = Tools.getRandom().nextDouble() * 2 * Math.PI;
-			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10
-					* Tools.getRandom().nextDouble(), Math.sin(dir) * 10 + 10
-					* Tools.getRandom().nextDouble());
-			this.spawnParticle(ParticleType.CIRCULAR,
-					20,
-					new ValuePair(x, y),
-					v.multiply(1.5),
-					v.multiply(0.1),
-					4,
-					new Color(Tools.getRandom().nextInt(255), 0, 0));
-		}
-	}
-
-	public void render(Graphics2D g, double scaleX, double scaleY)
-	{
-		synchronized (_particles)
-		{
-			for (int i = 0; i < _particles.size(); i++)
-			{
-				Particle p = _particles.get(i);
-				p.render(g, scaleX, scaleY);
-			}
-		}
-	}
-
-	public void spawnParticle(
-			ParticleType type,
-			int lifetime,
-			ValuePair spawnPoint,
-			ValuePair velocity,
-			ValuePair acceleration,
-			double size,
-			Color color)
-	{
-		Particle particle = null;
-		switch (type)
-		{
-			case CIRCULAR:
-				particle = new CircularParticle(spawnPoint,
-						velocity,
-						acceleration,
-						lifetime,
-						size,
-						color);
-				break;
-		}
-		_particles.add(particle);
-	}
-
 	private void tick()
 	{
 		for (int i = 0; i < _particles.size(); i++)

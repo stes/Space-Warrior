@@ -154,6 +154,11 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 		_connectionListener.add(l);
 	}
 
+	public void added()
+	{
+		_playingField.startThreads();
+	}
+
 	@Override
 	public void chatMessage(String name, String text)
 	{
@@ -178,6 +183,11 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 	public void removeConnecionListener(ConnectionListener l)
 	{
 		_connectionListener.remove(l);
+	}
+
+	public void removed()
+	{
+		_playingField.stopThreads();
 	}
 
 	public void render(Graphics2D g)
@@ -322,15 +332,5 @@ public class GamePanel extends JPanel implements ClientMessageListener, ActionLi
 		}
 		p.writeUTF(content);
 		_client.sendPacket(p);
-	}
-
-	public void removed()
-	{
-		_playingField.stopThreads();
-	}
-
-	public void added()
-	{
-		_playingField.startThreads();
 	}
 }

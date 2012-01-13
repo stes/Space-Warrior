@@ -298,7 +298,7 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	{
 		return this.predict(1);
 	}
-	
+
 	public SpaceShip predict(int ticks)
 	{
 		SpaceShip d = new SpaceShip(this);
@@ -383,12 +383,11 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 			// TODO improve the prediction
 			int time = 0;
 			if (id == WeaponType.LASER.getID() || id == WeaponType.MASTER_LASER.getID())
-				time = (int)(GameConstants.SHOT_TTL * 0.35);
+				time = (int) (GameConstants.SHOT_TTL * 0.35);
 			SpaceShip pred = this.predict(time);
 			try
 			{
-				s = WeaponType.getWeaponType(id).createInstance(
-						pred.getX(),
+				s = WeaponType.getWeaponType(id).createInstance(pred.getX(),
 						pred.getY(),
 						this.getDirection(),
 						this);
