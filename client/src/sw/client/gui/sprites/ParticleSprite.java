@@ -18,7 +18,6 @@
 package sw.client.gui.sprites;
 
 import java.awt.Graphics2D;
-import java.util.Random;
 
 import sw.client.psystem.ParticleSystem;
 import sw.shared.data.entities.IStaticEntity;
@@ -30,9 +29,7 @@ import sw.shared.data.entities.IStaticEntity;
  * @version 05.01.2012
  */
 public abstract class ParticleSprite extends ImageSprite
-{
-	protected static Random _random = new Random(System.currentTimeMillis());
-
+{ 
 	private ParticleSystem _particleSystem;
 	private long _lastParticleUpdate;
 

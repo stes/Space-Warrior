@@ -18,10 +18,10 @@
 package sw.shared.data.entities.players;
 
 import java.awt.Dimension;
-import java.util.Random;
 
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
+import sw.shared.Tools;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.IImageEntity;
 import sw.shared.data.entities.IStaticEntity;
@@ -38,8 +38,6 @@ import sw.shared.net.Unpacker;
 public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, IDamageable,
 		IAttacker, IImageEntity
 {
-	private static Random _random = new Random();
-
 	private String _name;
 	private int _lifepoints;
 	private int _ammo;
@@ -332,12 +330,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public void respawn()
 	{
 		int rand = GameConstants.PLAYER_SIZE / 2 + 1;
-		int x = rand + SpaceShip._random.nextInt((int) IStaticEntity.MAX_X - rand);
-		int y = rand + SpaceShip._random.nextInt((int) IStaticEntity.MAX_Y - rand);
+		int x = rand + Tools.getRandom().nextInt((int) IStaticEntity.MAX_X - rand);
+		int y = rand + Tools.getRandom().nextInt((int) IStaticEntity.MAX_Y - rand);
 		this.setX(x);
 		this.setY(y);
 		this.setSpeed(0);
-		this.setDirection(SpaceShip._random.nextDouble() * 2 * Math.PI);
+		this.setDirection(Tools.getRandom().nextDouble() * 2 * Math.PI);
 		_lifepoints = GameConstants.MAX_LIVES;
 		_ammo = GameConstants.MAX_AMMO;
 		_alive = true;

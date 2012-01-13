@@ -35,6 +35,7 @@ import javax.swing.RepaintManager;
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
+import sw.shared.Tools;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -76,7 +77,6 @@ public class ParticleDemo extends JFrame
 	private BufferStrategy _bufferStrategy;
 	private boolean _isRunning;
 	private int _fps;
-	private Random _random = new Random(System.currentTimeMillis());
 
 	private ParticleDemo _self;
 
@@ -252,8 +252,8 @@ public class ParticleDemo extends JFrame
 			 50,
 			 new ValuePair(200, 200),
 			 new ValuePair(0, 0),
-			 new ValuePair(10 * ((_random.nextDouble() * 2) - 1),
-			 10 * ((_random.nextDouble() * 2) - 1)),
+			 new ValuePair(10 * ((Tools.getRandom().nextDouble() * 2) - 1),
+			 10 * ((Tools.getRandom().nextDouble() * 2) - 1)),
 			 5,
 			 Color.RED);
 			 }

@@ -56,8 +56,6 @@ import sw.shared.data.entities.shots.Projectile;
  */
 public class PlayingFieldPanel extends JPanel
 {
-	@SuppressWarnings("unused")
-	private static final Random _random = new Random(System.currentTimeMillis());
 	private static final long serialVersionUID = -8647279084154615455L;
 
 	private PlayingFieldPanel _self;

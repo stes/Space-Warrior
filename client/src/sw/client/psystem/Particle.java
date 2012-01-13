@@ -19,7 +19,6 @@ package sw.client.psystem;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Random;
 
 /**
  * Base class for a particle
@@ -29,8 +28,6 @@ import java.util.Random;
  */
 abstract class Particle
 {
-	protected static Random _random = new Random(System.currentTimeMillis());
-
 	private final static int LIFETIME = 50;
 	private final static double SIZE = 3;
 

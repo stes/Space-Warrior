@@ -22,6 +22,8 @@ import java.awt.Graphics2D;
 import java.util.Random;
 import java.util.Vector;
 
+import sw.shared.Tools;
+
 /**
  * Particle system to create animations such as explosions, fog etc.
  * 
@@ -34,8 +36,6 @@ public final class ParticleSystem
 	{
 		CIRCULAR
 	}
-
-	private static final Random _random = new Random(System.currentTimeMillis());
 
 	public final static int REMOVE_WHEN_HALTED = -1;;
 
@@ -103,17 +103,17 @@ public final class ParticleSystem
 	{
 		for (int i = 0; i < 500; i++)
 		{
-			double dir = ParticleSystem._random.nextDouble() * 2 * Math.PI;
+			double dir = Tools.getRandom().nextDouble() * 2 * Math.PI;
 			ValuePair v = new ValuePair(Math.cos(dir) * 10 + 10
-					* ParticleSystem._random.nextDouble(), Math.sin(dir) * 10 + 10
-					* ParticleSystem._random.nextDouble());
+					* Tools.getRandom().nextDouble(), Math.sin(dir) * 10 + 10
+					* Tools.getRandom().nextDouble());
 			this.spawnParticle(ParticleType.CIRCULAR,
 					20,
 					new ValuePair(x, y),
 					v.multiply(1.5),
 					v.multiply(0.1),
 					4,
-					new Color(ParticleSystem._random.nextInt(255), 0, 0));
+					new Color(Tools.getRandom().nextInt(255), 0, 0));
 		}
 	}
 

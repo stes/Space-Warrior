@@ -22,6 +22,7 @@ import java.awt.Color;
 import sw.client.psystem.ParticleSystem;
 import sw.client.psystem.ParticleSystem.ParticleType;
 import sw.client.psystem.ValuePair;
+import sw.shared.Tools;
 import sw.shared.data.entities.shots.Projectile;
 
 /**
@@ -49,10 +50,10 @@ public class ProjectileSprite extends ParticleSprite implements IShotSprite
 			{
 				for (int i = 0; i < 20; i++)
 				{
-					double dir = -projectile.getDirection() + ParticleSprite._random.nextDouble()
+					double dir = -projectile.getDirection() + Tools.getRandom().nextDouble()
 							* Math.PI / 4 - Math.PI / 8 + Math.PI / 2;
 					double speed = projectile.getSpeed()
-							* Math.abs((1 + ParticleSprite._random.nextGaussian()));
+							* Math.abs((1 + Tools.getRandom().nextGaussian()));
 					ValuePair v = new ValuePair(Math.cos(dir) * speed, Math.sin(dir) * speed);
 					this.getParticleSystem().spawnParticle(ParticleType.CIRCULAR,
 							ParticleSystem.REMOVE_WHEN_HALTED,
