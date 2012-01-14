@@ -136,19 +136,19 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		{
 			try
 			{
-				System.out.println("Successfully loaded AI Player.");
+				SWFrame.out.println("Successfully loaded AI Player.");
 				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				System.out.println("Unable to load AI Player. Loading default player instead");
+				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
 				_localPlayer = new HumanPlayer(this);
 			}
 		}
 		else
 		{
-			System.out.println("no AI player selected, using default player");
+			SWFrame.out.println("no AI player selected, using default player");
 			_localPlayer = new HumanPlayer(this);
 		}
 		this.invokePlayerInit(new GameStateChangedEvent(this));

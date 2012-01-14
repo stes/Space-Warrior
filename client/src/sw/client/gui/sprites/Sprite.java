@@ -25,6 +25,8 @@ import java.awt.image.BufferedImage;
 import sw.shared.data.entities.IStaticEntity;
 
 /**
+ * Base class of all sprites
+ * 
  * @author Redix, stes
  * @version 05.01.2012
  */

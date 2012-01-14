@@ -43,6 +43,7 @@ import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientConnlessListener;
 import sw.client.GameController;
+import sw.client.SWFrame;
 import sw.client.gui.ConnectionEvent.ActionType;
 import sw.server.SWServer;
 import sw.shared.GameConstants;
@@ -283,7 +284,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			{
 				if (!_txtName.getText().isEmpty())
 				{
-					System.out.println("connect");
+					SWFrame.out.println("connect");
 					ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGIN);
 					e.setIPAdress(new InetSocketAddress(_txtIPAddress.getText(),
 							Integer.parseInt(_txtPort.getText())));

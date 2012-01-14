@@ -52,6 +52,9 @@ import sw.shared.net.Packer;
  */
 public class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener
 {
+	public static PrintStream out;
+	private static StringBuilder _sb;
+	
 	private enum GUIMode
 	{
 		LOGIN, GAME
@@ -101,6 +104,17 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	{
 		super("Space Warrior");
 
+//		out = new PrintStream(new OutputStream()
+//		{
+//			@Override
+//			public void write(int i) throws IOException
+//			{
+//				_sb.append((char)i);
+//			}
+//		}, true);
+		
+		out = System.out;
+		
 		_self = this;
 		this.setIgnoreRepaint(true);
 
@@ -295,7 +309,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			}
 		});
 
-		System.out.println("init");
+		SWFrame.out.println("init");
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		_client = new SWClient();
@@ -347,7 +361,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			_gamePanel.added();
 		}
 		this.add(_activePanel);
-		System.out.println("switch mode");
+		SWFrame.out.println("switch mode");
 		this.setVisible(true);
 	}
 }

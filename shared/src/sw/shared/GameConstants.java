@@ -110,8 +110,8 @@ public final class GameConstants
 	public final static int MAX_COLLISION_DAMAGE_RANGE = GameConstants.PLAYER_SIZE;
 
 	// Playing field
-	public final static int PLAYING_FIELD_WIDTH = 200;
-	public final static int PLAYING_FIELD_HEIGHT = 200;
+	public final static int PLAYING_FIELD_WIDTH = 1200;
+	public final static int PLAYING_FIELD_HEIGHT = 800;
 	public final static int REFERENCE_X = 0;
 	public final static int REFERENCE_Y = 0;
 
@@ -119,7 +119,7 @@ public final class GameConstants
 	public final static int SHOT_TTL = 20; // ticks
 
 	// Scoring
-	public final static int POINTS_PER_HIT = 1200;
-	public final static int POINTS_PER_KILL = 800;
+	public final static int POINTS_PER_HIT = 0;
+	public final static int POINTS_PER_KILL = 1;
 	public static final double SPAWN_SAFETY_MARGIN = PLAYER_SIZE * 2;
 }
