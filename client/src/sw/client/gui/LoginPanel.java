@@ -28,7 +28,6 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -108,15 +107,16 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private JTextField _txtIPAddress;
 	private JTextField _txtPort;
 	private JTextField _txtName;
-	private AbstractButton _btnConnect;
-	private AbstractButton _btnUpdate;
+	private JButton _btnConnect;
+	private JButton _btnUpdate;
 	private JButton _btnHost;
-	private AbstractButton _btnChooseAI;
+	private JButton _btnChooseAI;
 	private JLabel _lblIPAdress;
 	private JLabel _lblName;
 	private JScrollPane _scroll;
 	private JTable _tblServers;
 	private JButton _btnImage;
+	private JButton _btnExit;
 
 	private JLabel _lblPort;
 	private Vector<ServerInfo> _servers;
@@ -223,6 +223,19 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	 */
 	private void initComponents()
 	{
+		_btnExit = new JButton("Exit");
+		_btnExit.setBounds(getWidth() - 200, 60, 100, 25);
+		_btnExit.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				System.exit(0);
+			}
+		});
+		this.add(_btnExit);
+		
 		_btnImage = new JButton();
 		_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID)));
 		_btnImage.setBounds(200, 250, 64, 64);

@@ -103,8 +103,8 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	 */
 	public SWFrame(boolean debugMode)
 	{
-		super("Space Warrior");
-
+		super("Space Warrior");		
+		
 		out = new PrintStream(new OutputStream()
 		{
 			@Override
@@ -123,7 +123,7 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		RepaintManager.setCurrentManager(repaintManager);
 
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setSize(d.width / 2, d.height / 2);
+		this.setSize(d.width, d.height);
 		this.setMinimumSize(new Dimension(800, 600));
 
 		((JComponent) this.getContentPane()).setOpaque(false);
@@ -149,6 +149,13 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 				_self.renderLoop();
 			}
 		}.start();
+		
+		this.dispose();
+		this.setUndecorated(true);
+		this.pack();
+		this.setVisible(true);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+
 	}
 
 	@Override
@@ -308,8 +315,6 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 				_loginPanel.close();
 			}
 		});
-
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		_client = new SWClient();
 		_controller = new GameController(_client);

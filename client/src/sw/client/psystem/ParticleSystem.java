@@ -21,8 +21,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
-
 import sw.shared.Tools;
 import sw.shared.util.ValuePair;
 
