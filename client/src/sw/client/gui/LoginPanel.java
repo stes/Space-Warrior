@@ -229,7 +229,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		{
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
 				System.exit(0);
 			}

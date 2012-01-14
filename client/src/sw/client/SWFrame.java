@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sw.client;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -25,6 +26,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -52,7 +55,7 @@ import sw.shared.net.Packer;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener
+public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
 {
 	public static PrintStream out;
 
@@ -84,8 +87,8 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 	public final int SLEEP_TIME = 0;
 	private static final long serialVersionUID = 1575599799999464878L;
 
-	private GameController _controller;
-	private SWClient _client;
+	private final GameController _controller;
+	private final SWClient _client;
 
 	private GamePanel _gamePanel;
 	private LoginPanel _loginPanel;
@@ -117,7 +120,6 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 
 		_self = this;
 		this.setIgnoreRepaint(true);
-
 		RepaintManager repaintManager = new UnRepaintManager();
 		repaintManager.setDoubleBufferingEnabled(false);
 		RepaintManager.setCurrentManager(repaintManager);
@@ -128,18 +130,15 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 
 		((JComponent) this.getContentPane()).setOpaque(false);
 
-		this.init();
+		_client = new SWClient();
+		_controller = new GameController(_client);
+		
+		this.init(debugMode);
 
 		this.createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
-
-		if (!debugMode)
-		{
-			this.initBugLogger();
-		}
-
+		Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.KEY_EVENT_MASK);
 		_screen = this.createVolatileImage(this.getWidth(), this.getHeight());
-
 		_isRunning = true;
 		new Thread()
 		{
@@ -150,12 +149,22 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			}
 		}.start();
 		
+		this.setFullscreen(false);
+	}
+
+	private void setFullscreen(boolean active)
+	{
 		this.dispose();
-		this.setUndecorated(true);
+		this.setUndecorated(active);
 		this.pack();
 		this.setVisible(true);
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
-
+		this.toFront();
+	}
+	
+	private void switchFullscreen()
+	{
+		setFullscreen(!isUndecorated());
 	}
 
 	@Override
@@ -296,10 +305,8 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		_client.scan();
 	}
 
-	private void init()
+	private void init(boolean debugMode)
 	{
-		this.setVisible(true);
-		this.toFront();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Insets insets = this.getInsets();
 		int insetWide = insets.left + insets.right;
@@ -316,14 +323,11 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 			}
 		});
 
-		_client = new SWClient();
-		_controller = new GameController(_client);
-
 		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-
+		
 		_controller.addGameStateChangedListener(_gamePanel);
-
+		
 		_client.addClientConnectionListener(this);
 		_client.addClientConnectionListener(_controller);
 		_client.addClientMessageListener(_controller);
@@ -334,6 +338,11 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		_gamePanel.addConnectionListener(this);
 
 		this.setGUIMode(GUIMode.LOGIN);
+		
+		if (!debugMode)
+		{
+			this.initBugLogger();
+		}
 	}
 
 	private void initBugLogger()
@@ -366,5 +375,18 @@ public class SWFrame extends JFrame implements ClientConnectionListener, Connect
 		}
 		this.add(_activePanel);
 		this.setVisible(true);
+	}
+
+	@Override
+	public void eventDispatched(AWTEvent event)
+	{
+		if (event instanceof KeyEvent)
+		{
+			KeyEvent e = (KeyEvent)event;
+			System.out.println("event id: " + event.getID());
+			System.out.println("key released: " + KeyEvent.KEY_RELEASED);
+			if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2)
+				this.switchFullscreen();
+		}
 	}
 }
