@@ -110,8 +110,6 @@ public class GameWorld
 				return;
 			}
 			newEnt.fromSnap(p);
-			if (newEnt instanceof IWeapon)
-				System.out.println(newEnt.toString());
 			tmp.put(newEnt.getID(), newEnt);
 		}
 
