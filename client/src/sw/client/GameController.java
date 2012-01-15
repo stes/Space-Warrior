@@ -25,7 +25,7 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.client.player.ai.AIPlayerLoader;
+import sw.client.plugins.AIPlayerLoader;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;

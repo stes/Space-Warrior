@@ -44,6 +44,7 @@ import sw.client.ClientConnlessListener;
 import sw.client.GameController;
 import sw.client.SWFrame;
 import sw.client.gui.ConnectionEvent.ActionType;
+import sw.client.plugins.PluginLoader;
 import sw.server.SWServer;
 import sw.shared.GameConstants;
 import sw.shared.GameConstants.Images;
@@ -115,21 +116,18 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private JLabel _lblName;
 	private JScrollPane _scroll;
 	private JTable _tblServers;
+	private JTable _tblAIPlayers;
 	private JButton _btnImage;
 	private JButton _btnExit;
-
 	private JLabel _lblPort;
 	private Vector<ServerInfo> _servers;
-
 	private ServerTableModel _tableModel;
-
-	private ArrayList<ConnectionListener> _connectionListener;
-
-	private int _imageID;
-
 	private JTextField _txtChooseAI;
-
+	
+	private ArrayList<ConnectionListener> _connectionListener;
+	private int _imageID;
 	protected SWServer _server;
+	private PluginLoader _pluginLoader;
 
 	public LoginPanel(int width, int height)
 	{
@@ -145,6 +143,8 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_tableModel = new ServerTableModel();
 
 		_imageID = Images.min().getID();
+		_pluginLoader = new PluginLoader();
+		_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
 		this.initComponents();
 
 		this.addComponentListener(new ComponentAdapter()
@@ -154,6 +154,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			{
 				_btnUpdate.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 + 200, 100, 25);
 				_scroll.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 - 150, 200, 300);
+				_tblAIPlayers.setBounds(_self.getWidth() - 600, 300, 200, 300);
 				_self.repaint();
 			}
 		});
@@ -349,10 +350,18 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				_txtPort.setText(_servers.get(index).getAddress().getPort() + "");
 			}
 		});
+		
 		_scroll = new JScrollPane(_tblServers);
 		_scroll.setBounds(this.getWidth() - 300, 300, 200, 300);
 		this.add(_scroll);
 
+		File[] pluginFiles = _pluginLoader.getAIs("sample");
+		File[][] f = new File[][] {pluginFiles};
+		_tblAIPlayers = new JTable(f, new String[] {"Path"});
+		_tblAIPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		_tblAIPlayers.setBounds(this.getWidth() - 600, 300, 200, 300);
+		this.add(_tblAIPlayers);
+		
 		_btnChooseAI = new JButton("Choose AI");
 		_btnChooseAI.setBounds(100, 500, 100, 25);
 		_btnChooseAI.addActionListener(new ActionListener()

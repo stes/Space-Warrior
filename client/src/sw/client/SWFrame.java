@@ -383,8 +383,6 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		if (event instanceof KeyEvent)
 		{
 			KeyEvent e = (KeyEvent)event;
-			System.out.println("event id: " + event.getID());
-			System.out.println("key released: " + KeyEvent.KEY_RELEASED);
 			if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2)
 				this.switchFullscreen();
 		}
