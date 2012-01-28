@@ -25,7 +25,7 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.client.plugins.AIPlayerLoader;
+import sw.client.player.ai.SampleAI;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
@@ -132,25 +132,26 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 
 	public void init()
 	{
-		if (GameController._runAI && GameController._aiPlugin.exists())
-		{
-			try
-			{
-				SWFrame.out.println("Successfully loaded AI Player.");
-				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new HumanPlayer(this);
-			}
-		}
-		else
-		{
-			SWFrame.out.println("no AI player selected, using default player");
-			_localPlayer = new HumanPlayer(this);
-		}
+		_localPlayer = new SampleAI(this);
+//		if (GameController._runAI && GameController._aiPlugin.exists())
+//		{
+//			try
+//			{
+//				SWFrame.out.println("Successfully loaded AI Player.");
+//				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
+//			}
+//			catch (Exception e)
+//			{
+//				e.printStackTrace();
+//				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
+//				_localPlayer = new HumanPlayer(this);
+//			}
+//		}
+//		else
+//		{
+//			SWFrame.out.println("no AI player selected, using default player");
+//			_localPlayer = new HumanPlayer(this);
+//		}
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 

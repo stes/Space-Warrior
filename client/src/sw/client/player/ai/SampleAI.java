@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.sampleai;
+package sw.client.player.ai;
 
 import java.util.Random;
 
@@ -25,8 +25,8 @@ import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.data.entities.shots.IWeapon;
-import sw.shared.data.entities.shots.IWeapon.WeaponType;
 import sw.shared.data.entities.shots.LaserBeam;
+import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 public class SampleAI extends AIPlayer
 {
