@@ -85,7 +85,7 @@ public abstract class Player
 		return _currentState;
 	}
 
-	protected GameWorld getGameWorld()
+	public GameWorld getGameWorld()
 	{
 		return _stateManager.getGameWorld();
 	}
