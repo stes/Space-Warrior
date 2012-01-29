@@ -252,4 +252,9 @@ public class GameWorld
 		}
 		return false;
 	}
+
+	public IEntity getEntity(int i)
+	{
+		return _entities.get(i);
+	}
 }

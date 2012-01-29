@@ -473,4 +473,10 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	{
 		_angularAcceleration = value;
 	}
+	
+	// TODO for test purposes only!
+	public void setLocal(boolean local)
+	{
+		_local = local;
+	}
 }

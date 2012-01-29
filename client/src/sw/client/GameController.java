@@ -25,7 +25,7 @@ import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
-import sw.client.player.ai.SampleAI;
+import sw.client.plugins.AIPlayerLoader;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
@@ -52,8 +52,8 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 
 	private GameWorld _prevWorld;
 	private GameWorld _world;
-	private IClient _client;
-	private SpaceShip[] _players;
+//	private IClient _client;
+//	private HashMap<String, SpaceShip> _players;
 	private Player _localPlayer;
 
 	private long _prevLastSnap;
@@ -68,15 +68,15 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	/**
 	 * creates an new GameController
 	 */
-	public GameController(IClient client)
-	{
-		_prevWorld = new GameWorld();
-		_world = new GameWorld();
-		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
-		_client = client;
-		_players = new SpaceShip[0];
-		_rendering = false;
-	}
+//	public GameController(IClient client)
+//	{
+//		_prevWorld = new GameWorld();
+//		_world = new GameWorld();
+//		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+//		_client = client;
+//		_players = new SpaceShip[0];
+//		_rendering = false;
+//	}
 
 	@Override
 	public void addGameStateChangedListener(GameStateChangedListener l)
@@ -121,7 +121,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	@Override
 	public synchronized SpaceShip[] getPlayerList()
 	{
-		return _players;
+		return _world.getPlayers();
 	}
 
 	@Override
@@ -132,26 +132,27 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 
 	public void init()
 	{
-		_localPlayer = new SampleAI(this);
-//		if (GameController._runAI && GameController._aiPlugin.exists())
-//		{
-//			try
-//			{
-//				SWFrame.out.println("Successfully loaded AI Player.");
-//				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
-//			}
-//			catch (Exception e)
-//			{
-//				e.printStackTrace();
-//				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
-//				_localPlayer = new HumanPlayer(this);
-//			}
-//		}
-//		else
-//		{
-//			SWFrame.out.println("no AI player selected, using default player");
-//			_localPlayer = new HumanPlayer(this);
-//		}
+		System.out.println("init");
+//		_localPlayer = new SampleAI(this);
+		if (GameController._runAI && GameController._aiPlugin.exists())
+		{
+			try
+			{
+				SWFrame.out.println("Successfully loaded AI Player.");
+				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
+				_localPlayer = new HumanPlayer(this);
+			}
+		}
+		else
+		{
+			SWFrame.out.println("no AI player selected, using default player");
+			_localPlayer = new HumanPlayer(this);
+		}
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 
@@ -163,7 +164,8 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	@Override
 	public boolean isReady()
 	{
-		return this.isConnected();
+		return true;
+//		return this.isConnected();
 	}
 
 	public void removeGameStateChangedListener(GameStateChangedListener l)
@@ -186,7 +188,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		_lastSnap = System.currentTimeMillis();
 		_prevWorld = _world;
 		_world = world;
-		_players = _world.getPlayers();
+//		_players = _world.getPlayers();
 	}
 
 	@Override
@@ -202,10 +204,10 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	@Override
 	public void snapshot(Unpacker snapshot)
 	{
-		GameWorld world = new GameWorld();
-		world.fromSnap(snapshot);
-		this.setGameworld(world);
-		for (SpaceShip pl : _players)
+//		GameWorld world = new GameWorld();
+//		world.fromSnap(snapshot);
+		this.setGameworld(_world);
+		for (SpaceShip pl : _world.getPlayers())
 		{
 			if (pl.isLocal())
 			{
@@ -240,8 +242,9 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
-		Packer p = input.pack();
-		_client.sendPacket(p);
+//		Packer p = input.pack();
+//		_client.sendPacket(p);
+		this.processPlayerInput(_localPlayer.getDataSet().getName(), input);
 	}
 
 	private void invokeNewRound(GameStateChangedEvent e)
@@ -290,5 +293,113 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	private void setIsConnected(boolean _isConnected)
 	{
 		this._isConnected = _isConnected;
+	}
+
+	private GameState _gameState;
+
+	/**
+	 * Creates a new game controller
+	 * 
+	 * @param server
+	 *            IServer
+	 */
+	public GameController()
+	{
+		_world = new GameWorld();
+		//_players = new HashMap<String, SpaceShip>();
+		_gameState = new GameState();
+		_world.insert(_gameState);
+		
+		_prevWorld = new GameWorld();
+		_world = new GameWorld();
+		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+//		_client = client;
+//		_players = new SpaceShip[0];
+		_rendering = false;
+	}
+
+	public void broadcastSnapshots()
+	{
+		for (SpaceShip pl : _world.getPlayers())
+		{
+			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
+			_world.snap(snapshot, pl.getName());
+//			_server.sendPacket(pl.getName(), snapshot);
+			this.snapshot(new Unpacker(snapshot.toByteArray()));
+		}
+	}
+
+	public void playerConnected(String name, int imageID)
+	{
+		SpaceShip newPl = new SpaceShip(name, imageID);
+		newPl.setLocal(true);
+		_world.insert(newPl);
+	}
+
+	public void playerLeft(String name, String reason)
+	{
+//		_players.get(name).destroy();
+//		_players.remove(name);
+	}
+
+	public void processPlayerInput(String name, PlayerInput input)
+	{
+//		_players.get(name).setInput(input);
+		SpaceShip s = ((SpaceShip)_world.getEntity(0));
+		s.setInput(input);
+//		_localPlayer.setDataSet(((SpaceShip)_world.getEntity(name)));
+	}
+
+	/**
+	 * starts a new game
+	 */
+	public void startGame()
+	{
+		_world.removeShotEntities();
+		for (SpaceShip pl : _world.getPlayers())
+		{
+			do
+			{
+				pl.respawn();
+			}
+			while(_world.checkCollision(pl));
+		}
+		_gameState.startNewRound();
+	}
+
+
+	public void tick()
+	{
+		this.checkTurn();
+		_world.tick();
+	}
+
+	private void checkTurn()
+	{
+		int alive = 0;
+		
+		SpaceShip[] players = _world.getPlayers();
+		for (SpaceShip pl : players)
+		{
+			if (pl.isAlive())
+			{
+				alive++;
+			}
+		}
+
+		if ((alive == 1 && players.length > 1) || (alive == 0 && players.length == 1))
+		{
+			if (alive == 1)
+			{
+				for (SpaceShip pl : players)
+				{
+					Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
+					info.writeUTF("Server");
+					info.writeUTF(pl.getName() + " has won the round!");
+					break;
+				}
+			}
+			this.startGame();
+		}
 	}
 }

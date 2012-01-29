@@ -36,7 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.InetSocketAddress;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -48,14 +47,14 @@ import sw.client.gui.ConnectionEvent;
 import sw.client.gui.ConnectionListener;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
-import sw.shared.Packettype;
-import sw.shared.net.Packer;
+import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
+public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener,
+		AWTEventListener
 {
 	public static PrintStream out;
 
@@ -88,7 +87,6 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	private static final long serialVersionUID = 1575599799999464878L;
 
 	private final GameController _controller;
-	private final SWClient _client;
 
 	private GamePanel _gamePanel;
 	private LoginPanel _loginPanel;
@@ -106,8 +104,8 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	 */
 	public SWFrame(boolean debugMode)
 	{
-		super("Space Warrior");		
-		
+		super("Space Warrior");
+
 		out = new PrintStream(new OutputStream()
 		{
 			@Override
@@ -130,9 +128,8 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 
 		((JComponent) this.getContentPane()).setOpaque(false);
 
-		_client = new SWClient();
-		_controller = new GameController(_client);
-		
+		_controller = new GameController();
+
 		this.init(debugMode);
 
 		this.createBufferStrategy(2);
@@ -148,7 +145,28 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 				_self.renderLoop();
 			}
 		}.start();
-		
+		new Thread()
+		{
+			private long _lastUpdate;
+
+			@Override
+			public void run()
+			{
+				_lastUpdate = System.currentTimeMillis();
+				while (true)
+				{
+					long curTime = System.currentTimeMillis();
+					if (curTime - _lastUpdate >= GameConstants.TICK_INTERVAL)
+					{
+						_controller.tick();
+						_controller.broadcastSnapshots();
+						_lastUpdate = curTime;
+					}
+					Thread.yield();
+				}
+			}
+		}.start();
+
 		this.setFullscreen(false);
 	}
 
@@ -161,7 +179,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		this.toFront();
 	}
-	
+
 	private void switchFullscreen()
 	{
 		setFullscreen(!isUndecorated());
@@ -171,10 +189,11 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
-		Packer start = new Packer(Packettype.CL_START_INFO);
-		start.writeUTF(_loginPanel.getName());
-		start.writeInt(_loginPanel.getImageID());
-		_client.sendPacket(start);
+		// Packer start = new Packer(Packettype.CL_START_INFO);
+		// start.writeUTF(_loginPanel.getName());
+		// start.writeInt(_loginPanel.getImageID());
+		// _client.sendPacket(start);
+		_controller.playerConnected(_loginPanel.getName(), _loginPanel.getImageID());
 	}
 
 	@Override
@@ -191,14 +210,16 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	@Override
 	public void login(ConnectionEvent e)
 	{
-		InetSocketAddress addr = e.getIPAdress();
-		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+		// InetSocketAddress addr = e.getIPAdress();
+		// _client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+		this.connected();
 	}
 
 	@Override
 	public void logout(ConnectionEvent e)
 	{
-		_client.disconnect("user logout");
+		// _client.disconnect("user logout");
+		this.disconnected("user logout");
 	}
 
 	public void render(Graphics2D g2d)
@@ -302,7 +323,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	@Override
 	public void scan()
 	{
-		_client.scan();
+		// _client.scan();
 	}
 
 	private void init(boolean debugMode)
@@ -318,31 +339,33 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
-				_client.close();
+				// _client.close();
 				_loginPanel.close();
 			}
 		});
 
-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, null);
 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-		
+
 		_controller.addGameStateChangedListener(_gamePanel);
-		
-		_client.addClientConnectionListener(this);
-		_client.addClientConnectionListener(_controller);
-		_client.addClientMessageListener(_controller);
-		_client.addClientMessageListener(_gamePanel);
-		_client.addClientConnlessListener(_loginPanel);
+
+		// _client.addClientConnectionListener(this);
+		// _client.addClientConnectionListener(_controller);
+		// _client.addClientMessageListener(_controller);
+		// _client.addClientMessageListener(_gamePanel);
+		// _client.addClientConnlessListener(_loginPanel);
 
 		_loginPanel.addConnectionListener(this);
 		_gamePanel.addConnectionListener(this);
 
 		this.setGUIMode(GUIMode.LOGIN);
-		
+
 		if (!debugMode)
 		{
 			this.initBugLogger();
 		}
+		
+		_controller.init();
 	}
 
 	private void initBugLogger()
@@ -382,7 +405,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	{
 		if (event instanceof KeyEvent)
 		{
-			KeyEvent e = (KeyEvent)event;
+			KeyEvent e = (KeyEvent) event;
 			if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2)
 				this.switchFullscreen();
 		}
