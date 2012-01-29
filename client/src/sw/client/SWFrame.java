@@ -268,13 +268,16 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 			}
 			// related to drawing
 			Graphics g = null;
-			try
+			synchronized (this)
 			{
-				g = _bufferStrategy.getDrawGraphics();
-			}
-			catch (IllegalStateException e)
-			{
-				continue;
+				try
+				{
+					g = _bufferStrategy.getDrawGraphics();
+				}
+				catch (IllegalStateException e)
+				{
+					continue;
+				}
 			}
 			synchronized (g)
 			{
@@ -300,9 +303,12 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 					g.dispose();
 				}
 			}
-			if (!_bufferStrategy.contentsLost())
+			synchronized (this)
 			{
-				_bufferStrategy.show();
+				if (!_bufferStrategy.contentsLost())
+				{
+					_bufferStrategy.show();
+				}
 			}
 			Toolkit.getDefaultToolkit().sync();
 
@@ -364,7 +370,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		{
 			this.initBugLogger();
 		}
-		
+
 		_controller.init();
 	}
 
