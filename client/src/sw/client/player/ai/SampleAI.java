@@ -21,12 +21,10 @@ import java.util.Random;
 
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
-import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.data.entities.shots.IWeapon;
-import sw.shared.data.entities.shots.LaserBeam;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
+import sw.shared.data.entities.shots.LaserBeam;
 
 public class SampleAI extends AIPlayer
 {
