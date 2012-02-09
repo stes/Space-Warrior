@@ -55,6 +55,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 //	private IClient _client;
 //	private HashMap<String, SpaceShip> _players;
 	private Player _localPlayer;
+	private ArrayList<Player> _opponents;
 
 	private long _prevLastSnap;
 	private long _lastSnap;
@@ -316,6 +317,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 //		_client = client;
 //		_players = new SpaceShip[0];
 		_rendering = false;
+		_opponents = new ArrayList<Player>();
 	}
 
 	public void broadcastSnapshots()
