@@ -18,7 +18,7 @@
 
 package sw.server.cli;
 
-import sw.server.GameController;
+import sw.server.ServerGameEngine;
 import sw.server.IServer;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
@@ -31,9 +31,9 @@ public class SWCommandParser extends CommandParser
 {
 	private IServer _server;
 	// TODO use some interface
-	private GameController _gameController;
+	private ServerGameEngine _gameController;
 
-	public SWCommandParser(IServer server, GameController controller)
+	public SWCommandParser(IServer server, ServerGameEngine controller)
 	{
 		_server = server;
 		_gameController = controller;

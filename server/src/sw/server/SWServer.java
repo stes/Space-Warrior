@@ -43,7 +43,7 @@ public class SWServer implements IServer, NetworkListener, Runnable
 	private Vector<Client> _clients;
 	private PropertyLoader _propertyLoader;
 	private ServerInfo _serverInfo;
-	private GameController _controller;
+	private ServerGameEngine _controller;
 	private SWCommandParser _cmdParser;
 
 	private int _tick;
@@ -63,7 +63,7 @@ public class SWServer implements IServer, NetworkListener, Runnable
 		_clients = new Vector<Client>();
 		_serverInfo = new ServerInfo("Server", _propertyLoader.getMaxPlayers(), 0);
 		_lastUpdate = System.currentTimeMillis();
-		_controller = new GameController(this);
+		_controller = new ServerGameEngine(this);
 		this.addServerListener(_controller);
 		_cmdParser = new SWCommandParser(this, _controller);
 		new Thread(this).start();

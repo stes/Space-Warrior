@@ -17,26 +17,23 @@
  ******************************************************************************/
 package sw.server;
 
-import java.util.HashMap;
-
+import sw.shared.GameEngine;
 import sw.shared.Packettype;
-import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
 import sw.shared.net.Packer;
 
 /**
+ * A game engine running on a server and handling several clients using
+ * the SpaceWarrior UDP protocol
+ * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 
-public class GameController implements ServerListener
+public class ServerGameEngine extends GameEngine implements ServerListener
 {
-	private GameWorld _world;
-	private HashMap<String, SpaceShip> _players;
 	private IServer _server;
-	private GameState _gameState;
 
 	/**
 	 * Creates a new game controller
@@ -44,22 +41,19 @@ public class GameController implements ServerListener
 	 * @param server
 	 *            IServer
 	 */
-	public GameController(IServer server)
+	public ServerGameEngine(IServer server)
 	{
-		_world = new GameWorld();
-		_players = new HashMap<String, SpaceShip>();
+		super();
 		_server = server;
-		_gameState = new GameState();
-		_world.insert(_gameState);
 	}
 
 	@Override
 	public void broadcastSnapshots()
 	{
-		for (SpaceShip pl : _players.values())
+		for (SpaceShip pl : getPlayers().values())
 		{
 			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
-			_world.snap(snapshot, pl.getName());
+			getWorld().snap(snapshot, pl.getName());
 			_server.sendPacket(pl.getName(), snapshot);
 		}
 	}
@@ -67,73 +61,27 @@ public class GameController implements ServerListener
 	@Override
 	public void playerConnected(String name, int imageID)
 	{
-		SpaceShip newPl = new SpaceShip(name, imageID);
-		_players.put(name, newPl);
-		_world.insert(newPl);
+		this.addPlayer(name, imageID);
 	}
 
 	@Override
 	public void playerLeft(String name, String reason)
 	{
-		_players.get(name).destroy();
-		_players.remove(name);
+		this.removePlayer(name);
 	}
-
+	
 	@Override
 	public void processPlayerInput(String name, PlayerInput input)
 	{
-		_players.get(name).setInput(input);
+		this.playerInput(name, input);
 	}
-
-	/**
-	 * starts a new game
-	 */
-	public void startGame()
-	{
-		_world.removeShotEntities();
-		for (SpaceShip pl : _players.values())
-		{
-			do
-			{
-				pl.respawn();
-			}
-			while(_world.checkCollision(pl));
-		}
-		_gameState.startNewRound();
-	}
-
+	
 	@Override
-	public void tick()
+	public void invokePlayerWon(SpaceShip pl)
 	{
-		this.checkTurn();
-		_world.tick();
-	}
-
-	private void checkTurn()
-	{
-		int alive = 0;
-		for (SpaceShip pl : _players.values())
-		{
-			if (pl.isAlive())
-			{
-				alive++;
-			}
-		}
-
-		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() == 1))
-		{
-			if (alive == 1)
-			{
-				for (SpaceShip pl : _players.values())
-				{
-					Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
-					info.writeUTF("Server");
-					info.writeUTF(pl.getName() + " has won the round!");
-					_server.sendBroadcast(info);
-					break;
-				}
-			}
-			this.startGame();
-		}
+		Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
+		info.writeUTF("Server");
+		info.writeUTF(pl.getName() + " has won the round!");
+		_server.sendBroadcast(info);
 	}
 }

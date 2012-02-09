@@ -1,0 +1,630 @@
+diff --git a/ai/SampleAI/src/sw/sampleai/SampleAI.java b/ai/SampleAI/src/sw/sampleai/SampleAI.java
+index 5a95f27..148fd20 100644
+--- a/ai/SampleAI/src/sw/sampleai/SampleAI.java
++++ b/ai/SampleAI/src/sw/sampleai/SampleAI.java
+@@ -24,8 +24,6 @@ import sw.client.gcontrol.IGameStateManager;
+ import sw.client.player.ai.AIPlayer;
+ import sw.shared.GameConstants;
+ import sw.shared.data.entities.players.SpaceShip;
+-import sw.shared.data.entities.shots.IWeapon;
+-import sw.shared.data.entities.shots.IWeapon.WeaponType;
+ import sw.shared.data.entities.shots.LaserBeam;
+ 
+ public class SampleAI extends AIPlayer
+@@ -95,11 +93,11 @@ public class SampleAI extends AIPlayer
+ 				continue;
+ 			if (laserBeam.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+ 			{
+-				this.getCurrentState().setShot(WeaponType.LASER.getID());
++				this.getCurrentState().setShot(1);
+ 			}
+ 			else if (mshot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+ 			{
+-				this.getCurrentState().setShot(WeaponType.MASTER_LASER.getID());
++				this.getCurrentState().setShot(2);
+ 			}
+ 		}
+ 		this.update();
+diff --git a/client/src/sw/client/GameController.java b/client/src/sw/client/GameController.java
+index b985108..e1c6ba3 100644
+--- a/client/src/sw/client/GameController.java
++++ b/client/src/sw/client/GameController.java
+@@ -52,10 +52,9 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 
+ 	private GameWorld _prevWorld;
+ 	private GameWorld _world;
+-//	private IClient _client;
+-//	private HashMap<String, SpaceShip> _players;
++	private IClient _client;
++	private SpaceShip[] _players;
+ 	private Player _localPlayer;
+-	private ArrayList<Player> _opponents;
+ 
+ 	private long _prevLastSnap;
+ 	private long _lastSnap;
+@@ -69,15 +68,15 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	/**
+ 	 * creates an new GameController
+ 	 */
+-//	public GameController(IClient client)
+-//	{
+-//		_prevWorld = new GameWorld();
+-//		_world = new GameWorld();
+-//		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+-//		_client = client;
+-//		_players = new SpaceShip[0];
+-//		_rendering = false;
+-//	}
++	public GameController(IClient client)
++	{
++		_prevWorld = new GameWorld();
++		_world = new GameWorld();
++		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
++		_client = client;
++		_players = new SpaceShip[0];
++		_rendering = false;
++	}
+ 
+ 	@Override
+ 	public void addGameStateChangedListener(GameStateChangedListener l)
+@@ -122,7 +121,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	@Override
+ 	public synchronized SpaceShip[] getPlayerList()
+ 	{
+-		return _world.getPlayers();
++		return _players;
+ 	}
+ 
+ 	@Override
+@@ -133,8 +132,6 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 
+ 	public void init()
+ 	{
+-		System.out.println("init");
+-//		_localPlayer = new SampleAI(this);
+ 		if (GameController._runAI && GameController._aiPlugin.exists())
+ 		{
+ 			try
+@@ -165,8 +162,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	@Override
+ 	public boolean isReady()
+ 	{
+-		return true;
+-//		return this.isConnected();
++		return this.isConnected();
+ 	}
+ 
+ 	public void removeGameStateChangedListener(GameStateChangedListener l)
+@@ -189,7 +185,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 		_lastSnap = System.currentTimeMillis();
+ 		_prevWorld = _world;
+ 		_world = world;
+-//		_players = _world.getPlayers();
++		_players = _world.getPlayers();
+ 	}
+ 
+ 	@Override
+@@ -205,10 +201,10 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	@Override
+ 	public void snapshot(Unpacker snapshot)
+ 	{
+-//		GameWorld world = new GameWorld();
+-//		world.fromSnap(snapshot);
+-		this.setGameworld(_world);
+-		for (SpaceShip pl : _world.getPlayers())
++		GameWorld world = new GameWorld();
++		world.fromSnap(snapshot);
++		this.setGameworld(world);
++		for (SpaceShip pl : _players)
+ 		{
+ 			if (pl.isLocal())
+ 			{
+@@ -243,9 +239,8 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	@Override
+ 	public void stateUpdated(PlayerInput input)
+ 	{
+-//		Packer p = input.pack();
+-//		_client.sendPacket(p);
+-		this.processPlayerInput(_localPlayer.getDataSet().getName(), input);
++		Packer p = input.pack();
++		_client.sendPacket(p);
+ 	}
+ 
+ 	private void invokeNewRound(GameStateChangedEvent e)
+@@ -295,113 +290,4 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
+ 	{
+ 		this._isConnected = _isConnected;
+ 	}
+-
+-	private GameState _gameState;
+-
+-	/**
+-	 * Creates a new game controller
+-	 * 
+-	 * @param server
+-	 *            IServer
+-	 */
+-	public GameController()
+-	{
+-		_world = new GameWorld();
+-		//_players = new HashMap<String, SpaceShip>();
+-		_gameState = new GameState();
+-		_world.insert(_gameState);
+-		
+-		_prevWorld = new GameWorld();
+-		_world = new GameWorld();
+-		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+-//		_client = client;
+-//		_players = new SpaceShip[0];
+-		_rendering = false;
+-		_opponents = new ArrayList<Player>();
+-	}
+-
+-	public void broadcastSnapshots()
+-	{
+-		for (SpaceShip pl : _world.getPlayers())
+-		{
+-			Packer snapshot = new Packer(Packettype.SV_SNAPSHOT);
+-			_world.snap(snapshot, pl.getName());
+-//			_server.sendPacket(pl.getName(), snapshot);
+-			this.snapshot(new Unpacker(snapshot.toByteArray()));
+-		}
+-	}
+-
+-	public void playerConnected(String name, int imageID)
+-	{
+-		SpaceShip newPl = new SpaceShip(name, imageID);
+-		newPl.setLocal(true);
+-		_world.insert(newPl);
+-	}
+-
+-	public void playerLeft(String name, String reason)
+-	{
+-//		_players.get(name).destroy();
+-//		_players.remove(name);
+-	}
+-
+-	public void processPlayerInput(String name, PlayerInput input)
+-	{
+-//		_players.get(name).setInput(input);
+-		SpaceShip s = ((SpaceShip)_world.getEntity(0));
+-		s.setInput(input);
+-//		_localPlayer.setDataSet(((SpaceShip)_world.getEntity(name)));
+-	}
+-
+-	/**
+-	 * starts a new game
+-	 */
+-	public void startGame()
+-	{
+-		_world.removeShotEntities();
+-		for (SpaceShip pl : _world.getPlayers())
+-		{
+-			do
+-			{
+-				pl.respawn();
+-			}
+-			while(_world.checkCollision(pl));
+-		}
+-		_gameState.startNewRound();
+-	}
+-
+-
+-	public void tick()
+-	{
+-		this.checkTurn();
+-		_world.tick();
+-	}
+-
+-	private void checkTurn()
+-	{
+-		int alive = 0;
+-		
+-		SpaceShip[] players = _world.getPlayers();
+-		for (SpaceShip pl : players)
+-		{
+-			if (pl.isAlive())
+-			{
+-				alive++;
+-			}
+-		}
+-
+-		if ((alive == 1 && players.length > 1) || (alive == 0 && players.length == 1))
+-		{
+-			if (alive == 1)
+-			{
+-				for (SpaceShip pl : players)
+-				{
+-					Packer info = new Packer(Packettype.SV_CHAT_MESSAGE);
+-					info.writeUTF("Server");
+-					info.writeUTF(pl.getName() + " has won the round!");
+-					break;
+-				}
+-			}
+-			this.startGame();
+-		}
+-	}
+ }
+diff --git a/client/src/sw/client/SWFrame.java b/client/src/sw/client/SWFrame.java
+index 131988a..4bcef82 100644
+--- a/client/src/sw/client/SWFrame.java
++++ b/client/src/sw/client/SWFrame.java
+@@ -36,6 +36,7 @@ import java.io.FileNotFoundException;
+ import java.io.IOException;
+ import java.io.OutputStream;
+ import java.io.PrintStream;
++import java.net.InetSocketAddress;
+ 
+ import javax.swing.JComponent;
+ import javax.swing.JFrame;
+@@ -47,14 +48,14 @@ import sw.client.gui.ConnectionEvent;
+ import sw.client.gui.ConnectionListener;
+ import sw.client.gui.GamePanel;
+ import sw.client.gui.LoginPanel;
+-import sw.shared.GameConstants;
++import sw.shared.Packettype;
++import sw.shared.net.Packer;
+ 
+ /**
+  * @author Redix, stes, Abbadonn
+  * @version 25.11.11
+  */
+-public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener,
+-		AWTEventListener
++public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
+ {
+ 	public static PrintStream out;
+ 
+@@ -87,6 +88,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	private static final long serialVersionUID = 1575599799999464878L;
+ 
+ 	private final GameController _controller;
++	private final SWClient _client;
+ 
+ 	private GamePanel _gamePanel;
+ 	private LoginPanel _loginPanel;
+@@ -104,8 +106,8 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	 */
+ 	public SWFrame(boolean debugMode)
+ 	{
+-		super("Space Warrior");
+-
++		super("Space Warrior");		
++		
+ 		out = new PrintStream(new OutputStream()
+ 		{
+ 			@Override
+@@ -128,8 +130,9 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 
+ 		((JComponent) this.getContentPane()).setOpaque(false);
+ 
+-		_controller = new GameController();
+-
++		_client = new SWClient();
++		_controller = new GameController(_client);
++		
+ 		this.init(debugMode);
+ 
+ 		this.createBufferStrategy(2);
+@@ -145,28 +148,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 				_self.renderLoop();
+ 			}
+ 		}.start();
+-		new Thread()
+-		{
+-			private long _lastUpdate;
+-
+-			@Override
+-			public void run()
+-			{
+-				_lastUpdate = System.currentTimeMillis();
+-				while (true)
+-				{
+-					long curTime = System.currentTimeMillis();
+-					if (curTime - _lastUpdate >= GameConstants.TICK_INTERVAL)
+-					{
+-						_controller.tick();
+-						_controller.broadcastSnapshots();
+-						_lastUpdate = curTime;
+-					}
+-					Thread.yield();
+-				}
+-			}
+-		}.start();
+-
++		
+ 		this.setFullscreen(false);
+ 	}
+ 
+@@ -179,7 +161,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+ 		this.toFront();
+ 	}
+-
++	
+ 	private void switchFullscreen()
+ 	{
+ 		setFullscreen(!isUndecorated());
+@@ -189,11 +171,10 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	public void connected()
+ 	{
+ 		this.setGUIMode(GUIMode.GAME);
+-		// Packer start = new Packer(Packettype.CL_START_INFO);
+-		// start.writeUTF(_loginPanel.getName());
+-		// start.writeInt(_loginPanel.getImageID());
+-		// _client.sendPacket(start);
+-		_controller.playerConnected(_loginPanel.getName(), _loginPanel.getImageID());
++		Packer start = new Packer(Packettype.CL_START_INFO);
++		start.writeUTF(_loginPanel.getName());
++		start.writeInt(_loginPanel.getImageID());
++		_client.sendPacket(start);
+ 	}
+ 
+ 	@Override
+@@ -210,16 +191,14 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	@Override
+ 	public void login(ConnectionEvent e)
+ 	{
+-		// InetSocketAddress addr = e.getIPAdress();
+-		// _client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+-		this.connected();
++		InetSocketAddress addr = e.getIPAdress();
++		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+ 	}
+ 
+ 	@Override
+ 	public void logout(ConnectionEvent e)
+ 	{
+-		// _client.disconnect("user logout");
+-		this.disconnected("user logout");
++		_client.disconnect("user logout");
+ 	}
+ 
+ 	public void render(Graphics2D g2d)
+@@ -268,16 +247,13 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 			}
+ 			// related to drawing
+ 			Graphics g = null;
+-			synchronized (this)
++			try
+ 			{
+-				try
+-				{
+-					g = _bufferStrategy.getDrawGraphics();
+-				}
+-				catch (IllegalStateException e)
+-				{
+-					continue;
+-				}
++				g = _bufferStrategy.getDrawGraphics();
++			}
++			catch (IllegalStateException e)
++			{
++				continue;
+ 			}
+ 			synchronized (g)
+ 			{
+@@ -303,12 +279,9 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 					g.dispose();
+ 				}
+ 			}
+-			synchronized (this)
++			if (!_bufferStrategy.contentsLost())
+ 			{
+-				if (!_bufferStrategy.contentsLost())
+-				{
+-					_bufferStrategy.show();
+-				}
++				_bufferStrategy.show();
+ 			}
+ 			Toolkit.getDefaultToolkit().sync();
+ 
+@@ -329,7 +302,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	@Override
+ 	public void scan()
+ 	{
+-		// _client.scan();
++		_client.scan();
+ 	}
+ 
+ 	private void init(boolean debugMode)
+@@ -345,33 +318,31 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 			@Override
+ 			public void windowClosing(WindowEvent e)
+ 			{
+-				// _client.close();
++				_client.close();
+ 				_loginPanel.close();
+ 			}
+ 		});
+ 
+-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, null);
++		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
+ 		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
+-
++		
+ 		_controller.addGameStateChangedListener(_gamePanel);
+-
+-		// _client.addClientConnectionListener(this);
+-		// _client.addClientConnectionListener(_controller);
+-		// _client.addClientMessageListener(_controller);
+-		// _client.addClientMessageListener(_gamePanel);
+-		// _client.addClientConnlessListener(_loginPanel);
++		
++		_client.addClientConnectionListener(this);
++		_client.addClientConnectionListener(_controller);
++		_client.addClientMessageListener(_controller);
++		_client.addClientMessageListener(_gamePanel);
++		_client.addClientConnlessListener(_loginPanel);
+ 
+ 		_loginPanel.addConnectionListener(this);
+ 		_gamePanel.addConnectionListener(this);
+ 
+ 		this.setGUIMode(GUIMode.LOGIN);
+-
++		
+ 		if (!debugMode)
+ 		{
+ 			this.initBugLogger();
+ 		}
+-
+-		_controller.init();
+ 	}
+ 
+ 	private void initBugLogger()
+@@ -411,7 +382,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
+ 	{
+ 		if (event instanceof KeyEvent)
+ 		{
+-			KeyEvent e = (KeyEvent) event;
++			KeyEvent e = (KeyEvent)event;
+ 			if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2)
+ 				this.switchFullscreen();
+ 		}
+diff --git a/client/src/sw/client/player/ai/SampleAI.java b/client/src/sw/client/player/ai/SampleAI.java
+deleted file mode 100644
+index f1bc3a3..0000000
+--- a/client/src/sw/client/player/ai/SampleAI.java
++++ /dev/null
+@@ -1,112 +0,0 @@
+-/*******************************************************************************
+- * Space Warrior - an open source multiplayer shooter
+- * Copyright (C) 2011 Redix stes Abbadonn
+- * 
+- * This program is free software: you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation, either version 3 of the License, or
+- * (at your option) any later version.
+- * 
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- * 
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- ******************************************************************************/
+-package sw.client.player.ai;
+-
+-import java.util.Random;
+-
+-import sw.client.gcontrol.GameStateChangedEvent;
+-import sw.client.gcontrol.IGameStateManager;
+-import sw.shared.GameConstants;
+-import sw.shared.data.entities.players.SpaceShip;
+-import sw.shared.data.entities.shots.IWeapon.WeaponType;
+-import sw.shared.data.entities.shots.LaserBeam;
+-
+-public class SampleAI extends AIPlayer
+-{
+-	private static Random _random = new Random(System.currentTimeMillis());
+-
+-	private int _hold;
+-
+-	public SampleAI(IGameStateManager stateManager)
+-	{
+-		super(stateManager);
+-		System.out.println("init ai player");
+-		this.getCurrentState().setDirection(1);
+-	}
+-
+-	@Override
+-	public void gameStateChanged(GameStateChangedEvent e)
+-	{
+-		boolean turn = false;
+-		if (getDataSet().getPosition().x < 150)
+-		{
+-			turn = true;
+-			this.getCurrentState().setRotation((int) Math.signum(90 - getDataSet().getDirection()));
+-		}
+-		if (getDataSet().getPosition().y < 150)
+-		{
+-			turn = true;
+-			this.getCurrentState().setRotation(-(int) Math.signum(180 - getDataSet().getDirection()));
+-		}
+-		if (getDataSet().getPosition().x > GameConstants.PLAYING_FIELD_WIDTH - 150)
+-		{
+-			turn = true;
+-			this.getCurrentState().setRotation((int) Math.signum(270 - getDataSet().getDirection()));
+-		}
+-		if (getDataSet().getPosition().y > GameConstants.PLAYING_FIELD_HEIGHT - 150)
+-		{
+-			turn = true;
+-			this.getCurrentState().setRotation((int) Math.signum(180 - getDataSet().getDirection()));
+-		}
+-		if (!turn && _hold == 0)
+-		{
+-			if (_random.nextDouble() > 0.9)
+-			{
+-				_hold = 1 + _random.nextInt(9);
+-				this.getCurrentState().setRotation(_random.nextInt(2) * 2 - 1);
+-			}
+-			else
+-				this.getCurrentState().setRotation(0);
+-			this.getCurrentState().setDirection(1);
+-		}
+-		else if (_hold > 0)
+-		{
+-			_hold--;
+-		}
+-		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getX(),
+-				this.getDataSet().getY(),
+-				this.getDataSet().getDirection(),
+-				this.getDataSet());
+-		LaserBeam mshot = new LaserBeam(this.getDataSet().getX(),
+-				this.getDataSet().getY(),
+-				this.getDataSet().getDirection(),
+-				this.getDataSet(),
+-				true);
+-		for (SpaceShip d : this.getStateManager().getPlayerList())
+-		{
+-			if (d.equals(this.getDataSet()))
+-				continue;
+-			if (laserBeam.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+-			{
+-				this.getCurrentState().setShot(WeaponType.LASER.getID());
+-			}
+-			else if (mshot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
+-			{
+-				this.getCurrentState().setShot(WeaponType.MASTER_LASER.getID());
+-			}
+-		}
+-		this.update();
+-		this.getCurrentState().setShot(0);
+-	}
+-
+-	@Override
+-	public void newRound(GameStateChangedEvent arg0)
+-	{
+-		this.getCurrentState().setDirection(1);
+-	}
+-}
+diff --git a/shared/src/sw/shared/data/GameWorld.java b/shared/src/sw/shared/data/GameWorld.java
+index cecd64c..9992755 100644
+--- a/shared/src/sw/shared/data/GameWorld.java
++++ b/shared/src/sw/shared/data/GameWorld.java
+@@ -252,9 +252,4 @@ public class GameWorld
+ 		}
+ 		return false;
+ 	}
+-
+-	public IEntity getEntity(int i)
+-	{
+-		return _entities.get(i);
+-	}
+ }
+diff --git a/shared/src/sw/shared/data/entities/players/SpaceShip.java b/shared/src/sw/shared/data/entities/players/SpaceShip.java
+index da3347d..fd2b32c 100644
+--- a/shared/src/sw/shared/data/entities/players/SpaceShip.java
++++ b/shared/src/sw/shared/data/entities/players/SpaceShip.java
+@@ -473,10 +473,4 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>,
+ 	{
+ 		_angularAcceleration = value;
+ 	}
+-	
+-	// TODO for test purposes only!
+-	public void setLocal(boolean local)
+-	{
+-		_local = local;
+-	}
+ }

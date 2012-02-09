@@ -1,0 +1,1557 @@
+[33mcommit 7eaade8cb95fad9b05c12f3fae7a60cab7c35e23[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Feb 9 19:49:33 2012 +0100
+
+    small changes
+
+[33mcommit 6b4cccf139d642eda31f4f22362c9ac3ea3161c4[m
+Merge: 1c7d468 363f135
+Author: stes <stes94@ymail.com>
+Date:   Thu Feb 9 19:42:24 2012 +0100
+
+    Merge branch 'master' into singlepl_merge
+
+[33mcommit 363f1355518d0a2fd57cb9b583b550df125c2f53[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Feb 9 19:39:53 2012 +0100
+
+    workaround for bug in AI loading when there isn't a valid path
+
+[33mcommit dd24b4bbaccdecc33265679ff36e4ac1de2b7746[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Feb 9 19:09:47 2012 +0100
+
+    no change
+
+[33mcommit 1c7d468204ba4f225583ed86a73e42f284cd05d5[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 29 17:49:30 2012 +0100
+
+    synchronized rendering
+
+[33mcommit 71be803374e1c0591ad041d78516f09ee205ec63[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 29 17:42:20 2012 +0100
+
+    implemented singleplayer
+
+[33mcommit 485aa6a49d500c8dbc7db1dbe786a206b08319ea[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 29 16:03:58 2012 +0100
+
+    removed unused import
+
+[33mcommit cf471d4b2eea9c773b5a7546ced580f4da65031b[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 28 20:09:43 2012 +0100
+
+    added sampleai for test purposes
+
+[33mcommit 111298fd883d9b89e5d047bfc30e2016715b181a[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 28 19:46:49 2012 +0100
+
+    work on bot
+
+[33mcommit 2b47dc38d11a9e415e90aa81f4db4385479eec04[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 15 20:36:19 2012 +0100
+
+    started improving plugin loading
+
+[33mcommit 9344c0f12f49e77de9d4ee71824a934e3f207a22[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 15 00:56:34 2012 +0100
+
+    implemented switching between fullscreen and normal mode
+
+[33mcommit 156e2d7a7408e8579117b0e46b1d45805435859f[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 14 18:33:59 2012 +0100
+
+    implemented fullscreen mode
+
+[33mcommit d76d61f55a4a6d0541da331973a3dbfb4852bbdc[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 14 18:13:25 2012 +0100
+
+    removed no longer used outputs; syncronized particle updates
+
+[33mcommit 84517ca9e7c274ff0c86d66daa2c2cc5c2c80b8f[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 14 17:53:47 2012 +0100
+
+    implemented own printstream
+
+[33mcommit f6027e59d1d2ab8400624eab1f85b748aaa67c9b[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 13 19:15:18 2012 +0100
+
+    disabled spawning over other players
+
+[33mcommit 8ac6aae5216498547f7b01654c5f16a85741e868[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 13 18:40:06 2012 +0100
+
+    some documentation in the psystem package; cleanup
+
+[33mcommit c591f5c3c3d344a6fafb8d889e28e252706a8d67[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 13 17:57:33 2012 +0100
+
+    added class for tools (such as an instance of Random)
+
+[33mcommit 66cee54cba86b88e9ce9db15c33b39688f871a61[m
+Author: stes <stes94@ymail.com>
+Date:   Wed Jan 11 22:51:45 2012 +0100
+
+    fixed a bug
+
+[33mcommit 1d05b8ad9bc6378e4c3b7d83fca799af403ab105[m
+Author: stes <stes94@ymail.com>
+Date:   Tue Jan 10 10:24:42 2012 +0100
+
+    remove all weapons when a new round starts
+
+[33mcommit c86da74608567cd69e8480dafa4e162f745bdc4a[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Jan 9 00:54:07 2012 +0100
+
+    built the pre 0.2
+
+[33mcommit a8df386213be90c22257bf1ed5fd669549b0d5d4[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Jan 9 00:45:09 2012 +0100
+
+    created changelog
+
+[33mcommit a41b8dd1086dfc7f715674b17fdbbe3e05afe15a[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 23:51:26 2012 +0100
+
+    fixed problems with particle system; improved shooting
+
+[33mcommit 29f9a93811434178eb14c8b78cba448a4d9d01c8[m
+Merge: 428234a 210a6cd
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 22:09:20 2012 +0100
+
+    Merge branch 'shoots'
+
+[33mcommit 428234a63ef15c71fc0550e41588ef2e65e50b79[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 22:05:33 2012 +0100
+
+    workaround for resize bug
+
+[33mcommit 210a6cde24590bde8e8dd187b1869302bed912c5[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 21:36:49 2012 +0100
+
+    made particle system class final
+
+[33mcommit cdc1359a443227d1422feb3b0e14a52073f93093[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 21:25:08 2012 +0100
+
+    fixed bug in particle system due to using an unsynchronised ArrayList
+
+[33mcommit 86e4ae3bf9ec470d36fe3566150414e22450f751[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 20:15:08 2012 +0100
+
+    work on shot system
+
+[33mcommit 03d6dafd1040e44e6da35ea849d0dd3c850340c4[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 18:48:38 2012 +0100
+
+    refactored weapon constants
+
+[33mcommit 8370db8bb2172f6c035dcb26a669e9e8e984b92d[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 18:03:01 2012 +0100
+
+    particle updates are now handled internally
+
+[33mcommit 5faa73e5b3bf1a24ba21a0e3aecf6a866b82ac69[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 17:08:11 2012 +0100
+
+    cleanup
+
+[33mcommit 2ab366893c4cdce787f58ca43f3a014e8ffa57d9[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 17:07:03 2012 +0100
+
+    implemented rudimental cl support
+
+[33mcommit 5dc9bca17f1230013d00a290730d4ddd72fc0da8[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Jan 8 14:50:02 2012 +0100
+
+    server can be started out of the client
+
+[33mcommit cecee261878f6ccac6385fa022fc1be0a998c2f9[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 7 17:38:58 2012 +0100
+
+    implemented mines as a new weapon
+
+[33mcommit 8c36952618a852d4292644b097fd547b0ff7dfd4[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Jan 7 13:55:32 2012 +0100
+
+    .
+
+[33mcommit 85ba55992b3f83603223fbc74a5fc51c7fbac7c3[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 6 15:29:24 2012 +0100
+
+    animated laserbeams; shots are now rendered before players
+
+[33mcommit 1fa1f52f29dc900612252d6a612a811ab492d7d1[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 6 14:51:16 2012 +0100
+
+    fixed some bugs, re-integrated laser beams
+
+[33mcommit bfcfe395530fbd5effc4b78e397c95b6e98d3881[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Jan 6 01:01:16 2012 +0100
+
+    integrated particle system and added rudimental effects for explosions and moving entities
+
+[33mcommit 12277d1b506f3748e578a0848201dbb90c54d012[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Jan 5 23:34:38 2012 +0100
+
+    improved rendering using wrapper classes
+
+[33mcommit eb32dc6ae8524784bf4fade994c9ab27f9e86902[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Jan 5 22:10:12 2012 +0100
+
+    added entity wrapper classes for rendering; integrated basic particle effects
+
+[33mcommit 760ba9fdf83b63cc0002925a9b1244cdd8cf3dfb[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Jan 5 16:07:16 2012 +0100
+
+    added an important class
+
+[33mcommit 6f06ef60aedc529dffeaf4f3907af439611344a0[m
+Merge: 79696cf 0d9b22c
+Author: stes <stes94@ymail.com>
+Date:   Thu Jan 5 16:03:45 2012 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 79696cfac2660534cf42306062008bd3c5725b61[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Jan 5 16:03:04 2012 +0100
+
+    small changes
+
+[33mcommit 0d9b22c42ba1d63782ca466f1e489f56a790eb3f[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Jan 4 17:54:54 2012 +0100
+
+    disconnect reason is shown in a dialog
+
+[33mcommit 79b2e5eafaeb552c3b342d9595246e703d552d1e[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Jan 4 17:29:11 2012 +0100
+
+    don't render dead players
+
+[33mcommit 76094b75d1190dccd738d4ef383fbf7ed221bfeb[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Jan 4 17:02:16 2012 +0100
+
+    changed behavior when two clients have the same name
+
+[33mcommit d7f3225352028036c10411808842898b5db7585f[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Jan 4 16:41:30 2012 +0100
+
+    fixed freeze bug
+
+[33mcommit 82b292607a73c47381b41504d1b2dc906e6e504e[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Jan 2 20:19:30 2012 +0100
+
+    demo for particle system
+
+[33mcommit 191e3707528bc283cb77f63f9dee5bca60c97a70[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Jan 2 01:58:27 2012 +0100
+
+    started implementing a rudimental particle system
+
+[33mcommit 503cffe092e497fdbc896ff8d3d807e72328600d[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Jan 1 15:49:59 2012 +0100
+
+    using a VolatileImage for rendering now
+    fixed smooth rendering of static entities
+    reduced the cpu usage of the server
+    cleanup
+
+[33mcommit 36700443d75a52ac94bac01ec4337c5e829829d8[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Dec 31 00:35:51 2011 +0100
+
+    cleanup
+
+[33mcommit 039f7a720ed83c2da09758bb307ba1477c0b939e[m
+Author: stes <stes94@ymail.com>
+Date:   Sat Dec 31 00:34:36 2011 +0100
+
+    improved shots; fixed bug rel. to selecting images
+
+[33mcommit 4069947a6feca57fffb25cb1dbbc8740ad6e7010[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 23:53:43 2011 +0100
+
+    reworked scoring; fixed error in server gui
+
+[33mcommit 0302d62abdc844946aa616149a8e90c40f164a3c[m
+Merge: 1a0be7c 13c04ab
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 23:07:08 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 1a0be7cb7fbafecaf3bc3fc1b488085ae0903ba4[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 23:06:10 2011 +0100
+
+    work on bot
+
+[33mcommit 13c04ab3a753f9cced71af1243b74021ba4b9e09[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Dec 30 21:41:11 2011 +0100
+
+    reworked server GUI
+
+[33mcommit e6391bb97bd7fce35730d8fa65104e8617764a5c[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Dec 30 21:07:37 2011 +0100
+
+    divided the ClientListener
+
+[33mcommit 7cc816fda7abd6489cbdf1cd3db9ab1e67b5c139[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Dec 30 21:06:05 2011 +0100
+
+    forgot to add GameState.java
+
+[33mcommit fae4646d5b95406e4045be9678b38857e8dd3e5c[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Dec 30 20:25:04 2011 +0100
+
+    replaced the new round message by a snapitem
+
+[33mcommit 6a64f690d73d036b718e34244ada44e485c4f7e5[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 19:00:05 2011 +0100
+
+    improved rendering; introduced entity IDs
+
+[33mcommit ad02cf4fa729015714de582c49a85b445d668b04[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 17:19:00 2011 +0100
+
+    improved rendering
+
+[33mcommit 8a86ecbbf3d0a454f34e0bb853ca9a2efb11c0ab[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Dec 30 15:48:00 2011 +0100
+
+    fixed collision bug
+
+[33mcommit a1f63b57413f53c320f65c1de5bc730507336c3d[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 17:19:18 2011 +0100
+
+    ignoring some files
+
+[33mcommit 8e6b9411a7486bc4e259fbd9980d1c5c4ddbaaea[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 17:17:38 2011 +0100
+
+    added missing copyrights, removed some files
+
+[33mcommit 257546ef5cedff593327ed102719666158ad96cd[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 16:13:14 2011 +0100
+
+    cleanup, fixed warnings
+
+[33mcommit f7fcd8f58effcdf55c873a57673c2fb83eb39145[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 16:09:42 2011 +0100
+
+    work on bot
+
+[33mcommit 57a887056c80f699140879bc6b621cc768443fc9[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 14:40:56 2011 +0100
+
+    new round event is now invoked properly
+
+[33mcommit 28e6bc34687ac99831ef125e9626cedc9cf5d3b0[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 14:07:31 2011 +0100
+
+    fixed direction of LaserBeam
+
+[33mcommit f19d0ca2f0fa1d082d16d336021a06ee2f78b5b0[m
+Merge: cfca212 010a078
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 13:59:06 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit cfca212b0e83a24b847383150edf307f3e5c4643[m
+Author: stes <stes94@ymail.com>
+Date:   Thu Dec 29 13:58:42 2011 +0100
+
+    work on bot
+
+[33mcommit 010a0784a1b48ee2cc62de354c8ca59041c90b22[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Dec 28 16:08:26 2011 +0100
+
+    fixed the direction
+
+[33mcommit 4eaf3a65fc6de697af66d1dda3a00ca37bac1867[m
+Merge: d0af6b9 d95299e
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Dec 28 16:04:48 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit d0af6b9babb17616cbc50b0f82120a6015ad4704[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Dec 28 15:58:13 2011 +0100
+
+    made the moving animation a bit smoother
+
+[33mcommit d95299e6bc7b92a33e3e8752acc3cc7ef161f5bf[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Dec 26 18:10:37 2011 +0100
+
+    work on rl ai player
+
+[33mcommit 03f7b5d7db9bfc18f189f84fe37c6ca409f37577[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Dec 26 13:59:56 2011 +0100
+
+    reworked moveable entity (O degrees = facing north)
+
+[33mcommit 574f5338ad03ebaa7a6099cb7ce2d9c748ebcc32[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Dec 26 11:35:52 2011 +0100
+
+    fixed a bug related to ai player loading
+
+[33mcommit 79924d9aeb179b4d8b1a445cdba10e6d2e8359f6[m
+Author: stes <stes94@ymail.com>
+Date:   Sun Dec 25 22:34:07 2011 +0100
+
+    work on ai player
+
+[33mcommit 3dd7d83dea1f724f7830ff07c5771d2f31321b9b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 20:38:17 2011 +0100
+
+    work on bot
+
+[33mcommit c5db035d232b27d712c6e2137a9b390f153262b7[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 14:12:20 2011 +0100
+
+    work on shots; cleanup; package structure
+
+[33mcommit cf3dc9f0b0f20205002afe5e3c13a96d091e06a3[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 13:21:51 2011 +0100
+
+    integrated rockets
+
+[33mcommit 34f4377d987412441a333b64f86502e457c14e69[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 01:46:27 2011 +0100
+
+    removed files
+
+[33mcommit 9680576ca36b6c1aa51e071820452ee6d4b1a80a[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 01:44:25 2011 +0100
+
+    documentation
+
+[33mcommit 3c128d4f762eaa2a9d944a2d6e0dfc0259049c79[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 01:14:13 2011 +0100
+
+    added copyright headers
+
+[33mcommit acb4889ab67fd16e174d34c3d9e47f9d436c4b1b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 01:09:23 2011 +0100
+
+    worked on different shots
+
+[33mcommit 070b3d06cae9ec10e644b551496231967fecedf9[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 00:18:58 2011 +0100
+
+    some cleanup, moved some classes
+
+[33mcommit 70726c83bd132c9ff14f5f74edfc9f9db6224c50[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Dec 25 00:06:28 2011 +0100
+
+    fixed gui bug after disconnecting
+
+[33mcommit 74b6e85ed5815e6a891bd8b662014d36cd6fc321[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 24 23:58:39 2011 +0100
+
+    further work on entity framework
+
+[33mcommit 8f831a26e8915546da804883a183aacd94831264[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 24 22:35:32 2011 +0100
+
+    worked on entity system
+
+[33mcommit b3024ab2c21ab5c4ce2fca018124bbe173378cd2[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 24 16:02:29 2011 +0100
+
+    some cleanup; further improved fps
+
+[33mcommit ac5d8fbe61b61a5a3e886f826de249ec454d6f3e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 24 15:51:17 2011 +0100
+
+    reworked rendering
+
+[33mcommit b8ed941c2d3574da889637ccf020942740612ffa[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:57:41 2011 +0100
+
+    fixed some problems related to collision control
+
+[33mcommit 984d8e2e77182d98b8dbea1d1cafc6ed765c5b3e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:38:19 2011 +0100
+
+    changed rendering of shots
+
+[33mcommit a9696dc0451244ebc44d06ca255f50b4ef42d8b0[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:29:38 2011 +0100
+
+    fixed some TODOs
+
+[33mcommit 9603dc14170ad6ded2bfe71b1816c815fe4fd5ad[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:22:37 2011 +0100
+
+    formatted code
+
+[33mcommit 23f7963c385f7d3dc94c80a77cc7c00c2265f964[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:14:16 2011 +0100
+
+    cleanup
+
+[33mcommit 92fdc545beff807b82232b404b08077859c0f034[m
+Merge: b1cd83c 090d136
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:09:14 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit b1cd83c7783233276bcceb4c2c43be5f9ac4629d[m
+Merge: 439d5e7 930e8af
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:08:08 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 439d5e7b225534025d152c47c747437858c876aa[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 23:07:48 2011 +0100
+
+    added disconnect button
+
+[33mcommit 090d13609dc6ed5b1815fe86e696a5a48ff377d6[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 23:07:29 2011 +0100
+
+    added a disconnect method to the SWClient
+
+[33mcommit 9e3cda8975b12f081c6dc0395a7add68e606c7ef[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 23:00:57 2011 +0100
+
+    fixed the master shot
+
+[33mcommit 930e8af444c67c3887b4e2266106530f5c6d0110[m
+Merge: 381b69e 42fdb64
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:55:36 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 381b69e74bb7f562735e62a0cab3b7e715f4331e[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:55:28 2011 +0100
+
+    finished the shit
+
+[33mcommit 42fdb64ca2e9f34a06df5d339ccb378ae3f98a4c[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 22:42:59 2011 +0100
+
+    added simple buglogger
+
+[33mcommit e6a64fddd21783124cc68310538cb153c1ca5128[m
+Merge: 20100a6 a41c157
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:29:35 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 20100a60c2bff9f52eb835a8e97f9052438c3d09[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:29:22 2011 +0100
+
+    continued work on the shot
+
+[33mcommit a41c15737d68c5b5d27ae110c2fe667e5488bf20[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 22:27:34 2011 +0100
+
+    improved collisions, added damage
+
+[33mcommit 3b6ec3f0b7f263667477ce75709a8129e51aea1c[m
+Merge: 82055e9 a978666
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:05:27 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 82055e99c78d0a3899c2e20fd06d79627bed0f88[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 22:05:17 2011 +0100
+
+    started reworking the shot
+
+[33mcommit a978666238377e85e9ba071b4e40cc10e14f12dc[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 22:04:36 2011 +0100
+
+    improved collisions
+
+[33mcommit ecd30eb894bd6efeaa57bc9dade7760ac6920a31[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 21:55:29 2011 +0100
+
+    added rudimental collision checking
+
+[33mcommit 0758f8b833161659f6360493e97e7750f5d32147[m
+Merge: 3c131cd 59798ca
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 21:24:06 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 3c131cd43da48babdb8c62957be1d8f5ec47434e[m
+Merge: b71652e 7f98d96
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 21:20:53 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit b71652ed6bcbb39db497b3bcf953e08cc0c7321f[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 21:20:31 2011 +0100
+
+    some cleanup
+
+[33mcommit 59798ca1ba6311185f4c09d4dbacf3f1e8de7804[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 21:20:25 2011 +0100
+
+    -.-
+
+[33mcommit 7f98d96797b7144f37fa1a410c0f4223226c8fcd[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 21:17:58 2011 +0100
+
+    added entity system
+    improved snapshots
+
+[33mcommit 3e0945ea739015e8dc12243acacd733ddf6bd239[m
+Merge: 41f3ad0 8588dd9
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 20:54:43 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 8588dd9815f53dae9a345e6f3cec5518aa1a6671[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 20:49:35 2011 +0100
+
+    improved rendering
+
+[33mcommit 41f3ad00955daa6ede3bcc63217ce3798b574303[m
+Merge: 8e8475f dc0aec3
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 20:38:02 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit dc0aec3c2d44053a07b30abee4992654155b66db[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 22 20:35:31 2011 +0100
+
+    working on active rendering
+
+[33mcommit 8e8475fbe885ed886ae2f70c9900692f0a82d335[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 22 19:09:44 2011 +0100
+
+    improved server side input stuff; broke shot
+
+[33mcommit cc970e620dae5097ff24a19609da13627818a640[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 21 22:08:34 2011 +0100
+
+    started working on active rendering
+
+[33mcommit cc98f6fe8ea5b395d1fae9381a21bcc3304cd76b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 21 00:37:03 2011 +0100
+
+    started to implement bug logger
+
+[33mcommit f20c78f034a894b425d05e28a9bbe3e45c82dbe2[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Wed Dec 21 00:22:47 2011 +0100
+
+    small fix
+
+[33mcommit e75b21afbcec95727b7abb31e61c97eaa3b6c83b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 21 00:15:01 2011 +0100
+
+    fixed conflict; cleanup, removed warnings
+
+[33mcommit feddb68a06eed790b2ff3b1af83853ab5a58f73c[m
+Merge: 973130a 7b6a090
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 21 00:10:22 2011 +0100
+
+    fixed a conflict
+
+[33mcommit 973130a656cb15d51e4e5255fc8f9c9ce2414e33[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 21 00:07:46 2011 +0100
+
+    improved physics
+
+[33mcommit 7b6a09041091c51bf863d17f8af6c0651c75fdf6[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Tue Dec 20 23:58:13 2011 +0100
+
+    added a scroll bar to the chat history
+
+[33mcommit 98815ec01df790c155f151a180dc3aad77954bb7[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Tue Dec 20 23:10:50 2011 +0100
+
+    improved input
+
+[33mcommit 2c86cda94312746aa8891825bb6b14dadd7ad921[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 20 16:34:57 2011 +0100
+
+    excluded jars
+
+[33mcommit f5559f90b164f6e8224d81d59133ac0d8a3a7f8b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 20 16:33:16 2011 +0100
+
+    work on rl bot
+
+[33mcommit 306fda66605cb95d70be7bdcf758a2369e497ce7[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 20 14:28:57 2011 +0100
+
+    added player specific space ships
+
+[33mcommit 46679d7e0b0e06f61026f5bab54a0a5d68a7da5b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 20 13:25:21 2011 +0100
+
+    improved image/sprite handling; different player images; cleanup
+
+[33mcommit e595c70d8d0b657e39af97e56eb93f2a5b73ce66[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 19 22:59:37 2011 +0100
+
+    limited shotrate
+
+[33mcommit 4dd2f2c51da0f399d20c6970c066158e51d6a9a4[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 19 21:44:10 2011 +0100
+
+    removed unused files
+
+[33mcommit 528fe70e1bfec6122762eae406811b7ce8aa3322[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 19 21:40:26 2011 +0100
+
+    updated readme, added licenses to repo
+
+[33mcommit 4c1b39bb84f427c2c09beb6cbce2000e7641d7c3[m
+Author: stes <stes94@ymail.com>
+Date:   Mon Dec 19 21:30:45 2011 +0100
+
+    edited readme
+
+[33mcommit 4e30fd817909f094d1f4769fdca50ab01214790e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 19 21:09:15 2011 +0100
+
+    improved performance
+
+[33mcommit a3e0b59fb0d1a5adb542f94bbd1f5a01e393c736[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 19 20:20:22 2011 +0100
+
+    cleanup, some documentation
+
+[33mcommit 9095b45b78fa5067671c1e454f20a39f5f7d36fa[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sat Dec 17 19:34:43 2011 +0100
+
+    some cleanup
+
+[33mcommit 4f42684af7c1b771810ceab2bb0abaf73addc7a3[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sat Dec 17 01:08:14 2011 +0100
+
+    removed/replaced some german text
+
+[33mcommit 6aeda12ad5ece76db900b67b0a1ede8a995e8586[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Dec 16 23:47:53 2011 +0100
+
+    no builds in the repo
+
+[33mcommit 6ab31bbdb0b6a99fbe8ca471555f68c16ba24b9a[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 14 23:40:58 2011 +0100
+
+    further work on ai api; pre 0.1.1
+
+[33mcommit f36e1f2e843adde16c54270be4e844fd1448495e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 14 22:26:46 2011 +0100
+
+    fixed problem with ai api
+
+[33mcommit 39d47de56bd053fc3c28da0630b3bd0fcbf98929[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 14 17:09:06 2011 +0100
+
+    Added ant scripts
+
+[33mcommit 6a119930ddc70d9019aac7bf4d95fd576cbd4ba8[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Dec 14 00:44:07 2011 +0100
+
+    started working on collision control
+
+[33mcommit 29c152fe36f0ad5304fa1d73b3d874d96e19bdd0[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 13 23:57:00 2011 +0100
+
+    further work on resolution indepenent gui
+
+[33mcommit a43ebb627327a118eb2b052f551ce2cf37b1b597[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 13 23:25:56 2011 +0100
+
+    bugfix: ai players can be loaded properly now
+
+[33mcommit 250553580390f1166c44a21b16bc76a53f77cea4[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 13 20:51:35 2011 +0100
+
+    improved handling of players & relating events
+
+[33mcommit 39279ac74a558f98fc5ca82f4f4d93adf565b102[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Dec 13 20:12:54 2011 +0100
+
+    implemented resolution-independent gui
+
+[33mcommit 3438a36d99c195dbd0c722d50cd61e41e3908562[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Mon Dec 12 20:58:20 2011 +0100
+
+    splitted client and server
+
+[33mcommit 58f3e3d4dd8fb420251e62ee3facbb869f48a806[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 15:12:41 2011 +0100
+
+    last small changes, added binaries for prerelease 0.1
+
+[33mcommit ec2b85017803a6da3277eddb8ec8b4804c90cb56[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 14:47:53 2011 +0100
+
+    work on gui, cleanup
+
+[33mcommit 0eee11e1a4bb6c6e383991bd5d9fd3d1e1d20f36[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 13:11:12 2011 +0100
+
+    refactoring, cleanup, sorted members
+
+[33mcommit 02653dd2cd7124568caabe98941696888dd302be[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 13:01:47 2011 +0100
+
+    changed readme
+
+[33mcommit 120f5ecd031be9f32094ae28f2d7461728069d0d[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 12:53:00 2011 +0100
+
+    fixed conflicts
+
+[33mcommit e050d895e108844d64f60457ea5f5fa634ec6490[m
+Merge: c6c5f45 829c790
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 12:48:19 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit c6c5f45e7456f3a00c42354aff92ead436c99801[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Dec 10 12:47:25 2011 +0100
+
+    Added images and licenses
+
+[33mcommit 829c7904809506962e9d834001460eb190a6802b[m
+Merge: 31a6ecf 3ebafd2
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 8 18:41:12 2011 +0100
+
+    fixed conflicts
+
+[33mcommit 31a6ecfa091acfaa475c967bac14288474bfe0fb[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 8 18:35:49 2011 +0100
+
+    implementing ai
+
+[33mcommit 3ebafd22c905e2b78042073b81659ec8e02564a2[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Tue Dec 6 09:47:37 2011 +0100
+
+    fixed the server browser and the scoreboard
+
+[33mcommit 2444f52edcf154212cd533e59db6ca8b5cb85cc6[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Dec 2 21:36:07 2011 +0100
+
+    Worked on AI Player
+
+[33mcommit e885ae29631654df989fb7e8ab9005a2a0c90895[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 23:40:45 2011 +0100
+
+    rewrote the server browser stuff (not finished yet)
+
+[33mcommit 8899798d14212741ccf370aabcfc8c36e5f40d5b[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 22:12:35 2011 +0100
+
+    reworked the sw.shared.data stuff
+    translated some things
+
+[33mcommit d90db3ad1508aece2ce91986b66e965aeda8aff3[m
+Merge: ef57213 acb32f6
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 21:10:13 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit ef57213d3c2b9a2c5ddf4de7e50ac6f801ad5225[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 21:08:49 2011 +0100
+
+    rebuilt ai plugin
+
+[33mcommit acb32f618e57c6110a7e2ef4b4b1eddbf42eb7da[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 21:00:35 2011 +0100
+
+    fixed the lagging
+
+[33mcommit f6960e0353138b20b3baf640147e168f3478ccd2[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 20:53:57 2011 +0100
+
+    forgot to add them -.-
+
+[33mcommit 0f995ef75e8ac7036e6ef4ada38228917de9c1a3[m
+Merge: 090d323 28c56aa
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 20:53:42 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 090d3232eb7870bcac5b7d7357bbe9e79ab11e41[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 20:51:08 2011 +0100
+
+    replaced the Packet class with Packer and Unpacker
+
+[33mcommit 28c56aa547542b59c7140b4b1f1facf955715e45[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 20:47:41 2011 +0100
+
+    finished implementing ai api
+
+[33mcommit 8ec1252c3cd91bb6572089b945b46f29154cbd20[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 18:48:18 2011 +0100
+
+    ?
+
+[33mcommit 701643abdba9594639534b8207329cc8051c04d2[m
+Merge: d0d6a46 0f3e3e9
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 18:32:21 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit d0d6a46fd9b5ee9ec880859a62d3a138a86e396f[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 18:32:01 2011 +0100
+
+    small bugfixes
+
+[33mcommit 0f3e3e905adbb0462f234f860b35c07f2b9cf77e[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 18:28:40 2011 +0100
+
+    small cleanup
+
+[33mcommit efe7b87e3953bc241e5311d9d0c33beb9908f028[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 18:27:48 2011 +0100
+
+    added rudimental ai support
+
+[33mcommit 63e9808f0b67e741954fe3eb0d45f1c5521ee7c8[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 17:57:07 2011 +0100
+
+    fixed some small problems
+
+[33mcommit cd0160b786abfa8bda241cbc041a235da65d5233[m
+Merge: 722c415 dc64beb
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 17:52:38 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 722c415582db738c770076c7b36b5421e6cbe2dd[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Thu Dec 1 17:52:10 2011 +0100
+
+    added testfile
+
+[33mcommit dc64beb17957e8b43f8584a90b879f993280ea1b[m
+Merge: dc57690 d00cbbf
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 17:47:33 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit dc57690ca3dfedadc1a505ce6f6e91c1caf271c2[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Thu Dec 1 17:46:42 2011 +0100
+
+    added connectionless packets
+
+[33mcommit d00cbbfdf0efbfc82f058b337930c900f8cd2f19[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Nov 30 23:19:33 2011 +0100
+
+    Added copyright in several source files
+
+[33mcommit 66fa466aeff5ad64a59aaece98ed074ad1e8f728[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Nov 30 23:12:30 2011 +0100
+
+    started working on AI players
+
+[33mcommit a0eca0ea6bc9a3e05520ec4be52646508420eb9a[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Wed Nov 30 21:58:33 2011 +0100
+
+    reworked resource loading
+
+[33mcommit 503b058e082bf91e5d932a2a93b6c4bc8b7d32c2[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Tue Nov 29 21:46:34 2011 +0100
+
+    improved the connection handling
+
+[33mcommit 618cca96583fc0b6ace512b90ff79105ae336bd2[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Nov 29 20:47:59 2011 +0100
+
+    improved gui; changed width/height; did some cleanup
+
+[33mcommit ce962a9dc91ff833ec950604ed1059c5bb660817[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Nov 29 20:23:09 2011 +0100
+
+    fixed problem with chat, works now
+
+[33mcommit fa96284cad0b8bcf5da4e4862ca77d656a8a510b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Nov 29 19:59:38 2011 +0100
+
+    worked on chat
+
+[33mcommit 3679f1fd4cd0772be695d0ea1a071f96cab79445[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Tue Nov 29 14:42:31 2011 +0100
+
+    started implementing chat
+
+[33mcommit d04baea4a2c3718156673ba082f7c371494731be[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 20:44:06 2011 +0100
+
+    fixed the disconnecting
+    reconnecting works now
+
+[33mcommit 13cb13bec3c095b3e6eb6e64e6cc95f2b9c6bcab[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 19:05:39 2011 +0100
+
+    cleanup; sorted members
+
+[33mcommit 02ea49289a7022fbb77188f38cc40b0a9c8b84bf[m
+Merge: 4fff10f 655c209
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 18:57:24 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 4fff10fb46cb10cf2df91ee91934042641f5833d[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 18:56:50 2011 +0100
+
+    started integrating maps
+
+[33mcommit 655c209977f815f03bb30931b4b6fb5d05373efa[m
+Merge: 035edbb d2d37aa
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 18:48:34 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 035edbbf9b87ff52dce9c7876a6b626ad13ecac1[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 18:33:20 2011 +0100
+
+    fixed the login
+
+[33mcommit d2d37aa83340ba9ba9b48c3712d6cab83326610e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 18:28:28 2011 +0100
+
+    reworked handling of keyevents; some changes in package structure
+
+[33mcommit 57247a8ab9c0ae386c285411381ec114a6359977[m
+Merge: 3ca8fe3 cf28b30
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 18:24:19 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 3ca8fe3648e210c12a55b93b0addfeaf836b3429[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 18:22:25 2011 +0100
+
+    reworked the network stuff
+
+[33mcommit cf28b300177d756ff1cb234feda5ba6dba3e6523[m
+Merge: cbb26cf 830141a
+Author: unknown <Abbadonn@dennis.(none)>
+Date:   Sun Nov 27 17:24:34 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit cbb26cf3fa53e3c32c22b862e2c1f1fff35c45bf[m
+Author: unknown <Abbadonn@dennis.(none)>
+Date:   Sun Nov 27 17:23:58 2011 +0100
+
+    Documentation of the shared folder
+
+[33mcommit 830141a2b773d12f8d6eab129152a3e5b79e3618[m
+Merge: 4dce7e8 bb61f83
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 17:14:27 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 4dce7e8ae9686b31f2f43461bd53491998c54253[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 17:14:10 2011 +0100
+
+    bugfix: repaint gamepanel after new snap
+
+[33mcommit aa5db895a82cf895821a0dc2a60307144bfe3a4c[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 16:37:05 2011 +0100
+
+    reworked gui
+
+[33mcommit bb61f8351ceb1b7ac467ad1c261dc5c0b83a6697[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 15:11:47 2011 +0100
+
+    use bytes for control flag
+
+[33mcommit d3a4496102dd8e2a4b2a9f5bc7c9eb5a12161474[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 14:10:46 2011 +0100
+
+    fixed last commit
+
+[33mcommit 42f236e5692d3a18642d8e55bce41ce0863ac834[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 14:03:04 2011 +0100
+
+    changed tick and snapshot behavior
+
+[33mcommit 26fcb8a308f84b657e1b723bd03a3897ecd06a81[m
+Merge: 37e9898 ba4bd7f
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 13:43:36 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit 37e9898c81c99b72139af6772da31ca1b9547571[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 13:43:10 2011 +0100
+
+    added test class
+
+[33mcommit ba4bd7fa15e88dfc076afe24eaf74c1024b92ebe[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 13:41:03 2011 +0100
+
+    rewrote the packet class
+    fixed some stuff
+
+[33mcommit 7e07dbc3d36d0f7d752d02f72bd740b5caa21d1e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 13:30:13 2011 +0100
+
+    small bugfix ^^
+
+[33mcommit 1133737d35c0e9fae295c6d916bb5481d7f2d030[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 03:23:16 2011 +0100
+
+    started integrating the property loader
+
+[33mcommit 51d17b5f963e8adb80ab5840c46ce0ed4723ae1c[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 03:18:56 2011 +0100
+
+    sorted classes; added new packages
+
+[33mcommit d220896396e7263737626c0de060859fa5d24ef6[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 03:04:56 2011 +0100
+
+    Splitted the local player and the game controller (preparation for implementing AIs
+
+[33mcommit cb70c86daf66c5e3deb14b53ad94073904791b60[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 02:28:20 2011 +0100
+
+    bugfix: background of playing field is now properly painted (if there is a 'Hintergrund.png' file in the root dir
+
+[33mcommit 480b4c475d01111c677fb1323dbd9b0def9db0c3[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sun Nov 27 01:55:06 2011 +0100
+
+    smaller changes, working on client gui
+
+[33mcommit 2ea9fae1bd7defafdfd5fd38d7500b61cf99729a[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sun Nov 27 01:17:47 2011 +0100
+
+    moved to UDP sockets
+
+[33mcommit 0f86bda537e513a330367f3a4aa2f96eeafba6a6[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 19:13:56 2011 +0100
+
+    further work on Action Delegate; Implemented some events in SWFrame
+
+[33mcommit 2ae3a0c33f4267daff313a042d3871ae89df607d[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 18:54:48 2011 +0100
+
+    added ActionDelegate class to easy implement component event handling
+
+[33mcommit 76bec0dd60be4c17eff8dc43ede4eb91fb660764[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 17:58:22 2011 +0100
+
+    generated some serial version IDs
+
+[33mcommit 12e5dbf4cae830d07b3de1b203685c9ab801c34a[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 17:50:16 2011 +0100
+
+    finished and tested PropertyLoader
+
+[33mcommit 92bc92d14988d5adc8c7e55904f484def4e8463a[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 17:25:41 2011 +0100
+
+    finished property loader
+
+[33mcommit 0ddb128940bb001e8dbfe9e3a35616b99ee23f15[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 17:00:08 2011 +0100
+
+    created property loader for the server application
+
+[33mcommit 13d0c77dee187c9e3acc1fcc3ea19792897f200e[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 16:23:54 2011 +0100
+
+    translating; started splitting the game constants (sv/cl)
+
+[33mcommit cf4e559598dcd8ed453e8668a0c4fcf21b7fa97b[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Sat Nov 26 15:55:56 2011 +0100
+
+    translation
+
+[33mcommit 840cd78fc61bbf75904721076f9c2bb8b64d29d4[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sat Nov 26 15:24:35 2011 +0100
+
+    fixed last commit
+
+[33mcommit e8a9328bcb517d25c4253398f21b7ee917a10735[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Sat Nov 26 15:15:07 2011 +0100
+
+    fixed the classpath
+
+[33mcommit 92bf2962ead4aafb6cc020e9a86acbb1bf435481[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 23:49:21 2011 +0100
+
+    cleanup, sorted class members
+
+[33mcommit 3218e60abb06da028ef7e4e711f30fcaf0cd582f[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 23:45:23 2011 +0100
+
+    Translated method names and field names in sw.client, started with sw.server
+
+[33mcommit 2132c0cc53964cc4fda9163fdd3a388772844676[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 22:18:33 2011 +0100
+
+    updated copyright, changed author tags
+
+[33mcommit 8e8777ae994accf81f9a1b3fe9e945f67a9ef044[m
+Merge: c250611 a886bef
+Author: unknown <Abbadonn@dennis.(none)>
+Date:   Fri Nov 25 21:58:31 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit c2506110bf3e4baa8b92be72fa76613d77393b54[m
+Author: unknown <Abbadonn@dennis.(none)>
+Date:   Fri Nov 25 21:55:54 2011 +0100
+
+    some translations
+
+[33mcommit a886bef0fd45bc0a3d2f2aa3d5cf63e131ddcea7[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 21:51:48 2011 +0100
+
+    started translating
+
+[33mcommit e89c0b6eeeb261d1ed2777a760687534f36f15eb[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 20:53:10 2011 +0100
+
+    translated class names
+
+[33mcommit 388067b0f8ef94f673eba10ee31f8d2ca0e6ce94[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 20:52:52 2011 +0100
+
+    translated class names
+
+[33mcommit 5fd0fade507c8b8b79bdd303f1fedb98bdf0bd5d[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 20:24:23 2011 +0100
+
+    SWAnwendung is now able to run (no network support yet)
+
+[33mcommit 7ab31ce66228c40bbc0ee67c286430abacb21155[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 16:45:24 2011 +0100
+
+    continued removing sum dependencies
+
+[33mcommit 9b7fe7e3d81244d9bf15943a198f5610b07b5662[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 15:43:44 2011 +0100
+
+    started removing sum dependencies
+
+[33mcommit 9d78acf4aa0df9a2d71f2f79db8c677eee00f2e9[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 14:15:03 2011 +0100
+
+    moved the license to the root directory
+
+[33mcommit 34ffbddc23616ec9c9ea218caf2281ee3bcc9115[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 14:03:48 2011 +0100
+
+    added license
+
+[33mcommit be7747ff7f83fb0803616ccfc49c82c48b2889b3[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 13:59:40 2011 +0100
+
+    added copyright information
+
+[33mcommit 1531b2ea28af913fbfce8c79b3db266938956d13[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 13:54:57 2011 +0100
+
+    cleaning up
+
+[33mcommit 924d25a0b92346cd706049825d2d42073f9abcb8[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 13:37:58 2011 +0100
+
+    cleaning up
+
+[33mcommit 9405907fb68dde094d8b18ded292ab422468390f[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 13:23:28 2011 +0100
+
+    added copyright information
+
+[33mcommit 055e9c0395f3f76485fcd55ef32478c6fbfa1444[m
+Merge: 0268b30 bb473fc
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 13:22:40 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit bb473fcc6ce8ca25973e4d938cc5e4e51fa21a82[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 13:04:24 2011 +0100
+
+    removed some files
+
+[33mcommit 4d13431a7fd5248fc788f462635344e0fe26a1a9[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 12:46:15 2011 +0100
+
+    moved the eclipse project
+
+[33mcommit 7fd99d96663af4a9206f1473c34570658d125769[m
+Merge: 49ee8e9 b5a643b
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 12:41:45 2011 +0100
+
+    Merge branch 'master' of github.com:stes/Space-Warrior
+
+[33mcommit b5a643b64c23d0194a7da6e8f9ff04ee53bd2819[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 12:37:00 2011 +0100
+
+    ...
+
+[33mcommit 4b95010f41c93eb37df921eeecbd5f8e6a5c3d66[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 12:34:29 2011 +0100
+
+    removed some stuff
+
+[33mcommit ffcd9300c29359fc038acca68beefb041d5c37ad[m
+Author: stes <stes94@ymail.com>
+Date:   Fri Nov 25 12:27:20 2011 +0100
+
+    added eclipse project
+
+[33mcommit 49ee8e9b347fdc9b519b47d0592732016b4c5d97[m
+Merge: 52eee96 ea78015
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 11:59:51 2011 +0100
+
+    Merge branch 'master' of https://github.com/stes/Space-Warrior
+
+[33mcommit ea78015d6b35c9e81e52770e401a077548f60077[m
+Author: Redix <alexander.blubb@gmail.com>
+Date:   Fri Nov 25 11:49:28 2011 +0100
+
+    initial commit
+
+[33mcommit 52eee965e693815fab1321f2d953681b0aa7f537[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 11:35:50 2011 +0100
+
+    first commit
+
+[33mcommit 0268b300a517eeab5142a712b50c60b03ec7e7a3[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 11:24:50 2011 +0100
+
+    test
+
+[33mcommit bab6373cc4b173162ea51481ebcf76008667f284[m
+Author: Steffen S <stes94@ymail.com>
+Date:   Fri Nov 25 10:45:26 2011 +0100
+
+    first commit
