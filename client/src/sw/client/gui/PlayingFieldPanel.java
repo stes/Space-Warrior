@@ -30,9 +30,12 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+import javax.naming.OperationNotSupportedException;
 import javax.swing.JPanel;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import sw.client.ClientConstants;
+import sw.client.SWFrame;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.sprites.IShotSprite;
 import sw.client.gui.sprites.LaserSprite;
@@ -227,7 +230,7 @@ public class PlayingFieldPanel extends JPanel
 		});
 		this.setLayout(null);
 		this.setBackground(Color.BLACK);
-		_isDebugActive = false;
+		_isDebugActive = true;
 	}
 
 	private void invokeExplosion(double x, double y)

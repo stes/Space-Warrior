@@ -95,6 +95,12 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 		_input = new PlayerInput();
 	}
 
+	public SpaceShip(String name, int imageID, boolean local)
+	{
+		this(name, imageID);
+		_local = local;
+	}
+	
 	private SpaceShip(byte type)
 	{
 		super(type);

@@ -100,7 +100,7 @@ public abstract class GameEngine
 			}
 		}
 
-		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() == 1))
+		if ((alive == 1 && _players.size() > 1) || (alive == 0))
 		{
 			if (alive == 1)
 			{
@@ -114,10 +114,7 @@ public abstract class GameEngine
 		}
 	}
 
-	public void invokePlayerWon(SpaceShip pl)
-	{
-		// TODO implement
-	}
+	public abstract void invokePlayerWon(SpaceShip pl);
 	
 	public void playerInput(String name, PlayerInput input)
 	{
@@ -130,10 +127,15 @@ public abstract class GameEngine
 		getPlayers().remove(name);
 	}
 	
-	public void addPlayer(String name, int imageID)
+	public void addPlayer(String name, int imageID, boolean local)
 	{
-		SpaceShip newPl = new SpaceShip(name, imageID);
+		SpaceShip newPl = new SpaceShip(name, imageID, local);
 		getPlayers().put(name, newPl);
 		getWorld().insert(newPl);
+	}
+	
+	public void addPlayer(String name, int imageID)
+	{
+		addPlayer(name, imageID, false);
 	}
 }

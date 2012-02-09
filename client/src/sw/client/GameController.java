@@ -26,20 +26,17 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.plugins.AIPlayerLoader;
-import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;
-import sw.shared.net.Packer;
-import sw.shared.net.Unpacker;
 
 /**
+ * Controls all gameplay related issues
+ * 
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class GameController implements ClientConnectionListener, ClientMessageListener,
-		IGameStateManager
+public abstract class GameController implements IGameStateManager
 {
 	private static File _aiPlugin;
 	private static boolean _runAI = false;
@@ -52,7 +49,6 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 
 	private GameWorld _prevWorld;
 	private GameWorld _world;
-	private IClient _client;
 	private SpaceShip[] _players;
 	private Player _localPlayer;
 
@@ -61,19 +57,16 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 
 	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
 
-	private boolean _isConnected;
-
 	private boolean _rendering;
 
 	/**
 	 * creates an new GameController
 	 */
-	public GameController(IClient client)
+	public GameController()
 	{
 		_prevWorld = new GameWorld();
-		_world = new GameWorld();
+		setWorld(new GameWorld());
 		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
-		_client = client;
 		_players = new SpaceShip[0];
 		_rendering = false;
 	}
@@ -85,31 +78,14 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	}
 
 	@Override
-	public void chatMessage(String name, String text)
-	{}
-
-	@Override
-	public void connected()
-	{
-		this.setIsConnected(true);
-		this.init();
-	}
-
-	@Override
-	public void disconnected(String reason)
-	{
-		this.setIsConnected(false);
-	}
-
-	@Override
 	public synchronized GameWorld getGameWorld()
 	{
-		return _world;
+		return getWorld();
 	}
 
 	public boolean getIsPlayerHuman()
 	{
-		return (_localPlayer instanceof HumanPlayer);
+		return (getLocalPlayer() instanceof HumanPlayer);
 	}
 
 	@Override
@@ -121,7 +97,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	@Override
 	public synchronized SpaceShip[] getPlayerList()
 	{
-		return _players;
+		return getPlayers();
 	}
 
 	@Override
@@ -137,32 +113,21 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 			try
 			{
 				SWFrame.out.println("Successfully loaded AI Player.");
-				_localPlayer = AIPlayerLoader.load(GameController._aiPlugin, this);
+				setLocalPlayer(AIPlayerLoader.load(GameController._aiPlugin, this));
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
-				_localPlayer = new HumanPlayer(this);
+				setLocalPlayer(new HumanPlayer(this));
 			}
 		}
 		else
 		{
 			SWFrame.out.println("no AI player selected, using default player");
-			_localPlayer = new HumanPlayer(this);
+			setLocalPlayer(new HumanPlayer(this));
 		}
 		this.invokePlayerInit(new GameStateChangedEvent(this));
-	}
-
-	public boolean isConnected()
-	{
-		return _isConnected;
-	}
-
-	@Override
-	public boolean isReady()
-	{
-		return this.isConnected();
 	}
 
 	public void removeGameStateChangedListener(GameStateChangedListener l)
@@ -183,9 +148,9 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		}
 		_prevLastSnap = _lastSnap;
 		_lastSnap = System.currentTimeMillis();
-		_prevWorld = _world;
-		_world = world;
-		_players = _world.getPlayers();
+		_prevWorld = getWorld();
+		setWorld(world);
+		_players = getWorld().getPlayers();
 	}
 
 	@Override
@@ -199,34 +164,6 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 	}
 
 	@Override
-	public void snapshot(Unpacker snapshot)
-	{
-		GameWorld world = new GameWorld();
-		world.fromSnap(snapshot);
-		this.setGameworld(world);
-		for (SpaceShip pl : _players)
-		{
-			if (pl.isLocal())
-			{
-				_localPlayer.setDataSet(pl);
-			}
-		}
-		GameState[] state = _world.getEntitiesByType(Packettype.SNAP_GAMESTATE, new GameState[] {});
-		if (state.length >= 1)
-		{
-			if (state[0].isNewRoundStarted())
-			{
-				this.newRound();
-			}
-		}
-		GameStateChangedEvent e = new GameStateChangedEvent(this);
-		e.setLocalDataSet(_localPlayer.getDataSet());
-		// TODO only pass a copy!
-		e.setGameWorld(_world);
-		this.invokeStateChanged(e);
-	}
-
-	@Override
 	public synchronized double snapTime() // TODO: find a better name
 	{
 		if (_lastSnap == 0 || _prevLastSnap == 0)
@@ -234,13 +171,6 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 			return 1;
 		}
 		return (System.currentTimeMillis() - _lastSnap) / (double) (_lastSnap - _prevLastSnap);
-	}
-
-	@Override
-	public void stateUpdated(PlayerInput input)
-	{
-		Packer p = input.pack();
-		_client.sendPacket(p);
 	}
 
 	private void invokeNewRound(GameStateChangedEvent e)
@@ -267,7 +197,7 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		}
 	}
 
-	private void invokeStateChanged(GameStateChangedEvent e)
+	protected void invokeStateChanged(GameStateChangedEvent e)
 	{
 		if (_gameStateChangedListener == null || _gameStateChangedListener.size() == 0)
 		{
@@ -279,15 +209,30 @@ public class GameController implements ClientConnectionListener, ClientMessageLi
 		}
 	}
 
-	private void newRound()
+	protected void newRound()
 	{
 		// TODO improve, add loser/winner to event
 		GameStateChangedEvent e = new GameStateChangedEvent(this);
 		this.invokeNewRound(e);
 	}
 
-	private void setIsConnected(boolean _isConnected)
+	protected SpaceShip[] getPlayers()
 	{
-		this._isConnected = _isConnected;
+		return _players;
+	}
+
+	private void setLocalPlayer(Player localPlayer)
+	{
+		this._localPlayer = localPlayer;
+	}
+
+	public GameWorld getWorld()
+	{
+		return _world;
+	}
+
+	private void setWorld(GameWorld world)
+	{
+		this._world = world;
 	}
 }

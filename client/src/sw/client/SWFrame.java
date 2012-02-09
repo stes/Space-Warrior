@@ -58,6 +58,7 @@ import sw.shared.net.Packer;
 public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
 {
 	public static PrintStream out;
+	public static boolean DEBUG;
 
 	private enum GUIMode
 	{
@@ -100,6 +101,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	private boolean _isRunning;
 	private int _fps;
 	private SWFrame _self;
+	private boolean _isMultiplayer = false;
 
 	/**
 	 * Creates a new SWFrame
@@ -107,7 +109,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	public SWFrame(boolean debugMode)
 	{
 		super("Space Warrior");		
-		
+		DEBUG = debugMode;
 		out = new PrintStream(new OutputStream()
 		{
 			@Override
@@ -131,7 +133,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		((JComponent) this.getContentPane()).setOpaque(false);
 
 		_client = new SWClient();
-		_controller = new GameController(_client);
+		_controller = new SPGameController();
 		
 		this.init(debugMode);
 
@@ -171,10 +173,17 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	public void connected()
 	{
 		this.setGUIMode(GUIMode.GAME);
-		Packer start = new Packer(Packettype.CL_START_INFO);
-		start.writeUTF(_loginPanel.getName());
-		start.writeInt(_loginPanel.getImageID());
-		_client.sendPacket(start);
+		if (_isMultiplayer)
+		{
+			Packer start = new Packer(Packettype.CL_START_INFO);
+			start.writeUTF(_loginPanel.getName());
+			start.writeInt(_loginPanel.getImageID());
+			_client.sendPacket(start);
+		}
+		else
+		{
+			_controller.init();
+		}
 	}
 
 	@Override
@@ -191,8 +200,15 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	@Override
 	public void login(ConnectionEvent e)
 	{
-		InetSocketAddress addr = e.getIPAdress();
-		_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+		if (_isMultiplayer)
+		{
+			InetSocketAddress addr = e.getIPAdress();
+			_client.connect(addr.getAddress().getHostAddress(), addr.getPort());
+		}
+		else
+		{
+			this.connected();
+		}
 	}
 
 	@Override
@@ -302,7 +318,10 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	@Override
 	public void scan()
 	{
-		_client.scan();
+		if (_isMultiplayer)
+		{
+			_client.scan();
+		}
 	}
 
 	private void init(boolean debugMode)
@@ -318,7 +337,10 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 			@Override
 			public void windowClosing(WindowEvent e)
 			{
-				_client.close();
+				if (_isMultiplayer)
+				{
+					_client.close();
+				}
 				_loginPanel.close();
 			}
 		});
@@ -328,12 +350,21 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		
 		_controller.addGameStateChangedListener(_gamePanel);
 		
-		_client.addClientConnectionListener(this);
-		_client.addClientConnectionListener(_controller);
-		_client.addClientMessageListener(_controller);
-		_client.addClientMessageListener(_gamePanel);
-		_client.addClientConnlessListener(_loginPanel);
-
+		if (_isMultiplayer)
+		{
+			_client.addClientConnectionListener(this);
+			_client.addClientMessageListener(_gamePanel);
+			_client.addClientConnlessListener(_loginPanel);
+		}
+		if (_controller instanceof ClientConnectionListener)
+		{
+			_client.addClientConnectionListener((ClientConnectionListener) _controller);
+		}
+		if (_controller instanceof ClientMessageListener)
+		{
+			_client.addClientMessageListener((ClientMessageListener) _controller);
+		}
+		
 		_loginPanel.addConnectionListener(this);
 		_gamePanel.addConnectionListener(this);
 
