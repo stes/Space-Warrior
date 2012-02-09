@@ -33,6 +33,8 @@ public class PluginLoader
 	public File[] getAIs(String name)
 	{
 		File dir = _directories.get(name);
+		if (dir == null)
+			return new File[]{};
 		return dir.listFiles(new FileFilter()
 		{
 			@Override

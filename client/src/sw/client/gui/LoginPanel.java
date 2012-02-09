@@ -144,7 +144,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		_imageID = Images.min().getID();
 		_pluginLoader = new PluginLoader();
-		_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
+		//_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
 		this.initComponents();
 
 		this.addComponentListener(new ComponentAdapter()
