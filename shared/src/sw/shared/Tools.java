@@ -1,6 +1,5 @@
 package sw.shared;
 
-import java.io.PrintStream;
 import java.util.Random;
 
 public class Tools

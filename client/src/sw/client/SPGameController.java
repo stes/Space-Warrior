@@ -4,7 +4,6 @@ import sw.client.gcontrol.GameStateChangedEvent;
 import sw.shared.GameConstants;
 import sw.shared.GameEngine;
 import sw.shared.Packettype;
-import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.GameState;
 import sw.shared.data.entities.players.SpaceShip;

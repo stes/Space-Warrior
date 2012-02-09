@@ -27,7 +27,6 @@ import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.plugins.AIPlayerLoader;
 import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.players.SpaceShip;
 
 /**
