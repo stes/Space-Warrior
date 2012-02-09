@@ -58,7 +58,6 @@ import sw.shared.net.Packer;
 public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
 {
 	public static PrintStream out;
-	public static boolean DEBUG;
 
 	private enum GUIMode
 	{
@@ -101,7 +100,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	private boolean _isRunning;
 	private int _fps;
 	private SWFrame _self;
-	private boolean _isMultiplayer = false;
+	private boolean _isMultiplayer = true;
 
 	/**
 	 * Creates a new SWFrame
@@ -109,7 +108,6 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	public SWFrame(boolean debugMode)
 	{
 		super("Space Warrior");		
-		DEBUG = debugMode;
 		out = new PrintStream(new OutputStream()
 		{
 			@Override
@@ -133,7 +131,14 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		((JComponent) this.getContentPane()).setOpaque(false);
 
 		_client = new SWClient();
-		_controller = new SPGameController();
+		if (_isMultiplayer)
+		{
+			_controller = new MPGameController(_client);
+		}
+		else
+		{
+			_controller = new SPGameController();
+		}
 		
 		this.init(debugMode);
 
