@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>Space Warrior</title>
+
+  <style type="text/css">
+    body {
+      margin-top: 1.0em;
+      background-color: #e6e6e6;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 750px;
+    }
+    h1 { font-size: 3.8em; color: #191919; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #191919; }
+    h3 { text-align: center; color: #191919; }
+    a { color: #191919; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+  </style>
+</head>
+
+<body>
+
+	<div id="container">
+
+		<div class="content">
+			<div class="download">
+				<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_PRE_0_2_1.zip">
+				<img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
+				<!--<a href="https://github.com/stes/Space-Warrior/tarball/master">
+				<img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>-->
+			</div>
+
+			<h1><a href="https://github.com/stes/Space-Warrior">Space Warrior</a>
+			<span class="small"><br/>by <a href="https://github.com/Redix">Redix</a>, <a href="https://github.com/stes">stes</a> and <a href="https://github.com/Abbadonn">Abbadonn</a></span></h1>
+
+			<div class="description">
+			An open source multiplayer shooter
+			</div>
+
+
+			<p>Space Warrior is a free, open source multiplayer shooter which can be played in local networks as well as over the internet.
+			<br/><br/>
+			Every Player is equipped with a space ship which he can use to move in the environment and fight against the other players in a last man standing gameplay mode.
+			To do so, the player uses a laser gun which can fire two types of shots, a regular shot or a so-called "master shot", whereas the last one has a greater range and causes more damage, but also uses more ammo.
+			<br/>
+			We are currently refactoring the code and translating it, since the original version was written using German expressions and documentation.
+			<br/>
+			Our first aim is to implement stable server and client applications first, so that we can provide an alpha version of the game soon.
+			<br/><br/>
+			After doing so, we will add more functionality, including an API for opponents powered by AI, thus some kind of single player mode as well as games between teams of players and teams of AI players would become possible.
+			Furthermore, we want to improve graphics and provide several gameplay modes such as team last man standing (TLMS), death match (DM) and team death match (TDM).
+			<br/><br/>
+			However, we would be glad if you could check out this site frequently to stay up-to-date and do not miss the coming releases.</p>
+
+
+
+			<h2>Dependencies</h2>
+			<p>The server as well as the client are written in Java. We use Java 6 for developing and recommend this or a later version of Java.</p>
+
+
+
+			<h2>Install Instructions</h2>
+			<p>After downloading your chosen version of Space Warrior as either an .zip or .rar package and unpacking, you will get a folder structure such as<br/>
+			<pre>
+			SpaceWarrior
+			|
+			|	LICENSE.txt
+			|	License_Background.txt
+			|	License_Sprites.txt
+			|	README.txt
+			|	CHANGELOG.txt
+			|
+			+---client
+			|	client.jar
+			|
+			\---server
+				server.jar
+			</pre><br/>
+			As you can guess from the folder's name, you will find the server application in the folder <b>server</b>, so simply start <b>SW_Server.jar</b> to set up your own
+			Space Warrior server. Starting it first, the application will create a file name <b>config.ini</b> where you can modify several game or server related settings.<br/>
+			Starting a client is just as easy: Start <b>SpaceWarrior.jar</b> and establish a connection to a server. In a local network, you have the possibility to use the
+			integrated server browser. Playing the game via internet requires that the server's IP is known, as well as the port. In addition, you mustn't forget to open the
+			port specified in the server's <b>config.ini</b>.<br/>
+			Last but not least, we should mention the (up to now, very rudimental) possibility to let a computer bot join the game. After starting your Space Warrior client, you
+			can choose an AI (artificial intelligence) player by clicking on <i>Choose AI...</i>. A dialog will show up; now simply select your bot and connect as usual. However,
+			instead of controlling the space ship with your keyboard, your code will do it. Apart from the AI API "space_warrior_ai_api.jar", there is an example bot in the
+			<b>ai</b>-folder, called <b>sampleai.jar</b>. Right now, it can only be used for demonstration purposes rather than to play, let alone win against a human player.
+			</p>
+
+
+
+			<h2>License</h2>
+			<p>The application will be published under the terms of the GNU GPL 3. A copy of the licence will be available with the program. Right now, you can find it in the LICENSE.txt file in the root directory or <a href="http://www.gnu.org/copyleft/gpl.html">here</a></p>
+
+
+			<div class="blubb">
+				<div class="contact" style="width: 70%; float: left;">
+					<h2>Authors</h2>
+					<p>Redix
+					<br/>stes
+					<br/>Abbadonn
+					<br/>      
+					</p>
+
+					<h2>Contact</h2>
+					<p>If you have any suggestions, critics etc., feel free to send an email to<br/>
+					<a href="space_warrior@ymail.com">space_warrior@ymail.com</a>
+					<br/> Also consider following us on twitter: <br/>Twitter: @Space_Warrior
+					</p>
+				</div>
+
+				<div class="twitter" style="width: 30%; float: right;">
+					<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+					<script>
+						new TWTR.Widget({
+						version: 2,
+						type: 'profile',
+						rpp: 4,
+						interval: 30000,
+						width: 250,
+						height: 300,
+						theme: 
+						{
+							shell: 
+							{
+								background: '#333333',
+								color: '#ffffff'
+							},
+							tweets: 
+							{
+								background: '#000000',
+								color: '#ffffff',
+								links: '#eb9f07'
+							}
+							},
+							features: 
+							{
+								scrollbar: true,
+								loop: false,
+								live: true,
+								behavior: 'all'
+							}
+						}).render().setUser('Space_Warrior').start();
+					</script>
+				</div>
+			</div>
+			<h2>Download</h2>
+			<p>RECOMMENDED:<br/>
+			Download the <b>PRERELEASE 0.2.1</b> as
+			<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_PRE_0_2_1.zip">zip</a>.
+			</p>
+			<p>Older downloads:<br/>
+			Download the <b>PRERELEASE 0.2</b> in either
+			<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_PRE_0_2.zip">zip</a> or
+			<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_PRE_0_2.rar">tar</a> formats.
+			Download the <b>PRERELEASE 0.1.1</b> in either
+			<a href="https://github.com/downloads/stes/Space-Warrior/prerelease_0_1_1.zip">zip</a> or
+			<a href="https://github.com/downloads/stes/Space-Warrior/prerelease_0_1_1.rar">tar</a> formats.
+			</p>
+			Download the PRERELEASE 0.1 in either
+			<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_0_1.zip">zip</a> or
+			<a href="https://github.com/downloads/stes/Space-Warrior/SpaceWarrior_0_1.rar">tar</a> formats.
+			</p>
+			<p>
+			You can download this <b>project repo</b> in either
+			<a href="https://github.com/stes/Space-Warrior/zipball/master">zip</a> or
+			<a href="https://github.com/stes/Space-Warrior/tarball/master">tar formats.</a>
+			</p>
+			
+			<h2>Known Bugs</h2>
+			<p>
+			<b>PRERELEASE 0.1</b>
+			<ul>
+				<li>AI API does not load the AI player (fixed with PRE 0.1.1)</li>
+			</ul>
+			</p>
+
+			<div class="footer">
+			<p>get the source code on GitHub : <a href="https://github.com/stes/Space-Warrior">stes/Space-Warrior</a></p>
+			<p>
+				<pre>Copyright (c) Redix, stes, Abbadonn 2011</pre>
+			</p>
+			</div>
+		</div>
+	</div>
+	</body>	
+</html>
