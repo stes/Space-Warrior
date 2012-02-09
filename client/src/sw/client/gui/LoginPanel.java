@@ -144,7 +144,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		_imageID = Images.min().getID();
 		_pluginLoader = new PluginLoader();
-		_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
+		//_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
 		this.initComponents();
 
 		this.addComponentListener(new ComponentAdapter()
@@ -154,7 +154,11 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			{
 				_btnUpdate.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 + 200, 100, 25);
 				_scroll.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 - 150, 200, 300);
-				_tblAIPlayers.setBounds(_self.getWidth() - 600, 300, 200, 300);
+				// TODO rework
+				if (_tblAIPlayers != null)
+				{
+					_tblAIPlayers.setBounds(_self.getWidth() - 600, 300, 200, 300);
+				}
 				_self.repaint();
 			}
 		});
@@ -357,10 +361,14 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		File[] pluginFiles = _pluginLoader.getAIs("sample");
 		File[][] f = new File[][] {pluginFiles};
-		_tblAIPlayers = new JTable(f, new String[] {"Path"});
-		_tblAIPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		_tblAIPlayers.setBounds(this.getWidth() - 600, 300, 200, 300);
-		this.add(_tblAIPlayers);
+		// TODO improve
+		if (pluginFiles.length > 0)
+		{
+			_tblAIPlayers = new JTable(f, new String[] {"Path"});
+			_tblAIPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			_tblAIPlayers.setBounds(this.getWidth() - 600, 300, 200, 300);
+			this.add(_tblAIPlayers);
+		}
 		
 		_btnChooseAI = new JButton("Choose AI");
 		_btnChooseAI.setBounds(100, 500, 100, 25);
