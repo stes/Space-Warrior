@@ -58,9 +58,9 @@ public class HumanPlayer extends Player implements KeyListener
 	 * 
 	 * @param stateManager
 	 */
-	public HumanPlayer(IGameStateManager stateManager)
+	public HumanPlayer(IGameStateManager stateManager, String name)
 	{
-		super(stateManager);
+		super(stateManager, name);
 	}
 
 	@Override

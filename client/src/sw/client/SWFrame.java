@@ -84,7 +84,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	}
 
 	// change to limit fps in order to minimize cpu usage
-	public final int SLEEP_TIME = 0;
+	public final int SLEEP_TIME = 1;
 	private static final long serialVersionUID = 1575599799999464878L;
 
 	private final GameController _controller;
@@ -100,7 +100,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	private boolean _isRunning;
 	private int _fps;
 	private SWFrame _self;
-	private boolean _isMultiplayer = true;
+	private boolean _isMultiplayer = false;
 
 	/**
 	 * Creates a new SWFrame

@@ -37,9 +37,9 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 	 *            An instance that supplies the player with information of the
 	 *            current game state
 	 */
-	public AIPlayer(IGameStateManager stateManager)
+	public AIPlayer(IGameStateManager stateManager, String name)
 	{
-		super(stateManager);
+		super(stateManager, name);
 		stateManager.addGameStateChangedListener(this);
 	}
 

@@ -1,8 +1,11 @@
 package sw.client;
 
+import java.util.ArrayList;
+
 import sw.client.gcontrol.GameStateChangedEvent;
-import sw.shared.GameConstants;
-import sw.shared.GameEngine;
+import sw.client.player.Player;
+import sw.client.player.ai.SampleAI;
+import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.GameState;
@@ -16,72 +19,43 @@ import sw.shared.data.entities.players.SpaceShip;
  */
 public class SPGameController extends GameController
 {
-	private class SPGameEngine extends GameEngine
-	{
-		public SPGameEngine()
-		{
-			super();
-			new Thread()
-			{
-				private long _lastTick = System.currentTimeMillis();
-				
-				@Override
-				public void run()
-				{
-					while(!_isReady)
-						Thread.yield();
-					while(true)
-					{
-						while (System.currentTimeMillis() - _lastTick < GameConstants.TICK_INTERVAL)
-							;
-						tick();
-						snapshot();
-						_lastTick = System.currentTimeMillis();
-						Thread.yield();
-					}
-				}
-			}.start();
-		}
-		
-		@Override
-		public void invokePlayerWon(SpaceShip pl)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+	private static SPGameEngine _gameEngine = new SPGameEngine();
 	
-	private SPGameEngine _gameEngine;
-	private boolean _isReady;
+	private ArrayList<Player> _opponents;
 	
 	public SPGameController()
 	{
 		super();
-		_gameEngine = new SPGameEngine();
+		_opponents = new ArrayList<Player>();
+		_gameEngine.addListener(this);
+	}
+	
+	private SPGameController(String aiPlayerName)
+	{
+		super();
+		setLocalPlayer(new SampleAI(this, aiPlayerName));
+		_gameEngine.addListener(this);
 	}
 	
 	@Override
 	public void init()
 	{
 		super.init();
+		_opponents.add(new SPGameController("AI").getLocalPlayer());
+		
 		_gameEngine.addPlayer(getLocalPlayer().getDataSet().getName(), getLocalPlayer().getDataSet().getImageID(), true);
-		_gameEngine.addPlayer("SampleAI", GameConstants.Images.SHIP_1.getID());
+		for (Player p : _opponents)
+		{
+			_gameEngine.addPlayer(p.getDataSet().getName(), Images.SHIP_1.getID());
+		}
 		_gameEngine.startGame();
-		_isReady = true;
+		_gameEngine.start();
 	}
 
 	@Override
 	public void stateUpdated(PlayerInput input)
 	{
 		_gameEngine.playerInput(getLocalPlayer().getDataSet().getName(), input);
-		_gameEngine.playerInput("SampleAI", input);
-	}
-	
-	@Override
-	public boolean isReady()
-	{
-		return _isReady;
 	}
 
 	public void snapshot()
@@ -89,7 +63,7 @@ public class SPGameController extends GameController
 		this.setGameworld(_gameEngine.getWorld());
 		for (SpaceShip pl : getPlayers())
 		{
-			if (pl.isLocal())
+			if (pl.getName().equals(getLocalPlayer().getDataSet().getName()))
 			{
 				getLocalPlayer().setDataSet(pl);
 			}
@@ -107,5 +81,11 @@ public class SPGameController extends GameController
 		// TODO only pass a copy!
 		e.setGameWorld(getWorld());
 		this.invokeStateChanged(e);
+	}
+
+	@Override
+	public boolean isReady()
+	{
+		return true;
 	}
 }

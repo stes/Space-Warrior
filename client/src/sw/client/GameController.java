@@ -107,24 +107,28 @@ public abstract class GameController implements IGameStateManager
 
 	public void init()
 	{
+		Player local = null;
 		if (GameController._runAI && GameController._aiPlugin.exists())
 		{
 			try
 			{
-				SWFrame.out.println("Successfully loaded AI Player.");
-				setLocalPlayer(AIPlayerLoader.load(GameController._aiPlugin, this));
+				local = AIPlayerLoader.load(GameController._aiPlugin, this);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 				SWFrame.out.println("Unable to load AI Player. Loading default player instead");
-				setLocalPlayer(new HumanPlayer(this));
 			}
+		}
+		if (local == null)
+		{
+			SWFrame.out.println("Using default player");
+			setLocalPlayer(new HumanPlayer(this, ""));
 		}
 		else
 		{
-			SWFrame.out.println("no AI player selected, using default player");
-			setLocalPlayer(new HumanPlayer(this));
+			SWFrame.out.println("Successfully loaded AI Player.");
+			setLocalPlayer(local);
 		}
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
@@ -220,7 +224,7 @@ public abstract class GameController implements IGameStateManager
 		return _players;
 	}
 
-	private void setLocalPlayer(Player localPlayer)
+	protected void setLocalPlayer(Player localPlayer)
 	{
 		this._localPlayer = localPlayer;
 	}
