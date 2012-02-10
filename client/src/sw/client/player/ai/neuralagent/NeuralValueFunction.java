@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
 import java.util.HashMap;
 
@@ -14,12 +14,6 @@ import stes.ai.ann.NeuralNetwork;
 import stes.ai.ann.NeuronLayer;
 import stes.ai.ann.data.DataVector;
 import stes.ai.ann.functions.Sigmoid;
-import sw.client.player.ai.neuralagent.DistanceState;
-import sw.client.player.ai.neuralagent.IState;
-import sw.client.player.ai.neuralagent.IValueFunction;
-import sw.client.player.ai.neuralagent.RLConstants;
-import sw.client.player.ai.neuralagent.RewardFunction;
-import sw.client.player.ai.neuralagent.TransitionFunction;
 /**
  * Value function which uses a neural network for state value mapping
  * 
@@ -32,7 +26,7 @@ public class NeuralValueFunction implements IValueFunction
 	private NeuralNetwork _network;
 	private BackpropagationTrainer _trainer;
 
-	public NeuralValueFunction(int states)
+	public NeuralValueFunction()
 	{
 		_network = new NeuralNetwork(new Sigmoid());
 		_network.addLayer(new NeuronLayer(2));
@@ -77,10 +71,10 @@ public class NeuralValueFunction implements IValueFunction
 	private double maxFutureReward(IState state, RewardFunction r, TransitionFunction t)
 	{
 		double maxValue = Double.NEGATIVE_INFINITY;
-		for (int i = 0; i < RLConstants.MAX_ACTIONS; i++)
+		for (Action a : Action.values())
 		{
 			double curValue = r.getReward(state) + RLConstants.DISCOUNT_FACTOR
-					* this.getValue(t.getSuccessor(state, i));
+					* this.getValue(t.getSuccessor(state, a));
 			maxValue = Math.max(curValue, maxValue);
 		}
 		return maxValue;

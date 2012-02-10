@@ -5,20 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
-import sw.client.player.ai.neuralagent.IState;
-
-/**
- * Interface for a Value Function. A value function maps states to values
- * 
- * @author stes
- * @version 02.01.2012
- */
-public interface IValueFunction
+public class RLConstants
 {
-	public double getValue(IState state);
+	public static final double DISCOUNT_FACTOR = 0.7;
 
-	public void setValue(IState state, double value);
-
+	//public static final int MAX_ACTIONS = 4;
 }

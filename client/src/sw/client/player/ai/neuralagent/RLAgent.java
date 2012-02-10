@@ -5,14 +5,10 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.ai.AIPlayer;
-import sw.client.player.ai.neuralagent.IPolicy;
-import sw.client.player.ai.neuralagent.IRewardFunction;
-import sw.client.player.ai.neuralagent.ITransitionFunction;
-import sw.client.player.ai.neuralagent.IValueFunction;
 
 /**
  * Base class for reinforcement learning agents
@@ -24,7 +20,7 @@ public abstract class RLAgent extends AIPlayer
 {
 	public RLAgent(IGameStateManager stateManager)
 	{
-		super(stateManager);
+		super(stateManager, "RL Agent");
 	}
 
 	private IRewardFunction _rewardFunction;

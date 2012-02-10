@@ -5,13 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
-import sw.client.player.ai.neuralagent.DistanceState;
-import sw.client.player.ai.neuralagent.IState;
-import sw.client.player.ai.neuralagent.ITransitionFunction;
-import sw.client.player.ai.neuralagent.NeuralAgent;
-import sw.shared.GameConstants;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.players.SpaceShip;
 
@@ -30,15 +26,16 @@ public class TransitionFunction implements ITransitionFunction
 	}
 
 	@Override
-	public IState getSuccessor(IState state, int action)
+	public IState getSuccessor(IState state, Action action)
 	{
-		GameWorld world = state.getGameWorld();
+		GameWorld world = _agent.getGameWorld();
 
+		// TODO predict and return new state
 		for (SpaceShip player : world.getPlayers())
 		{
 			
 		}
 
-		return new DistanceState(_localDataSet, _playerList);
+		throw new NotImplementedException();
 	}
 }

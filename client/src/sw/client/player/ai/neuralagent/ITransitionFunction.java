@@ -5,20 +5,16 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
-
-import sw.client.player.ai.neuralagent.IState;
+package sw.client.player.ai.neuralagent;
 
 /**
- * Interface for a Value Function. A value function maps states to values
+ * Interface for a State Transition Function. A state transition function maps a
+ * given state and a given action to the successor state
  * 
  * @author stes
  * @version 02.01.2012
  */
-public interface IValueFunction
+public interface ITransitionFunction
 {
-	public double getValue(IState state);
-
-	public void setValue(IState state, double value);
-
+	public IState getSuccessor(IState state, Action a);
 }

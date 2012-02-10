@@ -5,9 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
-
-import sw.client.player.ai.neuralagent.IState;
+package sw.client.player.ai.neuralagent;
 
 /**
  * Interface for a Value Function. A value function maps states to values

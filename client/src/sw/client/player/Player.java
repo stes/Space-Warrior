@@ -80,7 +80,7 @@ public abstract class Player
 	/**
 	 * @return the _currentState
 	 */
-	protected PlayerInput getCurrentState()
+	protected PlayerInput getCurrentInput()
 	{
 		return _currentState;
 	}
@@ -94,7 +94,7 @@ public abstract class Player
 	{
 		if (_stateManager.isReady())
 		{
-			_stateManager.stateUpdated(this.getCurrentState());
+			_stateManager.stateUpdated(this.getCurrentInput());
 		}
 	}
 
@@ -109,9 +109,9 @@ public abstract class Player
 
 	protected void update()
 	{
-		if (!this.getOldState().equals(this.getCurrentState()))
+		if (!this.getOldState().equals(this.getCurrentInput()))
 		{
-			this.setOldState(new PlayerInput(this.getCurrentState()));
+			this.setOldState(new PlayerInput(this.getCurrentInput()));
 			this.sendInput();
 		}
 	}

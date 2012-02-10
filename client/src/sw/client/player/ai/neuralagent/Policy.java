@@ -5,14 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
 import java.util.Random;
-
-import stes.ai.rldemo.rl.IPolicy;
-import stes.ai.rldemo.rl.ITransitionFunction;
-import stes.ai.rldemo.rl.IValueFunction;
-import sw.client.player.ai.neuralagent.RLConstants;
 
 /**
  * @author stes
@@ -30,12 +25,12 @@ public class Policy implements IPolicy
 	}
 
 	@Override
-	public int getAction(int state, ITransitionFunction t)
+	public Action getAction(IState state, ITransitionFunction t)
 	{
 		double maxValue = Double.NEGATIVE_INFINITY;
-		int action = -1;
+		Action action = Action.NONE;
 
-		for (int a = 0; a < RLConstants.MAX_ACTIONS; a++)
+		for (Action a : Action.values())
 		{
 			double curValue = _valueFunction.getValue(t.getSuccessor(state, a));
 			if (curValue > maxValue)
@@ -47,11 +42,7 @@ public class Policy implements IPolicy
 
 		if (_random.nextDouble() < 0.4)
 		{
-			do
-			{
-				action =  _random.nextInt(RLConstants.MAX_ACTIONS);
-			}
-			while (_valueFunction.getValue(t.getSuccessor(state, action)) == GridWorldPanel.oo);
+			action = Action.values()[_random.nextInt(Action.values().length)];
 		}
 		return action;
 	}

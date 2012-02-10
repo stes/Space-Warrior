@@ -7,6 +7,8 @@
  ******************************************************************************/
 package sw.neuralagent;
 
+import sw.client.player.ai.neuralagent.IState;
+
 /**
  * Interface for a Reward Function. A reward function maps states to rewards
  * 

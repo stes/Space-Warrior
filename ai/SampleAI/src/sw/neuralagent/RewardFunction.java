@@ -9,6 +9,9 @@ package sw.neuralagent;
 
 import java.util.HashMap;
 
+import sw.client.player.ai.neuralagent.IRewardFunction;
+import sw.client.player.ai.neuralagent.IState;
+
 /**
  * @author stes
  * @version 02.01.2012

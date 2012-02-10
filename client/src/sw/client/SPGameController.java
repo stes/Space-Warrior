@@ -33,7 +33,7 @@ public class SPGameController extends GameController
 	private SPGameController(String aiPlayerName)
 	{
 		super();
-		setLocalPlayer(new SampleAI(this, aiPlayerName));
+		setLocalPlayer(new SampleAI(this, "horst"));
 		_gameEngine.addListener(this);
 	}
 	

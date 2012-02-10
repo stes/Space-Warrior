@@ -5,20 +5,32 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  ******************************************************************************/
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
-import sw.client.player.ai.neuralagent.IState;
+import java.util.HashMap;
 
 /**
- * Interface for a Value Function. A value function maps states to values
- * 
  * @author stes
  * @version 02.01.2012
  */
-public interface IValueFunction
+public class RewardFunction implements IRewardFunction
 {
-	public double getValue(IState state);
+	private HashMap<IState, Double> _rewards;
 
-	public void setValue(IState state, double value);
+	public RewardFunction()
+	{
+		_rewards = new HashMap<IState, Double>();
+	}
 
+	@Override
+	public double getReward(IState state)
+	{
+		return _rewards.get(state);
+	}
+
+	@Override
+	public void setReward(IState state, double value)
+	{
+		_rewards.put(state, value);
+	}
 }

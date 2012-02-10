@@ -81,16 +81,16 @@ public class HumanPlayer extends Player implements KeyListener
 				_right = true;
 				break;
 			case 'n':
-				this.getCurrentState().setShot(WeaponType.LASER.getID());
+				this.getCurrentInput().setShot(WeaponType.LASER.getID());
 				break;
 			case 'm':
-				this.getCurrentState().setShot(WeaponType.MASTER_LASER.getID());
+				this.getCurrentInput().setShot(WeaponType.MASTER_LASER.getID());
 				break;
 			case 'b':
-				this.getCurrentState().setShot(WeaponType.ROCKET.getID());
+				this.getCurrentInput().setShot(WeaponType.ROCKET.getID());
 				break;
 			case 'v':
-				this.getCurrentState().setShot(WeaponType.MINE.getID());
+				this.getCurrentInput().setShot(WeaponType.MINE.getID());
 				break;
 		}
 
@@ -118,7 +118,7 @@ public class HumanPlayer extends Player implements KeyListener
 			case 'm':
 			case 'b':
 			case 'v':
-				this.getCurrentState().setShot(0);
+				this.getCurrentInput().setShot(0);
 				break;
 		}
 
@@ -151,8 +151,8 @@ public class HumanPlayer extends Player implements KeyListener
 			rotation = -1;
 		}
 
-		this.getCurrentState().setDirection(direction);
-		this.getCurrentState().setRotation(rotation);
+		this.getCurrentInput().setDirection(direction);
+		this.getCurrentInput().setRotation(rotation);
 
 		this.update();
 	}

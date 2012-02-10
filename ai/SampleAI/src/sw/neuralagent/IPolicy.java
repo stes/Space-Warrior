@@ -7,6 +7,8 @@
  ******************************************************************************/
 package sw.neuralagent;
 
+import sw.client.player.ai.neuralagent.ITransitionFunction;
+
 /**
  * Interface for a Policy used by the agent to determine the best action in each
  * state. The Policy maps states to actions using the state transition function.

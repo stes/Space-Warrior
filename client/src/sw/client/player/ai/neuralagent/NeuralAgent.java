@@ -1,19 +1,10 @@
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
 import java.util.Random;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.IGameStateManager;
-import sw.client.player.ai.neuralagent.Actions;
-import sw.client.player.ai.neuralagent.IState;
-import sw.client.player.ai.neuralagent.NeuralValueFunction;
-import sw.client.player.ai.neuralagent.Policy;
-import sw.client.player.ai.neuralagent.RLAgent;
-import sw.client.player.ai.neuralagent.RLConstants;
-import sw.client.player.ai.neuralagent.RewardFunction;
-import sw.client.player.ai.neuralagent.State;
-import sw.client.player.ai.neuralagent.TransitionFunction;
-import sw.shared.data.entities.players.SpaceShip;
 
 public class NeuralAgent extends RLAgent
 {
@@ -42,42 +33,42 @@ public class NeuralAgent extends RLAgent
 		//if (isTerminated())
 		//	return;
 		
-		switch (this.getPolicy().getAction(this.getCurrentState()),
-				this.getTransitionFunction()))
-		{
-			case Actions.DOWN:
-				_player.move(0, 1);
-				break;
-			case Actions.UP:
-				_player.move(0, -1);
-				break;
-			case Actions.RIGHT:
-				_player.move(1, 0);
-				break;
-			case Actions.LEFT:
-				_player.move(-1, 0);
-				break;
-			default:
-				throw new IllegalStateException();
-		}
-		if (_player.isTerminated())
-		{
-			getValueFunction().setTerminal(GridWorld.stateID(_player.getX(), _player.getY()),
-					_player.getTerminalReward());
-			this.iteration();
-		}
+//		switch (this.getPolicy().getAction(this.getCurrentState()),
+//				this.getTransitionFunction()))
+//		{
+//			case Actions.DOWN:
+//				_player.move(0, 1);
+//				break;
+//			case Actions.UP:
+//				_player.move(0, -1);
+//				break;
+//			case Actions.RIGHT:
+//				_player.move(1, 0);
+//				break;
+//			case Actions.LEFT:
+//				_player.move(-1, 0);
+//				break;
+//			default:
+//				throw new IllegalStateException();
+//		}
+//		if (_player.isTerminated())
+//		{
+//			getValueFunction().setTerminal(GridWorld.stateID(_player.getX(), _player.getY()),
+//					_player.getTerminalReward());
+//			this.iteration();
+//		}
 	}
 
 	private IState getCurrentState()
 	{
-		return new State();
+		throw new NotImplementedException();
 	}
 
 	private void initFunctions()
 	{
-		this.setRewardFunction(new RewardFunction(RLConstants.MAX_STATES));
-		this.setTransitionFunction(new TransitionFunction());
-		this.setValueFunction(new NeuralValueFunction(RLConstants.MAX_STATES));
+		this.setRewardFunction(new RewardFunction());
+		this.setTransitionFunction(new TransitionFunction(this));
+		this.setValueFunction(new NeuralValueFunction());
 
 //		for (int x = 0; x < _worldWidth; x++)
 //		{
@@ -108,11 +99,6 @@ public class NeuralAgent extends RLAgent
 	{
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	protected SpaceShip getDataSet()
-	{
-		throw new UnsupportedOperationException("Not implemented yet");
 	}
 
 	/* (non-Javadoc)

@@ -1,12 +1,9 @@
-package sw.neuralagent;
+package sw.client.player.ai.neuralagent;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import stes.ai.ann.data.DataVector;
-import sw.client.player.ai.neuralagent.IState;
-import sw.client.player.ai.neuralagent.State;
-import sw.client.player.ai.neuralagent.Tools;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.players.SpaceShip;
 
