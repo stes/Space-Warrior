@@ -102,6 +102,7 @@ public class SampleAI extends AIPlayer
 		}
 		this.update();
 		this.getCurrentState().setShot(0);
+		this.update();
 	}
 
 	@Override
