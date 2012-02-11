@@ -1,17 +1,17 @@
-package sw.client.player.ai.neuralagent;
+package sw.client.player.ai.fagent;
 
 import java.util.Random;
 
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
-public class NeuralAgent extends RLAgent
+public class FollowAgent extends RLAgent
 {
 	private int _currentWeapon;
 	private Thread _moveThread;
 	private int _updates;
 	
-	public NeuralAgent(String name)
+	public FollowAgent(String name)
 	{
 		super(name);
 		this.initFunctions();
@@ -41,12 +41,6 @@ public class NeuralAgent extends RLAgent
 	}
 
 	private static Random _random = new Random(System.currentTimeMillis());
-
-	public void iteration()
-	{
-		((NeuralValueFunction) this.getValueFunction()).valueIteration((RewardFunction) this.getRewardFunction(),
-				(TransitionFunction) this.getTransitionFunction());
-	}
 
 	public void move()
 	{
@@ -101,7 +95,7 @@ public class NeuralAgent extends RLAgent
 	{
 		this.setRewardFunction(new RewardFunction());
 		this.setTransitionFunction(new TransitionFunction(this));
-		this.setValueFunction(new NeuralValueFunction());
+		this.setValueFunction(new DistanceValueFunction());
 
 		// for (int x = 0; x < _worldWidth; x++)
 		// {
@@ -138,5 +132,12 @@ public class NeuralAgent extends RLAgent
 	{
 		super.gameStateChanged(e);
 		_updates++;
+	}
+
+	@Override
+	public void iteration()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

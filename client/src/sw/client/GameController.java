@@ -123,13 +123,14 @@ public abstract class GameController implements IGameStateManager
 		if (local == null)
 		{
 			SWFrame.out.println("Using default player");
-			setLocalPlayer(new HumanPlayer(this, ""));
+			setLocalPlayer(new HumanPlayer(""));
 		}
 		else
 		{
 			SWFrame.out.println("Successfully loaded AI Player.");
 			setLocalPlayer(local);
 		}
+		getLocalPlayer().setStateManager(this);
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 

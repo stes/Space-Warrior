@@ -3,7 +3,7 @@ package sw.neuralagent;
 import java.util.ArrayList;
 import java.util.Random;
 
-import stes.ai.ann.data.DataVector;
+import sw.client.player.ai.fagent.data.DataVector;
 import sw.client.player.ai.neuralagent.IState;
 import sw.client.player.ai.neuralagent.State;
 import sw.client.player.ai.neuralagent.Tools;

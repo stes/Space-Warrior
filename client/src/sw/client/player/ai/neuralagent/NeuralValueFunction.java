@@ -14,7 +14,6 @@ import stes.ai.ann.NeuralNetwork;
 import stes.ai.ann.NeuronLayer;
 import stes.ai.ann.data.DataVector;
 import stes.ai.ann.functions.Sigmoid;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Value function which uses a neural network for state value mapping
  * 
@@ -23,6 +22,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class NeuralValueFunction implements IValueFunction
 {
+	@SuppressWarnings("unused")
 	private HashMap<Integer, Double> _terminalValues;
 	private NeuralNetwork _network;
 	private BackpropagationTrainer _trainer;
@@ -47,7 +47,7 @@ public class NeuralValueFunction implements IValueFunction
 //		_network.calculateOutput(state.getFeatures());
 //		return _network.getOutput().getDataAt(0);
 		
-		return -(state.getFeature(0) * 0.8 + 0.2 * state.getFeature(1));
+		return -(state.getFeature(0) * 0.95 + 0.05 * state.getFeature(1));
 	}
 
 	@Override

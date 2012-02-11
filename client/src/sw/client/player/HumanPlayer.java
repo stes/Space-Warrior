@@ -20,7 +20,6 @@ package sw.client.player;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import sw.client.gcontrol.IGameStateManager;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 /**
@@ -58,9 +57,9 @@ public class HumanPlayer extends Player implements KeyListener
 	 * 
 	 * @param stateManager
 	 */
-	public HumanPlayer(IGameStateManager stateManager, String name)
+	public HumanPlayer(String name)
 	{
-		super(stateManager, name);
+		super(name);
 	}
 
 	@Override

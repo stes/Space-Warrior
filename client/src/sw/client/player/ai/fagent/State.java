@@ -1,7 +1,6 @@
-package sw.neuralagent;
+package sw.client.player.ai.fagent;
 
 import sw.client.player.ai.fagent.data.DataVector;
-import sw.client.player.ai.neuralagent.IState;
 
 public abstract class State implements IState
 {

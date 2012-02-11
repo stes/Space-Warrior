@@ -20,7 +20,6 @@ package sw.client.player.ai;
 import java.util.Random;
 
 import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
@@ -31,9 +30,9 @@ public class SampleAI extends AIPlayer
 	private int _hold;
 	private int _currentWeapon;
 
-	public SampleAI(IGameStateManager stateManager, String name)
+	public SampleAI(String name)
 	{
-		super(stateManager, name);
+		super( name);
 		System.out.println("init ai player");
 		this.getCurrentInput().setDirection(1);
 		WeaponType[] types = WeaponType.values();

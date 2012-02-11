@@ -1,8 +1,8 @@
-package sw.client.player.ai.neuralagent;
+package sw.client.player.ai.fagent;
 
 import java.util.ArrayList;
 
-import stes.ai.ann.data.DataVector;
+import sw.client.player.ai.fagent.data.DataVector;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.players.SpaceShip;
 

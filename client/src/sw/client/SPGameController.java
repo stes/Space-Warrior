@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.player.Player;
+import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.SampleAI;
-import sw.client.player.ai.neuralagent.NeuralAgent;
+import sw.client.player.ai.fagent.FollowAgent;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
@@ -31,10 +32,11 @@ public class SPGameController extends GameController
 		_gameEngine.addListener(this);
 	}
 	
-	private SPGameController(String aiPlayerName)
+	private SPGameController(AIPlayer player)
 	{
 		super();
-		setLocalPlayer(new NeuralAgent(this));
+		setLocalPlayer(player);
+		player.setStateManager(this);
 		_gameEngine.addListener(this);
 	}
 	
@@ -42,9 +44,9 @@ public class SPGameController extends GameController
 	public void init()
 	{
 		super.init();
-		_opponents.add(new SPGameController("AI").getLocalPlayer());
-//		_opponents.add(new SPGameController("AI2").getLocalPlayer());
-//		_opponents.add(new SPGameController("AI3").getLocalPlayer());
+		_opponents.add(new SPGameController(new FollowAgent("Killer")).getLocalPlayer());
+		_opponents.add(new SPGameController(new SampleAI("Simple")).getLocalPlayer());
+		_opponents.add(new SPGameController(new SampleAI("Simple2")).getLocalPlayer());
 		
 		_gameEngine.addPlayer(getLocalPlayer().getDataSet().getName(), getLocalPlayer().getDataSet().getImageID(), true);
 		for (Player p : _opponents)

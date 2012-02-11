@@ -96,6 +96,10 @@ public class GameWorld implements Serializable
 		{
 			throw new UnsupportedOperationException("GameWorld could not be copied");
 		}
+		catch (Exception e)
+		{
+			return this.copy();
+		}
 	}
 
 	/**
