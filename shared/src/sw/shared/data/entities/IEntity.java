@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.shared.data.entities;
 
+import java.io.Serializable;
+
 import sw.shared.data.GameWorld;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -25,7 +27,7 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public interface IEntity
+public interface IEntity extends Serializable
 {
 	public void destroy();
 

@@ -23,6 +23,10 @@ import sw.shared.net.Unpacker;
 
 public class GameState extends Entity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5119642078894538680L;
 	private final static byte STATE_RUNNING = 0;
 	// private final static byte STATE_PAUSEDE = 1; // not used right now
 	private final static byte STATE_NEW_ROUND = 2;

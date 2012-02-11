@@ -30,6 +30,10 @@ import sw.shared.net.Unpacker;
  */
 abstract class StaticEntity extends Entity implements IStaticEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9176820814140587030L;
 	// state variables
 	private double _x;
 	private double _y;

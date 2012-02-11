@@ -25,6 +25,11 @@ import sw.shared.data.entities.players.SpaceShip;
 
 public class Rocket extends Projectile
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1733113215832798575L;
+
 	public Rocket(double x, double y, double direction, SpaceShip owner)
 	{
 		super(x, y, direction, owner, WeaponType.ROCKET.getID());

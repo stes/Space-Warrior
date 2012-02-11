@@ -30,17 +30,22 @@ public class Policy implements IPolicy
 		double maxValue = Double.NEGATIVE_INFINITY;
 		Action action = Action.NONE;
 
+		IState bestSucc = null;
 		for (Action a : Action.values())
 		{
-			double curValue = _valueFunction.getValue(t.getSuccessor(state, a));
+			IState succ = t.getSuccessor(state, a);
+			double curValue = _valueFunction.getValue(succ);
 			if (curValue > maxValue)
 			{
 				maxValue = curValue;
 				action = a;
+				bestSucc=succ;
 			}
 		}
-
-		if (_random.nextDouble() < 0.4)
+		
+		System.out.println("perform action: " + action.toString() + "in state " + _valueFunction.getValue(state)+ " to get to " + _valueFunction.getValue(bestSucc));
+		
+		if (_random.nextDouble() < 0)
 		{
 			action = Action.values()[_random.nextInt(Action.values().length)];
 		}

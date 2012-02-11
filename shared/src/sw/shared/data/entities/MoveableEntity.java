@@ -31,6 +31,11 @@ import sw.shared.net.Unpacker;
  */
 public abstract class MoveableEntity extends StaticEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3423631869017040528L;
+
 	// public static final double MAX_SPEED = GameConstants.MAX_SPEED;
 	public static final double MAX_TURN_SPEED = GameConstants.MAX_ANGULAR_SPEED;
 

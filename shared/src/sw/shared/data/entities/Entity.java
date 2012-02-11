@@ -29,6 +29,10 @@ import sw.shared.net.Unpacker;
  */
 public abstract class Entity implements IEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6665055916431124020L;
 	private boolean _entDestroy;
 	private byte _entType;
 	private GameWorld _world;

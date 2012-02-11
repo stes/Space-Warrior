@@ -38,6 +38,10 @@ import sw.shared.net.Unpacker;
 public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, IDamageable,
 		IAttacker, IImageEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7605634024138964210L;
 	private String _name;
 	private int _lifepoints;
 	private int _ammo;
@@ -367,6 +371,11 @@ public class SpaceShip extends MoveableEntity implements Comparable<SpaceShip>, 
 	public void setInput(PlayerInput input)
 	{
 		_input = input;
+	}
+	
+	public PlayerInput getInput()
+	{
+		return _input;
 	}
 
 	/**

@@ -28,6 +28,10 @@ import sw.shared.net.Unpacker;
 
 public abstract class ShotEntity extends MoveableEntity implements IWeapon
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4770235976651639031L;
 	private IAttacker _owner;
 	private int _shottype;
 

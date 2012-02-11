@@ -32,6 +32,10 @@ import sw.shared.net.Unpacker;
  */
 public abstract class Projectile extends ShotEntity implements IImageEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4881411750797733615L;
 	private boolean _isExploding;
 
 	public Projectile(double x, double y, double direction, SpaceShip owner, byte shottype)

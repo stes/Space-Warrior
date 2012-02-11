@@ -17,6 +17,12 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -39,16 +45,53 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class GameWorld
+public class GameWorld implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2294552287043944874L;
+	
 	private HashMap<Integer, IEntity> _entities;
-
+	
 	/**
 	 * Creates a new, empty GameWorld
 	 */
 	public GameWorld()
 	{
 		_entities = new HashMap<Integer, IEntity>();
+	}
+	
+	public GameWorld copy()
+	{
+		try
+		{
+			ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+			ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+			
+			objOut.writeObject(this);
+			objOut.close();
+			
+			byte[] buffer = byteOut.toByteArray();
+			
+			ByteArrayInputStream byteIn = new ByteArrayInputStream(buffer);
+			ObjectInputStream objIn = new ObjectInputStream(byteIn);
+			
+			GameWorld copy = (GameWorld)objIn.readObject();
+			
+			objIn.close();
+			
+			return copy;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new UnsupportedOperationException("GameWorld could not be copied");
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new UnsupportedOperationException("GameWorld could not be copied");
+		}
 	}
 
 	/**

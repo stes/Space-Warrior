@@ -11,6 +11,13 @@ import sw.shared.data.entities.players.SpaceShip;
  */
 public class Mine extends Projectile
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6033320175720353100L;
+
+	private static final int LIFETIME = 80;
+	
 	private int _lifetime;
 
 	public Mine(double x, double y, double direction, SpaceShip owner)
@@ -25,7 +32,7 @@ public class Mine extends Projectile
 		SpaceShip[] players = this.getWorld().getPlayers();
 		for (SpaceShip pl : players)
 		{
-			if (_lifetime < 80 && this.distanceTo(pl.getPosition()) < GameConstants.MAX_HITRANGE)
+			if (_lifetime < Mine.LIFETIME && this.distanceTo(pl.getPosition()) < GameConstants.MAX_HITRANGE)
 			{
 				this.causeDamage(pl);
 			}

@@ -29,8 +29,8 @@ public class NeuralValueFunction implements IValueFunction
 	public NeuralValueFunction()
 	{
 		_network = new NeuralNetwork(new Sigmoid());
+		_network.addLayer(new NeuronLayer(1));
 		_network.addLayer(new NeuronLayer(2));
-		_network.addLayer(new NeuronLayer(3));
 		_network.addLayer(new NeuronLayer(1));
 		_network.sealNetwork();
 		_trainer = new BackpropagationTrainer(_network, 0.5);
@@ -40,10 +40,13 @@ public class NeuralValueFunction implements IValueFunction
 	@Override
 	public double getValue(IState state)
 	{
-		if (state.isTerminal())
-			return _terminalValues.get(state);
-		_network.calculateOutput(state.getFeatures());
-		return _network.getOutput().getDataAt(0);
+		// TODO use neural network!!!
+//		if (state.isTerminal())
+//			return _terminalValues.get(state);
+//		_network.calculateOutput(state.getFeatures());
+//		return _network.getOutput().getDataAt(0);
+		
+		return -state.getFeature(0);
 	}
 
 	@Override

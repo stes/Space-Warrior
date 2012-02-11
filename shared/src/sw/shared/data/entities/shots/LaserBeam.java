@@ -34,6 +34,10 @@ import sw.shared.net.Unpacker;
  */
 public class LaserBeam extends ShotEntity
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1948346970661786021L;
 	private boolean _isMaster;
 	private int _lifetime;
 	private SpaceShip _owner;

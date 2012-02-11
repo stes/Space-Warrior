@@ -29,12 +29,15 @@ public class SampleAI extends AIPlayer
 	private static Random _random = new Random(System.currentTimeMillis());
 
 	private int _hold;
+	private int _currentWeapon;
 
 	public SampleAI(IGameStateManager stateManager, String name)
 	{
 		super(stateManager, name);
 		System.out.println("init ai player");
 		this.getCurrentInput().setDirection(1);
+		WeaponType[] types = WeaponType.values();
+		_currentWeapon = types[_random.nextInt(types.length)].getID();
 	}
 
 	@Override
@@ -78,8 +81,13 @@ public class SampleAI extends AIPlayer
 		}
 		if (_random.nextDouble() < 0.01)
 		{
-			this.getCurrentInput().setShot(WeaponType.ROCKET.getID());
+			this.getCurrentInput().setShot(_currentWeapon);
 			System.out.println("shot"+getDataSet().getAmmo());
+		}
+		if (_random.nextDouble() < 0.001)
+		{
+			WeaponType[] types = WeaponType.values();
+			_currentWeapon = types[_random.nextInt(types.length)].getID();
 		}
 //		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getX(),
 //				this.getDataSet().getY(),

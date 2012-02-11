@@ -99,6 +99,4 @@ public abstract class RLAgent extends AIPlayer
 	public abstract void iteration();
 
 	public abstract void move();
-
-	public abstract double getValue(int x, int y);
 }

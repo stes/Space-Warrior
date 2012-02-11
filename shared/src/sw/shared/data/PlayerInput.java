@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.shared.data;
 
+import java.io.Serializable;
+
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
@@ -25,8 +27,13 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public class PlayerInput
+public class PlayerInput implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7855677024419567977L;
+
 	public static PlayerInput unpack(Unpacker p)
 	{
 		if (p.getType() != Packettype.CL_INPUT)
