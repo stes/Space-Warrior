@@ -43,7 +43,7 @@ public class Policy implements IPolicy
 			}
 		}
 		
-		System.out.println("perform action: " + action.toString() + "in state " + _valueFunction.getValue(state)+ " to get to " + _valueFunction.getValue(bestSucc));
+//		System.out.println("perform action: " + action.toString() + "in state " + _valueFunction.getValue(state)+ " to get to " + _valueFunction.getValue(bestSucc));
 		
 		if (_random.nextDouble() < 0)
 		{

@@ -18,13 +18,14 @@ public class DistanceState extends State
 
 	public DistanceState(SpaceShip localPlayer, GameWorld world)
 	{
-		super(1);
+		super(2);
 		_localPlayer = localPlayer;
 		_world = world;
 		this.setFeature(0, (int) Tools.distanceToNearestShip(_localPlayer, _world));
+		this.setFeature(1, (int) Tools.angleToNextPlayer(_localPlayer, _world));
 	}
 	
-	public DistanceState(DataVector data)
+	protected DistanceState(DataVector data)
 	{
 		super(data);
 	}

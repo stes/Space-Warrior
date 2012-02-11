@@ -66,21 +66,25 @@ public class GameWorld implements Serializable
 	{
 		try
 		{
-			ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-			ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
-			
-			objOut.writeObject(this);
-			objOut.close();
-			
-			byte[] buffer = byteOut.toByteArray();
-			
-			ByteArrayInputStream byteIn = new ByteArrayInputStream(buffer);
-			ObjectInputStream objIn = new ObjectInputStream(byteIn);
-			
-			GameWorld copy = (GameWorld)objIn.readObject();
-			
-			objIn.close();
-			
+			GameWorld copy = null;
+			synchronized (this)
+			{
+				
+				ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+				ObjectOutputStream objOut = new ObjectOutputStream(byteOut);
+				
+				objOut.writeObject(this);
+				objOut.close();
+				
+				byte[] buffer = byteOut.toByteArray();
+				
+				ByteArrayInputStream byteIn = new ByteArrayInputStream(buffer);
+				ObjectInputStream objIn = new ObjectInputStream(byteIn);
+				
+				copy = (GameWorld)objIn.readObject();
+				
+				objIn.close();
+			}
 			return copy;
 		}
 		catch (IOException e)

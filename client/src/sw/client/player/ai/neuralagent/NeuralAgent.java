@@ -8,17 +8,37 @@ import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 public class NeuralAgent extends RLAgent
 {
+	private int _currentWeapon;
+	private Thread _moveThread;
+	private int _updates;
+	
 	public NeuralAgent(IGameStateManager stateManager)
 	{
 		super(stateManager);
 		this.initFunctions();
+		_currentWeapon = WeaponType.LASER.getID();
 	}
 
 	@Override
 	public void newRound(GameStateChangedEvent e)
 	{
-		// TODO Auto-generated method stub
+		if (_moveThread != null && _moveThread.isAlive())
+			return;
+		_moveThread = new Thread(){
+			public void run()
+			{
+				while(true)
+				{
+					while (_updates < 10)
+						Thread.yield();
+					move();
 
+					_updates = 0;
+					Thread.yield();
+				}
+			}
+		};
+		_moveThread.start();
 	}
 
 	private static Random _random = new Random(System.currentTimeMillis());
@@ -51,6 +71,18 @@ public class NeuralAgent extends RLAgent
 			default:
 				throw new IllegalStateException();
 		}
+		
+		if (_random.nextDouble() < 0.01)
+		{
+			this.getCurrentInput().setShot(_currentWeapon);
+			System.out.println("shot"+getDataSet().getAmmo());
+		}
+		if (_random.nextDouble() < 0.001)
+		{
+			WeaponType[] types = WeaponType.values();
+			_currentWeapon = types[_random.nextInt(types.length)].getID();
+		}
+		
 		this.update();
 		// if (_player.isTerminated())
 		// {
@@ -106,6 +138,6 @@ public class NeuralAgent extends RLAgent
 	public void gameStateChanged(GameStateChangedEvent e)
 	{
 		super.gameStateChanged(e);
-		this.move();
+		_updates++;
 	}
 }
