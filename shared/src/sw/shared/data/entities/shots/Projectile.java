@@ -98,17 +98,20 @@ public abstract class Projectile extends ShotEntity implements IImageEntity
 	{
 		super.snap(p, name);
 		p.writeBoolean(_isExploding);
-		if (_isExploding)
-		{
-			_isExploding = false;
-			super.destroy();
-		}
 	}
 
 	@Override
 	public void tick()
 	{
-		this.fire();
+		if (_isExploding)
+		{
+			_isExploding = false;
+			super.destroy();
+		}
+		else
+		{
+			this.fire();
+		}
 		super.tick();
 	}
 }
