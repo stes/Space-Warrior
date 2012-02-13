@@ -6,7 +6,6 @@ import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.bots.RandomBot;
-import sw.client.player.ai.fagent.FollowAgent;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.PlayerInput;
