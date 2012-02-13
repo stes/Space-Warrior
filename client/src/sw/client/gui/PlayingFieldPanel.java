@@ -286,7 +286,7 @@ public class PlayingFieldPanel extends JPanel
 		}
 	}
 
-	private void updateSprites()
+	private synchronized void updateSprites()
 	{
 		for (Sprite s : _sprites.values())
 		{

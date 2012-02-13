@@ -15,22 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client.player.ai;
+package sw.client.player.ai.bots;
 
 import java.util.Random;
 
 import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
-public class SampleAI extends AIPlayer
+public class RandomBot extends AIPlayer
 {
 	private static Random _random = new Random(System.currentTimeMillis());
 
 	private int _hold;
 	private int _currentWeapon;
 
-	public SampleAI(String name)
+	public RandomBot(String name)
 	{
 		super( name);
 		System.out.println("init ai player");

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayer;
-import sw.client.player.ai.SampleAI;
+import sw.client.player.ai.bots.RandomBot;
 import sw.client.player.ai.fagent.FollowAgent;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
@@ -45,8 +45,8 @@ public class SPGameController extends GameController
 	{
 		super.init();
 		_opponents.add(new SPGameController(new FollowAgent("Killer")).getLocalPlayer());
-		_opponents.add(new SPGameController(new SampleAI("Simple")).getLocalPlayer());
-		_opponents.add(new SPGameController(new SampleAI("Simple2")).getLocalPlayer());
+		_opponents.add(new SPGameController(new RandomBot("Simple")).getLocalPlayer());
+		_opponents.add(new SPGameController(new RandomBot("Simple2")).getLocalPlayer());
 		
 		_gameEngine.addPlayer(getLocalPlayer().getDataSet().getName(), getLocalPlayer().getDataSet().getImageID(), true);
 		for (Player p : _opponents)
