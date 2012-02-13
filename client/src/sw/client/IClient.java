@@ -27,4 +27,6 @@ import sw.shared.net.Packer;
 public interface IClient
 {
 	public void sendPacket(Packer packet);
+
+	public void addClientMessageListener(ClientMessageListener l);
 }

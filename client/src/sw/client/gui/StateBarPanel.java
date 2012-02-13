@@ -120,12 +120,12 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 	
 	private void resizeComponents()
 	{
-		_txtChatmessage.setBounds(20, 20, 300, 25);
-		_scrollChathistory.setBounds(20, 50, 300, getHeight()/2);
+		_txtChatmessage.setBounds(getWidth()/4, getWidth()/100, getWidth()/4, getWidth()/70);
+		_scrollChathistory.setBounds(getWidth()/4, getWidth()/100+getWidth()/70, getWidth()/4, getHeight()*1/2);
 		
-		_scrollScoreBoard.setBounds(getWidth()-170, 50, 150, getHeight()/2);
+		_scrollScoreBoard.setBounds(getWidth()*3/5, 10, getWidth()/8, 25+getHeight()*2/5);
 		
-		_btnDisconnect.setBounds(getWidth()-120, 10, 100, 30);
+		_btnDisconnect.setBounds(getWidth()-100, getHeight()-50, 100, 50);
 	}
 
 	public void addConnectionListener(ConnectionListener l)
@@ -194,7 +194,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 			}
 		});
 
-		_txtChatmessage = new JTextField("Chat")
+		_txtChatmessage = new JTextField()
 		{
 			private static final long serialVersionUID = 2109656328663846511L;
 
@@ -257,7 +257,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 			protected void paintComponent(Graphics g)
 			{
 				Graphics2D g2d = (Graphics2D) g;
-				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.65f));
+				g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
 				g2d.setColor(this.getBackground());
 				Rectangle bounds = g2d.getClip().getBounds();
 				g2d.fillRect((int) bounds.getX(),

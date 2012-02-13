@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -43,20 +42,19 @@ public class GamePanel extends JPanel implements
 	// other references
 	private IGameStateManager _stateManager;
 	private IClient _client;
-	private ArrayList<ConnectionListener> _connectionListener;
 
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super();
-		_connectionListener = new ArrayList<ConnectionListener>();
 		_stateManager = stateManager;
 		_client = client;
+
 		this.setLayout(null);
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
 		this.resizeComponents();
-
+		_client.addClientMessageListener(_stateBarPanel);
 		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
@@ -72,7 +70,7 @@ public class GamePanel extends JPanel implements
 
 	public void addConnectionListener(ConnectionListener l)
 	{
-		_connectionListener.add(l);
+		_stateBarPanel.addConnectionListener(l);
 	}
 
 	public void added()
@@ -98,7 +96,7 @@ public class GamePanel extends JPanel implements
 
 	public void removeConnecionListener(ConnectionListener l)
 	{
-		_connectionListener.remove(l);
+		_stateBarPanel.removeConnecionListener(l);
 	}
 
 	public void removed()
@@ -109,19 +107,6 @@ public class GamePanel extends JPanel implements
 	public void render(Graphics2D g)
 	{
 		super.paintComponents(g.create());
-	}
-
-	protected void invokeDisconnect(ConnectionEvent e)
-	{
-		if (_connectionListener.size() == 0)
-		{
-			return;
-		}
-		for (ConnectionListener l : _connectionListener)
-		{
-			l.logout(e);
-		}
-
 	}
 
 	private void initComponents()
