@@ -26,6 +26,7 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import sw.shared.GameConstants;
+import sw.shared.GameConstants.Images;
 
 /**
  * @author Redix, stes, Abbadonn
@@ -81,21 +82,23 @@ public class ImageContainer
 	{
 		try
 		{
-			_images.put(GameConstants.Images.BACKGROUND.getID(),
+			_images.put(Images.BACKGROUND.getID(),
 					ImageIO.read(this.getClass().getResourceAsStream("/rsc/background.jpg")));
-			_images.put(GameConstants.Images.SHIP_1.getID(),
+			_images.put(Images.SHIP_1.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship2Grey.gif"))));
-			_images.put(GameConstants.Images.SHIP_2.getID(),
+			_images.put(Images.SHIP_2.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship3Grey.gif"))));
-			_images.put(GameConstants.Images.SHIP_3.getID(),
+			_images.put(Images.SHIP_3.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/DeathFighter1.gif"))));
-			_images.put(GameConstants.Images.SHIP_4.getID(),
+			_images.put(Images.SHIP_4.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship1Brown.gif"))));
-			_images.put(GameConstants.Images.SHOT_ROCKET.getID(),
+			_images.put(Images.SHOT_ROCKET.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Rocket.gif"))));
 			// TODO chose own image
-			_images.put(GameConstants.Images.SHOT_MINE.getID(),
+			_images.put(Images.SHOT_MINE.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Rocket.gif"))));
+			_images.put(Images.COCKPIT.getID(),
+					ImageIO.read(this.getClass().getResourceAsStream("/rsc/cockpit.jpg")));
 		}
 		catch (IOException e)
 		{

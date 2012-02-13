@@ -1,8 +1,6 @@
 package sw.client.gui;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -10,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -24,11 +23,12 @@ import sw.client.ClientMessageListener;
 import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.ConnectionEvent.ActionType;
+import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public class StateBarPanel extends JPanel implements ClientMessageListener, ActionListener
+public class StateBarPanel extends JPanel implements ClientMessageListener
 {
 
 	/**
@@ -85,9 +85,10 @@ public class StateBarPanel extends JPanel implements ClientMessageListener, Acti
 	private JTextArea _lstChathistory;
 	private JScrollPane _scrollScoreBoard;
 	private JScrollPane _scrollChathistory;
-	private JTable _tblScoreBoard;
 	private JButton _btnDisconnect;
 	private PlayerTableModel _model;
+	
+	private BufferedImage _background;
 
 	// other references
 	private IGameStateManager _stateManager;
@@ -96,23 +97,35 @@ public class StateBarPanel extends JPanel implements ClientMessageListener, Acti
 
 	public StateBarPanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
-		super(new FlowLayout());
+		super(null);
 		_connectionListener = new ArrayList<ConnectionListener>();
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
 		this.setSize(width, height);
-		this.setBackground(Color.GREEN);
 		this.initComponents();
-
+		this.resizeComponents();
+		_background = ImageContainer.getLocalInstance().getImage(Images.COCKPIT);
 		this.setIgnoreRepaint(true);
+		
+		this.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				resizeComponents();
+			}
+		});
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
+	
+	private void resizeComponents()
 	{
-		this.sendChat(_txtChatmessage.getText());
-		_txtChatmessage.setText("");
+		_txtChatmessage.setBounds(20, 20, 300, 25);
+		_scrollChathistory.setBounds(20, 50, 300, getHeight()/2);
+		
+		_scrollScoreBoard.setBounds(getWidth()-170, 50, 150, getHeight()/2);
+		
+		_btnDisconnect.setBounds(getWidth()-120, 10, 100, 30);
 	}
 
 	public void addConnectionListener(ConnectionListener l)
@@ -131,8 +144,15 @@ public class StateBarPanel extends JPanel implements ClientMessageListener, Acti
 		_connectionListener.remove(l);
 	}
 
-	public void render(Graphics2D g)
+	public void paintComponent(Graphics g)
 	{
+		render(g);
+	}
+	
+	public void render(Graphics g)
+	{
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.drawImage(_background, 0, 0, getWidth(), getHeight(), null);
 		super.paintComponents(g);
 	}
 
@@ -174,7 +194,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener, Acti
 			}
 		});
 
-		_txtChatmessage = new JTextField()
+		_txtChatmessage = new JTextField("Chat")
 		{
 			private static final long serialVersionUID = 2109656328663846511L;
 
@@ -193,12 +213,19 @@ public class StateBarPanel extends JPanel implements ClientMessageListener, Acti
 			}
 		};
 		_txtChatmessage.setOpaque(false);
-		_txtChatmessage.addActionListener(this);
+		_txtChatmessage.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				sendChat(_txtChatmessage.getText());
+				_txtChatmessage.setText("");
+			}
+		});
 		this.add(_txtChatmessage);
 
-		_tblScoreBoard = new JTable(_model);
-
-		_scrollScoreBoard = new JScrollPane(_tblScoreBoard)
+		_scrollScoreBoard = new JScrollPane(new JTable(_model))
 		{
 			private static final long serialVersionUID = -2017756045550747936L;
 

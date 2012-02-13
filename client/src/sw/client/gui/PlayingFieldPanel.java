@@ -88,7 +88,9 @@ public class PlayingFieldPanel extends JPanel
 
 	@Override
 	public void paintComponent(Graphics g)
-	{}
+	{
+		this.render(g);
+	}
 
 	@Override
 	public void paintComponents(Graphics g)
@@ -102,7 +104,7 @@ public class PlayingFieldPanel extends JPanel
 		}
 	}
 
-	public void render(Graphics g)
+	private void render(Graphics g)
 	{
 		// determine scale factors
 		double scaleX = this.getScaleX();

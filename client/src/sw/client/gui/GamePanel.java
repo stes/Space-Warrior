@@ -18,8 +18,9 @@
 package sw.client.gui;
 
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Graphics2D;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -33,13 +34,12 @@ import sw.client.gcontrol.IGameStateManager;
  * @author Redix, stes
  * @version 08.01.2012
  */
-public class GamePanel extends JPanel implements GameStateChangedListener
+public class GamePanel extends JPanel implements
+		GameStateChangedListener
 {
-
 	private static final long serialVersionUID = -8751902318746091633L;
 	private PlayingFieldPanel _playingField;
 	private StateBarPanel _stateBarPanel;
-
 	// other references
 	private IGameStateManager _stateManager;
 	private IClient _client;
@@ -47,7 +47,7 @@ public class GamePanel extends JPanel implements GameStateChangedListener
 
 	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
-		super(null);
+		super();
 		_connectionListener = new ArrayList<ConnectionListener>();
 		_stateManager = stateManager;
 		_client = client;
@@ -55,8 +55,20 @@ public class GamePanel extends JPanel implements GameStateChangedListener
 		this.setSize(width, height);
 		this.setBackground(Color.BLACK);
 		this.initComponents();
+		this.resizeComponents();
+
 		this.setIgnoreRepaint(true);
+
+		this.addComponentListener(new ComponentAdapter()
+		{
+			@Override
+			public void componentResized(ComponentEvent e)
+			{
+				resizeComponents();
+			}
+		});
 	}
+
 
 	public void addConnectionListener(ConnectionListener l)
 	{
@@ -67,6 +79,7 @@ public class GamePanel extends JPanel implements GameStateChangedListener
 	{
 		_playingField.startThreads();
 	}
+
 
 	@Override
 	public void gameStateChanged(GameStateChangedEvent e)
@@ -95,9 +108,6 @@ public class GamePanel extends JPanel implements GameStateChangedListener
 
 	public void render(Graphics2D g)
 	{
-		//super.paintComponents(g.create());
-		_playingField.render(g.create());
-		//_stateBarPanel.render((Graphics2D) g.create());
 		super.paintComponents(g.create());
 	}
 
@@ -111,14 +121,24 @@ public class GamePanel extends JPanel implements GameStateChangedListener
 		{
 			l.logout(e);
 		}
+
 	}
 
 	private void initComponents()
 	{
 		_playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
-//		this.add(_playingField);
-//		_stateBarPanel = new StateBarPanel(this.getWidth(), this.getHeight()*2/10, _stateManager, _client);
-//		_stateBarPanel.setLocation(0, getHeight()*8/10);
-//		this.add(_stateBarPanel);
+		this.add(_playingField);
+		_stateBarPanel = new StateBarPanel(getWidth(), getHeight(), _stateManager, _client);
+		this.add(_stateBarPanel);
 	}
+
+	private void resizeComponents()
+	{
+		int x = 8;
+		
+		_playingField.setSize(getWidth(), getHeight()*x/10);
+		_stateBarPanel.setSize(getWidth(), getHeight()*(10-x)/10);
+		_stateBarPanel.setLocation(0, getHeight()*x/10);
+	}
+
 }
