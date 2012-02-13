@@ -364,7 +364,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 		if (_isMultiplayer)
 		{
 			_client.addClientConnectionListener(this);
-			_client.addClientMessageListener(_gamePanel);
+			//_client.addClientMessageListener(_gamePanel);
 			_client.addClientConnlessListener(_loginPanel);
 		}
 		if (_controller instanceof ClientConnectionListener)
