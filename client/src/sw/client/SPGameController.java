@@ -43,7 +43,7 @@ public class SPGameController extends GameController
 	public void init()
 	{
 		super.init();
-		//_opponents.add(new SPGameController(new FollowAgent("Killer")).getLocalPlayer());
+		_opponents.add(new SPGameController(new RandomBot("Killer")).getLocalPlayer());
 		_opponents.add(new SPGameController(new RandomBot("Simple")).getLocalPlayer());
 		_opponents.add(new SPGameController(new RandomBot("Simple2")).getLocalPlayer());
 		

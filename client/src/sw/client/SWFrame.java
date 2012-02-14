@@ -100,7 +100,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	private boolean _isRunning;
 	private int _fps;
 	private SWFrame _self;
-	private boolean _isMultiplayer = true;
+	private boolean _isMultiplayer = false;
 
 	/**
 	 * Creates a new SWFrame
