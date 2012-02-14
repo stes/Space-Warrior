@@ -28,6 +28,7 @@ import sw.client.IClient;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.gcontrol.GameStateChangedListener;
 import sw.client.gcontrol.IGameStateManager;
+import sw.shared.GameConstants;
 
 /**
  * @author Redix, stes
@@ -106,22 +107,40 @@ public class GamePanel extends JPanel implements
 
 	public void render(Graphics2D g)
 	{
+		g.fillRect(0, 0, getWidth(), getHeight());
 		super.paintComponents(g.create());
 	}
 
 	private void initComponents()
 	{
-		_playingField = new PlayingFieldPanel(this.getWidth(), this.getHeight(), _stateManager);
+		int width = (int) (GameConstants.PLAYING_FIELD_WIDTH*getScale());
+		_playingField = new PlayingFieldPanel(width, this.getHeight()*8/10, _stateManager);
 		this.add(_playingField);
 		_stateBarPanel = new StateBarPanel(getWidth(), getHeight(), _stateManager, _client);
 		this.add(_stateBarPanel);
+	}
+	
+	private double getScale()
+	{
+		return Math.min(getScaleX(), getScaleY());
+	}
+	
+	private double getScaleX()
+	{
+		return (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
+	}
+
+	private double getScaleY()
+	{
+		return (double) this.getHeight()*0.8 / (double) GameConstants.PLAYING_FIELD_HEIGHT;
 	}
 
 	private void resizeComponents()
 	{
 		int x = 8;
-		
-		_playingField.setSize(getWidth(), getHeight()*x/10);
+		int width = (int) (GameConstants.PLAYING_FIELD_WIDTH*getScale());
+		_playingField.setSize(width, getHeight()*x/10);
+		_playingField.setLocation(getWidth()/2 - width/2, 0);
 		_stateBarPanel.setSize(getWidth(), getHeight()*(10-x)/10);
 		_stateBarPanel.setLocation(0, getHeight()*x/10);
 	}

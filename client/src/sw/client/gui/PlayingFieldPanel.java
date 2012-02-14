@@ -107,11 +107,11 @@ public class PlayingFieldPanel extends JPanel
 	private void render(Graphics g)
 	{
 		// determine scale factors
-		double scaleX = this.getScaleX();
-		double scaleY = this.getScaleY();
+		double scaleX = getScaleX();
+		double scaleY = getScaleY();
 
 		// draw
-		g.drawImage(_backgroundImg, 0, 0, this.getWidth(), this.getHeight(), null);
+		g.drawImage(_backgroundImg, 0, 0, getWidth(), getHeight(), null);
 		Graphics2D g2d = (Graphics2D) g;
 		_stateManager.setRendering(true);
 		_snapTime = _stateManager.snapTime();
@@ -199,6 +199,11 @@ public class PlayingFieldPanel extends JPanel
 		// TODO handle other entity types as well
 	}
 
+	private double getScale()
+	{
+		return Math.min(getScaleX(), getScaleY());
+	}
+	
 	private double getScaleX()
 	{
 		return (double) this.getWidth() / (double) GameConstants.PLAYING_FIELD_WIDTH;
