@@ -61,6 +61,11 @@ public class HumanPlayer extends Player implements KeyListener
 	{
 		super(name);
 	}
+	
+	public HumanPlayer(String name, int imageID)
+	{
+		super(name, imageID);
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e)

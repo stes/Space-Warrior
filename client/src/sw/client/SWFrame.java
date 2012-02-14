@@ -177,7 +177,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 		}
 		else
 		{
-			_controller.init();
+			((SPGameController)_controller).init(_loginPanel.getName(), _loginPanel.getImageID());
 		}
 	}
 

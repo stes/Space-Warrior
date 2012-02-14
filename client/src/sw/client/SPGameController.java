@@ -64,15 +64,20 @@ public class SPGameController extends GameController
 	@Override
 	public void init()
 	{
-		super.init();
-		_opponents.add(new SPGameController(new RandomBot("Killer")).getLocalPlayer());
-		_opponents.add(new SPGameController(new RandomBot("Simple")).getLocalPlayer());
-		_opponents.add(new SPGameController(new RandomBot("Simple2")).getLocalPlayer());
+		this.init("noname", Images.SHIP_1.getID());
+	}
+	
+	public void init(String name, int imageID)
+	{
+		super.init(name, imageID);
+		_opponents.add(new SPGameController(new RandomBot("Killer", Images.SHIP_2.getID())).getLocalPlayer());
+		_opponents.add(new SPGameController(new RandomBot("Simple", Images.SHIP_3.getID())).getLocalPlayer());
+		_opponents.add(new SPGameController(new RandomBot("Simple2", Images.SHIP_4.getID())).getLocalPlayer());
 		
-		_gameEngine.addPlayer(getLocalPlayer().getDataSet().getName(), getLocalPlayer().getDataSet().getImageID(), true);
+		_gameEngine.addPlayer(name, imageID, true);
 		for (Player p : _opponents)
 		{
-			_gameEngine.addPlayer(p.getDataSet().getName(), Images.SHIP_1.getID());
+			_gameEngine.addPlayer(p.getDataSet().getName(), p.getDataSet().getImageID());
 		}
 		_gameEngine.startGame();
 		_gameEngine.start();

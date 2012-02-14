@@ -22,6 +22,7 @@ import java.util.Random;
 import sw.client.gcontrol.GameStateChangedEvent;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
+import sw.shared.GameConstants.Images;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 public class RandomBot extends AIPlayer
@@ -31,9 +32,15 @@ public class RandomBot extends AIPlayer
 	private int _hold;
 	private int _currentWeapon;
 
+	
 	public RandomBot(String name)
 	{
-		super( name);
+		this(name, Images.SHIP_1.getID());
+	}
+	
+	public RandomBot(String name, int imageID)
+	{
+		super(name, imageID);
 		System.out.println("init ai player");
 		this.getCurrentInput().setDirection(1);
 		WeaponType[] types = WeaponType.values();
@@ -82,37 +89,13 @@ public class RandomBot extends AIPlayer
 		if (_random.nextDouble() < 0.01)
 		{
 			this.getCurrentInput().setShot(_currentWeapon);
-			System.out.println("shot"+getDataSet().getAmmo());
 		}
 		if (_random.nextDouble() < 0.001)
 		{
 			WeaponType[] types = WeaponType.values();
 			_currentWeapon = types[_random.nextInt(types.length)].getID();
 		}
-//		LaserBeam laserBeam = new LaserBeam(this.getDataSet().getX(),
-//				this.getDataSet().getY(),
-//				this.getDataSet().getDirection(),
-//				this.getDataSet());
-//		LaserBeam mshot = new LaserBeam(this.getDataSet().getX(),
-//				this.getDataSet().getY(),
-//				this.getDataSet().getDirection(),
-//				this.getDataSet(),
-//				true);
-//		for (SpaceShip d : this.getStateManager().getPlayerList())
-//		{
-//			if (d.equals(this.getDataSet()))
-//				continue;
-//			if (laserBeam.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
-//			{
-//				this.getCurrentInput().setShot(WeaponType.LASER.getID());
-//			}
-//			else if (mshot.distanceTo(d.getPosition()) < GameConstants.PLAYER_SIZE / 2)
-//			{
-//				this.getCurrentInput().setShot(WeaponType.MASTER_LASER.getID());
-//			}
-//		}
 		this.update();
-		//this.getCurrentInput().setShot(0);
 	}
 
 	@Override

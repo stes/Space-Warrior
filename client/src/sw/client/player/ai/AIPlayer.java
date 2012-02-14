@@ -42,6 +42,11 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 		super(name);
 	}
 	
+	public AIPlayer(String name, int imageID)
+	{
+		super(name, imageID);
+	}
+	
 	public void setStateManager(IGameStateManager stateManager)
 	{
 		super.setStateManager(stateManager);

@@ -26,6 +26,7 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.plugins.AIPlayerLoader;
+import sw.shared.GameConstants.Images;
 import sw.shared.data.GameWorld;
 import sw.shared.data.entities.players.SpaceShip;
 
@@ -107,6 +108,11 @@ public abstract class GameController implements IGameStateManager
 
 	public void init()
 	{
+		this.init("Player", Images.SHIP_1.getID());
+	}
+	
+	public void init(String name, int imageID)
+	{
 		Player local = null;
 		if (GameController._runAI && GameController._aiPlugin.exists())
 		{
@@ -123,7 +129,7 @@ public abstract class GameController implements IGameStateManager
 		if (local == null)
 		{
 			SWFrame.out.println("Using default player");
-			setLocalPlayer(new HumanPlayer(""));
+			setLocalPlayer(new HumanPlayer(name, imageID));
 		}
 		else
 		{

@@ -118,7 +118,10 @@ public abstract class GameEngine
 	
 	public void playerInput(String name, PlayerInput input)
 	{
-		getPlayers().get(name).setInput(input);
+		SpaceShip pl = getPlayers().get(name);
+		if (pl == null)
+			return;
+		pl.setInput(input);
 	}
 	
 	public void removePlayer(String name)

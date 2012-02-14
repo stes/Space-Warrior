@@ -18,6 +18,7 @@
 package sw.client.player;
 
 import sw.client.gcontrol.IGameStateManager;
+import sw.shared.GameConstants.Images;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
 import sw.shared.data.entities.players.SpaceShip;
@@ -46,9 +47,14 @@ public abstract class Player
 	 */
 	public Player(String name)
 	{
+		this(name, Images.SHIP_1.getID());
+	}
+	
+	public Player(String name, int imageID)
+	{
 		_currentState = new PlayerInput();
 		_oldState = new PlayerInput();
-		_dataSet = new SpaceShip(name);
+		_dataSet = new SpaceShip(name, imageID);
 	}
 	
 	public void setStateManager(IGameStateManager stateManager)
