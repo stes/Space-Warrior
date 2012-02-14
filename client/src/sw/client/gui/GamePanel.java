@@ -115,8 +115,9 @@ public class GamePanel extends JPanel implements
 
 	private void initComponents()
 	{
+		int height = (int) (GameConstants.PLAYING_FIELD_HEIGHT*getScale());
 		int width = (int) (GameConstants.PLAYING_FIELD_WIDTH*getScale());
-		_playingField = new PlayingFieldPanel(width, this.getHeight()*8/10, _stateManager);
+		_playingField = new PlayingFieldPanel(width, height, _stateManager);
 		this.add(_playingField);
 		_stateBarPanel = new StateBarPanel(getWidth(), getHeight(), _stateManager, _client);
 		this.add(_stateBarPanel);
@@ -140,9 +141,10 @@ public class GamePanel extends JPanel implements
 	private void resizeComponents()
 	{
 		int x = 8;
+		int height = (int) (GameConstants.PLAYING_FIELD_HEIGHT*getScale());
 		int width = (int) (GameConstants.PLAYING_FIELD_WIDTH*getScale());
-		_playingField.setSize(width, getHeight()*x/10);
-		_playingField.setLocation(getWidth()/2 - width/2, 0);
+		_playingField.setSize(width, height);
+		_playingField.setLocation(getWidth()/2 - width/2, (getHeight()*x/10)/2-height/2);
 		_stateBarPanel.setSize(getWidth(), getHeight()*(10-x)/10);
 		_stateBarPanel.setLocation(0, getHeight()*x/10);
 	}
