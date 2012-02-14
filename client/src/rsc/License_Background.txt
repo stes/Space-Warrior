@@ -8,3 +8,8 @@ Source of the cockpit background image:
 http://en.wikipedia.org/wiki/File:Shuttle_Landing_Simulator_cockpit.jpg
 
 License: Public Domain (see specified web site for further information)
+
+Source of the login background image:
+http://commons.wikimedia.org/wiki/File:Hubble_ultra_deep_field.jpg
+
+License: Public Domain (see specified web site for further information)

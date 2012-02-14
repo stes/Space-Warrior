@@ -198,11 +198,6 @@ public class PlayingFieldPanel extends JPanel
 		}
 		// TODO handle other entity types as well
 	}
-
-	private double getScale()
-	{
-		return Math.min(getScaleX(), getScaleY());
-	}
 	
 	private double getScaleX()
 	{
