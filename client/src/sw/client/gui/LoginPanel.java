@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -129,6 +130,8 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	protected SWServer _server;
 	private PluginLoader _pluginLoader;
 
+	private BufferedImage _background;
+
 	public LoginPanel(int width, int height)
 	{
 		super();
@@ -143,6 +146,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_tableModel = new ServerTableModel();
 
 		_imageID = Images.min().getID();
+		_background = ImageContainer.getLocalInstance().getImage(Images.TITLE);
 		_pluginLoader = new PluginLoader();
 		//_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
 		this.initComponents();
@@ -200,6 +204,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 	public void render(Graphics g)
 	{
+		g.drawImage(_background, 0, 0, getWidth(), getHeight(), null);
 		this.paintComponents(g);
 	}
 
@@ -229,7 +234,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private void initComponents()
 	{
 		_btnExit = new JButton("Exit");
-		_btnExit.setBounds(getWidth() - 200, 60, 100, 25);
+		_btnExit.setBounds(getWidth() - 200, 260, 100, 25);
 		_btnExit.addActionListener(new ActionListener()
 		{
 			
@@ -243,7 +248,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		
 		_btnImage = new JButton();
 		_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID)));
-		_btnImage.setBounds(200, 250, 64, 64);
+		_btnImage.setBounds(200, 450, 64, 64);
 		_btnImage.addActionListener(new ActionListener()
 		{
 			@Override
@@ -266,34 +271,34 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		this.add(_btnImage);
 
 		_txtIPAddress = new JTextField();
-		_txtIPAddress.setBounds(200, 10, 100, 25);
+		_txtIPAddress.setBounds(200, 210, 100, 25);
 		_txtIPAddress.setText("localhost");
 		this.add(_txtIPAddress);
 
 		_txtPort = new JTextField();
-		_txtPort.setBounds(400, 10, 50, 25);
+		_txtPort.setBounds(400, 210, 50, 25);
 		_txtPort.setText(GameConstants.STANDARD_PORT + "");
 		this.add(_txtPort);
 
 		_txtName = new JTextField();
-		_txtName.setBounds(200, 50, 400, 25);
+		_txtName.setBounds(200, 250, 400, 25);
 		_txtName.setText("test");
 		this.add(_txtName);
 
 		_lblIPAdress = new JLabel("IP-Address");
-		_lblIPAdress.setBounds(100, 10, 100, 25);
+		_lblIPAdress.setBounds(100, 210, 100, 25);
 		this.add(_lblIPAdress);
 
 		_lblPort = new JLabel("Port");
-		_lblPort.setBounds(350, 10, 100, 25);
+		_lblPort.setBounds(350, 210, 100, 25);
 		this.add(_lblPort);
 
 		_lblName = new JLabel("Name");
-		_lblName.setBounds(100, 50, 100, 25);
+		_lblName.setBounds(100, 250, 100, 25);
 		this.add(_lblName);
 
 		_btnConnect = new JButton("Connect");
-		_btnConnect.setBounds(640, 10, 100, 25);
+		_btnConnect.setBounds(640, 210, 100, 25);
 		_btnConnect.addActionListener(new ActionListener()
 		{
 
@@ -331,7 +336,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		this.add(_btnUpdate);
 
 		_btnHost = new JButton("Host");
-		_btnHost.setBounds(100, 100, 100, 25);
+		_btnHost.setBounds(100, 300, 100, 25);
 		_btnHost.addActionListener(new ActionListener()
 		{
 			@Override
@@ -356,7 +361,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 		
 		_scroll = new JScrollPane(_tblServers);
-		_scroll.setBounds(this.getWidth() - 300, 300, 200, 300);
+		_scroll.setBounds(this.getWidth() - 300, 400, 200, 300);
 		this.add(_scroll);
 
 		File[] pluginFiles = _pluginLoader.getAIs("sample");

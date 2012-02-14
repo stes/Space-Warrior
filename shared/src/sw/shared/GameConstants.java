@@ -28,8 +28,8 @@ public final class GameConstants
 	// Images
 	public static enum Images
 	{
-		BACKGROUND(0x00), COCKPIT(0x01), SHIP_1(0x11), SHIP_2(0x12), SHIP_3(0x13), SHIP_4(0x14),
-		SHOT_ROCKET(0x21), SHOT_MINE(0x22);
+		BACKGROUND(0x01), COCKPIT(0x02), SHIP_1(0x11), SHIP_2(0x12), SHIP_3(0x13), SHIP_4(0x14),
+		SHOT_ROCKET(0x21), SHOT_MINE(0x22), TITLE(0x03);
 
 		public static Images max()
 		{

@@ -84,6 +84,8 @@ public class ImageContainer
 		{
 			_images.put(Images.BACKGROUND.getID(),
 					ImageIO.read(this.getClass().getResourceAsStream("/rsc/background.jpg")));
+			_images.put(Images.TITLE.getID(),
+					ImageIO.read(this.getClass().getResourceAsStream("/rsc/Title.jpg")));
 			_images.put(Images.SHIP_1.getID(),
 					this.scale(ImageIO.read(this.getClass().getResourceAsStream("/rsc/Ship2Grey.gif"))));
 			_images.put(Images.SHIP_2.getID(),
