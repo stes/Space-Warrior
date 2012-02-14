@@ -22,6 +22,11 @@ public class SPGameController extends GameController
 {
 	private static SPGameEngine _gameEngine = new SPGameEngine();
 	
+	public static void reset()
+	{
+		_gameEngine = new SPGameEngine();
+	}
+	
 	private ArrayList<Player> _opponents;
 	
 	public SPGameController()

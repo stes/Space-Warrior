@@ -87,8 +87,8 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 	public final int SLEEP_TIME = 1;
 	private static final long serialVersionUID = 1575599799999464878L;
 
-	private final GameController _controller;
-	private final SWClient _client;
+	private GameController _controller;
+	private SWClient _client;
 
 	private GamePanel _gamePanel;
 	private LoginPanel _loginPanel;
@@ -100,7 +100,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 	private boolean _isRunning;
 	private int _fps;
 	private SWFrame _self;
-	private boolean _isMultiplayer = false;
+	private boolean _isMultiplayer = true;
 
 	/**
 	 * Creates a new SWFrame
@@ -129,18 +129,8 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 		this.setMinimumSize(new Dimension(800, 600));
 
 		((JComponent) this.getContentPane()).setOpaque(false);
-
-		_client = new SWClient();
-		if (_isMultiplayer)
-		{
-			_controller = new MPGameController(_client);
-		}
-		else
-		{
-			_controller = new SPGameController();
-		}
 		
-		this.init(debugMode);
+		this.init(debugMode, false);
 
 		this.createBufferStrategy(2);
 		_bufferStrategy = this.getBufferStrategy();
@@ -226,6 +216,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 		else
 		{
 			this.disconnected("user logout");
+			this.init(false, true);
 		}
 	}
 
@@ -342,30 +333,44 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 		}
 	}
 
-	private void init(boolean debugMode)
+	private void init(boolean debugMode, boolean reinit)
 	{
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Insets insets = this.getInsets();
-		int insetWide = insets.left + insets.right;
-		int insetTall = insets.top + insets.bottom;
-		this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
-
-		this.addWindowListener(new WindowAdapter()
+		_client = new SWClient();
+		if (_isMultiplayer)
 		{
-			@Override
-			public void windowClosing(WindowEvent e)
-			{
-				if (_isMultiplayer)
-				{
-					_client.close();
-				}
-				_loginPanel.close();
-			}
-		});
+			_controller = new MPGameController(_client);
+		}
+		else
+		{
+			SPGameController.reset();
+			_controller = new SPGameController();
+		}
 
-		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);
-		_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
-		
+		if (!reinit)
+		{
+			
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			Insets insets = this.getInsets();
+			int insetWide = insets.left + insets.right;
+			int insetTall = insets.top + insets.bottom;
+			this.setSize(this.getWidth() + insetWide, this.getHeight() + insetTall);
+			this.addWindowListener(new WindowAdapter()
+			{
+				@Override
+				public void windowClosing(WindowEvent e)
+				{
+					if (_isMultiplayer)
+					{
+						_client.close();
+					}
+					_loginPanel.close();
+				}
+			});
+			_loginPanel = new LoginPanel(this.getWidth(), this.getHeight());
+			_loginPanel.addConnectionListener(this);
+		}
+
+		_gamePanel = new GamePanel(this.getWidth(), this.getHeight(), _controller, _client);		
 		_controller.addGameStateChangedListener(_gamePanel);
 		
 		if (_isMultiplayer)
@@ -382,12 +387,12 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 			_client.addClientMessageListener((ClientMessageListener) _controller);
 		}
 		
-		_loginPanel.addConnectionListener(this);
 		_gamePanel.addConnectionListener(this);
 
-		this.setGUIMode(GUIMode.LOGIN);
+		if (!reinit)
+			this.setGUIMode(GUIMode.LOGIN);
 		
-		if (!debugMode)
+		if (!debugMode && !reinit)
 		{
 			this.initBugLogger();
 		}
@@ -439,7 +444,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, L
 	@Override
 	public void switchMode(LoginPanelEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+		_isMultiplayer = e.isMultiplayerModeActive();
+		this.init(false, true);
 	}
 }
