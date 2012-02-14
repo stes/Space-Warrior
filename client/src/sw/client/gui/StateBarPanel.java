@@ -240,7 +240,8 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 				_txtChatmessage.setText("");
 			}
 		});
-		this.add(_txtChatmessage);
+		// TODO remove comment after bug is fixed
+		//this.add(_txtChatmessage);
 
 		_scrollScoreBoard = new JScrollPane(new JTable(_model))
 		{

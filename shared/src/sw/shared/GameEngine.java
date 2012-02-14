@@ -100,7 +100,7 @@ public abstract class GameEngine
 			}
 		}
 
-		if ((alive == 1 && _players.size() > 1) || (alive == 0))
+		if ((alive == 1 && _players.size() > 1) || (alive == 0 && _players.size() > 0))
 		{
 			if (alive == 1)
 			{
