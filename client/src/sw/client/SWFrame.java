@@ -44,10 +44,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import sw.client.gui.ConnectionEvent;
-import sw.client.gui.ConnectionListener;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
+import sw.client.gui.LoginPanelEvent;
+import sw.client.gui.LoginPanelListener;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
 
@@ -55,7 +55,7 @@ import sw.shared.net.Packer;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class SWFrame extends JFrame implements ClientConnectionListener, ConnectionListener, AWTEventListener
+public final class SWFrame extends JFrame implements ClientConnectionListener, LoginPanelListener, AWTEventListener
 {
 	public static PrintStream out;
 
@@ -203,7 +203,7 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	}
 
 	@Override
-	public void login(ConnectionEvent e)
+	public void login(LoginPanelEvent e)
 	{
 		if (_isMultiplayer)
 		{
@@ -217,9 +217,16 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 	}
 
 	@Override
-	public void logout(ConnectionEvent e)
+	public void logout(LoginPanelEvent e)
 	{
-		_client.disconnect("user logout");
+		if (_isMultiplayer)
+		{
+			_client.disconnect("user logout");
+		}
+		else
+		{
+			this.disconnected("user logout");
+		}
 	}
 
 	public void render(Graphics2D g2d)
@@ -427,5 +434,12 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, C
 			if (e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_F2)
 				this.switchFullscreen();
 		}
+	}
+
+	@Override
+	public void switchMode(LoginPanelEvent e)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

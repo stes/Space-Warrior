@@ -55,7 +55,9 @@ public class GamePanel extends JPanel implements
 		this.setBackground(Color.BLACK);
 		this.initComponents();
 		this.resizeComponents();
+
 		_client.addClientMessageListener(_stateBarPanel);
+
 		this.setIgnoreRepaint(true);
 
 		this.addComponentListener(new ComponentAdapter()
@@ -69,7 +71,7 @@ public class GamePanel extends JPanel implements
 	}
 
 
-	public void addConnectionListener(ConnectionListener l)
+	public void addConnectionListener(LoginPanelListener l)
 	{
 		_stateBarPanel.addConnectionListener(l);
 	}
@@ -95,7 +97,7 @@ public class GamePanel extends JPanel implements
 		_playingField.playerInit();
 	}
 
-	public void removeConnecionListener(ConnectionListener l)
+	public void removeConnecionListener(LoginPanelListener l)
 	{
 		_stateBarPanel.removeConnecionListener(l);
 	}

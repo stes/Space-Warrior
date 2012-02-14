@@ -27,6 +27,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.InetSocketAddress;
@@ -35,6 +37,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,7 +51,7 @@ import javax.swing.table.AbstractTableModel;
 
 import sw.client.ClientConnlessListener;
 import sw.client.SWFrame;
-import sw.client.gui.ConnectionEvent.ActionType;
+import sw.client.gui.LoginPanelEvent.ActionType;
 import sw.client.plugins.PluginLoader;
 import sw.server.SWServer;
 import sw.shared.GameConstants;
@@ -126,10 +129,14 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private JLabel _lblPort;
 	private Vector<ServerInfo> _servers;
 	private ServerTableModel _tableModel;
-	
+	private JCheckBox _chkIsMultiplayer;
+
+	private ArrayList<JComponent> _mpOnly;
+	private boolean _isMultiplayer;
+
 	private JPanel _connectionPanel;
-	
-	private ArrayList<ConnectionListener> _connectionListener;
+
+	private ArrayList<LoginPanelListener> _connectionListener;
 	private int _imageID;
 	protected SWServer _server;
 	private PluginLoader _pluginLoader;
@@ -144,7 +151,9 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		this.setSize(width, height);
 		this.setBackground(Color.WHITE);
 
-		_connectionListener = new ArrayList<ConnectionListener>();
+		_mpOnly = new ArrayList<JComponent>();
+		_isMultiplayer = true;
+		_connectionListener = new ArrayList<LoginPanelListener>();
 
 		_servers = new Vector<ServerInfo>();
 		_tableModel = new ServerTableModel();
@@ -152,7 +161,8 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_imageID = Images.min().getID();
 		_background = ImageContainer.getLocalInstance().getImage(Images.TITLE);
 		_pluginLoader = new PluginLoader();
-		//_pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players", "sample");
+		// _pluginLoader.addDirectory("C:\\Users\\Steffen\\Projekte\\Projekte\\SpaceWarrior\\current_build\\ai_players",
+		// "sample");
 		this.initComponents();
 
 		this.addComponentListener(new ComponentAdapter()
@@ -162,7 +172,8 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			{
 				_btnUpdate.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 + 200, 100, 25);
 				_scroll.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 - 150, 200, 300);
-				_connectionPanel.setLocation(getWidth()/2-_connectionPanel.getWidth()/2, getHeight()/2-_connectionPanel.getHeight()/2);
+				_connectionPanel.setLocation(getWidth() / 2 - _connectionPanel.getWidth() / 2,
+						getHeight() / 2 - _connectionPanel.getHeight() / 2);
 				// TODO rework
 				if (_tblAIPlayers != null)
 				{
@@ -173,7 +184,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 	}
 
-	public void addConnectionListener(ConnectionListener l)
+	public void addConnectionListener(LoginPanelListener l)
 	{
 		_connectionListener.add(l);
 	}
@@ -202,7 +213,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		return _txtName.getText();
 	}
 
-	public void removeConnecionListener(ConnectionListener l)
+	public void removeConnecionListener(LoginPanelListener l)
 	{
 		_connectionListener.remove(l);
 	}
@@ -220,28 +231,41 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		_tableModel.fireTableDataChanged();
 	}
 
-	protected void invokeLogin(ConnectionEvent e)
+	protected void invokeLogin(LoginPanelEvent e)
 	{
 		if (_connectionListener.size() == 0)
 		{
 			return;
 		}
-		for (ConnectionListener l : _connectionListener)
+		for (LoginPanelListener l : _connectionListener)
 		{
 			l.login(e);
 		}
 
 	}
 	
+	protected void invokeSwitchMode(LoginPanelEvent e)
+	{
+		if (_connectionListener.size() == 0)
+		{
+			return;
+		}
+		for (LoginPanelListener l : _connectionListener)
+		{
+			l.switchMode(e);
+		}
+
+	}
+
 	private void addComponent(JComponent comp, int gridX, int gridY)
-	{		
-		comp.setLocation(50+gridX * 100, 30+gridY * 30);
+	{
+		comp.setLocation(50 + gridX * 100, 30 + gridY * 30);
 		_connectionPanel.add(comp);
 	}
-	
+
 	private void addComponent(JComponent comp, int gridX, int gridY, int dist)
-	{		
-		comp.setLocation(50+gridX * 100 + dist, 30+gridY * 30);
+	{
+		comp.setLocation(50 + gridX * 100 + dist, 30 + gridY * 30);
 		_connectionPanel.add(comp);
 	}
 
@@ -265,25 +289,28 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 						(int) bounds.getWidth(),
 						(int) bounds.getHeight());
 				super.paintComponents(g);
-				
+
 			}
 		};
-		
+
 		_connectionPanel.setLayout(null);
 		_connectionPanel.setBackground(Color.GRAY);
 		_connectionPanel.setSize(600, 225);
-		_connectionPanel.setLocation(getWidth()/2-_connectionPanel.getWidth()/2, getHeight()/2-_connectionPanel.getHeight()/2);
+		_connectionPanel.setLocation(getWidth() / 2 - _connectionPanel.getWidth() / 2, getHeight()
+				/ 2 - _connectionPanel.getHeight() / 2);
 		this.add(_connectionPanel);
-		
+
 		_txtIPAddress = new JTextField();
 		_txtIPAddress.setBounds(200, 210, 100, 25);
 		_txtIPAddress.setMinimumSize(new Dimension(200, 25));
 		_txtIPAddress.setText("localhost");
+		_mpOnly.add(_txtIPAddress);
 		addComponent(_txtIPAddress, 1, 0);
 
 		_txtPort = new JTextField();
 		_txtPort.setBounds(400, 210, 50, 25);
 		_txtPort.setText(GameConstants.STANDARD_PORT + "");
+		_mpOnly.add(_txtPort);
 		addComponent(_txtPort, 1, 1);
 
 		_txtName = new JTextField();
@@ -293,17 +320,19 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		_lblIPAdress = new JLabel("IP-Address");
 		_lblIPAdress.setBounds(100, 210, 100, 25);
+		_mpOnly.add(_lblIPAdress);
 		addComponent(_lblIPAdress, 0, 0);
 
 		_lblPort = new JLabel("Port");
 		_lblPort.setBounds(350, 210, 100, 25);
+		_mpOnly.add(_lblPort);
 		addComponent(_lblPort, 0, 1);
 
 		_lblName = new JLabel("Name");
 		_lblName.setBounds(100, 250, 100, 25);
 		addComponent(_lblName, 0, 2);
 
-		_btnConnect = new JButton("Connect");
+		_btnConnect = new JButton("Start");
 		_btnConnect.setBounds(640, 210, 100, 25);
 		_btnConnect.addActionListener(new ActionListener()
 		{
@@ -314,7 +343,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				if (!_txtName.getText().isEmpty())
 				{
 					SWFrame.out.println("connect");
-					ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGIN);
+					LoginPanelEvent e = new LoginPanelEvent(this, ActionType.LOGIN);
 					e.setIPAdress(new InetSocketAddress(_txtIPAddress.getText(),
 							Integer.parseInt(_txtPort.getText())));
 					e.setLoginName(_txtName.getText());
@@ -324,7 +353,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			}
 		});
 		addComponent(_btnConnect, 3, 0);
-		
+
 		_btnHost = new JButton("Host");
 		_btnHost.setBounds(640, 250, 100, 25);
 		_btnHost.addActionListener(new ActionListener()
@@ -335,8 +364,9 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				_server = new SWServer(GameConstants.STANDARD_PORT);
 			}
 		});
-		addComponent(_btnHost,3, 1);
-		
+		_mpOnly.add(_btnHost);
+		addComponent(_btnHost, 3, 1);
+
 		_btnImage = new JButton();
 		_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID)));
 		_btnImage.setBounds(700, 210, 64, 64);
@@ -360,12 +390,32 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			}
 		});
 		addComponent(_btnImage, 4, 0, 20);
-		
+
+		_chkIsMultiplayer = new JCheckBox("Singleplayer");
+		_chkIsMultiplayer.setSize(100, 25);
+		_chkIsMultiplayer.addItemListener(new ItemListener()
+		{
+
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				_isMultiplayer = (e.getStateChange() != ItemEvent.SELECTED);
+				for (JComponent c : _mpOnly)
+				{
+					c.setEnabled(_isMultiplayer);
+				}
+				LoginPanelEvent ev = new LoginPanelEvent(this, ActionType.SWITCH_MODE);
+				ev.setMultiplayer(_isMultiplayer);
+				invokeSwitchMode(ev);
+			}
+		});
+		addComponent(_chkIsMultiplayer, 0, 3);
+
 		_btnExit = new JButton("Exit");
 		_btnExit.setBounds(getWidth() - 200, 260, 100, 25);
 		_btnExit.addActionListener(new ActionListener()
 		{
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
@@ -374,7 +424,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 		addComponent(_btnExit, 0, 4);
 	}
-	
+
 	/**
 	 * Initializes the GUI components
 	 */
@@ -390,13 +440,13 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			public void actionPerformed(ActionEvent arg0)
 			{
 				_servers.clear();
-				for (ConnectionListener l : _connectionListener)
+				for (LoginPanelListener l : _connectionListener)
 				{
 					l.scan();
 				}
 			}
 		});
-//		this.add(_btnUpdate);
+		// this.add(_btnUpdate);
 
 		_tblServers = new JTable(_tableModel);
 		_tblServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -410,20 +460,25 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				_txtPort.setText(_servers.get(index).getAddress().getPort() + "");
 			}
 		});
-		
+
 		_scroll = new JScrollPane(_tblServers);
 		_scroll.setBounds(this.getWidth() - 300, 400, 200, 300);
-//		this.add(_scroll);
+		// this.add(_scroll);
 
 		File[] pluginFiles = _pluginLoader.getAIs("sample");
-		File[][] f = new File[][] {pluginFiles};
+		File[][] f = new File[][] { pluginFiles };
 		// TODO improve
 		if (pluginFiles.length > 0)
 		{
-			_tblAIPlayers = new JTable(f, new String[] {"Path"});
+			_tblAIPlayers = new JTable(f, new String[] { "Path" });
 			_tblAIPlayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			_tblAIPlayers.setBounds(this.getWidth() - 600, 300, 200, 300);
 			this.add(_tblAIPlayers);
 		}
+	}
+
+	public boolean isMultiplayerMode()
+	{
+		return _isMultiplayer;
 	}
 }

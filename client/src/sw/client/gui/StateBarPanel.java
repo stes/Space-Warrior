@@ -22,7 +22,7 @@ import javax.swing.table.AbstractTableModel;
 import sw.client.ClientMessageListener;
 import sw.client.IClient;
 import sw.client.gcontrol.IGameStateManager;
-import sw.client.gui.ConnectionEvent.ActionType;
+import sw.client.gui.LoginPanelEvent.ActionType;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
@@ -93,12 +93,12 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 	// other references
 	private IGameStateManager _stateManager;
 	private IClient _client;
-	private ArrayList<ConnectionListener> _connectionListener;
+	private ArrayList<LoginPanelListener> _connectionListener;
 
 	public StateBarPanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super(null);
-		_connectionListener = new ArrayList<ConnectionListener>();
+		_connectionListener = new ArrayList<LoginPanelListener>();
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
@@ -128,7 +128,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 		_btnDisconnect.setBounds(getWidth()-100, getHeight()-50, 100, 50);
 	}
 
-	public void addConnectionListener(ConnectionListener l)
+	public void addConnectionListener(LoginPanelListener l)
 	{
 		_connectionListener.add(l);
 	}
@@ -139,7 +139,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 		this.appendMessage("[ " + name + " ] " + text + "\n");
 	}
 
-	public void removeConnecionListener(ConnectionListener l)
+	public void removeConnecionListener(LoginPanelListener l)
 	{
 		_connectionListener.remove(l);
 	}
@@ -162,13 +162,13 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 		_model.fireTableDataChanged();
 	}
 
-	protected void invokeDisconnect(ConnectionEvent e)
+	protected void invokeDisconnect(LoginPanelEvent e)
 	{
 		if (_connectionListener.size() == 0)
 		{
 			return;
 		}
-		for (ConnectionListener l : _connectionListener)
+		for (LoginPanelListener l : _connectionListener)
 		{
 			l.logout(e);
 		}
@@ -189,7 +189,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				ConnectionEvent e = new ConnectionEvent(this, ActionType.LOGOUT);
+				LoginPanelEvent e = new LoginPanelEvent(this, ActionType.LOGOUT);
 				invokeDisconnect(e);
 			}
 		});

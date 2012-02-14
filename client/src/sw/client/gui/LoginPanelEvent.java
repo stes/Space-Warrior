@@ -20,11 +20,11 @@ package sw.client.gui;
 import java.net.InetSocketAddress;
 import java.util.EventObject;
 
-public class ConnectionEvent extends EventObject
+public class LoginPanelEvent extends EventObject
 {
 	public enum ActionType
 	{
-		LOGIN, LOGOUT
+		LOGIN, LOGOUT, SWITCH_MODE
 	}
 
 	private static final long serialVersionUID = -5796463210269739871L;
@@ -35,7 +35,9 @@ public class ConnectionEvent extends EventObject
 
 	private ActionType _actionType;
 
-	public ConnectionEvent(Object source, ActionType actionType)
+	private boolean _isMultiplayer;
+
+	public LoginPanelEvent(Object source, ActionType actionType)
 	{
 		super(source);
 		this.setActionType(actionType);
@@ -60,6 +62,11 @@ public class ConnectionEvent extends EventObject
 	{
 		return _loginName;
 	}
+	
+	public boolean isMultiplayerModeActive()
+	{
+		return _isMultiplayer;
+	}
 
 	public void setActionType(ActionType _actionType)
 	{
@@ -79,5 +86,10 @@ public class ConnectionEvent extends EventObject
 	public void setLoginName(String loginName)
 	{
 		this._loginName = loginName;
+	}
+	
+	public void setMultiplayer(boolean b)
+	{
+		_isMultiplayer = b;
 	}
 }
