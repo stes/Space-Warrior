@@ -15,11 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.events.comm;
 
-public class ClientConstants
+import sw.shared.net.Unpacker;
+
+/**
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
+ */
+
+public interface IClientMessageListener
 {
-	// Other elements
-	public final static int BAR_LENGTH = 400;
-	public final static int BAR_X = 10;
+	/**
+	 * Invoked when a chat message was received
+	 * 
+	 * @param name
+	 *            the addresser's name
+	 * @param text
+	 *            the chat message
+	 */
+	public void chatMessage(String name, String text);
+
+	/**
+	 * Invoked when a snapshot was received
+	 * 
+	 * @param packet
+	 *            snapshot
+	 */
+	public void snapshot(Unpacker packet);
 }

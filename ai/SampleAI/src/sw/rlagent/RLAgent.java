@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sw.rlagent;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.data.PlayerInput;
 
@@ -28,7 +28,7 @@ public class RLAgent extends AIPlayer
 
 	public static RLAgent _self;
 
-	public RLAgent(IGameStateManager stateManager)
+	public RLAgent(IGameController stateManager)
 	{
 		super(stateManager);
 		_self = this;

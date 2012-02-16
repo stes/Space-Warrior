@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client.player;
 
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
 import sw.shared.GameConstants.Images;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
@@ -36,7 +36,7 @@ public abstract class Player
 	private PlayerInput _oldState;
 	private SpaceShip _dataSet;
 
-	private IGameStateManager _stateManager;
+	private IGameController _stateManager;
 
 	/**
 	 * Creates a new player given the controller
@@ -57,7 +57,7 @@ public abstract class Player
 		_dataSet = new SpaceShip(name, imageID);
 	}
 	
-	public void setStateManager(IGameStateManager stateManager)
+	public void setStateManager(IGameController stateManager)
 	{
 		_stateManager = stateManager;
 	}
@@ -73,7 +73,7 @@ public abstract class Player
 	/**
 	 * @return the state manager assigned to this player
 	 */
-	public IGameStateManager getStateManager()
+	public IGameController getStateManager()
 	{
 		return _stateManager;
 	}

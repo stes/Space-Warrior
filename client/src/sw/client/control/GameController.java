@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.control;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.GameStateChangedListener;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.events.gcontrol.GameStateChangedEvent;
+import sw.client.events.gcontrol.IGameStateChangedListener;
+import sw.client.gui.SWFrame;
 import sw.client.player.HumanPlayer;
 import sw.client.player.Player;
 import sw.client.plugins.AIPlayerLoader;
@@ -36,7 +36,7 @@ import sw.shared.data.entities.players.SpaceShip;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public abstract class GameController implements IGameStateManager
+public abstract class GameController implements IGameController
 {
 	private static File _aiPlugin;
 	private static boolean _runAI = false;
@@ -55,7 +55,7 @@ public abstract class GameController implements IGameStateManager
 	private long _prevLastSnap;
 	private long _lastSnap;
 
-	private ArrayList<GameStateChangedListener> _gameStateChangedListener;
+	private ArrayList<IGameStateChangedListener> _gameStateChangedListener;
 
 	private boolean _rendering;
 
@@ -66,13 +66,13 @@ public abstract class GameController implements IGameStateManager
 	{
 		_prevWorld = new GameWorld();
 		setWorld(new GameWorld());
-		_gameStateChangedListener = new ArrayList<GameStateChangedListener>();
+		_gameStateChangedListener = new ArrayList<IGameStateChangedListener>();
 		_players = new SpaceShip[0];
 		_rendering = false;
 	}
 
 	@Override
-	public void addGameStateChangedListener(GameStateChangedListener l)
+	public void addGameStateChangedListener(IGameStateChangedListener l)
 	{
 		_gameStateChangedListener.add(l);
 	}
@@ -140,7 +140,7 @@ public abstract class GameController implements IGameStateManager
 		this.invokePlayerInit(new GameStateChangedEvent(this));
 	}
 
-	public void removeGameStateChangedListener(GameStateChangedListener l)
+	public void removeGameStateChangedListener(IGameStateChangedListener l)
 	{
 		_gameStateChangedListener.remove(l);
 	}
@@ -189,7 +189,7 @@ public abstract class GameController implements IGameStateManager
 		{
 			return;
 		}
-		for (GameStateChangedListener l : _gameStateChangedListener)
+		for (IGameStateChangedListener l : _gameStateChangedListener)
 		{
 			l.newRound(e);
 		}
@@ -201,7 +201,7 @@ public abstract class GameController implements IGameStateManager
 		{
 			return;
 		}
-		for (GameStateChangedListener l : _gameStateChangedListener)
+		for (IGameStateChangedListener l : _gameStateChangedListener)
 		{
 			l.playerInit(e);
 		}
@@ -213,7 +213,7 @@ public abstract class GameController implements IGameStateManager
 		{
 			return;
 		}
-		for (GameStateChangedListener l : _gameStateChangedListener)
+		for (IGameStateChangedListener l : _gameStateChangedListener)
 		{
 			l.gameStateChanged(e);
 		}

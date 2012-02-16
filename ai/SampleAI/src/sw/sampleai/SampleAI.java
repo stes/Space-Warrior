@@ -19,8 +19,8 @@ package sw.sampleai;
 
 import java.util.Random;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.GameConstants;
 import sw.shared.data.entities.players.SpaceShip;
@@ -32,7 +32,7 @@ public class SampleAI extends AIPlayer
 
 	private int _hold;
 
-	public SampleAI(IGameStateManager stateManager)
+	public SampleAI(IGameController stateManager)
 	{
 		super(stateManager);
 		System.out.println("init ai player");

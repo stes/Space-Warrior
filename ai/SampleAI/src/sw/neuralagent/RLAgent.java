@@ -7,7 +7,7 @@
  ******************************************************************************/
 package sw.neuralagent;
 
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
 import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.neuralagent.IPolicy;
 import sw.client.player.ai.neuralagent.IRewardFunction;
@@ -22,7 +22,7 @@ import sw.client.player.ai.neuralagent.IValueFunction;
  */
 public abstract class RLAgent extends AIPlayer
 {
-	public RLAgent(IGameStateManager stateManager)
+	public RLAgent(IGameController stateManager)
 	{
 		super(stateManager);
 	}

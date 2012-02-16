@@ -15,22 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
-
-import sw.shared.data.ServerInfo;
+package sw.client.events.gcontrol;
 
 /**
- * @author Redix, stes, Abbadonn
- * @version 25.11.11
+ * @author Redix stes Abbadonn
+ * @version 02.12.2011
  */
-
-public interface ClientConnlessListener
+public interface IGameStateChangedListener
 {
-	/**
-	 * Invoked when server info was received
-	 * 
-	 * @param info
-	 *            server info
-	 */
-	public void serverInfo(ServerInfo info);
+	public void gameStateChanged(GameStateChangedEvent e);
+
+	public void newRound(GameStateChangedEvent e);
+
+	public void playerInit(GameStateChangedEvent e);
 }

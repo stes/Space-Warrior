@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.control;
 
 import java.util.ArrayList;
 
-import sw.client.gcontrol.GameStateChangedEvent;
+import sw.client.events.gcontrol.GameStateChangedEvent;
 import sw.client.player.Player;
 import sw.client.player.ai.AIPlayer;
 import sw.client.player.ai.bots.RandomBot;

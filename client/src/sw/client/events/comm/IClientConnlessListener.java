@@ -15,32 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.events.comm;
 
-import sw.shared.net.Unpacker;
+import sw.shared.data.ServerInfo;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 
-public interface ClientMessageListener
+public interface IClientConnlessListener
 {
 	/**
-	 * Invoked when a chat message was received
+	 * Invoked when server info was received
 	 * 
-	 * @param name
-	 *            the addresser's name
-	 * @param text
-	 *            the chat message
+	 * @param info
+	 *            server info
 	 */
-	public void chatMessage(String name, String text);
-
-	/**
-	 * Invoked when a snapshot was received
-	 * 
-	 * @param packet
-	 *            snapshot
-	 */
-	public void snapshot(Unpacker packet);
+	public void serverInfo(ServerInfo info);
 }

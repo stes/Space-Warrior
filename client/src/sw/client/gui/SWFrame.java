@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.gui;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -44,10 +44,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 
-import sw.client.gui.GamePanel;
-import sw.client.gui.LoginPanel;
-import sw.client.gui.LoginPanelEvent;
-import sw.client.gui.ILoginPanelListener;
+import sw.client.control.GameController;
+import sw.client.control.MPGameController;
+import sw.client.control.SPGameController;
+import sw.client.events.comm.IClientConnectionListener;
+import sw.client.events.comm.IClientMessageListener;
+import sw.client.net.SWClient;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
 
@@ -55,7 +57,7 @@ import sw.shared.net.Packer;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class SWFrame extends JFrame implements ClientConnectionListener, ILoginPanelListener, AWTEventListener
+public final class SWFrame extends JFrame implements IClientConnectionListener, ILoginPanelListener, AWTEventListener
 {
 	public static PrintStream out;
 
@@ -378,13 +380,13 @@ public final class SWFrame extends JFrame implements ClientConnectionListener, I
 			_client.addClientConnectionListener(this);
 			_client.addClientConnlessListener(_loginPanel);
 		}
-		if (_controller instanceof ClientConnectionListener)
+		if (_controller instanceof IClientConnectionListener)
 		{
-			_client.addClientConnectionListener((ClientConnectionListener) _controller);
+			_client.addClientConnectionListener((IClientConnectionListener) _controller);
 		}
-		if (_controller instanceof ClientMessageListener)
+		if (_controller instanceof IClientMessageListener)
 		{
-			_client.addClientMessageListener((ClientMessageListener) _controller);
+			_client.addClientMessageListener((IClientMessageListener) _controller);
 		}
 		
 		_gamePanel.addConnectionListener(this);

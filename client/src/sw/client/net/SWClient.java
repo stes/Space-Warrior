@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.net;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
+import sw.client.events.comm.IClientConnectionListener;
+import sw.client.events.comm.IClientConnlessListener;
+import sw.client.events.comm.IClientMessageListener;
 import sw.shared.GameConstants;
 import sw.shared.Packettype;
 import sw.shared.data.ServerInfo;
@@ -39,31 +42,31 @@ public class SWClient implements IClient, NetworkListener
 	private UDPHost _netClient;
 	private UDPConnection _server;
 
-	private ArrayList<ClientConnectionListener> _clientConnectionListener;
-	private ArrayList<ClientMessageListener> _clientMessageListener;
-	private ArrayList<ClientConnlessListener> _clientConnlessListener;
+	private ArrayList<IClientConnectionListener> _clientConnectionListener;
+	private ArrayList<IClientMessageListener> _clientMessageListener;
+	private ArrayList<IClientConnlessListener> _clientConnlessListener;
 
 	public SWClient()
 	{
 		_netClient = new UDPHost(null, 1);
 		_netClient.addNetworkListener(this);
-		_clientConnectionListener = new ArrayList<ClientConnectionListener>();
-		_clientMessageListener = new ArrayList<ClientMessageListener>();
-		_clientConnlessListener = new ArrayList<ClientConnlessListener>();
+		_clientConnectionListener = new ArrayList<IClientConnectionListener>();
+		_clientMessageListener = new ArrayList<IClientMessageListener>();
+		_clientConnlessListener = new ArrayList<IClientConnlessListener>();
 		_netClient.start();
 	}
 
-	public void addClientConnectionListener(ClientConnectionListener listener)
+	public void addClientConnectionListener(IClientConnectionListener listener)
 	{
 		_clientConnectionListener.add(listener);
 	}
 
-	public void addClientConnlessListener(ClientConnlessListener listener)
+	public void addClientConnlessListener(IClientConnlessListener listener)
 	{
 		_clientConnlessListener.add(listener);
 	}
 
-	public void addClientMessageListener(ClientMessageListener listener)
+	public void addClientMessageListener(IClientMessageListener listener)
 	{
 		_clientMessageListener.add(listener);
 	}
@@ -82,7 +85,7 @@ public class SWClient implements IClient, NetworkListener
 	public void connected(UDPConnection connection)
 	{
 		_server = connection;
-		for (ClientConnectionListener l : _clientConnectionListener)
+		for (IClientConnectionListener l : _clientConnectionListener)
 		{
 			l.connected();
 		}
@@ -100,7 +103,7 @@ public class SWClient implements IClient, NetworkListener
 	public void disconnected(UDPConnection connection, String reason)
 	{
 		_server = null;
-		for (ClientConnectionListener l : _clientConnectionListener)
+		for (IClientConnectionListener l : _clientConnectionListener)
 		{
 			l.disconnected(reason);
 		}
@@ -115,14 +118,14 @@ public class SWClient implements IClient, NetworkListener
 		{
 			String name = packet.readUTF();
 			String text = packet.readUTF();
-			for (ClientMessageListener l : _clientMessageListener)
+			for (IClientMessageListener l : _clientMessageListener)
 			{
 				l.chatMessage(name, text);
 			}
 		}
 		else if (Packettype.SV_SNAPSHOT == packet.getType())
 		{
-			for (ClientMessageListener l : _clientMessageListener)
+			for (IClientMessageListener l : _clientMessageListener)
 			{
 				l.snapshot(packet);
 			}
@@ -141,7 +144,7 @@ public class SWClient implements IClient, NetworkListener
 			ServerInfo serverInfo = ServerInfo.unpack(new Unpacker(info));
 			serverInfo.setAddress(addr);
 
-			for (ClientConnlessListener l : _clientConnlessListener)
+			for (IClientConnlessListener l : _clientConnlessListener)
 			{
 				l.serverInfo(serverInfo);
 			}

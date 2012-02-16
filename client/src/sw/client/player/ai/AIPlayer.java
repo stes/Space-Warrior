@@ -17,9 +17,9 @@
  ******************************************************************************/
 package sw.client.player.ai;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.GameStateChangedListener;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
+import sw.client.events.gcontrol.IGameStateChangedListener;
 import sw.client.player.Player;
 
 /**
@@ -28,7 +28,7 @@ import sw.client.player.Player;
  * @author Redix, stes, Abbadonn
  * @version 27.11.2011
  */
-public abstract class AIPlayer extends Player implements GameStateChangedListener
+public abstract class AIPlayer extends Player implements IGameStateChangedListener
 {
 	/**
 	 * Creates a new ai player given the controller
@@ -47,7 +47,7 @@ public abstract class AIPlayer extends Player implements GameStateChangedListene
 		super(name, imageID);
 	}
 	
-	public void setStateManager(IGameStateManager stateManager)
+	public void setStateManager(IGameController stateManager)
 	{
 		super.setStateManager(stateManager);
 		stateManager.addGameStateChangedListener(this);

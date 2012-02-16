@@ -15,17 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client.gcontrol;
+package sw.client.control;
 
-/**
- * @author Redix stes Abbadonn
- * @version 02.12.2011
- */
-public interface GameStateChangedListener
+import sw.client.events.gcontrol.IGameStateChangedListener;
+import sw.client.player.Player;
+import sw.shared.data.GameWorld;
+import sw.shared.data.PlayerInput;
+import sw.shared.data.entities.players.SpaceShip;
+
+public interface IGameController
 {
-	public void gameStateChanged(GameStateChangedEvent e);
+	public void addGameStateChangedListener(IGameStateChangedListener l);
 
-	public void newRound(GameStateChangedEvent e);
+	public GameWorld getGameWorld();
 
-	public void playerInit(GameStateChangedEvent e);
+	public Player getLocalPlayer();
+
+	public SpaceShip[] getPlayerList();
+
+	public GameWorld getPrevGameWorld();
+
+	public boolean isReady();
+
+	public void setRendering(boolean render);
+
+	public double snapTime();
+
+	public void stateUpdated(PlayerInput input);
 }

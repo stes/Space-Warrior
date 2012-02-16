@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
 import sw.client.player.ai.AIPlayer;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
@@ -35,7 +35,7 @@ public class PAgent extends AIPlayer
 	private HashMap<PState, int[]> _visitedStates;
 	private int _oldScore;
 
-	public PAgent(IGameStateManager stateManager)
+	public PAgent(IGameController stateManager)
 	{
 		super(stateManager);
 		this.init();

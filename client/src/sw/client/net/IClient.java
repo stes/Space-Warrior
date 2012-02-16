@@ -15,22 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.net;
+
+import sw.client.events.comm.IClientMessageListener;
+import sw.shared.net.Packer;
 
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
 
-public interface ClientConnectionListener
+public interface IClient
 {
-	/**
-	 * Invoked after connection
-	 */
-	public void connected();
+	public void sendPacket(Packer packet);
 
-	/**
-	 * Invoked after disconnect
-	 */
-	public void disconnected(String reason);
+	public void addClientMessageListener(IClientMessageListener l);
 }

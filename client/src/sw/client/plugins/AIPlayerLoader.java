@@ -30,7 +30,7 @@ import java.util.Properties;
 
 import javax.naming.OperationNotSupportedException;
 
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
 import sw.client.player.ai.AIPlayer;
 
 /**
@@ -87,7 +87,7 @@ public class AIPlayerLoader
 			return _pluginFile;
 		}
 		
-		public AIPlayer getInstance(IGameStateManager stateManager) throws ClassNotFoundException
+		public AIPlayer getInstance(IGameController stateManager) throws ClassNotFoundException
 		{
 			URLClassLoader loader;
 			try
@@ -109,7 +109,7 @@ public class AIPlayerLoader
 			Object o;
 			try
 			{
-				o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);
+				o = c.getConstructor(IGameController.class).newInstance(stateManager);
 			}
 			catch (Exception e)
 			{
@@ -177,7 +177,7 @@ public class AIPlayerLoader
 		for (Constructor<?> con : cons)
 		{
 			Class<?>[] params = con.getParameterTypes();
-			if (params.length != 1 || !params[0].equals(IGameStateManager.class))
+			if (params.length != 1 || !params[0].equals(IGameController.class))
 				continue;
 			return true;
 		}
@@ -196,7 +196,7 @@ public class AIPlayerLoader
 	 * @throws ClassNotFoundException
 	 * @throws OperationNotSupportedException
 	 */
-	public static AIPlayer load(File source, IGameStateManager stateManager)
+	public static AIPlayer load(File source, IGameController stateManager)
 			throws FileNotFoundException,
 			ClassNotFoundException,
 			OperationNotSupportedException
@@ -233,7 +233,7 @@ public class AIPlayerLoader
 		Class<?> c = loader.loadClass(properties.get("class").toString());
 		try
 		{
-			Object o = c.getConstructor(IGameStateManager.class).newInstance(stateManager);
+			Object o = c.getConstructor(IGameController.class).newInstance(stateManager);
 			System.out.println(o instanceof AIPlayer);
 			return (AIPlayer) o;
 		}

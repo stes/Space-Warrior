@@ -32,8 +32,7 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 
-import sw.client.ClientConstants;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
 import sw.client.gui.sprites.IShotSprite;
 import sw.client.gui.sprites.LaserSprite;
 import sw.client.gui.sprites.ProjectileSprite;
@@ -57,13 +56,16 @@ public class PlayingFieldPanel extends JPanel
 {
 	private static final long serialVersionUID = -8647279084154615455L;
 
+	private final static int BAR_LENGTH = 400;
+	private final static int BAR_X = 10;
+	
 	private PlayingFieldPanel _self;
 	private BufferedImage _backgroundImg;
 	private double _snapTime;
 
 	private boolean _isDebugActive;
 
-	private IGameStateManager _stateManager;
+	private IGameController _stateManager;
 	private HashMap<Integer, Sprite> _sprites;
 	private ParticleSystem _particleSystem;
 
@@ -73,7 +75,7 @@ public class PlayingFieldPanel extends JPanel
 	 * @param stateManager
 	 *            a game state manager
 	 */
-	public PlayingFieldPanel(int width, int height, IGameStateManager stateManager)
+	public PlayingFieldPanel(int width, int height, IGameController stateManager)
 	{
 		super();
 		_self = this;
@@ -241,8 +243,8 @@ public class PlayingFieldPanel extends JPanel
 	{
 		g2d.setStroke(new BasicStroke(15));
 
-		int start_x = ClientConstants.BAR_X;
-		int end_x = start_x + d.getLifepoints() * ClientConstants.BAR_LENGTH
+		int start_x = BAR_X;
+		int end_x = start_x + d.getLifepoints() * BAR_LENGTH
 				/ GameConstants.MAX_LIVES;
 		int y = 10;
 		GradientPaint pat = new GradientPaint(start_x, 10, Color.RED, end_x, 60, new Color(255,
@@ -252,7 +254,7 @@ public class PlayingFieldPanel extends JPanel
 		g2d.setPaint(pat);
 		g2d.drawLine(start_x, y, end_x, y);
 
-		end_x = start_x + d.getAmmo() * ClientConstants.BAR_LENGTH / GameConstants.MAX_AMMO;
+		end_x = start_x + d.getAmmo() * BAR_LENGTH / GameConstants.MAX_AMMO;
 		y = 30;
 		pat = new GradientPaint(start_x, 10, Color.GRAY, end_x, 60, new Color(100, 100, 100, 100));
 		g2d.setPaint(pat);

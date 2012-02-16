@@ -24,10 +24,10 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JPanel;
 
-import sw.client.IClient;
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.GameStateChangedListener;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
+import sw.client.events.gcontrol.IGameStateChangedListener;
+import sw.client.net.IClient;
 import sw.shared.GameConstants;
 
 /**
@@ -35,16 +35,16 @@ import sw.shared.GameConstants;
  * @version 08.01.2012
  */
 public class GamePanel extends JPanel implements
-		GameStateChangedListener
+		IGameStateChangedListener
 {
 	private static final long serialVersionUID = -8751902318746091633L;
 	private PlayingFieldPanel _playingField;
 	private StateBarPanel _stateBarPanel;
 	// other references
-	private IGameStateManager _stateManager;
+	private IGameController _stateManager;
 	private IClient _client;
 
-	public GamePanel(int width, int height, IGameStateManager stateManager, IClient client)
+	public GamePanel(int width, int height, IGameController stateManager, IClient client)
 	{
 		super();
 		_stateManager = stateManager;

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client.gcontrol;
+package sw.client.events.gcontrol;
 
 import java.util.EventObject;
 

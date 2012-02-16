@@ -36,17 +36,17 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
-import sw.client.ClientMessageListener;
-import sw.client.IClient;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.comm.IClientMessageListener;
 import sw.client.gui.LoginPanelEvent.ActionType;
+import sw.client.net.IClient;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
-public class StateBarPanel extends JPanel implements ClientMessageListener
+public class StateBarPanel extends JPanel implements IClientMessageListener
 {
 
 	/**
@@ -110,13 +110,13 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 	private BufferedImage _background;
 
 	// other references
-	private IGameStateManager _stateManager;
+	private IGameController _stateManager;
 	private IClient _client;
 	private WeaponType _currentWeapon;
 	private ArrayList<ILoginPanelListener> _connectionListener;
 	private ArrayList<IWeaponChangedListener> _weaponChangedListener;
 
-	public StateBarPanel(int width, int height, IGameStateManager stateManager, IClient client)
+	public StateBarPanel(int width, int height, IGameController stateManager, IClient client)
 	{
 		super(null);
 		_connectionListener = new ArrayList<ILoginPanelListener>();

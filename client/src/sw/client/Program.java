@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sw.client;
 
+import sw.client.gui.SWFrame;
+
 /**
  * @author Redix, stes, Abbadonn
  * @version 25.11.11

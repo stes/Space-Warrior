@@ -20,15 +20,15 @@ package sw.lvqagent;
 import java.util.ArrayList;
 
 import sw.State;
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.control.IGameController;
+import sw.client.events.gcontrol.GameStateChangedEvent;
 import sw.client.player.ai.AIPlayer;
 
 public class LVQAgent extends AIPlayer
 {
 	private ArrayList<State> _visitedStates;
 
-	public LVQAgent(IGameStateManager stateManager)
+	public LVQAgent(IGameController stateManager)
 	{
 		super(stateManager);
 		_visitedStates = new ArrayList<State>();

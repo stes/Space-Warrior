@@ -15,10 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client;
+package sw.client.control;
 
-import sw.client.gcontrol.GameStateChangedEvent;
-import sw.client.gcontrol.IGameStateManager;
+import sw.client.events.comm.IClientConnectionListener;
+import sw.client.events.comm.IClientMessageListener;
+import sw.client.events.gcontrol.GameStateChangedEvent;
+import sw.client.net.IClient;
 import sw.shared.Packettype;
 import sw.shared.data.GameWorld;
 import sw.shared.data.PlayerInput;
@@ -33,8 +35,8 @@ import sw.shared.net.Unpacker;
  * @author Redix, stes
  * @version 25.11.11
  */
-public class MPGameController extends GameController implements ClientConnectionListener, ClientMessageListener,
-		IGameStateManager
+public class MPGameController extends GameController implements IClientConnectionListener, IClientMessageListener,
+		IGameController
 {
 	private IClient _client;
 	private boolean _isConnected;

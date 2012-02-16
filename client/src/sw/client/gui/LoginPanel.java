@@ -48,8 +48,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import sw.client.ClientConnlessListener;
-import sw.client.SWFrame;
+import sw.client.events.comm.IClientConnlessListener;
 import sw.client.gui.LoginPanelEvent.ActionType;
 import sw.client.plugins.PluginLoader;
 import sw.server.SWServer;
@@ -61,7 +60,7 @@ import sw.shared.data.ServerInfo;
  * @author Redix, stes
  * @version 08.01.2012
  */
-public class LoginPanel extends JPanel implements ClientConnlessListener
+public class LoginPanel extends JPanel implements IClientConnlessListener
 {
 	private class ServerTableModel extends AbstractTableModel
 	{

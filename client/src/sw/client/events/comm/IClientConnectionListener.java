@@ -15,30 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package sw.client.gcontrol;
+package sw.client.events.comm;
 
-import sw.client.player.Player;
-import sw.shared.data.GameWorld;
-import sw.shared.data.PlayerInput;
-import sw.shared.data.entities.players.SpaceShip;
+/**
+ * @author Redix, stes, Abbadonn
+ * @version 25.11.11
+ */
 
-public interface IGameStateManager
+public interface IClientConnectionListener
 {
-	public void addGameStateChangedListener(GameStateChangedListener l);
+	/**
+	 * Invoked after connection
+	 */
+	public void connected();
 
-	public GameWorld getGameWorld();
-
-	public Player getLocalPlayer();
-
-	public SpaceShip[] getPlayerList();
-
-	public GameWorld getPrevGameWorld();
-
-	public boolean isReady();
-
-	public void setRendering(boolean render);
-
-	public double snapTime();
-
-	public void stateUpdated(PlayerInput input);
+	/**
+	 * Invoked after disconnect
+	 */
+	public void disconnected(String reason);
 }
