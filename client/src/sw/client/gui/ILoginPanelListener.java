@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sw.client.gui;
 
-public interface LoginPanelListener
+public interface ILoginPanelListener
 {
 	public void login(LoginPanelEvent e);
 

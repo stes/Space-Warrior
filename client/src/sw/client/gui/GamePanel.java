@@ -71,7 +71,7 @@ public class GamePanel extends JPanel implements
 	}
 
 
-	public void addConnectionListener(LoginPanelListener l)
+	public void addConnectionListener(ILoginPanelListener l)
 	{
 		_stateBarPanel.addConnectionListener(l);
 	}
@@ -95,9 +95,14 @@ public class GamePanel extends JPanel implements
 	{
 		// TODO best practice?
 		_playingField.playerInit();
+		System.out.println(_stateManager.getLocalPlayer());
+		if (_stateManager.getLocalPlayer() instanceof IWeaponChangedListener)
+		{
+			_stateBarPanel.addWeaponChangedListener((IWeaponChangedListener)_stateManager.getLocalPlayer());
+		}
 	}
 
-	public void removeConnecionListener(LoginPanelListener l)
+	public void removeConnecionListener(ILoginPanelListener l)
 	{
 		_stateBarPanel.removeConnecionListener(l);
 	}

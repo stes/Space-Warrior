@@ -47,7 +47,7 @@ import javax.swing.RepaintManager;
 import sw.client.gui.GamePanel;
 import sw.client.gui.LoginPanel;
 import sw.client.gui.LoginPanelEvent;
-import sw.client.gui.LoginPanelListener;
+import sw.client.gui.ILoginPanelListener;
 import sw.shared.Packettype;
 import sw.shared.net.Packer;
 
@@ -55,7 +55,7 @@ import sw.shared.net.Packer;
  * @author Redix, stes, Abbadonn
  * @version 25.11.11
  */
-public final class SWFrame extends JFrame implements ClientConnectionListener, LoginPanelListener, AWTEventListener
+public final class SWFrame extends JFrame implements ClientConnectionListener, ILoginPanelListener, AWTEventListener
 {
 	public static PrintStream out;
 

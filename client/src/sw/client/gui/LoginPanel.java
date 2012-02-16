@@ -19,7 +19,6 @@ package sw.client.gui;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -121,14 +120,14 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	private JButton _btnHost;
 	private JLabel _lblIPAdress;
 	private JLabel _lblName;
-	private JScrollPane _scroll;
+	private JScrollPane _sclServerTable;
 	private JTable _tblServers;
 	private JTable _tblAIPlayers;
 	private JButton _btnImage;
 	private JButton _btnExit;
 	private JLabel _lblPort;
 	private Vector<ServerInfo> _servers;
-	private ServerTableModel _tableModel;
+	private ServerTableModel _serverTableModel;
 	private JCheckBox _chkIsMultiplayer;
 
 	private ArrayList<JComponent> _mpOnly;
@@ -136,7 +135,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 	private JPanel _connectionPanel;
 
-	private ArrayList<LoginPanelListener> _connectionListener;
+	private ArrayList<ILoginPanelListener> _connectionListener;
 	private int _imageID;
 	protected SWServer _server;
 	private PluginLoader _pluginLoader;
@@ -153,10 +152,10 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		_mpOnly = new ArrayList<JComponent>();
 		_isMultiplayer = true;
-		_connectionListener = new ArrayList<LoginPanelListener>();
+		_connectionListener = new ArrayList<ILoginPanelListener>();
 
 		_servers = new Vector<ServerInfo>();
-		_tableModel = new ServerTableModel();
+		_serverTableModel = new ServerTableModel();
 
 		_imageID = Images.min().getID();
 		_background = ImageContainer.getLocalInstance().getImage(Images.TITLE);
@@ -182,7 +181,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 	}
 
-	public void addConnectionListener(LoginPanelListener l)
+	public void addConnectionListener(ILoginPanelListener l)
 	{
 		_connectionListener.add(l);
 	}
@@ -211,7 +210,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		return _txtName.getText();
 	}
 
-	public void removeConnecionListener(LoginPanelListener l)
+	public void removeConnecionListener(ILoginPanelListener l)
 	{
 		_connectionListener.remove(l);
 	}
@@ -226,7 +225,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 	public void serverInfo(ServerInfo info)
 	{
 		_servers.add(info);
-		_tableModel.fireTableDataChanged();
+		_serverTableModel.fireTableDataChanged();
 	}
 
 	protected void invokeLogin(LoginPanelEvent e)
@@ -235,7 +234,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		{
 			return;
 		}
-		for (LoginPanelListener l : _connectionListener)
+		for (ILoginPanelListener l : _connectionListener)
 		{
 			l.login(e);
 		}
@@ -248,7 +247,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		{
 			return;
 		}
-		for (LoginPanelListener l : _connectionListener)
+		for (ILoginPanelListener l : _connectionListener)
 		{
 			l.switchMode(e);
 		}
@@ -429,7 +428,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			public void actionPerformed(ActionEvent arg0)
 			{
 				_servers.clear();
-				for (LoginPanelListener l : _connectionListener)
+				for (ILoginPanelListener l : _connectionListener)
 				{
 					l.scan();
 				}
@@ -438,7 +437,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		addComponent(_btnUpdate, 4, 4, 20);
 		_mpOnly.add(_btnUpdate);
 		
-		_tblServers = new JTable(_tableModel);
+		_tblServers = new JTable(_serverTableModel);
 		_tblServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		_tblServers.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 		{
@@ -452,10 +451,10 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		});
 		_mpOnly.add(_tblServers);
 
-		_scroll = new JScrollPane(_tblServers);
-		_scroll.setSize(200, 85);
-		addComponent(_scroll, 2, 3);
-		_mpOnly.add(_scroll);
+		_sclServerTable = new JScrollPane(_tblServers);
+		_sclServerTable.setSize(200, 85);
+		addComponent(_sclServerTable, 2, 3);
+		_mpOnly.add(_sclServerTable);
 	}
 
 	/**

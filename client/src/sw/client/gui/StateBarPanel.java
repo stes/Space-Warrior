@@ -42,6 +42,7 @@ import sw.client.gcontrol.IGameStateManager;
 import sw.client.gui.LoginPanelEvent.ActionType;
 import sw.shared.GameConstants.Images;
 import sw.shared.Packettype;
+import sw.shared.data.entities.shots.IWeapon.WeaponType;
 import sw.shared.net.Packer;
 import sw.shared.net.Unpacker;
 
@@ -104,21 +105,26 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 	private JScrollPane _scrollChathistory;
 	private JButton _btnDisconnect;
 	private PlayerTableModel _model;
+	private JButton _btnWeapon;
 	
 	private BufferedImage _background;
 
 	// other references
 	private IGameStateManager _stateManager;
 	private IClient _client;
-	private ArrayList<LoginPanelListener> _connectionListener;
+	private WeaponType _currentWeapon;
+	private ArrayList<ILoginPanelListener> _connectionListener;
+	private ArrayList<IWeaponChangedListener> _weaponChangedListener;
 
 	public StateBarPanel(int width, int height, IGameStateManager stateManager, IClient client)
 	{
 		super(null);
-		_connectionListener = new ArrayList<LoginPanelListener>();
+		_connectionListener = new ArrayList<ILoginPanelListener>();
+		_weaponChangedListener = new ArrayList<IWeaponChangedListener>();
 		_stateManager = stateManager;
 		_client = client;
 		_model = new PlayerTableModel();
+		_currentWeapon = WeaponType.MASTER_LASER;
 		this.setSize(width, height);
 		this.initComponents();
 		this.resizeComponents();
@@ -139,26 +145,35 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 	{
 		_txtChatmessage.setBounds(getWidth()/4, getWidth()/100, getWidth()/4, getWidth()/70);
 		_scrollChathistory.setBounds(getWidth()/4, getWidth()/100+getWidth()/70, getWidth()/4, getHeight()*1/2);
-		
 		_scrollScoreBoard.setBounds(getWidth()*3/5, 10, getWidth()/8, 25+getHeight()*2/5);
-		
 		_btnDisconnect.setBounds(getWidth()-100, getHeight()-50, 100, 50);
+		_btnWeapon.setBounds(getWidth()/10, getHeight()/10, getWidth()/20, getWidth()/20);
 	}
 
-	public void addConnectionListener(LoginPanelListener l)
+	public void addConnectionListener(ILoginPanelListener l)
 	{
 		_connectionListener.add(l);
 	}
 
+	public void removeConnecionListener(ILoginPanelListener l)
+	{
+		_connectionListener.remove(l);
+	}
+	
+	public void addWeaponChangedListener(IWeaponChangedListener l)
+	{
+		_weaponChangedListener.add(l);
+	}
+
+	public void removeWeaponChangedListener(IWeaponChangedListener l)
+	{
+		_weaponChangedListener.remove(l);
+	}
+	
 	@Override
 	public void chatMessage(String name, String text)
 	{
 		this.appendMessage("[ " + name + " ] " + text + "\n");
-	}
-
-	public void removeConnecionListener(LoginPanelListener l)
-	{
-		_connectionListener.remove(l);
 	}
 
 	public void paintComponent(Graphics g)
@@ -185,7 +200,7 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 		{
 			return;
 		}
-		for (LoginPanelListener l : _connectionListener)
+		for (ILoginPanelListener l : _connectionListener)
 		{
 			l.logout(e);
 		}
@@ -287,8 +302,60 @@ public class StateBarPanel extends JPanel implements ClientMessageListener
 		};
 		_scrollChathistory.setOpaque(false);
 		this.add(_scrollChathistory);
+		
+		_btnWeapon = new JButton(_currentWeapon.toString());
+		_btnWeapon.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				changeWeapon();
+			}
+		});
+		this.add(_btnWeapon);
 	}
 
+	private void changeWeapon()
+	{
+		boolean next = false;
+		for (WeaponType w : WeaponType.values())
+		{
+			if (w.equals(WeaponType.LASER))
+				continue;
+			if (next)
+			{
+				_currentWeapon = w;
+				next = false;
+				break;
+			}
+			if (w.equals(_currentWeapon))
+				next = true;
+		}
+		if (next)
+		{
+			int i = 0;
+			do
+				_currentWeapon = WeaponType.values()[i++];
+			while(_currentWeapon.equals(WeaponType.LASER));
+				
+		}
+		this.invokeWeaponChanged(_currentWeapon);
+	}
+	
+	private void invokeWeaponChanged(WeaponType currentWeapon)
+	{
+		_btnWeapon.setText(currentWeapon.toString());
+		if (_weaponChangedListener == null)
+			return;
+		for (IWeaponChangedListener l : _weaponChangedListener)
+			l.weaponChanged(currentWeapon);
+	}
+
+	public WeaponType getCurrentWeapon()
+	{
+		return _currentWeapon;
+	}
+	
 	private void sendChat(String text)
 	{
 		Packer p = null;

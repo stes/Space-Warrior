@@ -20,6 +20,7 @@ package sw.client.player;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import sw.client.gui.IWeaponChangedListener;
 import sw.shared.data.entities.shots.IWeapon.WeaponType;
 
 /**
@@ -45,13 +46,16 @@ import sw.shared.data.entities.shots.IWeapon.WeaponType;
  * @author Redix, stes, Abbadonn
  * @version 27.11.2011
  */
-public class HumanPlayer extends Player implements KeyListener
+public class HumanPlayer extends Player implements KeyListener, IWeaponChangedListener
 {
 	private boolean _forward;
 	private boolean _backward;
 	private boolean _left;
 	private boolean _right;
+	
+	private int _currentWeapon;
 
+	
 	/**
 	 * Creates a new instance
 	 * 
@@ -60,17 +64,19 @@ public class HumanPlayer extends Player implements KeyListener
 	public HumanPlayer(String name)
 	{
 		super(name);
+		_currentWeapon = WeaponType.MASTER_LASER.getID();
 	}
 	
 	public HumanPlayer(String name, int imageID)
 	{
 		super(name, imageID);
+		_currentWeapon = WeaponType.MASTER_LASER.getID();
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		switch (e.getKeyChar())
+		switch (Character.toLowerCase(e.getKeyChar()))
 		{
 			case 'w':
 				_forward = true;
@@ -88,13 +94,7 @@ public class HumanPlayer extends Player implements KeyListener
 				this.getCurrentInput().setShot(WeaponType.LASER.getID());
 				break;
 			case 'm':
-				this.getCurrentInput().setShot(WeaponType.MASTER_LASER.getID());
-				break;
-			case 'b':
-				this.getCurrentInput().setShot(WeaponType.ROCKET.getID());
-				break;
-			case 'v':
-				this.getCurrentInput().setShot(WeaponType.MINE.getID());
+				this.getCurrentInput().setShot(_currentWeapon);
 				break;
 		}
 
@@ -104,7 +104,7 @@ public class HumanPlayer extends Player implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		switch (e.getKeyChar())
+		switch (Character.toLowerCase(e.getKeyChar()))
 		{
 			case 'w':
 				_forward = false;
@@ -120,8 +120,6 @@ public class HumanPlayer extends Player implements KeyListener
 				break;
 			case 'n':
 			case 'm':
-			case 'b':
-			case 'v':
 				this.getCurrentInput().setShot(0);
 				break;
 		}
@@ -159,5 +157,12 @@ public class HumanPlayer extends Player implements KeyListener
 		this.getCurrentInput().setRotation(rotation);
 
 		this.update();
+	}
+
+	@Override
+	public void weaponChanged(WeaponType w)
+	{
+		System.out.println(this);
+		_currentWeapon = w.getID();
 	}
 }
