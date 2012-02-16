@@ -170,8 +170,6 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			@Override
 			public void componentResized(ComponentEvent e)
 			{
-				_btnUpdate.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 + 200, 100, 25);
-				_scroll.setBounds(_self.getWidth() - 250, _self.getHeight() / 2 - 150, 200, 300);
 				_connectionPanel.setLocation(getWidth() / 2 - _connectionPanel.getWidth() / 2,
 						getHeight() / 2 - _connectionPanel.getHeight() / 2);
 				// TODO rework
@@ -259,13 +257,13 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 	private void addComponent(JComponent comp, int gridX, int gridY)
 	{
-		comp.setLocation(50 + gridX * 100, 30 + gridY * 30);
+		comp.setLocation(50 + gridX * 100, 30 + gridY * 30 + (gridY >= 3 ? 10 : 0));
 		_connectionPanel.add(comp);
 	}
 
 	private void addComponent(JComponent comp, int gridX, int gridY, int dist)
 	{
-		comp.setLocation(50 + gridX * 100 + dist, 30 + gridY * 30);
+		comp.setLocation(50 + gridX * 100 + dist, 30 + gridY * 30 + (gridY >= 3 ? 10 :0));
 		_connectionPanel.add(comp);
 	}
 
@@ -295,45 +293,44 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 
 		_connectionPanel.setLayout(null);
 		_connectionPanel.setBackground(Color.GRAY);
-		_connectionPanel.setSize(600, 225);
 		_connectionPanel.setLocation(getWidth() / 2 - _connectionPanel.getWidth() / 2, getHeight()
 				/ 2 - _connectionPanel.getHeight() / 2);
+		_connectionPanel.setSize(600, 250);
 		this.add(_connectionPanel);
 
 		_txtIPAddress = new JTextField();
-		_txtIPAddress.setBounds(200, 210, 100, 25);
-		_txtIPAddress.setMinimumSize(new Dimension(200, 25));
+		_txtIPAddress.setSize(100, 25);
 		_txtIPAddress.setText("localhost");
 		_mpOnly.add(_txtIPAddress);
 		addComponent(_txtIPAddress, 1, 0);
 
 		_txtPort = new JTextField();
-		_txtPort.setBounds(400, 210, 50, 25);
+		_txtPort.setSize(50, 25);
 		_txtPort.setText(GameConstants.STANDARD_PORT + "");
 		_mpOnly.add(_txtPort);
 		addComponent(_txtPort, 1, 1);
 
 		_txtName = new JTextField();
-		_txtName.setBounds(200, 250, 300, 25);
+		_txtName.setSize(300, 25);
 		_txtName.setText("test");
 		addComponent(_txtName, 1, 2);
 
 		_lblIPAdress = new JLabel("IP-Address");
-		_lblIPAdress.setBounds(100, 210, 100, 25);
+		_lblIPAdress.setSize(100, 25);
 		_mpOnly.add(_lblIPAdress);
 		addComponent(_lblIPAdress, 0, 0);
 
 		_lblPort = new JLabel("Port");
-		_lblPort.setBounds(350, 210, 100, 25);
+		_lblPort.setSize(100, 25);
 		_mpOnly.add(_lblPort);
 		addComponent(_lblPort, 0, 1);
 
 		_lblName = new JLabel("Name");
-		_lblName.setBounds(100, 250, 100, 25);
+		_lblName.setSize(100, 25);
 		addComponent(_lblName, 0, 2);
 
 		_btnConnect = new JButton("Start");
-		_btnConnect.setBounds(640, 210, 100, 25);
+		_btnConnect.setSize(100, 25);
 		_btnConnect.addActionListener(new ActionListener()
 		{
 
@@ -355,7 +352,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		addComponent(_btnConnect, 3, 0);
 
 		_btnHost = new JButton("Host");
-		_btnHost.setBounds(640, 250, 100, 25);
+		_btnHost.setSize(100, 25);
 		_btnHost.addActionListener(new ActionListener()
 		{
 			@Override
@@ -365,11 +362,11 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 			}
 		});
 		_mpOnly.add(_btnHost);
-		addComponent(_btnHost, 3, 1);
+		addComponent(_btnHost, 4, 3, 20);
 
 		_btnImage = new JButton();
 		_btnImage.setIcon(new ImageIcon(ImageContainer.getLocalInstance().getImage(_imageID)));
-		_btnImage.setBounds(700, 210, 64, 64);
+		_btnImage.setSize(64, 64);
 		_btnImage.addActionListener(new ActionListener()
 		{
 			@Override
@@ -412,7 +409,7 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 		addComponent(_chkIsMultiplayer, 0, 3);
 
 		_btnExit = new JButton("Exit");
-		_btnExit.setBounds(getWidth() - 200, 260, 100, 25);
+		_btnExit.setSize(100, 25);
 		_btnExit.addActionListener(new ActionListener()
 		{
 
@@ -422,18 +419,10 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				System.exit(0);
 			}
 		});
-		addComponent(_btnExit, 0, 4);
-	}
-
-	/**
-	 * Initializes the GUI components
-	 */
-	private void initComponents()
-	{
-		this.initLoginComponents();
-
+		addComponent(_btnExit, 0, 5);
+		
 		_btnUpdate = new JButton("Update");
-		_btnUpdate.setBounds(this.getWidth() - 300, 620, 100, 25);
+		_btnUpdate.setSize(100, 25);
 		_btnUpdate.addActionListener(new ActionListener()
 		{
 			@Override
@@ -446,8 +435,9 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				}
 			}
 		});
-		// this.add(_btnUpdate);
-
+		addComponent(_btnUpdate, 4, 4, 20);
+		_mpOnly.add(_btnUpdate);
+		
 		_tblServers = new JTable(_tableModel);
 		_tblServers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		_tblServers.getSelectionModel().addListSelectionListener(new ListSelectionListener()
@@ -460,10 +450,20 @@ public class LoginPanel extends JPanel implements ClientConnlessListener
 				_txtPort.setText(_servers.get(index).getAddress().getPort() + "");
 			}
 		});
+		_mpOnly.add(_tblServers);
 
 		_scroll = new JScrollPane(_tblServers);
-		_scroll.setBounds(this.getWidth() - 300, 400, 200, 300);
-		// this.add(_scroll);
+		_scroll.setSize(200, 85);
+		addComponent(_scroll, 2, 3);
+		_mpOnly.add(_scroll);
+	}
+
+	/**
+	 * Initializes the GUI components
+	 */
+	private void initComponents()
+	{
+		this.initLoginComponents();
 
 		File[] pluginFiles = _pluginLoader.getAIs("sample");
 		File[][] f = new File[][] { pluginFiles };
